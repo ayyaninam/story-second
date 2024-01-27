@@ -7,19 +7,23 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"api:generate-types": "npx openapi-typescript https://api.staging.storybird.ai/swagger/v1/swagger.json -o ./src/api/types.d.ts",
 		"format": "prettier . --write",
 		"prepare": "husky && husky install"
 	},
 	"dependencies": {
+		"@t3-oss/env-nextjs": "^0.8.0",
 		"@tanstack/react-query": "^5.17.19",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.0",
+		"ky": "^1.2.0",
 		"lucide-react": "^0.316.0",
 		"next": "14.1.0",
 		"react": "^18",
 		"react-dom": "^18",
 		"tailwind-merge": "^2.2.1",
-		"tailwindcss-animate": "^1.0.7"
+		"tailwindcss-animate": "^1.0.7",
+		"zod": "^3.22.4"
 	},
 	"devDependencies": {
 		"@tanstack/eslint-plugin-query": "^5.17.22",
