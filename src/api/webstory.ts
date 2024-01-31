@@ -2,9 +2,16 @@ import { authFetcher } from "@/lib/fetcher";
 import schema from "./schema";
 
 const webstory = {
+	createUnauthorized: async (
+		params: schema["RequestStoryDTO"]
+	): Promise<schema["ReturnAnonymousStoryDTOApiResponse"]> =>
+		await authFetcher
+			.post(`api/WebStory/NoAuth`, { body: JSON.stringify(params) })
+			.json(),
+
 	create: async (
 		params: schema["RequestStoryDTO"]
-	): Promise<schema["StringApiResponse"]> =>
+	): Promise<schema["ReturnAnonymousStoryDTOApiResponse"]> =>
 		await authFetcher
 			.post(`api/WebStory`, { body: JSON.stringify(params) })
 			.json(),
