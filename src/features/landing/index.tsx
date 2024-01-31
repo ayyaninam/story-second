@@ -41,7 +41,7 @@ export default function Landing() {
 			storyLength: data.storyLength,
 			prompt: data.prompt,
 		});
-		router.push(`/story/${WebStory.data?.claimingToken}`);
+		router.push(`/random`);
 	});
 
 	useEffect(() => {

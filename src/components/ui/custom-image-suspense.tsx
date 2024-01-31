@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useMap } from "usehooks-ts";
 
 export default function CustomImageSuspense({
 	width,
@@ -9,7 +10,8 @@ export default function CustomImageSuspense({
 }) {
 	const [grid, setGrid] = useState<number[]>([]);
 	const [queue, setQueue] = useState<number[]>([]);
-	const [seen, setSeen] = useState<number[]>([]);
+	const [seen, seenActions] = useMap<number, number>();
+	// const [seen, setSeen] = useState<number[]>([]);
 
 	const idx = (i: number, j: number) => {
 		return i * width + j;
@@ -42,42 +44,52 @@ export default function CustomImageSuspense({
 		setQueue(initialQueue);
 	}, [width, height]);
 
-	// useEffect(() => {
-	// 	if (queue.length > 0) {
-	// 		let newQueue = [...queue];
-	// 		let newSeen = [...seen];
-	// 		let newGrid = [...grid];
+	const update = () => {
+		if (queue.length > 0) {
+			let newQueue = [...queue];
+			let newGrid = [...grid];
 
-	// 		let curr: number = newQueue[Math.random() * newQueue.length]!;
-	// 		let { i, j } = ridx(curr);
-	// 		newQueue = newQueue.filter((x) => x !== curr);
+			const isValidIndex = (i: number, j: number) => {
+				return (
+					i >= 0 && i < height && j >= 0 && j < width && !seen.has(idx(i, j))
+				);
+			};
 
-	// 		if (i < 0 || i >= height || j < 0 || j >= width) {
-	// 			return;
-	// 		}
+			let curr: number = newQueue[Math.floor(Math.random() * newQueue.length)]!;
+			let { i, j } = ridx(curr);
+			// console.log(curr);
+			newQueue = newQueue.filter((x) => x !== curr);
 
-	// 		if (newSeen.includes(curr)) {
-	// 			return;
-	// 		}
+			if (i < 0 || i >= height || j < 0 || j >= width) {
+				console.log("OOB", curr);
+				return;
+			}
 
-	// 		newSeen.push(curr);
-	// 		newGrid[curr] = 1;
+			if (seen.has(curr)) {
+				console.log("Seen", curr);
+				return;
+			}
 
-	// 		setSeen(newSeen);
-	// 		setGrid(newGrid);
+			newGrid[curr] = 1;
+			seenActions.set(curr, curr);
+			setGrid(newGrid);
 
-	// 		newQueue.push(idx(i + 1, j));
-	// 		newQueue.push(idx(i - 1, j));
-	// 		newQueue.push(idx(i, j + 1));
-	// 		newQueue.push(idx(i, j - 1));
+			if (isValidIndex(i + 1, j)) newQueue.push(idx(i + 1, j));
+			if (isValidIndex(i - 1, j)) newQueue.push(idx(i - 1, j));
+			if (isValidIndex(i, j + 1)) newQueue.push(idx(i, j + 1));
+			if (isValidIndex(i, j - 1)) newQueue.push(idx(i, j - 1));
 
-	// 		setTimeout(() => {
-	// 			setQueue(newQueue);
-	// 		}, 1000);
-	// 	}
-	// }, [queue]);
+			setQueue(newQueue);
+		}
+	};
 
-	const twoDArray = [];
+	useEffect(() => {
+		const interval = setInterval(() => {
+			update();
+		}, 75);
+		return () => clearInterval(interval);
+	});
+	let twoDArray = [];
 
 	for (let i = 0; i < height; i++) {
 		let row = [];
@@ -88,20 +100,26 @@ export default function CustomImageSuspense({
 	}
 
 	return (
-		<div className="grid w-full h-full bg-white" style={{ height: "500px" }}>
-			{
-				// @ts-ignore
-				twoDArray.map((row, rowIdx) => {
-					return row.map((col, colIdx) => {
+		<div
+			className={`bg-[url(https://ik.imagekit.io/storybird/staging/images/99419a71-b420-412f-8f4a-8ebc13882605/0_385298655.webp)]`}
+			style={{ width: width * 40, height: height * 40 }}
+		>
+			{queue.length > 0
+				? twoDArray.map((row, rowIdx) => {
 						return (
-							<div
-								key={idx(rowIdx, colIdx)}
-								className={`${col === 1 ? "bg-black" : "bg-white"}`}
-							></div>
+							<div key={rowIdx} className="flex m-0 leading-none p-0">
+								{row.map((col, colIdx) => {
+									return (
+										<div
+											key={idx(rowIdx, colIdx)}
+											className={`h-10 w-10 ${col === 1 ? "bg-black" : "bg-yellow-200"} m-0 p-0`}
+										></div>
+									);
+								})}
+							</div>
 						);
-					});
-				})
-			}
+					})
+				: null}
 		</div>
 	);
 }
