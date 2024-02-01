@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+	reactStrictMode: true,
+	async rewrites() {
+		return {
+			afterFiles: [
+				{
+					source: "/homepage",
+					destination: "/landing/index.html",
+				},
+			],
+		};
+	},
 };
 
 export default nextConfig;
