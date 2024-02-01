@@ -8,6 +8,7 @@
 		"start": "next start",
 		"lint": "next lint",
 		"api:generate-types": "npx openapi-typescript https://api.staging.storybird.ai/swagger/v1/swagger.json -o ./src/api/types.d.ts",
+		"webflow:generate-bundle": "nodemon --exec ./node_modules/.bin/esbuild ./src/features/webflow/build.tsx --bundle --outfile='./public/landing/custominput.js'",
 		"format": "prettier . --write",
 		"prepare": "husky && husky install"
 	},
@@ -41,6 +42,7 @@
 		"eslint-config-next": "14.1.0",
 		"eslint-config-prettier": "^9.1.0",
 		"husky": "^9.0.6",
+		"nodemon": "^3.0.3",
 		"postcss": "^8",
 		"prettier": "3.2.4",
 		"react-dom": "^18.2.0",

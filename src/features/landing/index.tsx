@@ -20,7 +20,6 @@ export default function Landing() {
 	const CreateWebstory = useMutation({
 		mutationFn: api.webstory.createUnauthorized,
 	});
-
 	// Hooks
 	const {
 		register,
@@ -28,9 +27,7 @@ export default function Landing() {
 		setValue,
 		formState: { errors },
 	} = useStoryForm();
-
 	const router = useRouter();
-
 	// Handlers
 	const onSubmit = handleSubmit(async (data) => {
 		const WebStory = await CreateWebstory.mutateAsync({
@@ -54,7 +51,6 @@ export default function Landing() {
 					placeholder="Prompt"
 					{...register("prompt")}
 				/>
-
 				<RadioGroup
 					defaultValue="Short"
 					onValueChange={(value) => setValue("storyLength", value)}
@@ -72,10 +68,8 @@ export default function Landing() {
 						<Label htmlFor="r3">Long</Label>
 					</div>
 				</RadioGroup>
-
 				<DropdownMenu>
 					<DropdownMenuTrigger>Open</DropdownMenuTrigger>
-
 					<DropdownMenuContent>
 						{storyLanguages.map((language) => (
 							<DropdownMenuItem key={language}>{language}</DropdownMenuItem>

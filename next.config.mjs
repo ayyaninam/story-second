@@ -16,6 +16,9 @@ const nextConfig = {
 		domains: ["ik.imagekit.io"],
 >>>>>>> Stashed changes
 	},
+	images: {
+		domains: ["ik.imagekit.io"],
+	},
 };
 
 export default nextConfig;
