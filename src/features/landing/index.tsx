@@ -7,17 +7,15 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
+	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { StoryFormSchema, useStoryForm } from "./hooks/useStoryForm";
 import { useRouter } from "next/router";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import storyLanguages from "@/utils/storyLanguages";
 
 export default function Landing() {
 	// State
-
 	// Queries
-
 	// Mutations
 	const CreateWebstory = useMutation({
 		mutationFn: api.webstory.createUnauthorized,
@@ -41,7 +39,7 @@ export default function Landing() {
 			storyLength: data.storyLength,
 			prompt: data.prompt,
 		});
-		router.push(`/random`);
+		router.push(`/library/${WebStory.data?.url}`);
 	});
 
 	useEffect(() => {
