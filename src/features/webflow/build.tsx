@@ -1,19 +1,57 @@
+import api from "@/api";
 import storyLanguages from "@/utils/storyLanguages";
-import React, { useRef, useState } from "react";
+import {
+	QueryClient,
+	QueryClientProvider,
+	useMutation,
+} from "@tanstack/react-query";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { useStoryForm } from "./hooks/useStoryForm";
+import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
+
+const queryClient = new QueryClient();
 
 const App = () => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
+	const [isPromptClicked, setIsPromptClicked] = useState(false);
+
 	const [prompt, setPrompt] = useState("");
+	const [options, setOptions] = useState({
+		language: StoryLanguages.English,
+		length: StoryLengths.Short,
+		style: StoryImageStyles.Realistic,
+	});
+
 	const [outputMode, setOutputMode] = useState<"video" | "book">("video");
 
-	const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
+	const expandTextBox = !!isPromptClicked;
+	const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setPrompt(e.target.value);
+		// @ts-expect-error - TS doesn't know about the scrollHeight property
+		inputRef.current.style.height = "auto";
+		// @ts-expect-error - TS doesn't know about the scrollHeight property
+		inputRef.current.style.height = `${inputRef.current?.scrollHeight}px`;
+	};
+
+	const CreateWebstory = useMutation({
+		mutationFn: api.webstory.createUnauthorized,
+	});
+	// Hooks
+	// Handlers
+	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log(prompt);
+		const WebStory = await CreateWebstory.mutateAsync({
+			imageStyle: options.style,
+			language: options.language,
+			storyLength: options.length,
+			prompt: prompt,
+		});
+		window.location.href = `/library/${WebStory.data?.url}`;
 	};
 
 	return (
-		<form style={{ margin: 0 }} onSubmit={handleSubmit}>
+		<form style={{ margin: 0 }} onSubmit={onSubmit}>
 			<div className="first-form">
 				<div style={{ width: "100%", display: "flex" }}>
 					<textarea
@@ -22,32 +60,40 @@ const App = () => {
 							border: "none",
 							minWidth: "100%",
 							textAlign: "left",
-							paddingTop: "8px",
+							paddingTop: "16px",
+							fontSize: "20px",
+							fontWeight: "400",
 						}}
 						ref={inputRef}
+						onClick={() => setIsPromptClicked(true)}
 						// className="build-form-input w-input"
+						className={`${isPromptClicked ? "input-expanded" : "input-normal"}`}
 						name="Prompt"
 						data-name="Prompt"
-						onChange={(e) => setPrompt(e.target.value)}
+						onChange={handlePromptChange}
 						placeholder="What is your story about?"
 						id="Prompt"
 						required
-						onInput={(e) => {
-							if (inputRef.current) {
-								if (e.currentTarget.value.length >= 20) {
-									inputRef.current.classList.remove("input-normal");
-									inputRef.current.classList.add("input-expanded");
-								} else {
-									inputRef.current.classList.remove("input-expanded");
-									inputRef.current.classList.add("input-normal");
-								}
-							}
-						}}
+						// onInput={(e) => {
+						// 	if (inputRef.current) {
+						// 		if (!!isPromptClicked) {
+						// 			inputRef.current.classList.remove("input-normal");
+						// 			inputRef.current.classList.add("input-expanded");
+						// 		} else {
+						// 			inputRef.current.classList.remove("input-expanded");
+						// 			inputRef.current.classList.add("input-normal");
+						// 		}
+						// 	}
+						// }}
 					/>
 				</div>
-				{prompt.length <= 20 && (
+				{!expandTextBox && (
 					<div>
-						<button type="submit" disabled={!prompt}>
+						<button
+							type="submit"
+							// className={`${prompt.length ? "button hero-submit-button w-button" : ""} `}
+							disabled={!prompt}
+						>
 							<svg
 								width="17"
 								height="16"
@@ -102,7 +148,7 @@ const App = () => {
 					</div>
 				)}
 			</div>
-			{prompt.length >= 20 && (
+			{expandTextBox && (
 				<div
 					style={{
 						display: "flex",
@@ -191,26 +237,42 @@ const App = () => {
 								</svg>
 							</label>
 						</div>
-						<select>
-							{storyLanguages.map((lang, index) => (
-								<option key={index}>{lang}</option>
+						<select
+							onChange={(e) =>
+								// @ts-expect-error - TS doesn't know about the value property
+								setOptions((prev) => ({ ...prev, language: e.target.value }))
+							}
+						>
+							{Object.entries(StoryLanguages).map(([key, label], index) => (
+								<option key={key}>{label}</option>
 							))}
 						</select>
-						<select>
-							<option key={"shot"}>Short</option>
-							<option key={"medium"}>Medium</option>
-							<option key={"long"}>Long</option>
+						<select
+							onChange={(e) =>
+								// @ts-expect-error - TS doesn't know about the value property
+								setOptions((prev) => ({ ...prev, length: e.target.value }))
+							}
+						>
+							{Object.entries(StoryLengths).map(([key, label], index) => (
+								<option key={key}>{label}</option>
+							))}
 						</select>
-						<select>
-							<option key={"realistic"}>Realistic</option>
-							<option key={"sketch"}>Sketch</option>
-							<option key={"watercolor"}>Watercolor</option>
-							<option key={"scifi"}>Sci-fi</option>
-							<option key={"anime"}>Anime</option>
-							<option key={"horror"}>Horror</option>
+						<select
+							onChange={(e) =>
+								// @ts-expect-error - TS doesn't know about the value property
+								setOptions((prev) => ({ ...prev, style: e.target.value }))
+							}
+						>
+							{Object.entries(StoryImageStyles).map(([key, label], index) => (
+								<option key={key}>{label}</option>
+							))}
 						</select>
 					</div>
-					<button type="submit" disabled={!prompt}>
+					<button
+						type="submit"
+						disabled={!prompt}
+						className="button hero-submit-button w-button"
+					>
 						<svg
 							width="17"
 							height="16"
@@ -236,7 +298,7 @@ const App = () => {
 							/>
 						</svg>
 
-						<span>Produce It</span>
+						<span>{CreateWebstory.isPending ? "Loading" : "Produce It"}</span>
 						<svg
 							width="16"
 							height="16"
@@ -269,6 +331,13 @@ const App = () => {
 };
 
 const root = document.getElementById("prompt-form");
-
 if (!root) throw new Error("Root element not found");
-createRoot(root).render(<App />);
+
+// console.log(root?.innerHTML);
+root.innerHTML = "";
+
+createRoot(root).render(
+	<QueryClientProvider client={queryClient}>
+		<App />
+	</QueryClientProvider>
+);

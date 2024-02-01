@@ -1,20 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
-<<<<<<< Updated upstream
 	async rewrites() {
 		return {
 			afterFiles: [
 				{
-					source: "/homepage",
+					source: "/",
 					destination: "/landing/index.html",
 				},
 			],
 		};
-=======
-	images: {
-		domains: ["ik.imagekit.io"],
->>>>>>> Stashed changes
 	},
 	images: {
 		domains: ["ik.imagekit.io"],
