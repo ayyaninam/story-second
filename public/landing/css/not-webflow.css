@@ -1,0 +1,103 @@
+/* .grow-wrap { */
+    /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+    /* display: grid;
+  } */
+/* .grow-wrap::after { */
+  /* Note the weird space! Needed to preventy jumpy behavior */
+  /* content: attr(data-replicated-value) " "; */
+
+  /* This is how textarea text behaves */
+  /* white-space: pre-wrap; */
+
+  /* Hidden from view, clicks, and screen readers */
+  /* visibility: hidden;
+} */
+/* .grow-wrap > textarea { */
+  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+  /* resize: none; */
+
+  /* Firefox shows scrollbar on growth, you can hide like this. */
+  /* overflow: hidden;
+
+  border: none;
+  padding-right: 20px;
+  width: 100%;
+
+} */
+/* .grow-wrap > textarea,
+.grow-wrap::after { */
+  /* Identical styling required!! */
+  /* padding: 0.5rem; */
+  /* font: inherit; */
+
+
+  /* Place on top of each other */
+  /* grid-area: 1 / 1 / 2 / 2; */
+/* } */
+
+/* .grow-wrap > textarea:focus {
+  outline: none
+} */
+
+.first-form {
+  display: flex;
+  align-items: center;
+}
+
+#Prompt:focus {
+  outline: none;
+}
+
+.input-normal {
+  height: 48px;
+  transition: height 600ms ease-in-out;
+}
+
+.input-expanded {
+  height: 126px;
+  transition: height 600ms ease-in-out;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #FFFFFF;
+  background-image: url('data:image/svg+xml;utf8, <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" opacity="0.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-up-down"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>');
+  background-repeat: no-repeat;
+  background-position-x: 90%;
+  background-position-y: 50%;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 6px 12px;
+  padding-right: 2rem;
+}
+
+select:focus {
+  outline: none;
+}
+
+button[type="submit"] {
+  display: flex;
+  gap:4px;
+  align-items: center;
+  width: max-content;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 24px;
+  color: white;
+  background-color: #1F323D;
+}
+
+button[type="submit"]:hover {
+  color: white;
+  background-color: #8F22CE;
+}
+
+button[type="submit"]:disabled {
+  color: #94ABB8;
+  background-color: #E1EAEF;
+}
