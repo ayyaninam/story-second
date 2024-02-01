@@ -7,22 +7,19 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
+	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { StoryFormSchema, useStoryForm } from "./hooks/useStoryForm";
 import { useRouter } from "next/router";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import storyLanguages from "@/utils/storyLanguages";
 
 export default function Landing() {
 	// State
-
 	// Queries
-
 	// Mutations
 	const CreateWebstory = useMutation({
 		mutationFn: api.webstory.createUnauthorized,
 	});
-
 	// Hooks
 	const {
 		register,
@@ -30,9 +27,7 @@ export default function Landing() {
 		setValue,
 		formState: { errors },
 	} = useStoryForm();
-
 	const router = useRouter();
-
 	// Handlers
 	const onSubmit = handleSubmit(async (data) => {
 		const WebStory = await CreateWebstory.mutateAsync({
@@ -41,7 +36,7 @@ export default function Landing() {
 			storyLength: data.storyLength,
 			prompt: data.prompt,
 		});
-		router.push(`/random`);
+		router.push(`/library/${WebStory.data?.url}`);
 	});
 
 	useEffect(() => {
@@ -56,7 +51,6 @@ export default function Landing() {
 					placeholder="Prompt"
 					{...register("prompt")}
 				/>
-
 				<RadioGroup
 					defaultValue="Short"
 					onValueChange={(value) => setValue("storyLength", value)}
@@ -74,10 +68,8 @@ export default function Landing() {
 						<Label htmlFor="r3">Long</Label>
 					</div>
 				</RadioGroup>
-
 				<DropdownMenu>
 					<DropdownMenuTrigger>Open</DropdownMenuTrigger>
-
 					<DropdownMenuContent>
 						{storyLanguages.map((language) => (
 							<DropdownMenuItem key={language}>{language}</DropdownMenuItem>

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useMap } from "usehooks-ts";
 
 export default function CustomImageSuspense({
+	url,
 	width,
 	height,
 }: {
+	url: string;
 	width: number;
 	height: number;
 }) {
