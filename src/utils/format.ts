@@ -8,6 +8,10 @@ class Format {
 		return `https://${params.bucket}.s3.${params.region}.amazonaws.com/${object}`;
 	}
 
+	public static GetImageUrl(key: string) {
+		return `https://ik.imagekit.io/storybird/staging/${key}`;
+	}
+
 	public static GetPublicBucketObjectUrl(object: string) {
 		return this.GetBucketObjectUrl(object, {
 			bucket: env.NEXT_PUBLIC_S3_BUCKET_PUBLIC,

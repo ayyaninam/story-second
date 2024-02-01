@@ -100,7 +100,6 @@ export default function CustomImageSuspense({
 		}
 		twoDArray.push(row);
 	}
-
 	return (
 		<div
 			className={`bg-[url(https://ik.imagekit.io/storybird/staging/images/99419a71-b420-412f-8f4a-8ebc13882605/0_385298655.webp)]`}

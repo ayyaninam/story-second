@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
+<<<<<<< Updated upstream
 	async rewrites() {
 		return {
 			afterFiles: [
@@ -10,6 +11,10 @@ const nextConfig = {
 				},
 			],
 		};
+=======
+	images: {
+		domains: ["ik.imagekit.io"],
+>>>>>>> Stashed changes
 	},
 	images: {
 		domains: ["ik.imagekit.io"],
