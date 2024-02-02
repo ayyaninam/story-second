@@ -38,6 +38,7 @@ export default function Loading({
 			{selectedImage && (
 				// <div className="w-96 h-96">
 				<CustomImageSuspense
+					pixelSize={10}
 					height={10}
 					width={10}
 					loadingDuration={4000}
