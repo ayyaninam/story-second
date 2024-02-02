@@ -4,15 +4,19 @@ import Format from "@/utils/format";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useInterval } from "usehooks-ts";
 import CustomImageSuspense from "./custom-image-suspense";
 
 // accepts a list of image keys and returns loops them with the suspense component
 export default function Loading({
 	generatedImages,
+	children,
+	isLoaded = true,
 }: {
 	generatedImages: string[];
+	children?: ReactNode;
+	isLoaded?: boolean;
 }) {
 	const [index, setIndex] = useState(-1);
 
@@ -31,29 +35,18 @@ export default function Loading({
 		index > generatedImages.length || -1 ? generatedImages[index] : undefined;
 
 	return (
-		<div>
-			<p>
-				{selectedImage} {index}
-			</p>
+		<div className="relative m-auto">
 			{selectedImage && (
-				// <div className="w-96 h-96">
 				<CustomImageSuspense
+					isLoaded={isLoaded}
 					pixelSize={40}
-					height={10}
-					width={10}
-					loadingDuration={4000}
-					// imageSrc={
-					// 	"https://ik.imagekit.io/storybird/staging/images/f8aaf7a9-378e-4e31-9689-477ae6ab1b6b/2_286949388.webp"
-					// }
+					height={11.25}
+					width={20}
+					loadingDuration={2200}
 					imageSrc={Format.GetImageUrl(selectedImage)}
 				/>
-				// <Image
-				// 	src={Format.GetImageUrl(selectedImage)}
-				// 	alt="a loading image of a story segment"
-				// 	width={100}
-				// 	height={100}
-				// />
 			)}
+			{children}
 		</div>
 	);
 }

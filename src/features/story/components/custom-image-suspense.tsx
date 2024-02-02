@@ -8,12 +8,14 @@ export default function CustomImageSuspense({
 	loadingDuration = 10000,
 	width,
 	height,
+	isLoaded,
 }: {
 	loadingDuration: number;
 	imageSrc: string;
 	width: number;
 	height: number;
 	pixelSize: number;
+	isLoaded: boolean;
 }) {
 	const startTime = useRef(dayjs());
 	const lastTick = useRef(dayjs());
@@ -148,10 +150,10 @@ export default function CustomImageSuspense({
 			style={{
 				width: width * pixelSize,
 				height: height * pixelSize,
-				backgroundImage: `url(${imageSrc})`,
+				backgroundImage: !isLoaded ? `url(${imageSrc})` : "",
 			}}
 		>
-			{queue.length > 0
+			{!isLoaded && queue.length > 0
 				? twoDArray.map((row, rowIdx) => {
 						return (
 							<div key={rowIdx} className="flex m-0 leading-none p-0 ">

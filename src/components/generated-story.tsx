@@ -18,7 +18,36 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { Badge } from "./ui/badge";
 
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/api";
+import { QueryKeys } from "@/lib/queryKeys";
+import Loading from "@/features/story/components/loading";
+import cn from "@/utils/cn";
+
 export default function GeneratedStory() {
+	const router = useRouter();
+
+	// Queries
+	const Webstory = useQuery({
+		queryFn: () =>
+			api.library.get(
+				"adventure", //router.query.genre!.toString(),
+				"the-lost-key-105" //router.query.id!.toString()
+			),
+		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+	});
+
+	if (Webstory.isError) return <p>{Webstory.error.message}</p>;
+
+	if (Webstory.isLoading || !Webstory.data) return <p>Loading story data...</p>;
+
+	const generatedImages = Webstory.data.storySegments
+		?.filter((seg) => seg.imageKey)
+		.map((seg) => seg.imageKey!);
+
+	const isLoading = false;
+
 	return (
 		<div className="max-w-full min-h-screen bg-secondary">
 			{/* Navbar */}
@@ -134,13 +163,31 @@ export default function GeneratedStory() {
 				<div className="relative rounded-lg border-[1px] w-full border-border bg-[lightgray 0% 0% / 50px 50px repeat, var(--primary-foreground)] bg-blend-luminosity px-2 lg:px-5 py-2">
 					<div className="flex items-center h-full">
 						<div className="h-full lg:h-[450px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg flex flex-col lg:flex-row justify-stretch">
-							<Image
+							{/* Actual Preview */}
+							{/* <Image
 								alt="video-preview"
 								src="/images/video-preview.png"
 								className="min-w-[70%]"
 								width={800}
 								height={450}
-							/>
+							/> */}
+
+							{/* With Pixel loading */}
+							<Loading
+								generatedImages={generatedImages || []}
+								isLoaded={!isLoading}
+							>
+								<Image
+									alt="video-preview"
+									src="/images/video-preview.png"
+									className={cn(
+										"absolute top-0 right-0 min-w-[70%]",
+										isLoading ? "hidden" : "visible"
+									)}
+									width={800}
+									height={450}
+								/>
+							</Loading>
 							<div className="p-6 flex flex-col-reverse justify-between md:flex-col">
 								<div className="relative space-y-2">
 									<Edit2 className="absolute -top-0.5 -right-0.5 w-4 h-4 stroke-muted-foreground" />
