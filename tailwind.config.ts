@@ -7,6 +7,7 @@ const config = {
 	prefix: "",
 	theme: {
 		colors: {
+			white: "#FFF",
 			slate: {
 				50: "#F8FAFC",
 				100: "#F1F6F9",
