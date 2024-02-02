@@ -96,10 +96,7 @@ export default function GeneratedStory() {
 						<RefreshCcw className="mr-2 h-4 w-4" /> Remix
 					</Button>
 					<Button className="p-2" variant="outline">
-						<Heart className="mr-2 h-4 w-4" /> Like
-					</Button>
-					<Button className="p-2" variant="outline">
-						<Share className="mr-2 h-4 w-4" /> Share
+						<Share className="mr-2 h-4 w-4" /> Publish
 					</Button>
 				</div>
 			</div>
@@ -140,7 +137,7 @@ export default function GeneratedStory() {
 
 			{/* MainSection */}
 			<div className="flex bg-white min-h-[calc(100vh-196px)] p-2 gap-x-1.5">
-				<div className="p-2 space-y-3">
+				<div className="p-2 space-y-3 hidden sm:block">
 					<Menu className="h-4 w-4 stroke-muted-foreground" />
 					<FlipVertical className="h-4 w-4 stroke-muted-foreground" />
 
@@ -160,9 +157,9 @@ export default function GeneratedStory() {
 
 					<Compass className="h-4 w-4 stroke-muted-foreground" />
 				</div>
-				<div className="relative rounded-lg border-[1px] w-full border-border bg-[lightgray 0% 0% / 50px 50px repeat, var(--primary-foreground)] bg-blend-luminosity px-2 lg:px-5 py-2">
-					<div className="flex items-center h-full">
-						<div className="h-full lg:h-[450px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg flex flex-col lg:flex-row justify-stretch">
+				<div className="relative rounded-lg border-[1px] w-full border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
+					<div className="flex flex-col md:flex-row items-center justify-center h-full">
+						<div className="w-full md:max-w-[1500px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch">
 							{/* Actual Preview */}
 							{/* <Image
 								alt="video-preview"
@@ -173,22 +170,27 @@ export default function GeneratedStory() {
 							/> */}
 
 							{/* With Pixel loading */}
-							<Loading
+							{/* <Loading
 								generatedImages={generatedImages || []}
 								isLoaded={!isLoading}
+							> */}
+							<div
+								className="relative w-full  lg:max-w-[80%]  rounded-tl-lg rounded-bl-lg"
+								style={{ aspectRatio: 16 / 9 }}
 							>
 								<Image
 									alt="video-preview"
 									src="/images/video-preview.png"
 									className={cn(
-										"absolute top-0 right-0 min-w-[70%]",
+										"absolute top-0 right-0 w-full h-full",
 										isLoading ? "hidden" : "visible"
 									)}
-									width={800}
-									height={450}
+									layout="fill"
+									objectFit="contain"
 								/>
-							</Loading>
-							<div className="p-6 flex flex-col-reverse justify-between md:flex-col">
+							</div>
+							{/* </Loading> */}
+							<div className="p-6  flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-white rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg">
 								<div className="relative space-y-2">
 									<Edit2 className="absolute -top-0.5 -right-0.5 w-4 h-4 stroke-muted-foreground" />
 									<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
@@ -236,7 +238,7 @@ export default function GeneratedStory() {
 							</div>
 						</div>
 					</div>
-					<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
+					<div className="absolute bottom-4 right-4 flex-col gap-y-3 flex">
 						<span
 							className="rounded-full w-8 h-8 bg-popover p-1.5"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
