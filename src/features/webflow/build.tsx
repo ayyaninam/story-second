@@ -63,28 +63,29 @@ const App = () => {
 							paddingTop: "16px",
 							fontSize: "20px",
 							fontWeight: "400",
+							transition: "height 0.6s",
 						}}
 						ref={inputRef}
 						onClick={() => setIsPromptClicked(true)}
 						// className="build-form-input w-input"
-						className={`${isPromptClicked ? "input-expanded" : "input-normal"}`}
+						// className={`${isPromptClicked ? "input-expanded" : "input-normal"}`}
 						name="Prompt"
 						data-name="Prompt"
 						onChange={handlePromptChange}
 						placeholder="What is your story about?"
 						id="Prompt"
 						required
-						// onInput={(e) => {
-						// 	if (inputRef.current) {
-						// 		if (!!isPromptClicked) {
-						// 			inputRef.current.classList.remove("input-normal");
-						// 			inputRef.current.classList.add("input-expanded");
-						// 		} else {
-						// 			inputRef.current.classList.remove("input-expanded");
-						// 			inputRef.current.classList.add("input-normal");
-						// 		}
-						// 	}
-						// }}
+						onInput={(e) => {
+							if (inputRef.current) {
+								if (!!isPromptClicked) {
+									inputRef.current.classList.remove("input-normal");
+									inputRef.current.classList.add("input-expanded");
+								} else {
+									inputRef.current.classList.remove("input-expanded");
+									inputRef.current.classList.add("input-normal");
+								}
+							}
+						}}
 					/>
 				</div>
 				{!expandTextBox && (

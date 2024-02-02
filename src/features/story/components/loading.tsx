@@ -40,7 +40,11 @@ export default function Loading({
 				<CustomImageSuspense
 					height={10}
 					width={10}
-					url={Format.GetImageUrl(selectedImage)}
+					loadingDuration={4000}
+					// imageSrc={
+					// 	"https://ik.imagekit.io/storybird/staging/images/f8aaf7a9-378e-4e31-9689-477ae6ab1b6b/2_286949388.webp"
+					// }
+					imageSrc={Format.GetImageUrl(selectedImage)}
 				/>
 				// <Image
 				// 	src={Format.GetImageUrl(selectedImage)}

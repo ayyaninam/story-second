@@ -51,13 +51,23 @@
 .input-normal {
   height: 48px;
   transition: height 600ms ease-in-out;
+  -webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
 }
 
 .input-expanded {
-  min-height: 64px;
+  min-height: 100px;
   overflow-y:visible;
   transition: height 600ms ease-in-out;
   line-height: 1.3rem;
+  -webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
 }
 
 select {
