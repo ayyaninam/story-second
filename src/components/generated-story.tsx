@@ -4,13 +4,11 @@ import {
 	Compass,
 	Contrast,
 	Edit2,
-	Edit2Icon,
 	FlipVertical,
 	Heart,
 	HelpCircle,
 	LucideSparkles,
 	Menu,
-	Pencil,
 	RefreshCcw,
 	Share,
 } from "lucide-react";
