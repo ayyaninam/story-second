@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const config = {
 	darkMode: ["class"],
@@ -6,18 +7,18 @@ const config = {
 	prefix: "",
 	theme: {
 		colors: {
-			state: {
+			slate: {
 				50: "#F8FAFC",
-				100: "#F1F5F9",
-				200: "#E2E8F0",
-				300: "#CBD5E1",
-				400: "#94A3B8",
-				500: "#64748B",
-				600: "#475569",
-				700: "#334155",
-				800: "#1E293B",
-				900: "#0F172A",
-				950: "#020617",
+				100: "#F1F6F9",
+				200: "#E1EAEF",
+				300: "#CBD9E1",
+				400: "#94ABB8",
+				500: "#657D8B",
+				600: "#485E6A",
+				700: "#344956",
+				800: "#1F323D",
+				900: "#031926",
+				950: "#021017",
 			},
 			gray: {
 				50: "#F9FAFB",
@@ -354,6 +355,10 @@ const config = {
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
+			},
+			fontFamily: {
+				sans: ["var(--font-rand)", ...defaultTheme.fontFamily.sans],
+				mono: ["var(--font-rand-mono)", ...defaultTheme.fontFamily.sans],
 			},
 		},
 	},
