@@ -24,5 +24,34 @@ class Format {
 			region: env.NEXT_PUBLIC_AWS_REGION,
 		});
 	}
+	public static Title(string: string | undefined | null) {
+		if (!string) return string;
+		return string
+			.toLowerCase()
+			.split(" ")
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ");
+	}
+	public static AvatarName(string: string | undefined | null) {
+		if (!string) return string;
+		if (string.includes(" "))
+			return string
+				.split(" ")
+				.map((el) => el.charAt(0))
+				.join()
+				.toUpperCase();
+		else return string.slice(0, 2).toUpperCase();
+	}
+	public static TruncateText(string: string | undefined | null, limit: number) {
+		if (!string) return string;
+		return string.slice(0, limit);
+	}
+	public static TruncateTextWithEllipses(
+		string: string | undefined | null,
+		limit: number
+	) {
+		if (!string || string.length < limit) return string;
+		return string.slice(0, limit) + "...";
+	}
 }
 export default Format;

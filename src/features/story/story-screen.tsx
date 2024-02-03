@@ -4,6 +4,10 @@ import Format from "@/utils/format";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import ImageLoader from "./components/image-loader";
+import RemotionPlayer from "./video-player";
+import { VoiceType } from "@/utils/enums";
+import { useRemotionPlayerProps } from "./video-player/hooks";
+import VideoPlayer from "./components/video-player";
 
 const StoryScreen = () => {
 	const router = useRouter();
@@ -12,20 +16,21 @@ const StoryScreen = () => {
 	const Webstory = useQuery({
 		queryFn: () =>
 			api.library.get(
-				"adventure", //router.query.genre!.toString(),
-				"the-lost-key-105" //router.query.id!.toString()
+				router.query.genre!.toString(),
+				router.query.id!.toString()
 			),
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 	});
+
 	const generatedImages = Webstory.data?.storySegments
 		?.filter((seg) => !!seg.imageKey)
 		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }));
 
 	const areImagesLoading =
-		Webstory.isLoading || !Webstory.data || !Webstory.data.imagesDone;
+		!Webstory.data ||
+		Webstory.data.storySegments?.filter((el) => el.imageKey).length < 2;
 
-	const isStoryLoading =
-		Webstory.isLoading || !Webstory.data || !Webstory.data.storyDone;
+	const isStoryLoading = !Webstory.data || !Webstory.data.storyDone;
 
 	if (Webstory.isError)
 		return (
@@ -39,11 +44,22 @@ const StoryScreen = () => {
 	else if (areImagesLoading) {
 		return (
 			<div className="h-full w-full bg-slate-300 flex justify-center items-center">
-				<p className="text-xl">Loading...</p>
+				<div
+					className="px-4 py-1 text-white border-[0.5px] rounded-md max-w-[80%]"
+					style={{
+						background: `linear-gradient(180deg, rgba(3, 25, 38, 0.7) 0%, rgba(3, 25, 38, 0.8) 100%)`,
+						borderColor: "rgba(0, 0, 0, 0.29)",
+					}}
+				>
+					<p className="font-medium text-lg">Working on your story...</p>
+				</div>
 			</div>
 		);
-	} else {
+	} else if (isStoryLoading) {
 		return <ImageLoader imageData={generatedImages!} />;
+	} else {
+		console.log("Here!");
+		return <VideoPlayer />;
 	}
 };
 

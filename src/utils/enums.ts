@@ -45,3 +45,11 @@ export enum StoryLengths {
 	Medium,
 	Long,
 }
+
+export enum VoiceType {
+	GenericMale,
+	GenericFemale,
+	Portuguese,
+	Custom,
+	None,
+}

@@ -26,20 +26,29 @@ import Loading from "@/features/story/components/loading";
 import cn from "@/utils/cn";
 import Format from "@/utils/format";
 import StoryScreen from "./story-screen";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
+import { useRemotionPlayerProps } from "./video-player/hooks";
+import { VoiceType } from "@/utils/enums";
+
+const MAX_SUMMARY_LENGTH = 250;
 
 export default function GeneratedStory() {
 	const router = useRouter();
+	const [showFullDescription, setShowFullDescription] = useState(false);
 
 	// Queries
 	const Webstory = useQuery({
 		queryFn: () =>
 			api.library.get(
-				"adventure", //router.query.genre!.toString(),
-				"the-lost-key-105" //router.query.id!.toString()
+				router.query.genre!.toString(),
+				router.query.id!.toString()
 			),
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+		refetchInterval: 1000,
 	});
 
+	const isLoading = Webstory.isLoading || !Webstory.data;
 	return (
 		<div className="max-w-full min-h-screen bg-secondary">
 			{/* Navbar */}
@@ -78,9 +87,7 @@ export default function GeneratedStory() {
 							<p className="text-sm">16:9</p>
 						</span>
 					</div>
-					<p className="text-sm">
-						Journey to Alpine Vista: Exploring the Lakes
-					</p>
+					<p className="text-sm">{Format.Title(Webstory.data?.storyTitle)}</p>
 					<Edit2 className="stroke-slate-300 h-4 w-4" />
 				</div>
 				<div className="hidden md:block text-muted-foreground space-x-2">
@@ -152,40 +159,11 @@ export default function GeneratedStory() {
 				<div className="relative rounded-lg border-[1px] w-full border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
 						<div className="w-full md:max-w-[1500px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch">
-							{/* Actual Preview */}
-							{/* <Image
-								alt="video-preview"
-								src="/images/video-preview.png"
-								className="min-w-[70%]"
-								width={800}
-								height={450}
-							/> */}
-
-							{/* With Pixel loading */}
-							{/* <Loading
-								generatedImages={generatedImages || []}
-								isLoaded={!isLoading}
-							> */}
-
 							<div
 								className="relative w-full  lg:max-w-[80%]  rounded-tl-lg rounded-bl-lg"
 								style={{ aspectRatio: 16 / 9 }}
 							>
 								<StoryScreen />
-
-								{/* {areImagesLoading && (
-									<div className="h-full w-full bg-slate-300 flex justify-center items-center">
-										<p className="text-xl">Loading...</p>
-									</div>
-								)}{" "}
-								{isStoryLoading && !areImagesLoading && null} */}
-								{/* <Image
-									alt="video-preview"
-									src="/images/video-preview.png"
-									className={cn("absolute top-0 right-0 w-full h-full")}
-									layout="fill"
-									objectFit="contain"
-								/> */}
 							</div>
 							{/* </Loading> */}
 							<div className="p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-white rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg">
@@ -194,44 +172,74 @@ export default function GeneratedStory() {
 									<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
 										<p className="text-purple-500">Video</p>
 										<ChevronRight className="w-4 h-4" />
-										<p>Genre</p>
-										<ChevronRight className="w-4 h-4" />
-										<p>Subgenre</p>
+										{isLoading ? (
+											<Skeleton className="w-[100px] h-[20px] rounded-full" />
+										) : (
+											<p>{Format.Title(Webstory.data.topLevelCategory)}</p>
+										)}
 									</div>
-									<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
-										Journey to Alpine Vista: Exploring the Lakes
-									</p>
-									<p className="text-sm text-muted-foreground text-wrap text-ellipsis whitespace-nowrap overflow-hidden self-stretch">
-										Join us on a breathtaking adventure through the Sierra
-										Nevadas. Watch in awe as we paddle bright blue kayaks across
-										crystal clear mountain waters filled with ice age remnants.
-									</p>
-									<Button
-										variant="link"
-										className="text-indigo-500 text-sm font-normal m-0 p-0"
-									>
-										See full description
-									</Button>
+									{isLoading ? (
+										<Skeleton className="min-w-72 h-[24px] rounded-md" />
+									) : (
+										<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
+											{Format.Title(Webstory.data.storyTitle)}
+										</p>
+									)}
+									{isLoading ? (
+										<Skeleton className="min-w-72 h-[220px] rounded-lg" />
+									) : (
+										<p className="text-sm text-muted-foreground text-wrap text-ellipsis whitespace-nowrap overflow-hidden self-stretch">
+											{showFullDescription
+												? Webstory.data.summary
+												: Format.TruncateTextWithEllipses(
+														Webstory.data.summary,
+														MAX_SUMMARY_LENGTH
+													)}
+										</p>
+									)}
+
+									{(Webstory.data?.summary?.length ?? 0) > MAX_SUMMARY_LENGTH &&
+										!showFullDescription && (
+											<Button
+												variant="link"
+												className="text-indigo-500 text-sm font-normal m-0 p-0"
+												onClick={() => setShowFullDescription(true)}
+											>
+												See full description
+											</Button>
+										)}
 								</div>
 								<div className="lg:hidden my-2.5 bg-slate-200 self-stretch h-px" />
 								<div className="flex gap-x-2.5">
-									<Avatar className="h-11 w-11">
-										<AvatarImage src="https://github.com/shadcn.png" />
-										<AvatarFallback>CN</AvatarFallback>
-									</Avatar>
-									<span className="flex flex-col">
-										<span>Ernie Heming-Speare</span>
-										<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
-											<p>28 Videos</p>
-											<p className="text-slate-300"> • </p>
-											<a
-												className="p-0 m-0 text-muted-foreground font-normal"
-												href="#"
-											>
-												See all
-											</a>
+									{isLoading ? (
+										<Skeleton className="w-[44px] h-[44px] rounded-full" />
+									) : (
+										<Avatar className="h-11 w-11">
+											<AvatarImage
+												src={Webstory.data.user?.profileName ?? undefined}
+											/>
+											<AvatarFallback>
+												{Format.AvatarName(Webstory.data.user?.profileName)}
+											</AvatarFallback>
+										</Avatar>
+									)}
+									{isLoading ? (
+										<Skeleton className="w-[168px] h-[44px] rounded-lg" />
+									) : (
+										<span className="flex flex-col">
+											<span>{Webstory.data.user?.name} </span>
+											<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
+												<p>28 Videos</p>
+												<p className="text-slate-300"> • </p>
+												<a
+													className="p-0 m-0 text-muted-foreground font-normal"
+													href="#"
+												>
+													See all
+												</a>
+											</span>
 										</span>
-									</span>
+									)}
 								</div>
 							</div>
 						</div>

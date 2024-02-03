@@ -24,7 +24,6 @@ export default function ImageLoader({
 	const router = useRouter();
 	const [seenIndices, setSeenIndices] = useState([]);
 	const [index, setIndex] = useState(0);
-	console.log(seenIndices);
 	// Mutations
 
 	// Hooks

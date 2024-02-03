@@ -6518,7 +6518,7 @@ blockquote {
   color: #fff;
   text-transform: none;
   background-color: #212121;
-  background-image: url('../images/Arrow-Icon.svg');
+  /* background-image: url('../images/Arrow-Icon.svg'); */
   background-position: 82%;
   background-repeat: no-repeat;
   background-size: auto;
