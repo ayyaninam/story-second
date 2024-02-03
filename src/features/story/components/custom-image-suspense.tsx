@@ -4,18 +4,26 @@ import { useMap, useReadLocalStorage } from "usehooks-ts";
 
 export default function CustomImageSuspense({
 	imageSrc,
-	pixelSize = 40,
 	loadingDuration = 10000,
 	width,
 	height,
 	isLoaded,
+	Container,
+	onComplete,
+	showAnimation = true,
 }: {
 	loadingDuration: number;
 	imageSrc: string;
 	width: number;
+	showAnimation?: boolean;
 	height: number;
-	pixelSize: number;
 	isLoaded: boolean;
+	Container: React.FC<{
+		children: React.ReactNode;
+		style?: React.CSSProperties;
+		className?: string;
+	}>;
+	onComplete: () => void;
 }) {
 	const startTime = useRef(dayjs());
 	const lastTick = useRef(dayjs());
@@ -24,6 +32,7 @@ export default function CustomImageSuspense({
 	const [seen, seenActions] = useMap<number, number>();
 
 	useEffect(() => {
+		onComplete();
 		startTime.current = dayjs();
 		setGrid([]);
 		setQueue([]);
@@ -129,7 +138,7 @@ export default function CustomImageSuspense({
 				.add(loadingDuration - 750, "ms")
 				.diff(now, "ms");
 			const ticksPerSecond = ((grid.length - seen.size) / timeLeft) * 1000;
-			if (now.diff(lastTick.current, "ms") / 1.5 > ticksPerSecond) {
+			if (now.diff(lastTick.current, "ms") * 1 > ticksPerSecond) {
 				update();
 				lastTick.current = dayjs();
 			}
@@ -146,22 +155,23 @@ export default function CustomImageSuspense({
 		twoDArray.push(row);
 	}
 	return (
-		<div
+		<Container
 			style={{
-				width: width * pixelSize,
-				height: height * pixelSize,
-				backgroundImage: !isLoaded ? `url(${imageSrc})` : "",
+				backgroundImage: `url(${imageSrc})`,
+				backgroundSize: "cover",
 			}}
+			className="transition-all duration-500"
 		>
-			{!isLoaded && queue.length > 0
+			{isLoaded && queue.length > 0
 				? twoDArray.map((row, rowIdx) => {
 						return (
-							<div key={rowIdx} className="flex m-0 leading-none p-0 ">
+							<div key={rowIdx} className="flex m-0 p-0 w-full ">
 								{row.map((col, colIdx) => {
 									return (
 										<div
 											key={idx(rowIdx, colIdx)}
-											className={`h-10 w-10 ${col === 1 ? "opacity-0" : "bg-yellow-200"} m-0 p-0 transition-all`}
+											className={`h-full w-full ${col === 1 || !showAnimation ? "opacity-0" : "bg-purple-400"} m-0 p-0 transition-all duration-500`}
+											style={{ aspectRatio: 1 }}
 										></div>
 									);
 								})}
@@ -169,6 +179,6 @@ export default function CustomImageSuspense({
 						);
 					})
 				: null}
-		</div>
+		</Container>
 	);
 }

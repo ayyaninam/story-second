@@ -3,6 +3,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 import Format from "@/utils/format";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import ImageLoader from "./components/image-loader";
 
 const StoryScreen = () => {
 	const router = useRouter();
@@ -17,8 +18,8 @@ const StoryScreen = () => {
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 	});
 	const generatedImages = Webstory.data?.storySegments
-		?.filter((seg) => seg.imageKey)
-		.map((seg) => Format.GetImageUrl(seg.imageKey!));
+		?.filter((seg) => !!seg.imageKey)
+		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }));
 
 	const areImagesLoading =
 		Webstory.isLoading || !Webstory.data || !Webstory.data.imagesDone;
@@ -41,10 +42,8 @@ const StoryScreen = () => {
 				<p className="text-xl">Loading...</p>
 			</div>
 		);
-	} else if (isStoryLoading) {
-		return <ImageLoader />;
 	} else {
-		<StoryPlayer />;
+		return <ImageLoader imageData={generatedImages!} />;
 	}
 };
 

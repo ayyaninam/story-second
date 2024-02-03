@@ -25,6 +25,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 import Loading from "@/features/story/components/loading";
 import cn from "@/utils/cn";
 import Format from "@/utils/format";
+import StoryScreen from "./story-screen";
 
 export default function GeneratedStory() {
 	const router = useRouter();
@@ -165,23 +166,26 @@ export default function GeneratedStory() {
 								generatedImages={generatedImages || []}
 								isLoaded={!isLoading}
 							> */}
+
 							<div
 								className="relative w-full  lg:max-w-[80%]  rounded-tl-lg rounded-bl-lg"
 								style={{ aspectRatio: 16 / 9 }}
 							>
+								<StoryScreen />
+
 								{/* {areImagesLoading && (
 									<div className="h-full w-full bg-slate-300 flex justify-center items-center">
 										<p className="text-xl">Loading...</p>
 									</div>
 								)}{" "}
 								{isStoryLoading && !areImagesLoading && null} */}
-								<Image
+								{/* <Image
 									alt="video-preview"
 									src="/images/video-preview.png"
 									className={cn("absolute top-0 right-0 w-full h-full")}
 									layout="fill"
 									objectFit="contain"
-								/>
+								/> */}
 							</div>
 							{/* </Loading> */}
 							<div className="p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-white rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg">
