@@ -121,7 +121,7 @@ const App = () => {
 							</svg>
 
 							<span>Produce It</span>
-							<svg
+							{/* <svg
 								width="16"
 								height="16"
 								viewBox="0 0 16 16"
@@ -144,7 +144,7 @@ const App = () => {
 										stroke-linejoin="round"
 									/>
 								</g>
-							</svg>
+							</svg> */}
 						</button>
 					</div>
 				)}
@@ -300,7 +300,7 @@ const App = () => {
 						</svg>
 
 						<span>{CreateWebstory.isPending ? "Loading" : "Produce It"}</span>
-						<svg
+						{/* <svg
 							width="16"
 							height="16"
 							viewBox="0 0 16 16"
@@ -323,7 +323,7 @@ const App = () => {
 									stroke-linejoin="round"
 								/>
 							</g>
-						</svg>
+						</svg> */}
 					</button>
 				</div>
 			)}
