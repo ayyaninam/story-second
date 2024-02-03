@@ -1,0 +1,159 @@
+diff --git a/.idea/b56e58667569446796befe4896481e05.iml b/.idea/b56e58667569446796befe4896481e05.iml
+new file mode 100644
+index 0000000000000000000000000000000000000000..0b872d82d9c39f70bff219b3b4b60145430f8984
+--- /dev/null
++++ b/.idea/b56e58667569446796befe4896481e05.iml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="WEB_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
++      <excludeFolder url="file://$MODULE_DIR$/temp" />
++      <excludeFolder url="file://$MODULE_DIR$/tmp" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+diff --git a/.idea/discord.xml b/.idea/discord.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..9b28b4a45a383d25057c32221f854bc4fb89d0e5
+--- /dev/null
++++ b/.idea/discord.xml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="DiscordProjectSettings">
++    <option name="show" value="ASK" />
++    <option name="description" value="" />
++    <option name="theme" value="material" />
++    <option name="button1Title" value="" />
++    <option name="button1Url" value="" />
++    <option name="button2Title" value="" />
++    <option name="button2Url" value="" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/inspectionProfiles/Project_Default.xml b/.idea/inspectionProfiles/Project_Default.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..03d9549ea8e4ada36fb3ecbc30fef08175b7d728
+--- /dev/null
++++ b/.idea/inspectionProfiles/Project_Default.xml
+@@ -0,0 +1,6 @@
++<component name="InspectionProjectProfileManager">
++  <profile version="1.0">
++    <option name="myName" value="Project Default" />
++    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
++  </profile>
++</component>
+\ No newline at end of file
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..0d594308f373a44b8f88a79d32a2184db1da494b
+--- /dev/null
++++ b/.idea/modules.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/b56e58667569446796befe4896481e05.iml" filepath="$PROJECT_DIR$/.idea/b56e58667569446796befe4896481e05.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.rollup.cache/Users/jonathanburger/remotion/packages/player/dist/esm/MediaVolumeSlider.js b/.rollup.cache/Users/jonathanburger/remotion/packages/player/dist/esm/MediaVolumeSlider.js
+index 396190d20ff799ad8f44f2271297f0185f9553de..606e627bfe7f65e7d782672154a19812a9092ef2 100644
+--- a/.rollup.cache/Users/jonathanburger/remotion/packages/player/dist/esm/MediaVolumeSlider.js
++++ b/.rollup.cache/Users/jonathanburger/remotion/packages/player/dist/esm/MediaVolumeSlider.js
+@@ -14,7 +14,7 @@ export const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+     const inputRef = useRef(null);
+     const hover = useHoverState(parentDivRef);
+     // Need to import it from React to fix React 17 ESM support.
+-    const randomId = 
++    const randomId =
+     // eslint-disable-next-line react-hooks/rules-of-hooks
+     typeof React.useId === 'undefined' ? 'volume-slider' : React.useId();
+     const [randomClass] = useState(() => `__remotion-volume-slider-${random(randomId)}`.replace('.', ''));
+@@ -91,7 +91,7 @@ export const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+             width: VOLUME_SLIDER_WIDTH,
+             backgroundImage: `linear-gradient(
+ 				to right,
+-				white ${mediaVolume * 100}%, rgba(255, 255, 255, 0) ${mediaVolume * 100}%
++				#bb55f7 ${mediaVolume * 100}%, rgba(255, 255, 255, 0) ${mediaVolume * 100}%
+ 			)`,
+         };
+         if (displayVerticalVolumeSlider) {
+@@ -121,7 +121,7 @@ export const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+ 		width: ${KNOB_SIZE}px;
+ 	}
+ `;
+-    return (_jsxs("div", { ref: parentDivRef, style: parentDivStyle, children: [_jsx("style", { 
++    return (_jsxs("div", { ref: parentDivRef, style: parentDivStyle, children: [_jsx("style", {
+                 // eslint-disable-next-line react/no-danger
+                 dangerouslySetInnerHTML: {
+                     __html: sliderStyle,
+diff --git a/dist/cjs/MediaVolumeSlider.js b/dist/cjs/MediaVolumeSlider.js
+index b753a9fca57eedc66a8f0d2b5de42620132249df..04dae45255b04bcbcbdf9a98237ceedef2421a2f 100644
+--- a/dist/cjs/MediaVolumeSlider.js
++++ b/dist/cjs/MediaVolumeSlider.js
+@@ -40,7 +40,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+     const inputRef = (0, react_1.useRef)(null);
+     const hover = (0, use_hover_state_js_1.useHoverState)(parentDivRef);
+     // Need to import it from React to fix React 17 ESM support.
+-    const randomId = 
++    const randomId =
+     // eslint-disable-next-line react-hooks/rules-of-hooks
+     typeof react_1.default.useId === 'undefined' ? 'volume-slider' : react_1.default.useId();
+     const [randomClass] = (0, react_1.useState)(() => `__remotion-volume-slider-${(0, remotion_1.random)(randomId)}`.replace('.', ''));
+@@ -117,7 +117,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+             width: exports.VOLUME_SLIDER_WIDTH,
+             backgroundImage: `linear-gradient(
+ 				to right,
+-				white ${mediaVolume * 100}%, rgba(255, 255, 255, 0) ${mediaVolume * 100}%
++				#bb55f7 ${mediaVolume * 100}%, rgba(255, 255, 255, 0) ${mediaVolume * 100}%
+ 			)`,
+         };
+         if (displayVerticalVolumeSlider) {
+@@ -147,7 +147,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+ 		width: ${KNOB_SIZE}px;
+ 	}
+ `;
+-    return ((0, jsx_runtime_1.jsxs)("div", { ref: parentDivRef, style: parentDivStyle, children: [(0, jsx_runtime_1.jsx)("style", { 
++    return ((0, jsx_runtime_1.jsxs)("div", { ref: parentDivRef, style: parentDivStyle, children: [(0, jsx_runtime_1.jsx)("style", {
+                 // eslint-disable-next-line react/no-danger
+                 dangerouslySetInnerHTML: {
+                     __html: sliderStyle,
+diff --git a/dist/esm/index.mjs b/dist/esm/index.mjs
+index 548938a9c5a63f9701c1ed951393c82518b9462a..b095eb6cd518650738b692fe8f4d5073a104479f 100644
+--- a/dist/esm/index.mjs
++++ b/dist/esm/index.mjs
+@@ -761,7 +761,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+     const inputRef = useRef(null);
+     const hover = useHoverState(parentDivRef);
+     // Need to import it from React to fix React 17 ESM support.
+-    const randomId = 
++    const randomId =
+     // eslint-disable-next-line react-hooks/rules-of-hooks
+     typeof React.useId === 'undefined' ? 'volume-slider' : React.useId();
+     const [randomClass] = useState(() => `__remotion-volume-slider-${random(randomId)}`.replace('.', ''));
+@@ -838,7 +838,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+             width: VOLUME_SLIDER_WIDTH,
+             backgroundImage: `linear-gradient(
+ 				to right,
+-				white ${mediaVolume * 100}%, rgba(255, 255, 255, 0) ${mediaVolume * 100}%
++				#bb55f7 ${mediaVolume * 100}%, rgba(255, 255, 255, 0) ${mediaVolume * 100}%
+ 			)`,
+         };
+         if (displayVerticalVolumeSlider) {
+@@ -868,7 +868,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+ 		width: ${KNOB_SIZE$1}px;
+ 	}
+ `;
+-    return (jsxs("div", { ref: parentDivRef, style: parentDivStyle, children: [jsx("style", { 
++    return (jsxs("div", { ref: parentDivRef, style: parentDivStyle, children: [jsx("style", {
+                 // eslint-disable-next-line react/no-danger
+                 dangerouslySetInnerHTML: {
+                     __html: sliderStyle,

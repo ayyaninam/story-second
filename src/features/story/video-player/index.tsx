@@ -80,7 +80,9 @@ const RemotionPlayer = ({
 			playing ? (
 				<Pause color="white" size={24} strokeWidth={1} />
 			) : (
-				<Play color="white" size={24} strokeWidth={1} />
+				<div className="w-[28px] pl-[4px]">
+					<Play color="white" size={24} strokeWidth={1} />
+				</div>
 			),
 		[]
 	);
@@ -96,11 +98,44 @@ const RemotionPlayer = ({
 	);
 
 	useEffect(() => {
+		const hasBeenStyled = {
+			"Enter Fullscreen": false,
+			"Action Groups": false,
+			"Player Time": false,
+			"Time Bar": false,
+			"Volume Slider": false,
+		};
 		const observerCallback = (
 			_mutations: MutationRecord[],
 			observer: MutationObserver
 		) => {
-			if (containerRef.current) {
+			if (!containerRef.current) {
+				return;
+			}
+
+			const baseClassName =
+				" remotion-player-control-background flex justify-center items-center border-[#0000004A] border-[0.5px]";
+
+			const enterFullscreenButton = containerRef.current.querySelector(
+				'[title="Enter Fullscreen"]'
+			);
+			if (!hasBeenStyled["Enter Fullscreen"] && enterFullscreenButton) {
+				const enterFullscreenButton = containerRef.current.querySelector(
+					'[title="Enter Fullscreen"]'
+				);
+				if (enterFullscreenButton?.parentElement) {
+					enterFullscreenButton.parentElement.className +=
+						" w-10 h-10 rounded-lg" + baseClassName;
+					enterFullscreenButton.className += " outline-none";
+				}
+
+				hasBeenStyled["Enter Fullscreen"] = true;
+			}
+
+			if (
+				!hasBeenStyled["Action Groups"] &&
+				containerRef.current?.querySelector(`[title="Mute sound"]`)
+			) {
 				const actionGroups = [
 					{
 						titles: ["Play video", "Pause video"],
@@ -111,17 +146,6 @@ const RemotionPlayer = ({
 						className: " rounded-lg h-10 w-10",
 					},
 				];
-				const baseClassName =
-					" remotion-player-control-background flex justify-center items-center border-[#0000004A] border-[0.5px]";
-
-				const enterFullscreenButton = containerRef.current.querySelector(
-					'[title="Enter Fullscreen"]'
-				);
-				if (enterFullscreenButton?.parentElement) {
-					enterFullscreenButton.parentElement.className +=
-						" w-10 h-10 rounded-lg" + baseClassName;
-					enterFullscreenButton.className += " outline-none";
-				}
 
 				actionGroups.forEach((group) => {
 					group.titles.forEach((title) => {
@@ -141,10 +165,14 @@ const RemotionPlayer = ({
 					});
 				});
 
-				// modify styles of player's time ui
-				const muteSoundButton = containerRef.current?.querySelector(
-					'[title="Mute sound"]'
-				);
+				hasBeenStyled["Action Groups"] = true;
+			}
+
+			const muteSoundButton = containerRef.current?.querySelector(
+				'[title="Mute sound"]'
+			);
+
+			if (!hasBeenStyled["Player Time"] && muteSoundButton) {
 				const playerTimeElement =
 					muteSoundButton?.parentElement?.parentElement?.nextElementSibling
 						?.nextElementSibling;
@@ -160,7 +188,10 @@ const RemotionPlayer = ({
 					);
 				}
 
-				// modify styles of time bar ui
+				hasBeenStyled["Player Time"] = true;
+			}
+
+			if (!hasBeenStyled["Time Bar"] && muteSoundButton) {
 				const timeBarContainerElement =
 					muteSoundButton?.parentElement?.parentElement?.parentElement
 						?.parentElement?.nextElementSibling?.nextElementSibling;
@@ -168,7 +199,6 @@ const RemotionPlayer = ({
 				const circleElement = timeBarContainerElement?.children[1];
 				const toFillElement = timeBarElement?.children[0];
 				const filledElement = timeBarElement?.children[1];
-
 				if (
 					timeBarContainerElement &&
 					timeBarElement &&
@@ -196,7 +226,13 @@ const RemotionPlayer = ({
 						" flex flex-row justify-center items-center px-2.5 remotion-player-control-background h-6 rounded-full";
 				}
 
-				observer.disconnect();
+				hasBeenStyled["Time Bar"] = true;
+			}
+
+			const changeVolumeSlider: HTMLInputElement | null =
+				containerRef.current?.querySelector('[aria-label="Change volume"]');
+			if (changeVolumeSlider) {
+				changeVolumeSlider.className = " remotion-player-volume-slider";
 			}
 		};
 

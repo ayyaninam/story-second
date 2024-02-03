@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@remotion/player@4.0.106':
+    hash: olsbn46pdlcjpc5vx2fngup2ne
+    path: patches/@remotion__player@4.0.106.patch
+
 dependencies:
   '@hookform/resolvers':
     specifier: ^3.3.4
@@ -24,17 +29,17 @@ dependencies:
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.2.48)(react@18.2.0)
   '@remotion/gif':
-    specifier: ^4.0.106
+    specifier: 4.0.106
     version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
   '@remotion/google-fonts':
-    specifier: ^4.0.106
+    specifier: 4.0.106
     version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
   '@remotion/media-utils':
-    specifier: ^4.0.106
+    specifier: 4.0.106
     version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
   '@remotion/player':
-    specifier: ^4.0.106
-    version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+    specifier: 4.0.106
+    version: 4.0.106(patch_hash=olsbn46pdlcjpc5vx2fngup2ne)(react-dom@18.2.0)(react@18.2.0)
   '@t3-oss/env-nextjs':
     specifier: ^0.8.0
     version: 0.8.0(typescript@5.3.3)(zod@3.22.4)
@@ -1192,7 +1197,7 @@ packages:
       remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /@remotion/player@4.0.106(react-dom@18.2.0)(react@18.2.0):
+  /@remotion/player@4.0.106(patch_hash=olsbn46pdlcjpc5vx2fngup2ne)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-GhRVLKETGa/VZ5HpuyU6n1c4XaPcne0NeadufZ5/dbvwZqN3obHF+rN3qbsdnmE8JAIyxnPZgpegPU8Ob/oD1Q==}
     peerDependencies:
       react: '>=16.8.0'
@@ -1202,6 +1207,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
     dev: false
+    patched: true
 
   /@rushstack/eslint-patch@1.7.2:
     resolution: {integrity: sha512-RbhOOTCNoCrbfkRyoXODZp75MlpiHMgbE5MEBZAnnnLyQNgrigEj4p0lzsMDyc1zVsJDLrivB58tgg3emX0eEA==}

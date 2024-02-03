@@ -87,3 +87,34 @@
 .remotion-player-control-background {
 	backdrop-filter: blur(35px);
 }
+
+/* Targeting the thumb of the range input for Webkit browsers (Chrome, Safari, Edge) */
+.remotion-player-volume-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	background: #BB55F7;
+	border: 1px solid #F0D6FF;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 15px;
+	width: 15px;
+}
+/* For Mozilla Firefox */
+.remotion-player-volume-slider::-moz-range-thumb {
+	background: #BB55F7;
+	border: 1px solid #F0D6FF;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 15px;
+	width: 15px;
+}
+/* For Internet Explorer */
+.remotion-player-volume-slider::-ms-thumb {
+	background: #BB55F7;
+	border: 1px solid #F0D6FF;
+	border-radius: 50%;
+	cursor: pointer;
+	height: 15px;
+	width: 15px;
+}
+
