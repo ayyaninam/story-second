@@ -1,8 +1,5 @@
 import { AbsoluteFill } from "remotion";
 import { CSSProperties, useMemo } from "react";
-import { loadFont } from "@remotion/google-fonts/Aleo";
-
-const { fontFamily: fontFamilyAleo } = loadFont();
 
 const container: CSSProperties = {
   backgroundColor: "#f1e7d4",
@@ -17,7 +14,7 @@ const textContainer: CSSProperties = {
 export const TheEndSegment = () => {
   const textStyle: CSSProperties = useMemo(() => {
     return {
-      fontFamily: fontFamilyAleo,
+      fontFamily: "--font-rand",
       fontSize: 56,
       fontWeight: 700,
       width: 500,

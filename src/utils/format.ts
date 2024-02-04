@@ -18,12 +18,6 @@ class Format {
 			region: env.NEXT_PUBLIC_AWS_REGION,
 		});
 	}
-	public static GetInternalBucketObjectUrl(object: string) {
-		return this.GetBucketObjectUrl(object, {
-			bucket: env.NEXT_PUBLIC_S3_BUCKET_INTERNAL,
-			region: env.NEXT_PUBLIC_AWS_REGION,
-		});
-	}
 	public static Title(string: string | undefined | null) {
 		if (!string) return string;
 		return string

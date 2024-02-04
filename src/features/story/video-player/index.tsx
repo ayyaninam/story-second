@@ -20,9 +20,11 @@ const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
 });
 
+// TODO: responsive styles
 const player: React.CSSProperties = {
 	width: "100%",
-	borderRadius: 15,
+	borderTopLeftRadius: "0.5rem",
+	borderBottomLeftRadius: "0.5rem",
 };
 
 type RemotionPlayerProps = {
@@ -258,10 +260,9 @@ const RemotionPlayer = ({
 				compositionHeight={VIDEO_HEIGHT}
 				compositionWidth={VIDEO_WIDTH}
 				style={player}
-				autoPlay={inputProps.showLoadingVideo == true}
+				autoPlay={false}
 				numberOfSharedAudioTags={0}
 				controls
-				loop
 				renderPlayPauseButton={renderPlayPauseButton}
 				renderFullscreenButton={renderFullscreenButton}
 				{...props}
