@@ -13,7 +13,6 @@ import {
 	Share,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { Badge } from "@/components/ui/badge";
@@ -22,20 +21,17 @@ import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
-import Loading from "@/features/story/components/loading";
-import cn from "@/utils/cn";
 import Format from "@/utils/format";
 import StoryScreen from "./story-screen";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState } from "react";
-import { useRemotionPlayerProps } from "./video-player/hooks";
-import { VoiceType } from "@/utils/enums";
+import { useEffect, useState } from "react";
 
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function GeneratedStory() {
 	const router = useRouter();
 	const [showFullDescription, setShowFullDescription] = useState(false);
+	const [enableQuery, setEnableQuery] = useState(true);
 
 	// Queries
 	const Webstory = useQuery({
@@ -46,9 +42,22 @@ export default function GeneratedStory() {
 			),
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 		refetchInterval: 1000,
+		// Disable once all the videoKeys are obtained
+		enabled: enableQuery,
 	});
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
+
+	useEffect(() => {
+		if (Webstory.data) {
+			setEnableQuery(
+				!!Webstory.data.storySegments?.every((segment) => !!segment.videoKey)
+					? false
+					: true
+			);
+		}
+	}, [Webstory.data]);
+
 	return (
 		<div className="max-w-full min-h-screen bg-secondary">
 			{/* Navbar */}
