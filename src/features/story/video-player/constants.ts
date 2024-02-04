@@ -31,6 +31,7 @@ export const CompositionProps = z.object({
 	showLoadingVideo: z.boolean().nullish(),
 	durationInFrames: z.number(),
 	segments: z.array(Segment),
+	generatedImages: z.array(z.any()).optional(),
 });
 export type RemotionPlayerInputProps = z.infer<typeof CompositionProps>;
 export type RemotionSegment = RemotionPlayerInputProps["segments"][number];

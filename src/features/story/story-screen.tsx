@@ -28,7 +28,7 @@ const StoryScreen = () => {
 
 	const areImagesLoading =
 		!Webstory.data ||
-		Webstory.data.storySegments?.filter((el) => el.imageKey).length < 2;
+		(Webstory.data.storySegments?.filter((el) => el.imageKey).length ?? 0) < 2;
 
 	const isStoryLoading = !Webstory.data || !Webstory.data.storyDone;
 
@@ -58,7 +58,6 @@ const StoryScreen = () => {
 	} else if (isStoryLoading) {
 		return <ImageLoader imageData={generatedImages!} />;
 	} else {
-		console.log("Here!");
 		return <VideoPlayer />;
 	}
 };

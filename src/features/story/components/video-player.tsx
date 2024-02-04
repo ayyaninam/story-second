@@ -21,6 +21,9 @@ const VideoPlayer = () => {
 	const remotionPlayerProps = useRemotionPlayerProps({
 		story: Webstory.data,
 		selectedVoice: VoiceType.GenericFemale,
+		generatedImages: Webstory.data?.storySegments
+			?.filter((seg) => !!seg.imageKey)
+			.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }))!,
 	});
 	return <RemotionPlayer {...remotionPlayerProps} />;
 };

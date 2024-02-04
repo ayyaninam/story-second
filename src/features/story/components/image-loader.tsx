@@ -22,7 +22,7 @@ export default function ImageLoader({
 }) {
 	// State
 	const router = useRouter();
-	const [seenIndices, setSeenIndices] = useState([]);
+	const [seenIndices, setSeenIndices] = useState<number[]>([]);
 	const [index, setIndex] = useState(0);
 	// Mutations
 
