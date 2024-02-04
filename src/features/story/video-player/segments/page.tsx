@@ -1,6 +1,5 @@
 import React, { useMemo, CSSProperties } from "react";
 import { Gif } from "@remotion/gif";
-import { loadFont } from "@remotion/google-fonts/Poppins";
 import {
 	AbsoluteFill,
 	Img,
@@ -20,7 +19,6 @@ import {
 } from "../constants";
 import { Premount } from "@/features/story/components/premount";
 
-const { fontFamily: fontFamilyPoppins } = loadFont();
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
@@ -52,7 +50,6 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 
 	const storyTextStyle: CSSProperties = useMemo(
 		() => ({
-			fontFamily: fontFamilyPoppins,
 			fontSize: 24,
 			width: 500,
 			color: "white",
