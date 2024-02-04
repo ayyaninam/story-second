@@ -93,33 +93,6 @@ const storySegmentToRemotionSegment = async (
 	}
 	const audioURL = audioKey ? Format.GetPublicBucketObjectUrl(audioKey) : null;
 
-	// getting visual values
-	const mainPageVisual: RemotionSegment["visual"] = segment.videoKey
-		? {
-				format: "gif",
-				gifURL: Format.GetImageUrl(segment.videoKey),
-			}
-		: {
-				format: "image",
-				imageURL: Format.GetImageUrl(segment.imageKey!),
-			};
-
-	const frameInterpolationImageURL = segment.frameInterpolationKey
-		? Format.GetImageUrl(segment.frameInterpolationKey)
-		: segment.imageKey
-			? Format.GetImageUrl(segment.imageKey)
-			: null;
-	const isWebp = frameInterpolationImageURL?.endsWith(".webp");
-	const interpolationPageVisual: RemotionSegment["visual"] = isWebp
-		? {
-				format: "image",
-				imageURL: frameInterpolationImageURL ?? "",
-			}
-		: {
-				format: "gif",
-				gifURL: frameInterpolationImageURL ?? "",
-			};
-
 	// calculating segment duration based on audio duration
 	const { contentDuration, durationInFrames } = await calculateSegmentDuration({
 		audioURL,
@@ -128,25 +101,37 @@ const storySegmentToRemotionSegment = async (
 	});
 
 	// creating the segments
-	const interpolationFrames = 17;
-	const intermediatePage: RemotionSegment = {
-		type: "intermediate",
-		id: uuidv4(),
-		visual: interpolationPageVisual,
-		durationInFrames: interpolationFrames,
-	};
+	let mainPage: RemotionSegment | null = null;
+	if (segment.videoKey) {
+		mainPage = {
+			type: "page",
+			id: uuidv4(),
+			storyText: segment.textContent ?? "",
+			visual: {
+				format: "video",
+				videoURL: Format.GetImageUrl(segment.videoKey),
+			},
+			audioURL,
+			durationInFrames: durationInFrames,
+			contentDuration: contentDuration,
+		};
+	}
 
-	const mainPage: RemotionSegment = {
-		type: "page",
-		id: uuidv4(),
-		storyText: segment.textContent ?? "",
-		visual: mainPageVisual,
-		audioURL,
-		durationInFrames: durationInFrames,
-		contentDuration: contentDuration,
-	};
+	let intermediatePage: RemotionSegment | null = null;
+	if (segment.frameInterpolationKey) {
+		intermediatePage = {
+			type: "intermediate",
+			id: uuidv4(),
+			visual: {
+				format: "video",
+				videoURL: Format.GetImageUrl(segment.frameInterpolationKey),
+			},
+			durationInFrames: 17,
+		};
+	}
 
-	return [intermediatePage, mainPage];
+	// @ts-ignore
+	return [intermediatePage, mainPage].filter(Boolean);
 };
 
 const limit = pLimit(10);

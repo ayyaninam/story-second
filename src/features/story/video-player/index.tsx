@@ -20,9 +20,11 @@ const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
 });
 
+// TODO: responsive styles
 const player: React.CSSProperties = {
 	width: "100%",
-	borderRadius: 15,
+	borderTopLeftRadius: "0.5rem",
+	borderBottomLeftRadius: "0.5rem",
 };
 
 type RemotionPlayerProps = {
