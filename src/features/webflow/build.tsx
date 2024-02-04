@@ -55,16 +55,7 @@ const App = () => {
 			<div className="first-form">
 				<div style={{ width: "100%", display: "flex" }}>
 					<textarea
-						style={{
-							resize: "none",
-							border: "none",
-							minWidth: "100%",
-							textAlign: "left",
-							paddingTop: "16px",
-							fontSize: "20px",
-							fontWeight: "400",
-							transition: "height 0.6s",
-						}}
+						className="prompt-input"
 						ref={inputRef}
 						onClick={() => setIsPromptClicked(true)}
 						// className="build-form-input w-input"
