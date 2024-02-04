@@ -260,10 +260,9 @@ const RemotionPlayer = ({
 				compositionHeight={VIDEO_HEIGHT}
 				compositionWidth={VIDEO_WIDTH}
 				style={player}
-				autoPlay={inputProps.showLoadingVideo == true}
+				autoPlay={false}
 				numberOfSharedAudioTags={0}
 				controls
-				loop
 				renderPlayPauseButton={renderPlayPauseButton}
 				renderFullscreenButton={renderFullscreenButton}
 				{...props}

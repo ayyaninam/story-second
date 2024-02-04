@@ -12,7 +12,6 @@ esbuild
 		define: {
 			"process.env.NEXT_PUBLIC_API_URL": '"https://api.staging.storybird.ai"',
 			"process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC": '"storybird-public"',
-			"process.env.NEXT_PUBLIC_S3_BUCKET_INTERNAL": '"storybird-internal"',
 			"process.env.NEXT_PUBLIC_AWS_REGION": '"us-west-2"',
 			"process.env.NEXT_PUBLIC_IMAGEKIT_URL":
 				'"https://ik.imagekit.io/storybird/staging"',

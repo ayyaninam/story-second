@@ -1,12 +1,9 @@
 import { AbsoluteFill } from "remotion";
 import React, { useMemo, CSSProperties } from "react";
-import { loadFont } from "@remotion/google-fonts/Aleo";
 import { useLoadingDots } from "./hooks";
 
-const { fontFamily: fontFamilyAleo } = loadFont();
-
 const container: CSSProperties = {
-  backgroundColor: "#f1e7d4",
+  backgroundColor: "#031926", // slate-900
 };
 
 const textContainer: CSSProperties = {
@@ -25,10 +22,10 @@ export const LoadingSegmentPage = () => {
   const textStyle: CSSProperties = useMemo(
     () => ({
       position: "relative",
-      fontFamily: fontFamilyAleo,
       fontSize: 56,
       fontWeight: 700,
       width: 500,
+      color: "#F1F6F9"  // slate-100
     }),
     []
   );

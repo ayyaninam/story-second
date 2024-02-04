@@ -66,9 +66,9 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 		frame,
 		[
 			startAudioFrom,
-			startAudioFrom +
+			Math.max(startAudioFrom + 1,startAudioFrom +
 				segment.contentDuration -
-				(isLastSegment ? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS : 0),
+				(isLastSegment ? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS : 0)), // to avoid crashing on [N,N]
 		],
 		[0, 1],
 		{
