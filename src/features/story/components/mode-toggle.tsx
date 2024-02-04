@@ -1,6 +1,3 @@
-{
-	/* <Contrast className="rotate-45 h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400 [&>path]:fill-slate-400" /> */
-}
 import * as React from "react";
 import { useTheme } from "next-themes";
 import { Contrast, Moon } from "lucide-react";
