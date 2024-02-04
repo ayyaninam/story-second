@@ -19,7 +19,6 @@ import {
 } from "../constants";
 import { Premount } from "@/features/story/components/premount";
 
-
 const container: CSSProperties = {
 	backgroundColor: "#000000",
 };
@@ -63,9 +62,12 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 		frame,
 		[
 			startAudioFrom,
-			Math.max(startAudioFrom + 1,startAudioFrom +
-				segment.contentDuration -
-				(isLastSegment ? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS : 0)), // to avoid crashing on [N,N]
+			Math.max(
+				startAudioFrom + 1,
+				startAudioFrom +
+					segment.contentDuration -
+					(isLastSegment ? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS : 0)
+			), // to avoid crashing on [N,N]
 		],
 		[0, 1],
 		{
@@ -94,9 +96,13 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 	}, [percentageTextToShow, segment.storyText]);
 
 	return (
-		<AbsoluteFill style={container}>
+		<AbsoluteFill style={container} className="rounded-t-lg lg:rounded-tr-none">
 			<AbsoluteFill>
-				<OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
+				<OffthreadVideo
+					src={segment.visual.videoURL}
+					style={imageStyles}
+					className="rounded-t-lg lg:rounded-tr-none"
+				/>
 			</AbsoluteFill>
 
 			<AbsoluteFill style={subtitleContainer}>

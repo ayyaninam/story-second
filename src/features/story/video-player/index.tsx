@@ -23,8 +23,6 @@ const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 // TODO: responsive styles
 const player: React.CSSProperties = {
 	width: "100%",
-	borderTopLeftRadius: "0.5rem",
-	borderBottomLeftRadius: "0.5rem",
 };
 
 type RemotionPlayerProps = {
@@ -260,6 +258,7 @@ const RemotionPlayer = ({
 				compositionHeight={VIDEO_HEIGHT}
 				compositionWidth={VIDEO_WIDTH}
 				style={player}
+				className="lg:[&>div]:rounded-bl-lg"
 				autoPlay={false}
 				numberOfSharedAudioTags={0}
 				controls

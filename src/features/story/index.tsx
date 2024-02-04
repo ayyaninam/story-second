@@ -168,13 +168,9 @@ export default function GeneratedStory() {
 				<div className="relative rounded-lg border-[1px] w-full border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
 						<div className="w-full md:max-w-[1500px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch">
-							<div
-								className="relative w-full  lg:max-w-[80%]  rounded-tl-lg rounded-bl-lg"
-								style={{ aspectRatio: 16 / 9 }}
-							>
+							<div className="relative w-full lg:max-w-[80%] rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg aspect-video">
 								<StoryScreen />
 							</div>
-							{/* </Loading> */}
 							<div className="p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-white rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg">
 								<div className="relative space-y-2">
 									<Edit2 className="absolute -top-0.5 -right-0.5 w-4 h-4 stroke-muted-foreground" />
