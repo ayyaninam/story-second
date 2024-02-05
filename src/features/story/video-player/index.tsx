@@ -243,7 +243,7 @@ const RemotionPlayer = ({
 				className="lg:[&>div]:rounded-bl-lg"
 				autoPlay={false}
 				numberOfSharedAudioTags={0}
-				controls
+				controls={!inputProps.showLoadingVideo}
 				renderPlayPauseButton={renderPlayPauseButton}
 				renderFullscreenButton={renderFullscreenButton}
 				{...props}
