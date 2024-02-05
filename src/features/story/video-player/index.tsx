@@ -248,8 +248,6 @@ const RemotionPlayer = ({
 		return () => observer.disconnect();
 	}, []);
 
-	console.log(inputProps);
-
 	return (
 		<div ref={containerRef} className="w-full h-full">
 			<Player

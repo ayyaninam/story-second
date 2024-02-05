@@ -11,6 +11,15 @@ export const publicFetcher = ky.create({
 	headers: { "Content-Type": "application/json" },
 });
 
+/**
+ * Creates a fetcher instance for making public requests.
+ * This fetcher should be used in browser environments only.
+ */
+export const mlFetcher = ky.create({
+	prefixUrl: env.NEXT_PUBLIC_TEMP_ACCESS_KEY,
+	headers: { "Content-Type": "application/json" },
+});
+
 // TODO: add authenticated request instances
 /**
  * Creates an authenticated fetcher instance by extending the public fetcher.

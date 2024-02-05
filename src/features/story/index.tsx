@@ -59,6 +59,11 @@ export default function GeneratedStory() {
 					? false
 					: true
 			);
+			console.log(
+				!!Webstory.data.storySegments?.every((segment) => !!segment.videoKey)
+					? false
+					: true
+			);
 		}
 	}, [Webstory.data]);
 

@@ -5,7 +5,7 @@ const webstory = {
 	createUnauthorized: async (
 		params: schema["RequestStoryDTO"]
 	): Promise<schema["ReturnAnonymousStoryDTOApiResponse"]> =>
-		await publicFetcher
+		await mlFetcher
 			.post(`api/WebStory/NoAuth`, { body: JSON.stringify(params) })
 			.json(),
 
