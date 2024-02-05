@@ -26,7 +26,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRemotionPlayerProps } from "./video-player/hooks";
 import { VoiceType } from "@/utils/enums";
 import { ModeToggle } from "./components/mode-toggle";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/utils";
@@ -35,7 +34,6 @@ const MAX_SUMMARY_LENGTH = 250;
 
 export default function GeneratedStory() {
 	const router = useRouter();
-	const { theme } = useTheme();
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
@@ -153,7 +151,7 @@ export default function GeneratedStory() {
 
 			{/* MainSection */}
 			<div
-				className={`flex ${theme === "dark" ? "bg-slate-950" : "bg-white"} min-h-[calc(100vh-196px)] p-2 gap-x-1.5`}
+				className={`flex bg-background min-h-[calc(100vh-196px)] p-2 gap-x-1.5`}
 			>
 				<div className="p-2 space-y-3 hidden sm:block">
 					<Menu className="h-4 w-4 stroke-muted-foreground" />
@@ -192,8 +190,7 @@ export default function GeneratedStory() {
 							</div>
 							<div
 								className={cn(
-									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-white rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lgcn`,
-									theme === "dark" ? "bg-slate-950" : "bg-white"
+									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-background rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lgcn`
 								)}
 							>
 								<div className="relative space-y-2">

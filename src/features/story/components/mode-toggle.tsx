@@ -13,8 +13,8 @@ export function ModeToggle() {
 			/>
 		);
 	return (
-		<Moon
-			className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400 fill-slate-400 hover:cursor-pointer"
+		<Contrast
+			className="-rotate-45 h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400 [&>path]:fill-slate-400 hover:cursor-pointer"
 			onClick={() => setTheme("light")}
 		/>
 	);
