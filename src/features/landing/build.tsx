@@ -1,15 +1,12 @@
 import api from "@/api";
-import storyLanguages from "@/utils/storyLanguages";
 import {
 	QueryClient,
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useStoryForm } from "./hooks/useStoryForm";
 import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
-import { env } from "@/env.mjs";
 
 const queryClient = new QueryClient();
 
@@ -331,12 +328,6 @@ const App = () => {
 		</form>
 	);
 };
-
-const urlParams = new URLSearchParams(window.location.search);
-const accessToken = urlParams.get("k") ?? window.localStorage.getItem("k");
-window.localStorage.setItem("k", accessToken ?? "");
-if (accessToken !== env.NEXT_PUBLIC_TEMP_ACCESS_KEY)
-	window.location.href = "/404";
 
 const root = document.getElementById("prompt-form");
 if (!root) throw new Error("Root element not found");

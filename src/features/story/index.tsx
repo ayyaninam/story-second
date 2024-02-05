@@ -235,10 +235,10 @@ export default function GeneratedStory() {
 									) : (
 										<Avatar className="h-11 w-11">
 											<AvatarImage
-												src={Webstory.data.user?.profileName ?? undefined}
+												src={Webstory.data.user?.profilePicture ?? undefined}
 											/>
 											<AvatarFallback>
-												{Format.AvatarName(Webstory.data.user?.profileName)}
+												{Format.AvatarName(Webstory.data.user?.name)}
 											</AvatarFallback>
 										</Avatar>
 									)}
@@ -248,14 +248,18 @@ export default function GeneratedStory() {
 										<span className="flex flex-col">
 											<span>{Webstory.data.user?.name} </span>
 											<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
-												<p>28 Videos</p>
+												<p>
+													{(Webstory.data.user?.videoCount ?? 0) +
+														(Webstory.data.user?.storyCount ?? 0)}{" "}
+													stories
+												</p>
 												<p className="text-slate-300"> • </p>
-												<a
+												{/* <a
 													className="p-0 m-0 text-muted-foreground font-normal"
 													href="#"
 												>
 													See all
-												</a>
+												</a> */}
 											</span>
 										</span>
 									)}
