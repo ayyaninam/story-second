@@ -31,6 +31,7 @@ export const useRemotionPlayerProps = ({
 		}
 
 		const syncDurations = async () => {
+			// @ts-expect-error Haven't typed this yet fully
 			setInputProps(await webStoryToRemotionInputProps(story, selectedVoice));
 		};
 

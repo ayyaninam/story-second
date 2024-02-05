@@ -55,15 +55,9 @@ export default function GeneratedStory() {
 	useEffect(() => {
 		if (Webstory.data) {
 			setEnableQuery(
-				Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
-					Webstory.data.storySegments?.length > 0
-					? false
-					: true
-			);
-			console.log(
 				!(
-					Webstory.data.storySegments.length > 0 &&
-					Webstory.data.storySegments?.every((segment) => !!segment.videoKey)
+					Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
+					Webstory.data.storySegments?.length > 0
 				)
 			);
 		}

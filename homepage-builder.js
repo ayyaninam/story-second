@@ -2,7 +2,7 @@ const esbuild = require("esbuild");
 
 esbuild
 	.build({
-		entryPoints: ["./src/features/webflow/build.tsx"],
+		entryPoints: ["./src/features/landing/build.tsx"],
 		outfile: "./public/landing/custominput.js",
 		bundle: true,
 		minify: true,
