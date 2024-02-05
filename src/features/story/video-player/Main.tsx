@@ -5,6 +5,8 @@ import { SegmentIntermediate } from "./segments/intermediate";
 import { TheEndSegment } from "./segments/the-end";
 import { LoadingSegmentPage } from "./segments/loading-page";
 import { RemotionPlayerInputProps, VIDEO_FPS } from "./constants";
+import ImageLoader from "../components/image-loader";
+// import { Premount } from "@/features/story/components/premount";
 import { Premount } from "../components/premount";
 
 const THE_END_DURATION = 5 * VIDEO_FPS; // in seconds
@@ -12,9 +14,11 @@ const THE_END_DURATION = 5 * VIDEO_FPS; // in seconds
 export const Main: React.FC<RemotionPlayerInputProps> = ({
 	segments,
 	showLoadingVideo,
+	generatedImages,
 }) => {
 	if (showLoadingVideo) {
-		return <LoadingSegmentPage />;
+		return <ImageLoader imageData={generatedImages!} />;
+		// return <LoadingSegmentPage />;
 	}
 
 	return (

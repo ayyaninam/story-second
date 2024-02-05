@@ -2,7 +2,7 @@ const esbuild = require("esbuild");
 
 esbuild
 	.build({
-		entryPoints: ["./src/features/webflow/build.tsx"],
+		entryPoints: ["./src/features/landing/build.tsx"],
 		outfile: "./public/landing/custominput.js",
 		bundle: true,
 		minify: true,
@@ -15,6 +15,8 @@ esbuild
 			"process.env.NEXT_PUBLIC_AWS_REGION": '"us-west-2"',
 			"process.env.NEXT_PUBLIC_IMAGEKIT_URL":
 				'"https://ik.imagekit.io/storybird/staging"',
+			"process.env.NEXT_PUBLIC_TEMP_ACCESS_KEY": '"279a0580e6e05f2951825ba2"',
+			"process.env.NEXT_PUBLIC_ML_API_URL": '"http://35.84.133.4:8000"',
 		},
 	})
 	.then(() => console.log("⚡Bundle build complete ⚡"))

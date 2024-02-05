@@ -15,6 +15,7 @@ import schema from "@/api/schema";
 import { VoiceType } from "@/utils/enums";
 import { env } from "@/env.mjs";
 import Format from "@/utils/format";
+import { components } from "@/api/types";
 
 const IMAGE_BASE_URL = env.NEXT_PUBLIC_S3_BUCKET_PUBLIC;
 const AUDIO_BASE_URL = env.NEXT_PUBLIC_IMAGEKIT_URL;

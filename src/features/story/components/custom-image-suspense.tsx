@@ -1,3 +1,4 @@
+import cn from "@/utils/cn";
 import dayjs from "dayjs";
 import React, { useState, useEffect, useRef } from "react";
 import { useMap, useReadLocalStorage } from "usehooks-ts";
@@ -165,12 +166,15 @@ export default function CustomImageSuspense({
 			{isLoaded && queue.length > 0
 				? twoDArray.map((row, rowIdx) => {
 						return (
-							<div key={rowIdx} className="flex m-0 p-0 w-full ">
+							<div key={rowIdx} className="flex m-0 p-0 w-full">
 								{row.map((col, colIdx) => {
 									return (
 										<div
 											key={idx(rowIdx, colIdx)}
-											className={`h-full w-full ${col === 1 || !showAnimation ? "opacity-0" : "bg-purple-400"} m-0 p-0 transition-all duration-500`}
+											className={cn(
+												`h-full w-full ${col === 1 || !showAnimation ? "opacity-0" : "bg-purple-400"} m-0 p-0 transition-all duration-500`,
+												rowIdx === 0 && colIdx === 0 && "rounded-tl-lg"
+											)}
 											style={{ aspectRatio: 1 }}
 										></div>
 									);

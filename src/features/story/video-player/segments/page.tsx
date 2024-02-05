@@ -6,6 +6,7 @@ import {
 	interpolate,
 	useCurrentFrame,
 	OffthreadVideo,
+	Video,
 } from "remotion";
 import {
 	SILENT_DURATION,
@@ -14,6 +15,7 @@ import {
 	RemotionPageSegment,
 	bigZIndexTrick,
 } from "../constants";
+import { Premount } from "@/features/story/components/premount";
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
@@ -89,12 +91,17 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 	// this trick avoids showing the next segment before it should be
 	const zIndex = bigZIndexTrick - segment.index;
 
-	console.log(frame);
-
 	return (
-		<AbsoluteFill style={{ ...container, zIndex }}>
+		<AbsoluteFill
+			style={{ ...container, zIndex }}
+			className="rounded-t-lg lg:rounded-tr-none"
+		>
 			<AbsoluteFill>
-				<OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
+				<Video
+					src={segment.visual.videoURL}
+					style={imageStyles}
+					className="rounded-t-lg lg:rounded-tr-none"
+				/>
 			</AbsoluteFill>
 
 			<AbsoluteFill style={subtitleContainer}>
