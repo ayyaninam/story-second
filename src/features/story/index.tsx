@@ -1,3 +1,4 @@
+"use client";
 import {
 	ChevronLeft,
 	ChevronRight,
@@ -11,7 +12,6 @@ import {
 	Share,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { Badge } from "@/components/ui/badge";
@@ -20,23 +20,25 @@ import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
-import Loading from "@/features/story/components/loading";
-import cn from "@/utils/cn";
 import Format from "@/utils/format";
 import StoryScreen from "./story-screen";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState } from "react";
 import { useRemotionPlayerProps } from "./video-player/hooks";
 import { VoiceType } from "@/utils/enums";
 import { ModeToggle } from "./components/mode-toggle";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
+import { cn } from "@/utils";
 
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function GeneratedStory() {
 	const router = useRouter();
 	const { theme } = useTheme();
+	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
+	const [enableQuery, setEnableQuery] = useState(true);
 
 	// Queries
 	const Webstory = useQuery({
@@ -47,9 +49,23 @@ export default function GeneratedStory() {
 			),
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 		refetchInterval: 1000,
+		// Disable once all the videoKeys are obtained
+		enabled: enableQuery,
 	});
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
+
+	useEffect(() => {
+		if (Webstory.data) {
+			setEnableQuery(
+				!(
+					Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
+					Webstory.data.storySegments?.length > 0
+				)
+			);
+		}
+	}, [Webstory.data]);
+
 	return (
 		<div className="max-w-full min-h-screen bg-secondary">
 			{/* Navbar */}
@@ -162,15 +178,23 @@ export default function GeneratedStory() {
 				<div className="relative rounded-lg border-[1px] w-full border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
 						<div className="w-full md:max-w-[1500px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch">
-							<div
-								className="relative w-full  lg:max-w-[80%]  rounded-tl-lg rounded-bl-lg"
-								style={{ aspectRatio: 16 / 9 }}
-							>
+							{/* eslint-disable-next-line @next/next/no-img-element */}
+							{/* <img
+								alt="Background Blur"
+								// This url gonna change based on the current rendering frame
+								src="https://ik.imagekit.io/storybird/staging/images/849ce875-b59f-442d-b18f-548ff2bc7afc/1_823376133.webp"
+								className={
+									"absolute invisible xl:visible xl:w-full xl:h-min xl:max-w-screen-lg left-2 top-16 blur-lg"
+								}
+							/> */}
+							<div className="relative w-full lg:max-w-[80%] rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg aspect-video">
 								<StoryScreen />
 							</div>
-							{/* </Loading> */}
 							<div
-								className={`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm ${theme === "dark" ? "bg-slate-950" : "bg-white"} rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`}
+								className={cn(
+									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-white rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lgcn`,
+									theme === "dark" ? "bg-slate-950" : "bg-white"
+								)}
 							>
 								<div className="relative space-y-2">
 									<Edit2 className="absolute -top-0.5 -right-0.5 w-4 h-4 stroke-muted-foreground" />
