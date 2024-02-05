@@ -7,6 +7,8 @@ import {
 	INCREASED_LAST_PAGE_DURATION,
 	SILENT_DURATION,
 	RemotionPlayerInputProps,
+	RemotionPageSegment,
+	RemotionInterpolationSegment,
 } from "./constants";
 import { prefetchAssets } from "./prefetch";
 import schema from "@/api/schema";
@@ -75,7 +77,7 @@ const storySegmentToRemotionSegment = async (
 	index: number,
 	story: WebStory,
 	selectedVoice: VoiceType
-): Promise<RemotionSegment[]> => {
+): Promise<Omit<RemotionSegment, "index">[]> => {
 	// getting audio url
 	let audioKey = null;
 	switch (selectedVoice) {
@@ -102,7 +104,7 @@ const storySegmentToRemotionSegment = async (
 	});
 
 	// creating the segments
-	let mainPage: RemotionSegment | null = null;
+	let mainPage: Omit<RemotionPageSegment, "index"> | null = null;
 	if (segment.videoKey) {
 		mainPage = {
 			type: "page",
@@ -118,7 +120,8 @@ const storySegmentToRemotionSegment = async (
 		};
 	}
 
-	let intermediatePage: RemotionSegment | null = null;
+	let intermediatePage: Omit<RemotionInterpolationSegment, "index"> | null =
+		null;
 	if (segment.frameInterpolationKey) {
 		intermediatePage = {
 			type: "intermediate",
@@ -149,7 +152,8 @@ export const webStoryToRemotionSegments = async (
 
 	const segments = await Promise.all(storySegmentPromises);
 
-	return segments.flat();
+	// @ts-ignore
+	return segments.flat().map((segment, index) => ({ ...segment, index }));
 };
 
 export const webStoryToRemotionInputProps = async (

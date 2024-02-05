@@ -172,24 +172,25 @@ const RemotionPlayer = ({
 				'[title="Mute sound"]'
 			);
 
-			if (!hasBeenStyled["Player Time"] && muteSoundButton) {
-				const playerTimeElement =
-					muteSoundButton?.parentElement?.parentElement?.nextElementSibling
-						?.nextElementSibling;
-				if (playerTimeElement) {
-					playerTimeElement.className +=
-						" rounded-md px-2 py-0.5 remotion-player-control-background border-[#0000004A] border-[0.5px]";
-
-					// change the '/' character style
-					const textContent = playerTimeElement.textContent || "";
-					playerTimeElement.innerHTML = textContent.replace(
-						/\//g,
-						'<span style="color: #ffffff; opacity: 0.4;">/</span>'
-					);
-				}
-
-				hasBeenStyled["Player Time"] = true;
-			}
+			// todo: fix bug that does not allow time go correctly
+			// if (!hasBeenStyled["Player Time"] && muteSoundButton) {
+			// 	const playerTimeElement =
+			// 		muteSoundButton?.parentElement?.parentElement?.nextElementSibling
+			// 			?.nextElementSibling;
+			// 	if (playerTimeElement) {
+			// 		playerTimeElement.className +=
+			// 			" rounded-md px-2 py-0.5 remotion-player-control-background border-[#0000004A] border-[0.5px]";
+			//
+			// 		// change the '/' character style
+			// 		const textContent = playerTimeElement.textContent || "";
+			// 		playerTimeElement.innerHTML = textContent.replace(
+			// 			/\//g,
+			// 			'<span style="color: #ffffff; opacity: 0.4;">/</span>'
+			// 		);
+			// 	}
+			//
+			// 	hasBeenStyled["Player Time"] = true;
+			// }
 
 			if (!hasBeenStyled["Time Bar"] && muteSoundButton) {
 				const timeBarContainerElement =
@@ -246,6 +247,8 @@ const RemotionPlayer = ({
 
 		return () => observer.disconnect();
 	}, []);
+
+	console.log(inputProps);
 
 	return (
 		<div ref={containerRef} className="w-full h-full">

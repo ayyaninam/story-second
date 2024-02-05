@@ -1,21 +1,18 @@
 import React, { useMemo, CSSProperties } from "react";
-import { Gif } from "@remotion/gif";
 import {
 	AbsoluteFill,
-	Img,
 	Audio,
 	Sequence,
-	useVideoConfig,
 	interpolate,
 	useCurrentFrame,
-	Video,
 	OffthreadVideo,
 } from "remotion";
 import {
 	SILENT_DURATION,
 	VIDEO_FPS,
 	INCREASED_LAST_PAGE_DURATION,
-	RemotionSegment,
+	RemotionPageSegment,
+	bigZIndexTrick,
 } from "../constants";
 import { Premount } from "@/features/story/components/premount";
 
@@ -35,17 +32,12 @@ const imageStyles: CSSProperties = {
 };
 
 type RenderSegmentProps = {
-	segment: RemotionSegment;
+	segment: RemotionPageSegment;
 	isLastSegment: boolean;
 };
 
 export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
-	if (segment.type !== "page") {
-		return null;
-	}
-
 	const frame = useCurrentFrame();
-	const { width, height } = useVideoConfig();
 
 	const storyTextStyle: CSSProperties = useMemo(
 		() => ({
@@ -95,8 +87,14 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 		return words.slice(startIndex, startIndex + numberOfWordsToShow).join(" ");
 	}, [percentageTextToShow, segment.storyText]);
 
+	// this trick avoids showing the next segment before it should be
+	const zIndex = bigZIndexTrick - segment.index;
+
 	return (
-		<AbsoluteFill style={container} className="rounded-t-lg lg:rounded-tr-none">
+		<AbsoluteFill
+			style={{ ...container, zIndex }}
+			className="rounded-t-lg lg:rounded-tr-none"
+		>
 			<AbsoluteFill>
 				<OffthreadVideo
 					src={segment.visual.videoURL}

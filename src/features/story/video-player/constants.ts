@@ -9,16 +9,17 @@ const Visual = z.discriminatedUnion("format", [VideoVisual]);
 const PageSegment = z.object({
 	type: z.literal("page"),
 	id: z.string(),
+	index: z.number(),
 	storyText: z.string(),
 	visual: Visual,
 	audioURL: z.string().nullish(),
 	durationInFrames: z.number(),
 	contentDuration: z.number(),
-	isInterpolation: z.boolean().nullish(),
 });
 const InterpolationSegment = z.object({
 	type: z.literal("intermediate"),
 	id: z.string(),
+	index: z.number(),
 	visual: Visual,
 	durationInFrames: z.number(),
 });
@@ -34,6 +35,8 @@ export const CompositionProps = z.object({
 	generatedImages: z.array(z.any()).optional(),
 });
 export type RemotionPlayerInputProps = z.infer<typeof CompositionProps>;
+export type RemotionPageSegment = z.infer<typeof PageSegment>;
+export type RemotionInterpolationSegment = z.infer<typeof InterpolationSegment>;
 export type RemotionSegment = RemotionPlayerInputProps["segments"][number];
 
 export const VIDEO_WIDTH = 1280;
@@ -41,3 +44,5 @@ export const VIDEO_HEIGHT = 720;
 export const VIDEO_FPS = 30;
 export const SILENT_DURATION = 0.2; // in seconds
 export const INCREASED_LAST_PAGE_DURATION = 2; // in seconds
+
+export const bigZIndexTrick = 40000;
