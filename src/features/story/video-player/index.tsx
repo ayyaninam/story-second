@@ -31,6 +31,9 @@ type RemotionPlayerProps = {
 	onEnded?: () => void;
 } & Omit<Partial<ComponentProps<typeof Player>>, "component">;
 
+const controlBackgroundStyles =
+	" remotion-player-control-background flex justify-center items-center border-[#0000004A] border-[0.5px]";
+
 const RemotionPlayer = ({
 	inputProps,
 	onPlay,
@@ -73,6 +76,8 @@ const RemotionPlayer = ({
 				player.removeEventListener("ended", onEnded);
 			}
 		};
+
+		// somehow on the past i just did this dep and it worked back then, buut when doing other values it breaks
 	}, [inputProps]); // the dep inputProps is related when remotionPlayerRef has a value
 
 	const renderPlayPauseButton: RenderPlayPauseButton = useCallback(
@@ -88,48 +93,24 @@ const RemotionPlayer = ({
 	);
 
 	const renderFullscreenButton: RenderFullscreenButton = useCallback(
-		({ isFullscreen }) =>
-			isFullscreen ? (
+		() => (
+			<div className={`w-10 h-10 rounded-lg ${controlBackgroundStyles}`}>
 				<Scan color="white" size={24} strokeWidth={1} />
-			) : (
-				<Scan color="white" size={24} strokeWidth={1} />
-			),
+			</div>
+		),
 		[]
 	);
 
 	useEffect(() => {
 		const hasBeenStyled = {
-			"Enter Fullscreen": false,
 			"Action Groups": false,
 			"Player Time": false,
 			"Time Bar": false,
 			"Volume Slider": false,
 		};
-		const observerCallback = (
-			_mutations: MutationRecord[],
-			observer: MutationObserver
-		) => {
+		const observerCallback = () => {
 			if (!containerRef.current) {
 				return;
-			}
-
-			const baseClassName =
-				" remotion-player-control-background flex justify-center items-center border-[#0000004A] border-[0.5px]";
-
-			const enterFullscreenButton = containerRef.current.querySelector(
-				'[title="Enter Fullscreen"]'
-			);
-			if (!hasBeenStyled["Enter Fullscreen"] && enterFullscreenButton) {
-				const enterFullscreenButton = containerRef.current.querySelector(
-					'[title="Enter Fullscreen"]'
-				);
-				if (enterFullscreenButton?.parentElement) {
-					enterFullscreenButton.parentElement.className +=
-						" w-10 h-10 rounded-lg" + baseClassName;
-					enterFullscreenButton.className += " outline-none";
-				}
-
-				hasBeenStyled["Enter Fullscreen"] = true;
 			}
 
 			if (
@@ -154,7 +135,7 @@ const RemotionPlayer = ({
 						);
 						if (button && !button.closest(".actionGroupWrapper")) {
 							const wrapperDiv = document.createElement("div");
-							wrapperDiv.className = baseClassName + group.className;
+							wrapperDiv.className = controlBackgroundStyles + group.className;
 							wrapperDiv.classList.add("actionGroupWrapper");
 
 							button.parentNode?.insertBefore(wrapperDiv, button);
