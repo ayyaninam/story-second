@@ -1,4 +1,5 @@
 const esbuild = require("esbuild");
+require("dotenv").config();
 
 esbuild
 	.build({
@@ -7,6 +8,7 @@ esbuild
 		bundle: true,
 		minify: true,
 		sourcemap: false,
+		treeShaking: true,
 		format: "esm",
 		tsconfig: "./tsconfig.json",
 		define: {
@@ -16,7 +18,7 @@ esbuild
 			"process.env.NEXT_PUBLIC_IMAGEKIT_URL":
 				'"https://ik.imagekit.io/storybird/staging"',
 			"process.env.NEXT_PUBLIC_TEMP_ACCESS_KEY": '"279a0580e6e05f2951825ba2"',
-			"process.env.NEXT_PUBLIC_ML_API_URL": '"http://35.84.133.4:8000"',
+			"process.env.NEXT_PUBLIC_ML_API_URL": `"https://ml.staging.authorly.ai"`,
 		},
 	})
 	.then(() => console.log("⚡Bundle build complete ⚡"))
