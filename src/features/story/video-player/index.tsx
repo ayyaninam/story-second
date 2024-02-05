@@ -23,8 +23,6 @@ const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 // TODO: responsive styles
 const player: React.CSSProperties = {
 	width: "100%",
-	borderTopLeftRadius: "0.5rem",
-	borderBottomLeftRadius: "0.5rem",
 };
 
 type RemotionPlayerProps = {
@@ -174,24 +172,25 @@ const RemotionPlayer = ({
 				'[title="Mute sound"]'
 			);
 
-			if (!hasBeenStyled["Player Time"] && muteSoundButton) {
-				const playerTimeElement =
-					muteSoundButton?.parentElement?.parentElement?.nextElementSibling
-						?.nextElementSibling;
-				if (playerTimeElement) {
-					playerTimeElement.className +=
-						" rounded-md px-2 py-0.5 remotion-player-control-background border-[#0000004A] border-[0.5px]";
-
-					// change the '/' character style
-					const textContent = playerTimeElement.textContent || "";
-					playerTimeElement.innerHTML = textContent.replace(
-						/\//g,
-						'<span style="color: #ffffff; opacity: 0.4;">/</span>'
-					);
-				}
-
-				hasBeenStyled["Player Time"] = true;
-			}
+			// todo: fix bug that does not allow time go correctly
+			// if (!hasBeenStyled["Player Time"] && muteSoundButton) {
+			// 	const playerTimeElement =
+			// 		muteSoundButton?.parentElement?.parentElement?.nextElementSibling
+			// 			?.nextElementSibling;
+			// 	if (playerTimeElement) {
+			// 		playerTimeElement.className +=
+			// 			" rounded-md px-2 py-0.5 remotion-player-control-background border-[#0000004A] border-[0.5px]";
+			//
+			// 		// change the '/' character style
+			// 		const textContent = playerTimeElement.textContent || "";
+			// 		playerTimeElement.innerHTML = textContent.replace(
+			// 			/\//g,
+			// 			'<span style="color: #ffffff; opacity: 0.4;">/</span>'
+			// 		);
+			// 	}
+			//
+			// 	hasBeenStyled["Player Time"] = true;
+			// }
 
 			if (!hasBeenStyled["Time Bar"] && muteSoundButton) {
 				const timeBarContainerElement =
@@ -260,6 +259,7 @@ const RemotionPlayer = ({
 				compositionHeight={VIDEO_HEIGHT}
 				compositionWidth={VIDEO_WIDTH}
 				style={player}
+				className="lg:[&>div]:rounded-bl-lg"
 				autoPlay={false}
 				numberOfSharedAudioTags={0}
 				controls

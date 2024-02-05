@@ -9,6 +9,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { useStoryForm } from "./hooks/useStoryForm";
 import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
+import { env } from "@/env.mjs";
 
 const queryClient = new QueryClient();
 
@@ -42,12 +43,12 @@ const App = () => {
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const WebStory = await CreateWebstory.mutateAsync({
-			imageStyle: options.style,
+			image_style: options.style,
 			language: options.language,
-			storyLength: options.length,
+			length: options.length,
 			prompt: prompt,
 		});
-		window.location.href = `/library/${WebStory.data?.url}`;
+		window.location.href = `/library/${WebStory.url}`;
 	};
 
 	return (
@@ -321,6 +322,12 @@ const App = () => {
 		</form>
 	);
 };
+
+const urlParams = new URLSearchParams(window.location.search);
+const accessToken = urlParams.get("k") ?? window.localStorage.getItem("k");
+window.localStorage.setItem("k", accessToken ?? "");
+if (accessToken !== env.NEXT_PUBLIC_TEMP_ACCESS_KEY)
+	window.location.href = "/404";
 
 const root = document.getElementById("prompt-form");
 if (!root) throw new Error("Root element not found");

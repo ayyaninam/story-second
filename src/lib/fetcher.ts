@@ -11,6 +11,20 @@ export const publicFetcher = ky.create({
 	headers: { "Content-Type": "application/json" },
 });
 
+/**
+ * Fetcher for all ML ops
+ * This fetcher should be used in browser environments only.
+ */
+export const mlFetcher = ky.create({
+	prefixUrl: env.NEXT_PUBLIC_ML_API_URL,
+	headers: {
+		"Content-Type": "application/json",
+		Authorization: isBrowser()
+			? "Bearer " + window.localStorage.getItem("jwt") || undefined
+			: undefined,
+	},
+});
+
 // TODO: add authenticated request instances
 /**
  * Creates an authenticated fetcher instance by extending the public fetcher.
