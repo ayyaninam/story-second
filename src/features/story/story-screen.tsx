@@ -30,7 +30,10 @@ const StoryScreen = () => {
 		!Webstory.data ||
 		(Webstory.data.storySegments?.filter((el) => el.imageKey).length ?? 0) < 2;
 
-	const isStoryLoading = !Webstory.data || !Webstory.data.storyDone;
+	const isStoryLoading =
+		!Webstory.data ||
+		(Webstory.data.storySegments?.filter((el) => el.videoKey).length ?? 0) !==
+			Webstory.data.storySegments?.length;
 
 	if (Webstory.isError)
 		return (
@@ -58,6 +61,7 @@ const StoryScreen = () => {
 	} else if (isStoryLoading) {
 		return <ImageLoader imageData={generatedImages!} />;
 	} else {
+		// return <ImageLoader imageData={generatedImages!} />;
 		return <VideoPlayer />;
 	}
 };

@@ -1,12 +1,25 @@
-import { authFetcher, publicFetcher } from "@/lib/fetcher";
+import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
 import schema from "./schema";
 
 const webstory = {
-	createUnauthorized: async (
-		params: schema["RequestStoryDTO"]
-	): Promise<schema["ReturnAnonymousStoryDTOApiResponse"]> =>
+	createUnauthorized: async (params: {
+		prompt?: string;
+		image_style?: schema["ImageStyles"];
+		language?: schema["StoryLanguages"];
+		length?: schema["StoryLength"];
+	}): Promise<{
+		title: string;
+		englishTitle: string;
+		blurb: string;
+		category: string;
+		cover_image: string;
+		image_style: number;
+		url: string;
+	}> =>
 		await mlFetcher
-			.post(`api/WebStory/NoAuth`, { body: JSON.stringify(params) })
+			.post(`create-story`, {
+				body: JSON.stringify(params),
+			})
 			.json(),
 
 	create: async (

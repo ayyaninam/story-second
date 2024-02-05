@@ -6,6 +6,7 @@ import {
 	interpolate,
 	useCurrentFrame,
 	OffthreadVideo,
+	Video,
 } from "remotion";
 import {
 	SILENT_DURATION,
@@ -96,7 +97,7 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 			className="rounded-t-lg lg:rounded-tr-none"
 		>
 			<AbsoluteFill>
-				<OffthreadVideo
+				<Video
 					src={segment.visual.videoURL}
 					style={imageStyles}
 					className="rounded-t-lg lg:rounded-tr-none"
