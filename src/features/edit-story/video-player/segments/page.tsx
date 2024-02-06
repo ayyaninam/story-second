@@ -6,14 +6,15 @@ import {
 	interpolate,
 	useCurrentFrame,
 	OffthreadVideo,
-	Video,
 } from "remotion";
 import {
 	SILENT_DURATION,
 	VIDEO_FPS,
 	INCREASED_LAST_PAGE_DURATION,
-	RemotionPageSegment,
 	bigZIndexTrick,
+	RemotionPageSegment,
+	RemotionSegment,
+	PREMOUNT_FRAMES,
 } from "../constants";
 import { Premount } from "@/features/edit-story/components/premount";
 
@@ -34,10 +35,15 @@ const imageStyles: CSSProperties = {
 
 type RenderSegmentProps = {
 	segment: RemotionPageSegment;
-	isLastSegment: boolean;
+	nextSegment: RemotionSegment | undefined;
+	prevSegment: RemotionSegment | undefined;
 };
 
-export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
+export const SegmentPage = ({
+	segment,
+	nextSegment,
+	prevSegment,
+}: RenderSegmentProps) => {
 	const frame = useCurrentFrame();
 
 	const storyTextStyle: CSSProperties = useMemo(
@@ -59,7 +65,7 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 				startAudioFrom + 1,
 				startAudioFrom +
 					segment.contentDuration -
-					(isLastSegment ? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS : 0)
+					(!nextSegment ? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS : 0)
 			), // to avoid crashing on [N,N]
 		],
 		[0, 1],
@@ -88,20 +94,30 @@ export const SegmentPage = ({ segment, isLastSegment }: RenderSegmentProps) => {
 		return words.slice(startIndex, startIndex + numberOfWordsToShow).join(" ");
 	}, [percentageTextToShow, segment.storyText]);
 
+	const isFadeTransitionNext = nextSegment?.type === "transition";
+
+	const opacity = isFadeTransitionNext
+		? interpolate(
+				frame,
+				[
+					segment.durationInFrames - PREMOUNT_FRAMES / 2,
+					segment.durationInFrames,
+				],
+				[1, 0],
+				{
+					extrapolateLeft: "clamp",
+					extrapolateRight: "clamp",
+				}
+			)
+		: 1;
+
 	// this trick avoids showing the next segment before it should be
 	const zIndex = bigZIndexTrick - segment.index;
 
 	return (
-		<AbsoluteFill
-			style={{ ...container, zIndex }}
-			className="rounded-t-lg lg:rounded-tr-none"
-		>
+		<AbsoluteFill style={{ ...container, zIndex, opacity }}>
 			<AbsoluteFill>
-				<Video
-					src={segment.visual.videoURL}
-					style={imageStyles}
-					className="rounded-t-lg lg:rounded-tr-none"
-				/>
+				<OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
 			</AbsoluteFill>
 
 			<AbsoluteFill style={subtitleContainer}>
