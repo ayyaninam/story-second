@@ -7,8 +7,13 @@ import {
 import React, { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
+import storyLanguages from "@/utils/storyLanguages";
 
 const queryClient = new QueryClient();
+
+const getEnumKeys = (Enum: any) => {
+	return Object.keys(Enum).filter((x) => !(parseInt(x) >= 0));
+};
 
 const App = () => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -237,34 +242,46 @@ const App = () => {
 							</label>
 						</div>
 						<select
-							onChange={(e) =>
-								// @ts-expect-error - TS doesn't know about the value property
-								setOptions((prev) => ({ ...prev, language: e.target.value }))
-							}
+							onChange={(e) => {
+								setOptions((prev) => ({
+									...prev,
+									language: getEnumKeys(StoryLanguages).findIndex(
+										(el) => el === e.target.value
+									),
+								}));
+							}}
 						>
-							{Object.values(StoryLanguages).filter((value) => typeof value === "string").map((language, index) => (
-								<option key={index}>{language}</option>
+							{getEnumKeys(StoryLanguages).map((label, index) => (
+								<option key={index}>{label}</option>
 							))}
 						</select>
 
 						<select
 							onChange={(e) =>
-								// @ts-expect-error - TS doesn't know about the value property
-								setOptions((prev) => ({ ...prev, length: e.target.value }))
+								setOptions((prev) => ({
+									...prev,
+									length: getEnumKeys(StoryLengths).findIndex(
+										(el) => el === e.target.value
+									),
+								}))
 							}
 						>
-							{Object.values(StoryLengths).filter((value) => typeof value === "string").map((length, index) => (
-								<option key={index}>{length}</option>
+							{getEnumKeys(StoryLengths).map((label, index) => (
+								<option key={index}>{label}</option>
 							))}
 						</select>
 						<select
 							onChange={(e) =>
-								// @ts-expect-error - TS doesn't know about the value property
-								setOptions((prev) => ({ ...prev, style: e.target.value }))
+								setOptions((prev) => ({
+									...prev,
+									style: getEnumKeys(StoryImageStyles).findIndex(
+										(el) => el === e.target.value
+									),
+								}))
 							}
 						>
-							{Object.values(StoryImageStyles).filter((value) => typeof value === "string").map((style, index) => (
-								<option key={index}>{style}</option>
+							{getEnumKeys(StoryImageStyles).map((label, index) => (
+								<option key={index}>{label}</option>
 							))}
 						</select>
 					</div>
