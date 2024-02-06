@@ -242,18 +242,19 @@ const App = () => {
 								setOptions((prev) => ({ ...prev, language: e.target.value }))
 							}
 						>
-							{Object.entries(StoryLanguages).map(([key, label], index) => (
-								<option key={key}>{label}</option>
+							{Object.values(StoryLanguages).filter((value) => typeof value === "string").map((language, index) => (
+								<option key={index}>{language}</option>
 							))}
 						</select>
+
 						<select
 							onChange={(e) =>
 								// @ts-expect-error - TS doesn't know about the value property
 								setOptions((prev) => ({ ...prev, length: e.target.value }))
 							}
 						>
-							{Object.entries(StoryLengths).map(([key, label], index) => (
-								<option key={key}>{label}</option>
+							{Object.values(StoryLengths).filter((value) => typeof value === "string").map((length, index) => (
+								<option key={index}>{length}</option>
 							))}
 						</select>
 						<select
@@ -262,8 +263,8 @@ const App = () => {
 								setOptions((prev) => ({ ...prev, style: e.target.value }))
 							}
 						>
-							{Object.entries(StoryImageStyles).map(([key, label], index) => (
-								<option key={key}>{label}</option>
+							{Object.values(StoryImageStyles).filter((value) => typeof value === "string").map((style, index) => (
+								<option key={index}>{style}</option>
 							))}
 						</select>
 					</div>
