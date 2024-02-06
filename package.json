@@ -4,11 +4,12 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
+		"update:env": "op inject -i gen.env -o .env",
 		"build": "node homepage-builder.js && next build",
 		"start": "next start",
 		"lint": "next lint",
 		"api:generate-types": "npx openapi-typescript https://api.staging.storybird.ai/swagger/v1/swagger.json -o ./src/api/types.d.ts",
-		"webflow:build": "nodemon --exec 'node homepage-builder.js' --watch ./src/features/webflow/build.tsx",
+		"build:webflow": "nodemon --exec 'node homepage-builder.js' --watch ./src/features/landing/build.tsx",
 		"format": "prettier . --write",
 		"prepare": "husky && husky install"
 	},

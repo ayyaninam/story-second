@@ -46,22 +46,23 @@ const StoryScreen = () => {
 		);
 	else if (areImagesLoading) {
 		return (
-			<div className="aspect-video bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center">
+			<div className="aspect-video bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-end">
 				<div
-					className="px-4 py-1 text-white border-[0.5px]"
+					className="px-4 py-1 text-white border-[0.5px] mb-16"
 					style={{
 						background: `linear-gradient(180deg, rgba(3, 25, 38, 0.7) 0%, rgba(3, 25, 38, 0.8) 100%)`,
 						borderColor: "rgba(0, 0, 0, 0.29)",
 					}}
 				>
-					<p className="font-medium text-lg">Working on your story...</p>
+					<p className="font-medium font-mono text-lg">
+						Working on your story...
+					</p>
 				</div>
 			</div>
 		);
 	} else if (isStoryLoading) {
 		return <ImageLoader imageData={generatedImages!} />;
 	} else {
-		// return <ImageLoader imageData={generatedImages!} />;
 		return <VideoPlayer />;
 	}
 };
