@@ -55,15 +55,17 @@ export default function ImageLoader({
 					className={`relative w-full h-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg ${className}`}
 					style={style}
 				>
-					<div className="absolute flex h-full w-full justify-center items-center z-[100]">
+					<div className="absolute flex h-full w-full justify-center items-end z-[100]">
 						<div
-							className="px-4 py-1 text-white border-[0.5px] max-w-[80%]"
+							className="px-4 py-1 text-white border-[0.5px] max-w-[80%] mb-16"
 							style={{
 								background: `linear-gradient(180deg, rgba(3, 25, 38, 0.7) 0%, rgba(3, 25, 38, 0.8) 100%)`,
 								borderColor: "rgba(0, 0, 0, 0.29)",
 							}}
 						>
-							<p className="font-medium text-lg">Working on your story...</p>
+							<p className="font-medium font-mono text-lg">
+								Working on your story...
+							</p>
 						</div>
 					</div>
 					{children}
