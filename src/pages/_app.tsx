@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import localFont from "next/font/local";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 const randFont = localFont({
 	variable: "--font-rand",
@@ -141,7 +142,9 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<main className={randFont.className}>
-				<Component {...pageProps} />
+				<UserProvider>
+					<Component {...pageProps} />
+				</UserProvider>
 			</main>
 		</QueryClientProvider>
 	);

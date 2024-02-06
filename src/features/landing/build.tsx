@@ -45,7 +45,7 @@ const App = () => {
 			length: options.length,
 			prompt: prompt,
 		});
-		window.location.href = `/library/${WebStory.url}`;
+		window.location.href = `/api/auth/login?returnTo=/library/${WebStory.url}`;
 	};
 
 	return (
