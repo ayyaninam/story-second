@@ -3,10 +3,8 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	Compass,
-	Contrast,
 	Edit2,
 	FlipVertical,
-	Heart,
 	HelpCircle,
 	LucideSparkles,
 	Menu,
@@ -25,6 +23,9 @@ import { QueryKeys } from "@/lib/queryKeys";
 import Format from "@/utils/format";
 import StoryScreen from "./story-screen";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRemotionPlayerProps } from "./video-player/hooks";
+import { VoiceType } from "@/utils/enums";
+import { ModeToggle } from "./components/mode-toggle";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/utils";
@@ -149,7 +150,9 @@ export default function GeneratedStory() {
 			</div>
 
 			{/* MainSection */}
-			<div className="flex bg-white min-h-[calc(100vh-196px)] p-2 gap-x-1.5">
+			<div
+				className={`flex bg-background min-h-[calc(100vh-196px)] p-2 gap-x-1.5`}
+			>
 				<div className="p-2 space-y-3 hidden sm:block">
 					<Menu className="h-4 w-4 stroke-muted-foreground" />
 					<FlipVertical className="h-4 w-4 stroke-muted-foreground" />
@@ -185,7 +188,11 @@ export default function GeneratedStory() {
 							<div className="relative w-full lg:max-w-[80%] rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg aspect-video">
 								<StoryScreen />
 							</div>
-							<div className="p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-white rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg">
+							<div
+								className={cn(
+									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-background rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lgcn`
+								)}
+							>
 								<div className="relative space-y-2">
 									<Edit2 className="absolute -top-0.5 -right-0.5 w-4 h-4 stroke-muted-foreground" />
 									<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
@@ -272,7 +279,7 @@ export default function GeneratedStory() {
 							className="rounded-full w-8 h-8 bg-popover p-1.5"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
 						>
-							<Contrast className="rotate-45 h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400 [&>path]:fill-slate-400" />
+							<ModeToggle />
 						</span>
 						<span
 							className="rounded-full w-8 h-8 bg-popover p-1.5"
