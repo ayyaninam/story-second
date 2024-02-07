@@ -162,7 +162,7 @@ export const webStoryToRemotionInputProps = async (
 ): Promise<RemotionPlayerInputProps> => {
 	const segments = await webStoryToRemotionSegments(story, selectedVoice);
 
-	await prefetchAssets(segments);
+	// await prefetchAssets(segments);
 
 	const durationInFrames = segments.reduce(
 		(acc, segment) => acc + segment.durationInFrames,
