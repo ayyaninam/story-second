@@ -50,7 +50,7 @@ export const Main: React.FC<RemotionPlayerInputProps> = ({
 				// this is in order to avoid flickering
 				// higher value means more video players existing one above other at the same time = more resources?
 				// lower value increases the chance of flickering
-				const premountFrames = 150;
+				const premountFrames = VIDEO_FPS; // 1 second like this value might be the ideal duration
 
 				return (
 					<Series.Sequence
