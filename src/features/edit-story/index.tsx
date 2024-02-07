@@ -29,7 +29,7 @@ import { ModeToggle } from "./components/mode-toggle";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/utils";
-import Router from "@/routes";
+import Routes from "@/routes";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -38,7 +38,6 @@ export default function EditStory() {
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
-	console.log(router.pathname);
 
 	// Queries
 	const Webstory = useQuery({
@@ -116,7 +115,7 @@ export default function EditStory() {
 						variant="outline"
 						onClick={() =>
 							router.push(
-								Router.ViewStory(
+								Routes.ViewStory(
 									router.query.genre as string,
 									router.query.id as string
 								)

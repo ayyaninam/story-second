@@ -108,12 +108,10 @@ export default function CustomImageSuspense({
 			newQueue = newQueue.filter((x) => x !== curr);
 
 			if (i < 0 || i >= height || j < 0 || j >= width) {
-				console.log("OOB", curr);
 				return;
 			}
 
 			if (seen.has(curr)) {
-				console.log("Seen", curr);
 				return;
 			}
 

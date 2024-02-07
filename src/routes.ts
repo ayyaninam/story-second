@@ -1,4 +1,4 @@
-class Router {
+class Routes {
 	static ViewStory(genre: string, id: string) {
 		return `/video/${genre}/${id}/view`;
 	}
@@ -6,4 +6,4 @@ class Router {
 		return `/video/${genre}/${id}/edit`;
 	}
 }
-export default Router;
+export default Routes;

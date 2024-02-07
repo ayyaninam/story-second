@@ -8,6 +8,7 @@ import React, { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
 import storyLanguages from "@/utils/storyLanguages";
+import Routes from "@/routes";
 
 const queryClient = new QueryClient();
 
@@ -50,7 +51,8 @@ const App = () => {
 			length: options.length,
 			prompt: prompt,
 		});
-		window.location.href = `/library/${WebStory.url}`;
+		const [genre, id] = WebStory.url.split("/");
+		if (genre && id) window.location.href = Routes.EditStory(genre, id);
 	};
 
 	return (
