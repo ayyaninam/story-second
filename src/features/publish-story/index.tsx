@@ -9,22 +9,26 @@ import {
 	Video,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import MadeInAuthorly from "../../../public/publish/made-in-authorly";
-import MadeInAuthorlyDark from "../../../public/publish/made-in-authorly-dark";
+import MadeInAuthorly from "public/publish/made-in-authorly.svg";
+import MadeInAuthorlyDark from "public/publish/made-in-authorly-dark.svg";
 
-import { ModeToggle } from "../story/components/mode-toggle";
+import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
-import StoryScreen from "../story/story-screen";
+import StoryScreen from "../edit-story/story-screen";
+import { useMediaQuery } from "usehooks-ts";
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function PublishedStory() {
 	const router = useRouter();
+	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
+	const [enableQuery, setEnableQuery] = useState(true);
+	console.log(router.pathname);
 
 	// Queries
 	const Webstory = useQuery({
@@ -35,8 +39,22 @@ export default function PublishedStory() {
 			),
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 		refetchInterval: 1000,
+		// Disable once all the videoKeys are obtained
+		enabled: enableQuery,
 	});
+
 	const isLoading = Webstory.isLoading || !Webstory.data;
+
+	useEffect(() => {
+		if (Webstory.data) {
+			setEnableQuery(
+				!(
+					Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
+					Webstory.data.storySegments?.length > 0
+				)
+			);
+		}
+	}, [Webstory.data]);
 
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
@@ -249,14 +267,18 @@ export default function PublishedStory() {
 										<span className="flex flex-col">
 											<span>{"Storybird"} </span>
 											<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
-												<p>28 Videos</p>
+												<p>
+													{(Webstory.data.user?.videoCount ?? 0) +
+														(Webstory.data.user?.storyCount ?? 0)}{" "}
+													Stories
+												</p>
 												<p className="text-slate-300"> • </p>
-												<a
+												{/* <a
 													className="p-0 m-0 text-muted-foreground font-normal"
 													href="#"
 												>
 													See all
-												</a>
+												</a> */}
 											</span>
 										</span>
 									)}

@@ -29,14 +29,16 @@ import { ModeToggle } from "./components/mode-toggle";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/utils";
+import Router from "@/routes";
 
 const MAX_SUMMARY_LENGTH = 250;
 
-export default function GeneratedStory() {
+export default function EditStory() {
 	const router = useRouter();
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
+	console.log(router.pathname);
 
 	// Queries
 	const Webstory = useQuery({
@@ -109,7 +111,18 @@ export default function GeneratedStory() {
 					<Button className="p-2" variant="outline">
 						<RefreshCcw className="mr-2 h-4 w-4" /> Remix
 					</Button>
-					<Button className="p-2" variant="outline">
+					<Button
+						className="p-2"
+						variant="outline"
+						onClick={() =>
+							router.push(
+								Router.ViewStory(
+									router.query.genre as string,
+									router.query.id as string
+								)
+							)
+						}
+					>
 						<Share className="mr-2 h-4 w-4" /> Publish
 					</Button>
 				</div>
@@ -258,7 +271,7 @@ export default function GeneratedStory() {
 												<p>
 													{(Webstory.data.user?.videoCount ?? 0) +
 														(Webstory.data.user?.storyCount ?? 0)}{" "}
-													stories
+													Stories
 												</p>
 												<p className="text-slate-300"> • </p>
 												{/* <a

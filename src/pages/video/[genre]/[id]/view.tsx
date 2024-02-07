@@ -1,4 +1,4 @@
-import PublishedStory from "@/features/publish";
+import PublishedStory from "@/features/publish-story";
 
 export default function PublishPage() {
 	return <PublishedStory />;

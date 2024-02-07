@@ -15,7 +15,7 @@ import {
 	RemotionPageSegment,
 	bigZIndexTrick,
 } from "../constants";
-import { Premount } from "@/features/story/components/premount";
+import { Premount } from "@/features/edit-story/components/premount";
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
