@@ -37,6 +37,9 @@ dependencies:
   '@remotion/player':
     specifier: 4.0.106
     version: 4.0.106(patch_hash=olsbn46pdlcjpc5vx2fngup2ne)(react-dom@18.2.0)(react@18.2.0)
+  '@remotion/transitions':
+    specifier: 4.0.106
+    version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
   '@t3-oss/env-nextjs':
     specifier: ^0.8.0
     version: 0.8.0(typescript@5.3.3)(zod@3.22.4)
@@ -1194,6 +1197,10 @@ packages:
       remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
+  /@remotion/paths@4.0.106:
+    resolution: {integrity: sha512-IoKx6AEaA2BNlvbWbS5V9fikdT+23+c88fI9fmzEaZStyzesfhlfy+dTlwv7BwQvUXf2WDvmRK2sBA0YSjxepg==}
+    dev: false
+
   /@remotion/player@4.0.106(patch_hash=olsbn46pdlcjpc5vx2fngup2ne)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-GhRVLKETGa/VZ5HpuyU6n1c4XaPcne0NeadufZ5/dbvwZqN3obHF+rN3qbsdnmE8JAIyxnPZgpegPU8Ob/oD1Q==}
     peerDependencies:
@@ -1205,6 +1212,30 @@ packages:
       remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
     dev: false
     patched: true
+
+  /@remotion/shapes@4.0.106(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-hCSjahmVmmqxZT8dVyKvziPozy3vyRDFFPBTNt8oqoKgrUTK6JYBDPceOrImZ3PuUzVJXyg2D0ms8/K/m3QLBw==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@remotion/paths': 4.0.106
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@remotion/transitions@4.0.106(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-hhFZPyM9J4DeZHqQtYulyWjMSASPFgHtyS36oRqO+F1zxALdCcnFZh1/b9wIzvSoh92POVMcYz1ziiVGv2LL4A==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@remotion/paths': 4.0.106
+      '@remotion/shapes': 4.0.106(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+    dev: false
 
   /@rushstack/eslint-patch@1.7.2:
     resolution: {integrity: sha512-RbhOOTCNoCrbfkRyoXODZp75MlpiHMgbE5MEBZAnnnLyQNgrigEj4p0lzsMDyc1zVsJDLrivB58tgg3emX0eEA==}

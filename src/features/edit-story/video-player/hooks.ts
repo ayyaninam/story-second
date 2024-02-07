@@ -22,6 +22,7 @@ export const useRemotionPlayerProps = ({
 		showLoadingVideo: true,
 		durationInFrames: 10 * VIDEO_FPS,
 		segments: [],
+		// @ts-ignore
 		generatedImages,
 	});
 
