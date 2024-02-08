@@ -1,30 +1,36 @@
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import Format from "@/utils/format";
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import ImageLoader from "./components/image-loader";
 import RemotionPlayer from "./video-player";
 import { VoiceType } from "@/utils/enums";
 import { useRemotionPlayerProps } from "./video-player/hooks";
 import VideoPlayer from "./components/video-player";
-import { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { prefetch } from "remotion";
+import schema from "@/api/schema";
 
-const StoryScreen = () => {
+type StoryScreenProps = {
+	Webstory: schema["ReturnWebStoryDTOApiResponse"];
+	isError: boolean;
+};
+
+const StoryScreen: FC<StoryScreenProps> = ({ Webstory, isError }) => {
 	const router = useRouter();
 	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
 	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
 
 	// Queries
-	const Webstory = useQuery({
-		queryFn: () =>
-			api.library.get(
-				router.query.genre!.toString(),
-				router.query.id!.toString()
-			),
-		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
-	});
+	// const Webstory = useQuery({
+	// 	queryFn: () =>
+	// 		api.library.get(
+	// 			router.query.genre!.toString(),
+	// 			router.query.id!.toString()
+	// 		),
+	// 	queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+	// });
 
 	useEffect(() => {
 		for (const seg of Webstory.data?.storySegments ?? []) {
@@ -73,7 +79,7 @@ const StoryScreen = () => {
 		(videoArray?.length ?? 0) !== Webstory.data.storySegments?.length ||
 		fetchedVideos.length !== videoArray?.length ||
 		fetchedAudios.length !== videoArray?.length;
-	if (Webstory.isError)
+	if (isError)
 		return (
 			<div className="aspect-video bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center">
 				<p className="text-xl">

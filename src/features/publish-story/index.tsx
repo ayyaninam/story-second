@@ -9,8 +9,6 @@ import {
 	Video,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import MadeInAuthorly from "public/publish/made-in-authorly.svg";
-import MadeInAuthorlyDark from "public/publish/made-in-authorly-dark.svg";
 
 import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,6 +19,7 @@ import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
 import { useMediaQuery } from "usehooks-ts";
+import { components } from "@/api/types";
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function PublishedStory() {
@@ -28,6 +27,10 @@ export default function PublishedStory() {
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
+	const [storySegments, setStorySegemnts] = useState<
+		components["schemas"]["ReturnStorySegmentDTO"][] | null
+	>();
+	const [index, setIndex] = useState(0);
 	console.log(router.pathname);
 
 	// Queries
@@ -47,14 +50,28 @@ export default function PublishedStory() {
 
 	useEffect(() => {
 		if (Webstory.data) {
-			setEnableQuery(
-				!(
-					Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
-					Webstory.data.storySegments?.length > 0
-				)
-			);
+			if (
+				Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
+				Webstory.data.storySegments?.length > 0
+			) {
+				setEnableQuery(false);
+				setStorySegemnts(Webstory.data.storySegments);
+				console.log(">>>> segments", storySegments);
+			}
+
+			// console.log(">>>> video keys", Webstory.data.storySegments, );
 		}
 	}, [Webstory.data]);
+
+	useEffect(() => {
+		const interval = storySegments
+			? setInterval(() => {
+					setIndex((prev) => (prev + 1) % storySegments.length);
+				}, 5000)
+			: undefined;
+
+		return () => clearInterval(interval);
+	});
 
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
@@ -178,16 +195,55 @@ export default function PublishedStory() {
 					</Button>
 				</div>
 			</div>
+
 			<div className={`flex bg-reverse min-h-[calc(100vh-66px)] p-2 gap-x-1.5`}>
 				<div className="relative w-full lg:px-20 py-10 items-center">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
 						<div className="w-full md:max-w-[1500px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch">
-							<div
+							{/* {storySegments && (
+								<video
+									src={storySegments[0]?.videoKey!}
+									className={
+										"absolute invisible xl:visible xl:w-full xl:h-min xl:max-w-screen-lg left-2 top-16 blur-lg"
+									}
+									autoPlay={true}
+								/>
+							)} */}
+							{/* {storySegments && (
+								<img
+									alt="Background Blur"
+									// This url gonna change based on the current rendering frame
+									// src="https://ik.imagekit.io/storybird/staging/images/849ce875-b59f-442d-b18f-548ff2bc7afc/1_823376133.webp"
+									src={`https://ik.imagekit.io/storybird/staging/${storySegments[index]?.imageKey!}`}
+									className={
+										"absolute invisible xl:visible xl:w-full xl:h-min xl:max-w-screen-lg left-2 top-16 blur-lg"
+									}
+								/>
+							)} */}
+							{/* <div
 								className="relative w-full  lg:max-w-[80%]  rounded-tl-lg rounded-bl-lg"
 								style={{ aspectRatio: 16 / 9 }}
 							>
-								<StoryScreen />
+								<StoryScreen Webstory={Webstory} isError={Webstory.isError} />
+							</div> */}
+							<div
+								className="relative w-full lg:max-w-[80%] rounded-tl-lg rounded-bl-lg"
+								style={{ aspectRatio: 16 / 9 }}
+							>
+								<div
+									className="relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-lg"
+									style={{ aspectRatio: 16 / 9 }}
+								>
+									<StoryScreen Webstory={Webstory} isError={Webstory.isError} />
+								</div>
+								<div
+									className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+									style={{ aspectRatio: 16 / 9 }}
+								>
+									<StoryScreen Webstory={Webstory} isError={Webstory.isError} />
+								</div>
 							</div>
+
 							{/* </Loading> */}
 							<div
 								className={`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`}
@@ -273,17 +329,24 @@ export default function PublishedStory() {
 													Stories
 												</p>
 												<p className="text-slate-300"> • </p>
-												{/* <a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
 											</span>
 										</span>
 									)}
 								</div>
 							</div>
+							{/* 
+								<p>
+													{(Webstory.data.user?.videoCount ?? 0) +
+														(Webstory.data.user?.storyCount ?? 0)}{" "}
+													Stories
+												</p>
+												<p className="text-slate-300"> • </p>
+								<a
+													className="p-0 m-0 text-muted-foreground font-normal"
+													href="#"
+												>
+													See all
+												</a> */}
 						</div>
 					</div>
 					<div className="absolute bottom-4 left-4 items-center flex flex-row gap-x-1">
