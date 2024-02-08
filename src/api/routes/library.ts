@@ -1,12 +1,15 @@
 import { authFetcher } from "@/lib/fetcher";
-import schema from "./schema";
+import schema from "../schema";
+import { getJwt } from "@/utils/auth";
 
 const library = {
 	get: async (
 		topLevelCategory: string,
 		slug: string
 	): Promise<schema["ReturnWebStoryDTO"]> => {
-		const data: schema["ReturnWebStoryDTOApiResponse"] = await authFetcher
+		const data: schema["ReturnWebStoryDTOApiResponse"] = await authFetcher(
+			getJwt()
+		)
 			.get(`api/library/${topLevelCategory}/${slug}`)
 			.json();
 

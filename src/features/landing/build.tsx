@@ -9,6 +9,7 @@ import { createRoot } from "react-dom/client";
 import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
 import storyLanguages from "@/utils/storyLanguages";
 import Routes from "@/routes";
+import FileUpload from "./components/file-upload";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const keys = (Enum: any) => {
 const App = () => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const [isPromptClicked, setIsPromptClicked] = useState(false);
+	const [videoFile, setVideoFile] = useState<File | null>(null);
 
 	const [prompt, setPrompt] = useState("");
 	const [options, setOptions] = useState({
@@ -347,6 +349,7 @@ const App = () => {
 					</button>
 				</div>
 			)}
+			<FileUpload videoFile={videoFile} setVideoFile={setVideoFile} />
 		</form>
 	);
 };

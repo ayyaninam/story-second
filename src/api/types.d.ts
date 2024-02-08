@@ -1882,6 +1882,30 @@ export interface paths {
       };
     };
   };
+  "/api/Video/PreSignedUrl": {
+    get: {
+      parameters: {
+        query?: {
+          fileName?: string;
+          conteentType?: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["StringApiResponse"];
+            "application/json": components["schemas"]["StringApiResponse"];
+            "text/json": components["schemas"]["StringApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/WebStory/NoAuth": {
     /** Request a new anonymous story based on the provided parameters */
     post: {
@@ -5027,6 +5051,11 @@ export interface components {
        * @description The key of the frame interpolation in the video storage.
        */
       frameInterpolationKey?: string | null;
+      /**
+       * LastImageKey
+       * @description The key of the last image in the image storage.
+       */
+      lastImageKey?: string | null;
       imageStyle?: components["schemas"]["ImageStyles"];
       /**
        * ImagePrompt
