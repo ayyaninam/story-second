@@ -9,16 +9,12 @@ import {
 	RemotionPlayerInputProps,
 	RemotionPageSegment,
 	RemotionInterpolationSegment,
+	RemotionTransitionSegment,
 } from "./constants";
 import { prefetchAssets } from "./prefetch";
 import schema from "@/api/schema";
 import { VoiceType } from "@/utils/enums";
-import { env } from "@/env.mjs";
 import Format from "@/utils/format";
-import { components } from "@/api/types";
-
-const IMAGE_BASE_URL = env.NEXT_PUBLIC_S3_BUCKET_PUBLIC;
-const AUDIO_BASE_URL = env.NEXT_PUBLIC_IMAGEKIT_URL;
 
 type WebStory = NonNullable<
 	schema["ReturnWebStoryDTO"] & {
@@ -104,9 +100,9 @@ const storySegmentToRemotionSegment = async (
 	});
 
 	// creating the segments
-	let mainPage: Omit<RemotionPageSegment, "index"> | null = null;
+	let pageSegment: Omit<RemotionPageSegment, "index"> | null = null;
 	if (segment.videoKey) {
-		mainPage = {
+		pageSegment = {
 			type: "page",
 			id: uuidv4(),
 			storyText: segment.textContent ?? "",
@@ -120,10 +116,11 @@ const storySegmentToRemotionSegment = async (
 		};
 	}
 
-	let intermediatePage: Omit<RemotionInterpolationSegment, "index"> | null =
+	let intermediateSegment: Omit<RemotionInterpolationSegment, "index"> | null =
 		null;
+	let transitionSegment: RemotionTransitionSegment | null = null;
 	if (segment.frameInterpolationKey) {
-		intermediatePage = {
+		intermediateSegment = {
 			type: "intermediate",
 			id: uuidv4(),
 			visual: {
@@ -132,10 +129,18 @@ const storySegmentToRemotionSegment = async (
 			},
 			durationInFrames: 17,
 		};
+	} else {
+		transitionSegment = {
+			type: "transition",
+			id: uuidv4(),
+			durationInFrames: VIDEO_FPS,
+		};
 	}
 
 	// @ts-ignore
-	return [intermediatePage, mainPage].filter(Boolean);
+	return [intermediateSegment ?? transitionSegment, pageSegment].filter(
+		Boolean
+	);
 };
 
 const limit = pLimit(10);
@@ -162,7 +167,7 @@ export const webStoryToRemotionInputProps = async (
 ): Promise<RemotionPlayerInputProps> => {
 	const segments = await webStoryToRemotionSegments(story, selectedVoice);
 
-	await prefetchAssets(segments);
+	// await prefetchAssets(segments);
 
 	const durationInFrames = segments.reduce(
 		(acc, segment) => acc + segment.durationInFrames,
