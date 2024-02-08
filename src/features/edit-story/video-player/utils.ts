@@ -108,7 +108,7 @@ const storySegmentToRemotionSegment = async (
 			storyText: segment.textContent ?? "",
 			visual: {
 				format: "video",
-				videoURL: Format.GetImageUrl(segment.videoKey),
+				videoURL: Format.GetVideoUrl(segment.videoKey),
 			},
 			audioURL,
 			durationInFrames: durationInFrames,
@@ -125,7 +125,7 @@ const storySegmentToRemotionSegment = async (
 			id: uuidv4(),
 			visual: {
 				format: "video",
-				videoURL: Format.GetImageUrl(segment.frameInterpolationKey),
+				videoURL: Format.GetVideoUrl(segment.frameInterpolationKey),
 			},
 			durationInFrames: 17,
 		};

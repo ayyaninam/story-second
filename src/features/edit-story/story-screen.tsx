@@ -35,10 +35,10 @@ const StoryScreen: FC<StoryScreenProps> = ({ Webstory, isError }) => {
 	useEffect(() => {
 		for (const seg of Webstory.data?.storySegments ?? []) {
 			if (seg.videoKey && !fetchedVideos.includes(seg.videoKey)) {
-				const url = Format.GetImageUrl(seg.videoKey);
+				const url = Format.GetVideoUrl(seg.videoKey);
 				const fetchedContent = prefetch(url, {
 					method: "blob-url",
-					contentType: "video/mp4",
+					contentType: "video/webm",
 				})
 					.waitUntilDone()
 					.then((res) => {

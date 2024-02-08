@@ -39,21 +39,21 @@ const App = () => {
 	};
 
 	const CreateWebstory = useMutation({
-		mutationFn: api.webstory.createUnauthorized,
+		mutationFn: api.webstory.create,
 	});
 	// Hooks
 	// Handlers
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const WebStory = await CreateWebstory.mutateAsync({
+		const params = {
 			image_style: options.style,
 			language: options.language,
 			length: options.length,
 			prompt: prompt,
-		});
-		const [genre, id] = WebStory.url.split("/");
-		if (genre && id) window.location.href = Routes.EditStory(genre, id);
+		};
+		console.log(Routes.CreateStoryFromRoute(params));
+		window.location.href = Routes.CreateStoryFromRoute(params);
 	};
 
 	return (
