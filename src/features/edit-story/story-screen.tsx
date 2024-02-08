@@ -8,9 +8,13 @@ import RemotionPlayer from "./video-player";
 import { VoiceType } from "@/utils/enums";
 import { useRemotionPlayerProps } from "./video-player/hooks";
 import VideoPlayer from "./components/video-player";
+import { useEffect, useRef, useState } from "react";
+import { prefetch } from "remotion";
 
 const StoryScreen = () => {
 	const router = useRouter();
+	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
+	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
 
 	// Queries
 	const Webstory = useQuery({
@@ -22,19 +26,53 @@ const StoryScreen = () => {
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 	});
 
+	useEffect(() => {
+		for (const seg of Webstory.data?.storySegments ?? []) {
+			if (seg.videoKey && !fetchedVideos.includes(seg.videoKey)) {
+				const url = Format.GetVideoUrl(seg.videoKey);
+				const fetchedContent = prefetch(url, {
+					method: "blob-url",
+					contentType: "video/webm",
+				})
+					.waitUntilDone()
+					.then((res) => {
+						setFetchedVideos((prev) => [...prev, url]);
+					});
+			}
+		}
+		for (const seg of Webstory.data?.storySegments ?? []) {
+			if (seg.femaleAudioKey && !fetchedAudios.includes(seg.femaleAudioKey)) {
+				const url = Format.GetImageUrl(seg.femaleAudioKey);
+				const fetchedContent = prefetch(url, {
+					method: "blob-url",
+					contentType: "audio/mpeg",
+				})
+					.waitUntilDone()
+					.then((res) => {
+						setFetchedAudios((prev) => [...prev, url]);
+					});
+			}
+		}
+	}, [Webstory.data]);
+
+	const videoArray = Webstory.data?.storySegments
+		?.filter((seg) => !!seg.videoKey)
+		.map((seg) => seg.videoKey);
+
 	const generatedImages = Webstory.data?.storySegments
 		?.filter((seg) => !!seg.imageKey)
 		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }));
 
 	const areImagesLoading =
 		!Webstory.data ||
-		(Webstory.data.storySegments?.filter((el) => el.imageKey).length ?? 0) < 2;
+		(Webstory.data?.storySegments?.filter((seg) => !!seg.imageKey)?.length ??
+			0) < 2;
 
 	const isStoryLoading =
 		!Webstory.data ||
-		(Webstory.data.storySegments?.filter((el) => el.videoKey).length ?? 0) !==
-			Webstory.data.storySegments?.length;
-
+		(videoArray?.length ?? 0) !== Webstory.data.storySegments?.length ||
+		fetchedVideos.length !== videoArray?.length ||
+		fetchedAudios.length !== videoArray?.length;
 	if (Webstory.isError)
 		return (
 			<div className="aspect-video bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center">

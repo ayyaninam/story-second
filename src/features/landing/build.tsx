@@ -8,11 +8,12 @@ import React, { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
 import storyLanguages from "@/utils/storyLanguages";
+import Routes from "@/routes";
 
 const queryClient = new QueryClient();
 
-const getEnumKeys = (Enum: any) => {
-	return Object.keys(Enum).filter((x) => !(parseInt(x) >= 0));
+const keys = (Enum: any) => {
+	return Object.keys(Enum).filter((key) => isNaN(Number(key)));
 };
 
 const App = () => {
@@ -38,19 +39,21 @@ const App = () => {
 	};
 
 	const CreateWebstory = useMutation({
-		mutationFn: api.webstory.createUnauthorized,
+		mutationFn: api.webstory.create,
 	});
 	// Hooks
 	// Handlers
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const WebStory = await CreateWebstory.mutateAsync({
+
+		const params = {
 			image_style: options.style,
 			language: options.language,
 			length: options.length,
 			prompt: prompt,
-		});
-		window.location.href = `/library/${WebStory.url}`;
+		};
+		console.log(Routes.CreateStoryFromRoute(params));
+		window.location.href = Routes.CreateStoryFromRoute(params);
 	};
 
 	return (
@@ -245,13 +248,14 @@ const App = () => {
 							onChange={(e) => {
 								setOptions((prev) => ({
 									...prev,
-									language: getEnumKeys(StoryLanguages).findIndex(
-										(el) => el === e.target.value
-									),
+									language:
+										StoryLanguages[
+											e.target.value as keyof typeof StoryLanguages
+										],
 								}));
 							}}
 						>
-							{getEnumKeys(StoryLanguages).map((label, index) => (
+							{keys(StoryLanguages).map((label, index) => (
 								<option key={index}>{label}</option>
 							))}
 						</select>
@@ -260,13 +264,12 @@ const App = () => {
 							onChange={(e) =>
 								setOptions((prev) => ({
 									...prev,
-									length: getEnumKeys(StoryLengths).findIndex(
-										(el) => el === e.target.value
-									),
+									length:
+										StoryLengths[e.target.value as keyof typeof StoryLengths],
 								}))
 							}
 						>
-							{getEnumKeys(StoryLengths).map((label, index) => (
+							{keys(StoryLengths).map((label, index) => (
 								<option key={index}>{label}</option>
 							))}
 						</select>
@@ -274,13 +277,14 @@ const App = () => {
 							onChange={(e) =>
 								setOptions((prev) => ({
 									...prev,
-									style: getEnumKeys(StoryImageStyles).findIndex(
-										(el) => el === e.target.value
-									),
+									style:
+										StoryImageStyles[
+											e.target.value as keyof typeof StoryImageStyles
+										],
 								}))
 							}
 						>
-							{getEnumKeys(StoryImageStyles).map((label, index) => (
+							{keys(StoryImageStyles).map((label, index) => (
 								<option key={index}>{label}</option>
 							))}
 						</select>

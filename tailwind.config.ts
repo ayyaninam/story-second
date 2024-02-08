@@ -309,6 +309,7 @@ const config = {
 				ring: "hsl(var(--ring))",
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",
+				reverse: "hsl(var(--reverse))",
 				primary: {
 					DEFAULT: "hsl(var(--primary))",
 					foreground: "hsl(var(--primary-foreground))",
@@ -321,6 +322,7 @@ const config = {
 					DEFAULT: "hsl(var(--destructive))",
 					foreground: "hsl(var(--destructive-foreground))",
 				},
+				description: "hsl(var(--description))",
 				muted: {
 					DEFAULT: "hsl(var(--muted))",
 					foreground: "hsl(var(--muted-foreground))",
@@ -337,6 +339,10 @@ const config = {
 					DEFAULT: "hsl(var(--card))",
 					foreground: "hsl(var(--card-foreground))",
 				},
+				button: {
+					start: "hsl(var(--button-start))",
+					end: "hsl(var(--button-end))",
+				}
 			},
 			borderRadius: {
 				lg: "var(--radius)",
@@ -360,7 +366,7 @@ const config = {
 			fontFamily: {
 				sans: ["var(--font-rand)", ...defaultTheme.fontFamily.sans],
 				mono: ["var(--font-rand-mono)", ...defaultTheme.fontFamily.sans],
-			},
+			}
 		},
 	},
 	plugins: [require("tailwindcss-animate")],

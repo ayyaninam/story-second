@@ -12,6 +12,10 @@ class Format {
 		return `https://ik.imagekit.io/storybird/staging/${key}`;
 	}
 
+	public static GetVideoUrl(key: string) {
+		return `https://ik.imagekit.io/storybird/staging/${key}?tr=f-webm`;
+	}
+
 	public static GetPublicBucketObjectUrl(object: string) {
 		return this.GetBucketObjectUrl(object, {
 			bucket: env.NEXT_PUBLIC_S3_BUCKET_PUBLIC,
