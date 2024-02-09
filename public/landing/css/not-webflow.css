@@ -155,6 +155,14 @@ button[type="submit"]:disabled {
     margin-bottom: 20px;
   }
 
+  /* 
+    In mobile create some margin horizontally
+    !important is required, cause of the css specificity
+  */
+  .container {
+    margin: 0 12px !important;
+  }
+
   /*
     Making every child of the flex to occupy same space giving it a nicer look.
   */

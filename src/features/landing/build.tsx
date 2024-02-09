@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import React, { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
 import storyLanguages from "@/utils/storyLanguages";
 import Routes from "@/routes";
@@ -336,8 +337,16 @@ if (!root) throw new Error("Root element not found");
 // console.log(root?.innerHTML);
 root.innerHTML = "";
 
-createRoot(root).render(
+const CustomInput = () => (
 	<QueryClientProvider client={queryClient}>
 		<App />
 	</QueryClientProvider>
 );
+
+const bottomInput = document.getElementById("prompt-form-2");
+if (!bottomInput) {
+	throw new Error("Bottom-input not found!");
+}
+
+createRoot(root).render(<CustomInput />);
+createRoot(bottomInput).render(<CustomInput />);
