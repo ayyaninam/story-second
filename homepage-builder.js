@@ -18,6 +18,7 @@ esbuild
 			"process.env.NEXT_PUBLIC_IMAGEKIT_URL": `"${process.env.NEXT_PUBLIC_IMAGEKIT_URL}"`,
 			"process.env.NEXT_PUBLIC_TEMP_ACCESS_KEY": `"${process.env.NEXT_PUBLIC_TEMP_ACCESS_KEY}"`,
 			"process.env.NEXT_PUBLIC_ML_API_URL": `"${process.env.NEXT_PUBLIC_ML_API_URL}"`,
+			"process.env.NEXT_PUBLIC_AUTH0_AUDIENCE": `"${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}"`,
 		},
 	})
 	.then(() => console.log("⚡Bundle build complete ⚡"))

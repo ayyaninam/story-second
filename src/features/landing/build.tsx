@@ -22,6 +22,7 @@ const App = () => {
 	const [isPromptClicked, setIsPromptClicked] = useState(false);
 	const [videoFile, setVideoFile] = useState<File | null>(null);
 
+	const [isLoading, setIsLoading] = useState(false);
 	const [prompt, setPrompt] = useState("");
 	const [options, setOptions] = useState({
 		language: StoryLanguages.English,
@@ -39,15 +40,11 @@ const App = () => {
 		// @ts-expect-error - TS doesn't know about the scrollHeight property
 		inputRef.current.style.height = `${inputRef.current?.scrollHeight}px`;
 	};
-
-	const CreateWebstory = useMutation({
-		mutationFn: api.webstory.create,
-	});
 	// Hooks
 	// Handlers
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		setIsLoading(true);
 		e.preventDefault();
-
 		const params = {
 			image_style: options.style,
 			language: options.language,
@@ -56,6 +53,7 @@ const App = () => {
 		};
 		console.log(Routes.CreateStoryFromRoute(params));
 		window.location.href = Routes.CreateStoryFromRoute(params);
+		// setIsLoading(false);
 	};
 
 	return (
@@ -323,7 +321,7 @@ const App = () => {
 							/>
 						</svg>
 
-						<span>{CreateWebstory.isPending ? "Loading" : "Produce It"}</span>
+						<span>{isLoading ? "Loading" : "Produce It"}</span>
 						<svg
 							width="16"
 							height="16"

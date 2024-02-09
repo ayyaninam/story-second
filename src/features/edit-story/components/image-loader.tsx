@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import CustomImageSuspense from "./custom-image-suspense";
-import { components } from "@/api/types";
+import { components } from "@/api/schema/main";
 
 export default function ImageLoader({
 	imageData = [],

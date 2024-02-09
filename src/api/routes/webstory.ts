@@ -1,14 +1,14 @@
 import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
-import schema from "../schema";
+import { mainSchema } from "../schema";
 import { getJwt } from "@/utils/auth";
 
 const webstory = {
 	createUnauthorized: async (
 		params: {
 			prompt?: string;
-			image_style?: schema["ImageStyles"];
-			language?: schema["StoryLanguages"];
-			length?: schema["StoryLength"];
+			image_style?: mainSchema["ImageStyles"];
+			language?: mainSchema["StoryLanguages"];
+			length?: mainSchema["StoryLength"];
 		},
 		token: string
 	): Promise<{
@@ -29,9 +29,9 @@ const webstory = {
 	create: async (
 		params: {
 			prompt?: string;
-			image_style?: schema["ImageStyles"];
-			language?: schema["StoryLanguages"];
-			length?: schema["StoryLength"];
+			image_style?: mainSchema["ImageStyles"];
+			language?: mainSchema["StoryLanguages"];
+			length?: mainSchema["StoryLength"];
 		},
 		token?: string
 	): Promise<{
