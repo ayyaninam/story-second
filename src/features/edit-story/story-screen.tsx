@@ -71,8 +71,10 @@ const StoryScreen = () => {
 	const isStoryLoading =
 		!Webstory.data ||
 		(videoArray?.length ?? 0) !== Webstory.data.storySegments?.length ||
-		fetchedVideos.length !== videoArray?.length ||
-		fetchedAudios.length !== videoArray?.length;
+		// Using large vidArray length to ensure that all videos are fetched
+		fetchedVideos.length < (videoArray?.length ?? 1000) ||
+		fetchedAudios.length < (videoArray?.length ?? 1000);
+
 	if (Webstory.isError)
 		return (
 			<div className="aspect-video bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center">
