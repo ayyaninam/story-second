@@ -136,7 +136,16 @@ button[type="submit"]:disabled {
   gap:8px
 }
 
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 991px) {
+  .footer-links-block {
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-right: 0;
+  }
+}
+@media screen and (max-width: 767px) {
 /* 
     Adjusting the font-size for mobile view giving space 
     for the wrapper to wrap to the width of screen 
