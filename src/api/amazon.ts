@@ -1,12 +1,12 @@
 import { authFetcher } from "@/lib/fetcher";
-import schema from "./schema";
+import { mainSchema } from "./schema";
 
 const amazon = {
 	payment: async ({
 		id,
 	}: {
 		id: string;
-	}): Promise<schema["AmazonRequestPaymentTypeDTO"]> =>
+	}): Promise<mainSchema["AmazonRequestPaymentTypeDTO"]> =>
 		await authFetcher.post(`api/Amazon/${id}/Payment`).json(),
 
 	allBooksRevenue: async ({
@@ -15,7 +15,7 @@ const amazon = {
 	}: {
 		CurrentPage: number;
 		PageSize: number;
-	}): Promise<schema["AmazonBooksRevenueDTOPagedListApiResponse"]> =>
+	}): Promise<mainSchema["AmazonBooksRevenueDTOPagedListApiResponse"]> =>
 		await authFetcher
 			.get(`api/Amazon/AllAmazonBooksRevenue`, {
 				searchParams: { CurrentPage, PageSize },
