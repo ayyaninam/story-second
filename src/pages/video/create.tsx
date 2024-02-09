@@ -1,7 +1,9 @@
 import api from "@/api";
+import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import Routes from "@/routes";
 import { getAccessToken, withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { access } from "fs";
 import { InferGetServerSidePropsType } from "next";
 
 const redirectHomepage = {
@@ -15,12 +17,15 @@ function StoryPage() {
 	// props: InferGetServerSidePropsType<typeof getServerSideProps>
 	// const { image_style, language, length, prompt } = props;
 	// api.webstory.create({ image_style, language, length, prompt });
-	return <div>Hello world!</div>;
+	return <div>If you are here, there has been an error</div>;
 }
-
 export const getServerSideProps = withPageAuthRequired({
 	getServerSideProps: async (ctx) => {
-		const { accessToken } = await getAccessToken(ctx.req, ctx.res);
+		const { accessToken } = await getAccessToken(ctx.req, ctx.res, {
+			authorizationParams: {
+				audience: env.NEXT_PUBLIC_AUTH0_AUDIENCE,
+			},
+		});
 		const queryParams = ctx.query;
 		try {
 			// Access the query params
