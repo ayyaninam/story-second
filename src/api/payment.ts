@@ -1,4 +1,4 @@
-import schema from "./schema";
+import { mainSchema } from "./schema";
 import { authFetcher } from "@/lib/fetcher";
 
 const payment = {
@@ -6,13 +6,13 @@ const payment = {
 		quantity,
 	}: {
 		quantity: number;
-	}): Promise<schema["ShippingPricesApiResponse"]> =>
+	}): Promise<mainSchema["ShippingPricesApiResponse"]> =>
 		await authFetcher.get(`api/Payment/GetShippingPricing/${quantity}`).json(),
 	getDiscountCodeDetails: async ({
 		code,
 	}: {
 		code: string;
-	}): Promise<schema["ReturnDiscountCodeDetailsDTOApiResponse"]> =>
+	}): Promise<mainSchema["ReturnDiscountCodeDetailsDTOApiResponse"]> =>
 		await authFetcher
 			.get(`api/Payment/DiscountCodeDetails`, { searchParams: { code } })
 			.json(),

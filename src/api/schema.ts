@@ -1,4 +1,5 @@
-import { components } from "./types";
+import { components as mainComponents } from "./schema/main";
+import { components as mlComponents } from "./schema/ml";
 
-type schema = components["schemas"];
-export default schema;
+export type mainSchema = mainComponents["schemas"];
+export type mlSchema = mlComponents["schemas"];
