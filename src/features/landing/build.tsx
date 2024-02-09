@@ -147,20 +147,8 @@ const App = () => {
 				)}
 			</div>
 			{expandTextBox && (
-				<div
-					style={{
-						display: "flex",
-						margin: "8px 0px 8px 0px",
-						justifyContent: "space-between",
-					}}
-				>
-					<div
-						style={{
-							display: "flex",
-							gap: "8px",
-							height: "100$",
-						}}
-					>
+				<div className="prompt-actions-container">
+					<div className="prompt-actions">
 						<div
 							style={{
 								display: "flex",
