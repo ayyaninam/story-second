@@ -3417,7 +3417,7 @@ export interface components {
      * Format: int32
      * @enum {integer}
      */
-    ImageResolution: _512x512 | _1024x1024;
+    ImageResolution: _512x512 | _1024x1024 | _1024x576 | _576x1024;
     /**
      * Format: int32
      * @description Represents the art style of the image.
@@ -4004,10 +4004,10 @@ export interface components {
        */
       isPublic?: boolean;
       /**
-       * IsPluginGenerated
+       * PluginGenerated
        * @description Whether or not the WebStory is plugin generated.
        */
-      isPluginGenerated?: boolean;
+      pluginGenerated?: boolean;
       /**
        * Slug
        * @description The slug of the WebStory.
@@ -4186,10 +4186,10 @@ export interface components {
        */
       isPublic?: boolean;
       /**
-       * IsPluginGenerated
+       * PluginGenerated
        * @description Whether or not the WebStory is plugin generated.
        */
-      isPluginGenerated?: boolean;
+      pluginGenerated?: boolean;
       /**
        * Slug
        * @description The slug of the WebStory.
@@ -5122,6 +5122,23 @@ export interface components {
        */
       profileName?: string | null;
       /**
+       * ProfilePicture
+       * @description The user's profile picture.
+       */
+      profilePicture?: string | null;
+      /**
+       * StoryCount
+       * Format: int32
+       * @description The number of stories the user has.
+       */
+      storyCount?: number;
+      /**
+       * VideoCount
+       * Format: int32
+       * @description The number of videos the user has.
+       */
+      videoCount?: number;
+      /**
        * Created
        * Format: date-time
        * @description The date and time the user was created.
@@ -5825,10 +5842,17 @@ export interface components {
        */
       bio?: string | null;
       /**
-       * InternalUser
-       * @description Whether the user is an internal user.
+       * StoryCount
+       * Format: int32
+       * @description The number of stories the user has.
        */
-      internalUser?: boolean;
+      storyCount?: number;
+      /**
+       * VideoCount
+       * Format: int32
+       * @description The number of videos the user has.
+       */
+      videoCount?: number;
       /**
        * CardBrand
        * @description The brand of the user's card.
