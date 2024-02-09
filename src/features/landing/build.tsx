@@ -263,8 +263,7 @@ const App = () => {
 								htmlFor="upload-video"
 								style={{
 									cursor: "pointer",
-									backgroundColor:
-										outputMode === "upload" ? "white" : "#F1F5F9",
+									backgroundColor: "#F1F5F9",
 									padding: "4px 8px",
 									borderRadius: "4px",
 									margin: "auto",
@@ -276,7 +275,7 @@ const App = () => {
 									height="24"
 									viewBox="0 0 24 24"
 									fill="none"
-									stroke={outputMode === "upload" ? "#020617" : "#64748B"}
+									stroke={"#64748B"}
 									stroke-width="1"
 									stroke-linecap="round"
 									stroke-linejoin="round"
