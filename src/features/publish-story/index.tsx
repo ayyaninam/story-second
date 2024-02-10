@@ -181,7 +181,7 @@ export default function PublishedStory() {
 				</div>
 			</div>
 			<div className={`flex bg-reverse min-h-[calc(100vh-66px)] p-2 gap-x-1.5`}>
-				<div className="relative w-full lg:px-20 py-10 items-center">
+				<div className="relative w-full lg:px-20 pb-10 items-center">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
 						<div
 							className={cn(
