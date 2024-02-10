@@ -101,7 +101,9 @@ export default function EditStory() {
 									stroke="#94ABB8"
 								/>
 							</svg>
-							<p className="text-sm">16:9</p>
+							<p className="text-sm">
+								{GetImageRatio().width}:{GetImageRatio().height}
+							</p>
 						</span>
 					</div>
 					<p className="text-sm">{Format.Title(Webstory.data?.storyTitle)}</p>
@@ -188,7 +190,17 @@ export default function EditStory() {
 				</div>
 				<div className="relative rounded-lg border-[1px] w-full border-border bg-border  bg-blend-luminosity px-2 lg:px-5 py-2 ">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
-						<div className="w-full md:max-w-[1500px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch">
+						<div
+							className={cn(
+								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
+								// Based on aspect ratio we need to adjust the parent width
+								GetImageRatio().width === 1 && "md:max-w-[1080px]",
+								GetImageRatio().width === 3 && "md:max-w-[900px]",
+								GetImageRatio().width === 4 && "md:max-w-[1280px]",
+								GetImageRatio().width === 9 && "md:max-w-[780px]",
+								GetImageRatio().width === 16 && "md:max-w-[1620px]"
+							)}
+						>
 							{/* eslint-disable-next-line @next/next/no-img-element */}
 							{/* <img
 								alt="Background Blur"
@@ -199,7 +211,7 @@ export default function EditStory() {
 								}
 							/> */}
 							<div
-								className="relative lg:max-w-[80%] w-full  rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
+								className="relative w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
 								style={{ aspectRatio: GetImageRatio().ratio }}
 							>
 								<StoryScreen />

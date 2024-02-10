@@ -159,9 +159,10 @@ export default function CustomImageSuspense({
 			style={{
 				backgroundImage: `url(${imageSrc})`,
 				backgroundSize: "cover",
+				backgroundRepeat: "no-repeat",
 				aspectRatio: GetImageRatio().ratio,
 			}}
-			className="transition-all duration-500"
+			className={`transition-all duration-500`}
 		>
 			{isLoaded && queue.length > 0
 				? twoDArray.map((row, rowIdx) => {
