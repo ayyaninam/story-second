@@ -15,6 +15,7 @@ import {
 	VIDEO_WIDTH,
 	RemotionPlayerInputProps,
 } from "./constants";
+import { GetImageRatio } from "@/utils/image-ratio";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
@@ -23,6 +24,7 @@ const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 // TODO: responsive styles
 const player: React.CSSProperties = {
 	width: "100%",
+	aspectRatio: GetImageRatio().ratio,
 };
 
 type RemotionPlayerProps = {
