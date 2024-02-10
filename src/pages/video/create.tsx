@@ -41,6 +41,7 @@ export const getServerSideProps = withPageAuthRequired({
 					language: Number(language),
 					length: Number(length),
 					prompt: prompt as string,
+					image_resolution: 3,
 				},
 				accessToken as string
 			);

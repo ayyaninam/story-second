@@ -199,7 +199,7 @@ export default function EditStory() {
 								}
 							/> */}
 							<div
-								className="relative lg:max-w-[80%] w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
+								className="relative lg:max-w-[80%] w-full  rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
 								style={{ aspectRatio: GetImageRatio().ratio }}
 							>
 								<StoryScreen />

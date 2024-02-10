@@ -1,4 +1,5 @@
 import cn from "@/utils/cn";
+import { GetImageRatio } from "@/utils/image-ratio";
 import dayjs from "dayjs";
 import React, { useState, useEffect, useRef } from "react";
 import { useMap, useReadLocalStorage } from "usehooks-ts";
@@ -158,6 +159,7 @@ export default function CustomImageSuspense({
 			style={{
 				backgroundImage: `url(${imageSrc})`,
 				backgroundSize: "cover",
+				aspectRatio: GetImageRatio().ratio,
 			}}
 			className="transition-all duration-500"
 		>

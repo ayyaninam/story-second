@@ -32,6 +32,7 @@ const webstory = {
 			image_style?: mainSchema["ImageStyles"];
 			language?: mainSchema["StoryLanguages"];
 			length?: mainSchema["StoryLength"];
+			image_resolution: number;
 		},
 		token?: string
 	): Promise<{
