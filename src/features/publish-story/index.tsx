@@ -21,6 +21,8 @@ import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
 import { useMediaQuery } from "usehooks-ts";
+import { GetImageRatio } from "@/utils/image-ratio";
+import { cn } from "@/utils";
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function PublishedStory() {
@@ -179,13 +181,20 @@ export default function PublishedStory() {
 				</div>
 			</div>
 			<div className={`flex bg-reverse min-h-[calc(100vh-66px)] p-2 gap-x-1.5`}>
-				<div className="relative w-full lg:px-20 py-10 items-center">
+				<div className="relative w-full lg:px-20 pb-10 items-center">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
-						<div className="w-full md:max-w-[1500px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch">
-							<div
-								className="relative w-full  lg:max-w-[80%]  rounded-tl-lg rounded-bl-lg"
-								style={{ aspectRatio: 16 / 9 }}
-							>
+						<div
+							className={cn(
+								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
+								// Based on aspect ratio we need to adjust the parent width
+								GetImageRatio().width === 1 && "md:max-w-[1080px]",
+								GetImageRatio().width === 3 && "md:max-w-[900px]",
+								GetImageRatio().width === 4 && "md:max-w-[1280px]",
+								GetImageRatio().width === 9 && "md:max-w-[780px]",
+								GetImageRatio().width === 16 && "md:max-w-[1620px]"
+							)}
+						>
+							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
 								<StoryScreen />
 							</div>
 							{/* </Loading> */}

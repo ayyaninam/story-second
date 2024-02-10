@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import CustomImageSuspense from "./custom-image-suspense";
 import { components } from "@/api/schema/main";
+import { GetImageRatio } from "@/utils/image-ratio";
 
 export default function ImageLoader({
 	imageData = [],
@@ -48,12 +49,12 @@ export default function ImageLoader({
 			onComplete={() => setSeenIndices((prev) => [...prev, index])}
 			showAnimation={seenIndices.includes(index)}
 			loadingDuration={imageLoadingDurationMs}
-			width={16}
-			height={9}
+			width={GetImageRatio().width}
+			height={GetImageRatio().height}
 			Container={({ children, style, className }) => (
 				<div
-					className={`relative w-full h-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg ${className}`}
 					style={style}
+					className={`relative w-full h-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg ${className} `}
 				>
 					<div className="absolute flex h-full w-full justify-center items-end z-[100]">
 						<div
