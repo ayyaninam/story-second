@@ -27,5 +27,5 @@ export const ImageRatios = {
 };
 
 export const GetImageRatio = () => {
-	return ImageRatios["16x9"];
+	return ImageRatios["9x16"];
 };
