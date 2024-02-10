@@ -20,7 +20,7 @@ const keys = (Enum: any) => {
 const App = () => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const [isPromptClicked, setIsPromptClicked] = useState(false);
-	const [videoFile, setVideoFile] = useState<File | null>(null);
+	const [videoFileId, setVideoFileId] = useState<string | null>(null);
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [prompt, setPrompt] = useState("");
@@ -244,7 +244,7 @@ const App = () => {
 								</svg>
 							</label>
 						</div>
-						<FileUpload videoFile={videoFile} setVideoFile={setVideoFile} />
+						<FileUpload setVideoFileId={setVideoFileId} />
 
 						<select
 							onChange={(e) => {

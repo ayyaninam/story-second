@@ -1,12 +1,12 @@
 import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
-import schema from "../schema";
+import { mainSchema } from "../schema";
 import { getJwt } from "@/utils/auth";
 
 const video = {
 	getUploadUrl: async (
-		params: { fileName: string; conteentType: string },
+		params: { fileName: string; contentType: string },
 		token?: string
-	): Promise<schema["StringApiResponse"]> => {
+	): Promise<mainSchema["UploadToS3DTOApiResponse"]> => {
 		return await authFetcher(token || getJwt())
 			.get(`api/Video/PreSignedUrl`, { searchParams: params })
 			.json();
@@ -14,9 +14,9 @@ const video = {
 	create: async (
 		params: {
 			prompt?: string;
-			image_style?: schema["ImageStyles"];
-			language?: schema["StoryLanguages"];
-			length?: schema["StoryLength"];
+			image_style?: mainSchema["ImageStyles"];
+			language?: mainSchema["StoryLanguages"];
+			length?: mainSchema["StoryLength"];
 		},
 		token?: string
 	): Promise<{
