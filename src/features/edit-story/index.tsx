@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/utils";
 import Routes from "@/routes";
+import { GetImageRatio } from "@/utils/image-ratio";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -185,7 +186,7 @@ export default function EditStory() {
 
 					<Compass className="h-4 w-4 stroke-muted-foreground" />
 				</div>
-				<div className="relative rounded-lg border-[1px] w-full border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
+				<div className="relative rounded-lg border-[1px] w-full border-border bg-border  bg-blend-luminosity px-2 lg:px-5 py-2 ">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
 						<div className="w-full md:max-w-[1500px] border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch">
 							{/* eslint-disable-next-line @next/next/no-img-element */}
@@ -197,12 +198,15 @@ export default function EditStory() {
 									"absolute invisible xl:visible xl:w-full xl:h-min xl:max-w-screen-lg left-2 top-16 blur-lg"
 								}
 							/> */}
-							<div className="relative w-full lg:max-w-[80%] rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg aspect-video">
+							<div
+								className="relative lg:max-w-[80%] w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
+								style={{ aspectRatio: GetImageRatio().ratio }}
+							>
 								<StoryScreen />
 							</div>
 							<div
 								className={cn(
-									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-background rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lgcn`
+									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-background rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`
 								)}
 							>
 								<div className="relative space-y-2">
