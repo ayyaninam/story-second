@@ -10,6 +10,7 @@ import { useRemotionPlayerProps } from "./video-player/hooks";
 import VideoPlayer from "./components/video-player";
 import { useEffect, useRef, useState } from "react";
 import { prefetch } from "remotion";
+import { GetImageRatio } from "@/utils/image-ratio";
 
 const StoryScreen = () => {
 	const router = useRouter();
@@ -77,7 +78,10 @@ const StoryScreen = () => {
 
 	if (Webstory.isError)
 		return (
-			<div className="aspect-video bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center">
+			<div
+				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
+				style={{ aspectRatio: GetImageRatio().ratio }}
+			>
 				<p className="text-xl">
 					There was an error loading your story, please try again or contact
 					support.
@@ -86,7 +90,10 @@ const StoryScreen = () => {
 		);
 	else if (areImagesLoading) {
 		return (
-			<div className="aspect-video bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-end">
+			<div
+				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
+				style={{ aspectRatio: GetImageRatio().ratio }}
+			>
 				<div
 					className="px-4 py-1 text-white border-[0.5px] mb-16"
 					style={{
