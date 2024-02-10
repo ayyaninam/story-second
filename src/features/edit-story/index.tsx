@@ -31,7 +31,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/utils";
 import Routes from "@/routes";
 
-const MAX_SUMMARY_LENGTH = 250;
+const MAX_SUMMARY_LENGTH = 251;
 
 export default function EditStory() {
 	const router = useRouter();
