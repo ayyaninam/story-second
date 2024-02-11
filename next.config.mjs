@@ -5,10 +5,6 @@ const nextConfig = {
 		return {
 			afterFiles: [
 				{
-					source: "/l1",
-					destination: "/landing/index.html",
-				},
-				{
 					source: "/",
 					destination: "/landing/index.html",
 				},

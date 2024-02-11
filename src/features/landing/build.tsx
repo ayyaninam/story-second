@@ -1,17 +1,21 @@
 import api from "@/api";
-import storyLanguages from "@/utils/storyLanguages";
 import {
 	QueryClient,
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useStoryForm } from "./hooks/useStoryForm";
+import { renderToString } from "react-dom/server";
 import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
-import { env } from "@/env.mjs";
+import storyLanguages from "@/utils/storyLanguages";
+import Routes from "@/routes";
 
 const queryClient = new QueryClient();
+
+const keys = (Enum: any) => {
+	return Object.keys(Enum).filter((key) => isNaN(Number(key)));
+};
 
 const App = () => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -36,19 +40,21 @@ const App = () => {
 	};
 
 	const CreateWebstory = useMutation({
-		mutationFn: api.webstory.createUnauthorized,
+		mutationFn: api.webstory.create,
 	});
 	// Hooks
 	// Handlers
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const WebStory = await CreateWebstory.mutateAsync({
+
+		const params = {
 			image_style: options.style,
 			language: options.language,
 			length: options.length,
 			prompt: prompt,
-		});
-		window.location.href = `/library/${WebStory.url}`;
+		};
+		console.log(Routes.CreateStoryFromRoute(params));
+		window.location.href = Routes.CreateStoryFromRoute(params);
 	};
 
 	return (
@@ -142,20 +148,8 @@ const App = () => {
 				)}
 			</div>
 			{expandTextBox && (
-				<div
-					style={{
-						display: "flex",
-						margin: "8px 0px 8px 0px",
-						justifyContent: "space-between",
-					}}
-				>
-					<div
-						style={{
-							display: "flex",
-							gap: "8px",
-							height: "100$",
-						}}
-					>
+				<div className="prompt-actions-container">
+					<div className="prompt-actions">
 						<div
 							style={{
 								display: "flex",
@@ -231,33 +225,47 @@ const App = () => {
 							</label>
 						</div>
 						<select
+							onChange={(e) => {
+								setOptions((prev) => ({
+									...prev,
+									language:
+										StoryLanguages[
+											e.target.value as keyof typeof StoryLanguages
+										],
+								}));
+							}}
+						>
+							{keys(StoryLanguages).map((label, index) => (
+								<option key={index}>{label}</option>
+							))}
+						</select>
+
+						<select
 							onChange={(e) =>
-								// @ts-expect-error - TS doesn't know about the value property
-								setOptions((prev) => ({ ...prev, language: e.target.value }))
+								setOptions((prev) => ({
+									...prev,
+									length:
+										StoryLengths[e.target.value as keyof typeof StoryLengths],
+								}))
 							}
 						>
-							{Object.entries(StoryLanguages).map(([key, label], index) => (
-								<option key={key}>{label}</option>
+							{keys(StoryLengths).map((label, index) => (
+								<option key={index}>{label}</option>
 							))}
 						</select>
 						<select
 							onChange={(e) =>
-								// @ts-expect-error - TS doesn't know about the value property
-								setOptions((prev) => ({ ...prev, length: e.target.value }))
+								setOptions((prev) => ({
+									...prev,
+									style:
+										StoryImageStyles[
+											e.target.value as keyof typeof StoryImageStyles
+										],
+								}))
 							}
 						>
-							{Object.entries(StoryLengths).map(([key, label], index) => (
-								<option key={key}>{label}</option>
-							))}
-						</select>
-						<select
-							onChange={(e) =>
-								// @ts-expect-error - TS doesn't know about the value property
-								setOptions((prev) => ({ ...prev, style: e.target.value }))
-							}
-						>
-							{Object.entries(StoryImageStyles).map(([key, label], index) => (
-								<option key={key}>{label}</option>
+							{keys(StoryImageStyles).map((label, index) => (
+								<option key={index}>{label}</option>
 							))}
 						</select>
 					</div>
@@ -323,20 +331,22 @@ const App = () => {
 	);
 };
 
-const urlParams = new URLSearchParams(window.location.search);
-const accessToken = urlParams.get("k") ?? window.localStorage.getItem("k");
-window.localStorage.setItem("k", accessToken ?? "");
-if (accessToken !== env.NEXT_PUBLIC_TEMP_ACCESS_KEY)
-	window.location.href = "/404";
-
 const root = document.getElementById("prompt-form");
 if (!root) throw new Error("Root element not found");
 
 // console.log(root?.innerHTML);
 root.innerHTML = "";
 
-createRoot(root).render(
+const CustomInput = () => (
 	<QueryClientProvider client={queryClient}>
 		<App />
 	</QueryClientProvider>
 );
+
+const bottomInput = document.getElementById("prompt-form-2");
+if (!bottomInput) {
+	throw new Error("Bottom-input not found!");
+}
+
+createRoot(root).render(<CustomInput />);
+createRoot(bottomInput).render(<CustomInput />);
