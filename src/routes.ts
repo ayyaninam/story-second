@@ -1,3 +1,5 @@
+import { CreateInitialStoryQueryParams } from "./types";
+
 class Routes {
 	static ViewStory(genre: string, id: string) {
 		return `/video/${genre}/${id}/view`;
@@ -5,12 +7,7 @@ class Routes {
 	static EditStory(genre: string, id: string) {
 		return `/video/${genre}/${id}/edit`;
 	}
-	static CreateStoryFromRoute(params: {
-		image_style: number;
-		language: number;
-		length: number;
-		prompt: string;
-	}) {
+	static CreateStoryFromRoute(params: CreateInitialStoryQueryParams) {
 		const stringified = Object.fromEntries(
 			Object.entries(params).map(([key, value]) => [key, value.toString()])
 		);
