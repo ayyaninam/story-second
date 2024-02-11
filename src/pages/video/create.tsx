@@ -7,22 +7,11 @@ import { getAccessToken, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { access } from "fs";
 import { InferGetServerSidePropsType } from "next";
 
-const redirectToHomepage = (options?: { errorMessage?: string }) => {
-	if (options?.errorMessage) {
-		return {
-			redirect: {
-				destination: "/?error=" + encodeURIComponent(options.errorMessage),
-				permanent: false,
-			},
-		};
-	} else {
-		return {
-			redirect: {
-				destination: "/",
-				permanent: false,
-			},
-		};
-	}
+const redirectToHomepage = {
+	redirect: {
+		destination: "/",
+		permanent: false,
+	},
 };
 
 function convertAndValidateStoryQueryParams<
@@ -55,12 +44,10 @@ function convertAndValidateStoryQueryParams<
 }
 
 function StoryPage() {
-	// props: InferGetServerSidePropsType<typeof getServerSideProps>
-	// const { image_style, language, length, prompt } = props;
-	// api.webstory.create({ image_style, language, length, prompt });
 	return <div>If you are here, there has been an error</div>;
 }
 export const getServerSideProps = withPageAuthRequired({
+	// @ts-expect-error Some weird type error here
 	getServerSideProps: async (ctx) => {
 		try {
 			const { accessToken } = await getAccessToken(ctx.req, ctx.res, {
@@ -119,13 +106,19 @@ export const getServerSideProps = withPageAuthRequired({
 				},
 				accessToken as string
 			);
+			console.log("url", url);
 			const [genre, id] = url.split("/");
 			// If the url is not in the expected format, redirect to home
 			if (!genre || !id)
 				throw new Error(
 					"Invalid response from server, no genre or id provided"
 				);
-
+			console.log({
+				redirect: {
+					destination: Routes.EditStory(genre, id),
+					permanent: false,
+				},
+			});
 			return {
 				redirect: {
 					destination: Routes.EditStory(genre, id),
@@ -135,11 +128,8 @@ export const getServerSideProps = withPageAuthRequired({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
-				return redirectToHomepage({ errorMessage: error.message });
+				return redirectToHomepage;
 			}
-		} finally {
-			// Not sure why we need a finally but TS stops complaining if it's there
-			return redirectToHomepage();
 		}
 	},
 });

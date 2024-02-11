@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { renderToString } from "react-dom/server";
+import storyLanguages from "@/utils/storyLanguages";
 import {
 	StoryImageStyles,
 	StoryInputTypes,
@@ -75,16 +77,7 @@ const App = () => {
 			<div className="first-form">
 				<div style={{ width: "100%", display: "flex" }}>
 					<textarea
-						style={{
-							resize: "none",
-							border: "none",
-							minWidth: "100%",
-							textAlign: "left",
-							paddingTop: "16px",
-							fontSize: "20px",
-							fontWeight: "400",
-							transition: "height 0.6s",
-						}}
+						className="prompt-input"
 						ref={inputRef}
 						onClick={() => setIsPromptClicked(true)}
 						// className="build-form-input w-input"
@@ -170,20 +163,8 @@ const App = () => {
 				)}
 			</div>
 			{expandTextBox && (
-				<div
-					style={{
-						display: "flex",
-						margin: "8px 0px 8px 0px",
-						justifyContent: "space-between",
-					}}
-				>
-					<div
-						style={{
-							display: "flex",
-							gap: "8px",
-							height: "100$",
-						}}
-					>
+				<div className="prompt-actions-container">
+					<div className="prompt-actions">
 						<div
 							style={{
 								display: "flex",
@@ -383,8 +364,16 @@ if (!root) throw new Error("Root element not found");
 // console.log(root?.innerHTML);
 root.innerHTML = "";
 
-createRoot(root).render(
+const CustomInput = () => (
 	<QueryClientProvider client={queryClient}>
 		<App />
 	</QueryClientProvider>
 );
+
+const bottomInput = document.getElementById("prompt-form-2");
+if (!bottomInput) {
+	throw new Error("Bottom-input not found!");
+}
+
+createRoot(root).render(<CustomInput />);
+createRoot(bottomInput).render(<CustomInput />);
