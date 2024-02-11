@@ -8,8 +8,8 @@
 		"build": "node homepage-builder.js && next build",
 		"start": "next start",
 		"lint": "next lint",
-		"api:generate-types": "npx openapi-typescript https://api.staging.storybird.ai/swagger/v1/swagger.json -o ./src/api/types.d.ts",
-		"build:webflow": "nodemon --exec 'node homepage-builder.js' --watch ./src/features/landing/build.tsx",
+		"build:webflow": "nodemon --exec 'node homepage-builder.js' --watch './src/features/landing/*' -e tsx",
+		"api:generate-types": "npx openapi-typescript https://api.staging.storybird.ai/swagger/v1/swagger.json -o ./src/api/schema/main.d.ts && npx openapi-typescript https://ml.staging.authorly.ai/openapi.json -o ./src/api/schema/ml.d.ts",
 		"format": "prettier . --write",
 		"prepare": "husky && husky install"
 	},
@@ -39,6 +39,7 @@
 		"p-limit": "^5.0.0",
 		"react": "^18",
 		"react-hook-form": "^7.49.3",
+		"react-hot-toast": "^2.4.1",
 		"remotion": "4.0.106",
 		"tailwind-merge": "^2.2.1",
 		"tailwindcss-animate": "^1.0.7",

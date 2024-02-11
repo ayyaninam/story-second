@@ -46,6 +46,17 @@ export enum StoryLengths {
 	Long,
 }
 
+export enum StoryInputTypes {
+	Text,
+	Audio,
+	Video,
+}
+export enum StoryOutputTypes {
+	Story,
+	Video,
+	SplitScreen,
+}
+
 export enum VoiceType {
 	GenericMale,
 	GenericFemale,
