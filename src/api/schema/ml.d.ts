@@ -12,9 +12,9 @@ export interface paths {
 		/** Authorized */
 		post: operations["authorized_authorized_post"];
 	};
-	"/create-story": {
+	"/create": {
 		/** Create Story */
-		post: operations["create_story_create_story_post"];
+		post: operations["create_story_create_post"];
 	};
 	"/regenerate-image": {
 		/** Regenerate Image */
@@ -26,23 +26,40 @@ export type webhooks = Record<string, never>;
 
 export interface components {
 	schemas: {
+		/** CreateSplitScreenVideo */
+		CreateSplitScreenVideo: {
+			input_type: components["schemas"]["InputTypeEnum"];
+			output_type: components["schemas"]["OutputTypeEnum"];
+			/** Prompt */
+			prompt: string;
+			length: components["schemas"]["StoryLengthEnum"];
+			/** Video Key */
+			video_key: string;
+			image_style: components["schemas"]["ImageStyleEnum"];
+			language: components["schemas"]["StoryLanguageEnum"];
+			/** @default 3 */
+			image_resolution?: components["schemas"]["ImageResolutionEnum"];
+		};
 		/**
 		 * CreateStoryRequest
 		 * @description data = {
-		 *     auth_id: str,
+		 *     type: "story" | "video",
 		 *     prompt: "This is the prompt",
-		 *     video: boolean,
 		 *     length?: StoryLengthEnum,
 		 *     type?: VideoTypeEnum,
 		 *     image_style: ImageStyleEnum,
 		 * }
 		 */
 		CreateStoryRequest: {
+			input_type: components["schemas"]["InputTypeEnum"];
+			output_type: components["schemas"]["OutputTypeEnum"];
 			/** Prompt */
 			prompt: string;
 			length: components["schemas"]["StoryLengthEnum"];
 			image_style: components["schemas"]["ImageStyleEnum"];
 			language: components["schemas"]["StoryLanguageEnum"];
+			/** @default 2 */
+			image_resolution?: components["schemas"]["ImageResolutionEnum"];
 		};
 		/** HTTPValidationError */
 		HTTPValidationError: {
@@ -50,10 +67,25 @@ export interface components {
 			detail?: components["schemas"]["ValidationError"][];
 		};
 		/**
+		 * ImageResolutionEnum
+		 * @enum {integer}
+		 */
+		ImageResolutionEnum: 0 | 1 | 2 | 3 | 4 | 5;
+		/**
 		 * ImageStyleEnum
 		 * @enum {integer}
 		 */
 		ImageStyleEnum: 0 | 2 | 3 | 4 | 5 | 6 | 7;
+		/**
+		 * InputTypeEnum
+		 * @enum {integer}
+		 */
+		InputTypeEnum: 0 | 1 | 2;
+		/**
+		 * OutputTypeEnum
+		 * @enum {integer}
+		 */
+		OutputTypeEnum: 0 | 1 | 2;
 		/** RegenerateImageRequest */
 		RegenerateImageRequest: {
 			/** Story Id */
@@ -145,10 +177,12 @@ export interface operations {
 		};
 	};
 	/** Create Story */
-	create_story_create_story_post: {
+	create_story_create_post: {
 		requestBody: {
 			content: {
-				"application/json": components["schemas"]["CreateStoryRequest"];
+				"application/json":
+					| components["schemas"]["CreateStoryRequest"]
+					| components["schemas"]["CreateSplitScreenVideo"];
 			};
 		};
 		responses: {

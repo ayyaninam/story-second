@@ -1,15 +1,17 @@
-import api from "@/api";
-import {
-	QueryClient,
-	QueryClientProvider,
-	useMutation,
-} from "@tanstack/react-query";
-import React, { useRef, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
-import storyLanguages from "@/utils/storyLanguages";
+import {
+	StoryImageStyles,
+	StoryInputTypes,
+	StoryLanguages,
+	StoryLengths,
+	StoryOutputTypes,
+} from "@/utils/enums";
 import Routes from "@/routes";
 import FileUpload from "./components/file-upload";
+import toast, { Toaster } from "react-hot-toast";
+import { CreateInitialStoryQueryParams } from "@/types";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +32,9 @@ const App = () => {
 		style: StoryImageStyles.Realistic,
 	});
 
-	const [outputMode, setOutputMode] = useState<"video" | "book">("video");
+	const [outputType, setOutputType] = useState<
+		StoryOutputTypes.Story | StoryOutputTypes.Video
+	>(StoryOutputTypes.Video);
 
 	const expandTextBox = !!isPromptClicked;
 	const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -45,15 +49,25 @@ const App = () => {
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		setIsLoading(true);
 		e.preventDefault();
-		const params = {
-			image_style: options.style,
+		const params: CreateInitialStoryQueryParams = {
+			image_style:
+				options.style as CreateInitialStoryQueryParams["image_style"],
 			language: options.language,
 			length: options.length,
 			prompt: prompt,
+			image_resolution: 1,
+			input_type: StoryInputTypes.Text,
+			output_type: outputType,
+			video_key: "",
 		};
+
+		if (videoFileId) {
+			params["input_type"] = StoryInputTypes.Video;
+			params["output_type"] = StoryOutputTypes.SplitScreen;
+			params["video_key"] = videoFileId;
+		}
 		console.log(Routes.CreateStoryFromRoute(params));
 		window.location.href = Routes.CreateStoryFromRoute(params);
-		// setIsLoading(false);
 	};
 
 	return (
@@ -189,12 +203,13 @@ const App = () => {
 								className="appearance-none"
 								style={{
 									cursor: "pointer",
-									backgroundColor: outputMode === "video" ? "white" : "#F1F5F9",
+									backgroundColor:
+										outputType === StoryOutputTypes.Video ? "white" : "#F1F5F9",
 									padding: "4px 8px",
 									borderRadius: "4px",
 									margin: "auto",
 								}}
-								onClick={() => setOutputMode("video")}
+								onClick={() => setOutputType(StoryOutputTypes.Video)}
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -202,7 +217,11 @@ const App = () => {
 									height="24"
 									viewBox="0 0 24 24"
 									fill="none"
-									stroke={outputMode === "video" ? "#020617" : "#64748B"}
+									stroke={
+										outputType === StoryOutputTypes.Video
+											? "#020617"
+											: "#64748B"
+									}
 									strokeWidth="1"
 									strokeLinecap="round"
 									strokeLinejoin="round"
@@ -216,13 +235,14 @@ const App = () => {
 								name="Book"
 								id="book"
 								style={{ appearance: "none" }}
-								onClick={() => setOutputMode("book")}
+								onClick={() => setOutputType(StoryOutputTypes.Story)}
 							/>
 							<label
 								htmlFor="book"
 								style={{
 									cursor: "pointer",
-									backgroundColor: outputMode === "book" ? "white" : "#F1F5F9",
+									backgroundColor:
+										outputType === StoryOutputTypes.Story ? "white" : "#F1F5F9",
 									padding: "4px 8px",
 									borderRadius: "4px",
 									margin: "auto",
@@ -234,7 +254,11 @@ const App = () => {
 									height="24"
 									viewBox="0 0 24 24"
 									fill="none"
-									stroke={outputMode === "book" ? "#020617" : "#64748B"}
+									stroke={
+										outputType === StoryOutputTypes.Story
+											? "#020617"
+											: "#64748B"
+									}
 									strokeWidth="1"
 									strokeLinecap="round"
 									strokeLinejoin="round"

@@ -11,28 +11,6 @@ const video = {
 			.get(`api/Video/PreSignedUrl`, { searchParams: params })
 			.json();
 	},
-	create: async (
-		params: {
-			prompt?: string;
-			image_style?: mainSchema["ImageStyles"];
-			language?: mainSchema["StoryLanguages"];
-			length?: mainSchema["StoryLength"];
-		},
-		token?: string
-	): Promise<{
-		title: string;
-		englishTitle: string;
-		blurb: string;
-		category: string;
-		cover_image: string;
-		image_style: number;
-		url: string;
-	}> =>
-		await mlFetcher(token || getJwt())
-			.post(`create-story`, {
-				body: JSON.stringify(params),
-			})
-			.json(),
 };
 
 export default video;

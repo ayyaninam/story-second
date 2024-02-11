@@ -39,6 +39,7 @@
 		"p-limit": "^5.0.0",
 		"react": "^18",
 		"react-hook-form": "^7.49.3",
+		"react-hot-toast": "^2.4.1",
 		"remotion": "4.0.106",
 		"tailwind-merge": "^2.2.1",
 		"tailwindcss-animate": "^1.0.7",

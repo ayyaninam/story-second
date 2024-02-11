@@ -8,6 +8,10 @@ const nextConfig = {
 					source: "/",
 					destination: "/landing/index.html",
 				},
+				{
+					source: "/404",
+					destination: "/landing/404.html",
+				},
 			],
 		};
 	},
