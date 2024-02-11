@@ -176,7 +176,12 @@ export const webStoryToRemotionInputProps = async (
 
 	return {
 		showLoadingVideo: false,
+		variant: "portrait", // todo: add logic to differentiate between portrait and landscape
 		durationInFrames,
 		segments,
+		enableAudio: true,
+		enableSubtitles: true,
+		bottomVideoURL:
+			"https://ik.imagekit.io/storybird/staging/videos/3c27a33f-948e-4ded-8176-074ddee93285/1_357318118.mp4?tr=f-webm", // todo: change this hardcoded value
 	};
 };
