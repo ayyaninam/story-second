@@ -17,6 +17,12 @@
 			"@/*": ["./src/*"],
 		},
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "webflow-builder.js"],
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"webflow-builder.js",
+		"src/api/routes",
+	],
 	"exclude": ["node_modules"],
 }

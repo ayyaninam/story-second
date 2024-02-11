@@ -1882,6 +1882,30 @@ export interface paths {
       };
     };
   };
+  "/api/Video/PreSignedUrl": {
+    get: {
+      parameters: {
+        query?: {
+          fileName?: string;
+          contentType?: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["UploadToS3DTOApiResponse"];
+            "application/json": components["schemas"]["UploadToS3DTOApiResponse"];
+            "text/json": components["schemas"]["UploadToS3DTOApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/WebStory/NoAuth": {
     /** Request a new anonymous story based on the provided parameters */
     post: {
@@ -5027,6 +5051,11 @@ export interface components {
        * @description The key of the frame interpolation in the video storage.
        */
       frameInterpolationKey?: string | null;
+      /**
+       * LastImageKey
+       * @description The key of the last image in the image storage.
+       */
+      lastImageKey?: string | null;
       imageStyle?: components["schemas"]["ImageStyles"];
       /**
        * ImagePrompt
@@ -5791,6 +5820,20 @@ export interface components {
        * @description The user's phone number.
        */
       phoneNumber: string;
+    };
+    /** @description DTO used to return the pre-signed URL and object key for uploading to S3. */
+    UploadToS3DTO: {
+      /** @description The pre-signed URL for uploading to S3. */
+      preSignedUrl?: string | null;
+      /** @description The file location in S3. */
+      objectKey?: string | null;
+    };
+    /** @description Represents the standard response format for API requests. */
+    UploadToS3DTOApiResponse: {
+      data?: components["schemas"]["UploadToS3DTO"];
+      succeeded?: boolean;
+      message?: string | null;
+      status?: components["schemas"]["ApiResponseStatus"];
     };
     /** @description Return model for the user's account details. */
     UserInfoDTO: {
