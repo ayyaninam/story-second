@@ -114,6 +114,87 @@ button[type="submit"]:disabled {
   background-color: #E1EAEF;
 }
 
+.prompt-input {
+  resize: none;
+  border: none;
+  min-width: 100%;
+  text-align: left;
+  padding-top: 16px;
+  font-size: 20px;
+  font-weight: 400;
+  transition: height 0.6s;
+}
+
+.prompt-actions-container {
+  display:flex;
+  margin:8px 0px 8px 0px;
+  justify-content:space-between;
+}
+
+.prompt-actions {
+  display:flex;
+  gap:8px
+}
+
+@media screen and (max-width: 991px) {
+  .footer-links-block {
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-right: 0;
+  }
+}
+@media screen and (max-width: 767px) {
+/* 
+    Adjusting the font-size for mobile view giving space 
+    for the wrapper to wrap to the width of screen 
+  */
+  .prompt-input {
+    font-size: 16px;
+    padding-top: 10px;
+  }
+
+  /* 
+    Adjusting the action fields based on the available width.
+  */
+  .prompt-actions {
+    flex-flow: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  /* 
+    In mobile create some margin horizontally
+    !important is required, cause of the css specificity
+  */
+  .container {
+    margin: 0 12px !important;
+  }
+
+  /*
+    Making every child of the flex to occupy same space giving it a nicer look.
+  */
+  .prompt-actions > * {
+    /* Giving the space for items to wrap for margins & paddings */
+    width: 48%;
+    height: 40px;
+  }
+
+  /* 
+    Contain the flex-direction to column giving us to accommodate all the buttons in a nicer view
+  */
+  .prompt-actions-container {
+    flex-direction: column;
+  }
+
+  label[for="video"], label[for="book"]{
+    width: 50%;
+    margin: 0 !important;
+    height: 100%;
+    text-align: center;
+  }
+}
 
 .button-nosubmit:disabled {
   color: #FFFFFF
