@@ -88,21 +88,20 @@ export const getServerSideProps = withPageAuthRequired({
 			)
 				throw new Error("Missing required params");
 
-			// const _user = await api.user.register(
-			// 	{
-			// 		email: session.user.email,
-			// 		name: session.user.nickname,
-			// 		verificationRequired: session.user.email_verified,
-			// 		...(session.user.picture && session.user?.picture.length > 0
-			// 			? {
-			// 					profilePicture: session.user.picture,
-			// 				}
-			// 			: {}), // Only include profile picture if it exists
-			// 	},
-			// 	accessToken as string
-			// );
-			// console.log("Creating a story for user: ", _user.data);
-
+			const _user = await api.user.register(
+				{
+					email: session.user.email,
+					name: session.user.nickname,
+					verificationRequired: session.user.email_verified,
+					...(session.user.picture && session.user?.picture.length > 0
+						? {
+								profilePicture: session.user.picture,
+							}
+						: {}), // Only include profile picture if it exists
+				},
+				accessToken as string
+			);
+			console.log("Creating a story for user: ", _user.data);
 			const story = await api.webstory.create(
 				{
 					image_style: convertAndValidateStoryQueryParams(
