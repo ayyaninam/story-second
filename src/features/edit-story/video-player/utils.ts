@@ -1,5 +1,6 @@
 import pLimit from "p-limit";
 import { v4 as uuidv4 } from "uuid";
+import { getVideoMetadata } from "@remotion/media-utils";
 import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import {
 	RemotionSegment,
@@ -182,14 +183,23 @@ export const webStoryToRemotionInputProps = async (
 
 	// await prefetchAssets(segments);
 
-	const durationInFrames = segments.reduce(
-		(acc, segment) => acc + segment.durationInFrames,
+	const bottomVideoURL = Format.GetVideoUrl(story.originalTiktokInputKey!);
+
+	const bottomVideoDurationInFrames = Math.ceil(
+		(await getVideoMetadata(bottomVideoURL)).durationInSeconds * VIDEO_FPS
+	);
+	const topVideoDurationInFrames = segments.reduce(
+		(acc, segment) =>
+			acc + (segment.type === "transition" ? 0 : segment.durationInFrames),
 		0
 	);
 
 	const base = {
 		showLoadingVideo: false,
-		durationInFrames,
+		durationInFrames: Math.max(
+			bottomVideoDurationInFrames,
+			topVideoDurationInFrames
+		),
 		enableAudio: false,
 		enableSubtitles: false,
 		segments,
@@ -201,7 +211,7 @@ export const webStoryToRemotionInputProps = async (
 		return {
 			...base,
 			variant: "split",
-			bottomVideoURL: Format.GetVideoUrl(story.originalTiktokInputKey!),
+			bottomVideoURL,
 		};
 	} else if (variant === "landscape") {
 		return {
