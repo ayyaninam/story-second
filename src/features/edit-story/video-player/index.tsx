@@ -21,12 +21,6 @@ const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
 });
 
-// TODO: responsive styles
-const player: React.CSSProperties = {
-	width: "100%",
-	aspectRatio: GetImageRatio().ratio,
-};
-
 type RemotionPlayerProps = {
 	inputProps: RemotionPlayerInputProps;
 	onPlay?: () => void;
@@ -231,6 +225,12 @@ const RemotionPlayer = ({
 		return () => observer.disconnect();
 	}, []);
 
+	// TODO: responsive styles
+	const style: React.CSSProperties = {
+		width: "100%",
+		aspectRatio: GetImageRatio({ variant: inputProps.variant }).ratio,
+	};
+
 	return (
 		<div ref={containerRef} className="w-full h-full">
 			<Player
@@ -241,7 +241,7 @@ const RemotionPlayer = ({
 				fps={VIDEO_FPS}
 				compositionHeight={VIDEO_HEIGHT[inputProps.variant]}
 				compositionWidth={VIDEO_WIDTH[inputProps.variant]}
-				style={player}
+				style={style}
 				className="lg:[&>div]:rounded-bl-lg"
 				autoPlay={false}
 				numberOfSharedAudioTags={0}

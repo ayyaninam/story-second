@@ -160,7 +160,7 @@ export default function CustomImageSuspense({
 				backgroundImage: `url(${imageSrc})`,
 				backgroundSize: "cover",
 				backgroundRepeat: "no-repeat",
-				aspectRatio: GetImageRatio().ratio,
+				aspectRatio: GetImageRatio({}).ratio,
 			}}
 			className={`transition-all duration-500`}
 		>

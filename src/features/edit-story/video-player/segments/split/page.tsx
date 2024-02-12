@@ -25,7 +25,7 @@ const container: CSSProperties = {
 const subtitleContainer: CSSProperties = {
   justifyContent: "flex-start",
   alignItems: "center",
-  paddingTop: "1000px",
+  paddingTop: "300px",
   textAlign: "center",
 };
 
@@ -40,7 +40,7 @@ type RenderSegmentProps = {
   inputProps: RemotionPlayerInputProps;
 };
 
-export const SegmentPortraitPage = ({
+export const SegmentSplitPage = ({
   segment,
   nextSegment,
   prevSegment,
@@ -50,7 +50,7 @@ export const SegmentPortraitPage = ({
 
   const storyTextStyle: CSSProperties = useMemo(
     () => ({
-      fontSize: 32,
+      fontSize: 24,
       width: 500,
       color: "white",
     }),

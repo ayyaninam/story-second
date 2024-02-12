@@ -27,6 +27,8 @@ const StoryScreen = () => {
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 	});
 
+	const imageRadio = GetImageRatio({ story: Webstory.data! });
+
 	useEffect(() => {
 		for (const seg of Webstory.data?.storySegments ?? []) {
 			if (seg.videoKey && !fetchedVideos.includes(seg.videoKey)) {
@@ -80,7 +82,7 @@ const StoryScreen = () => {
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
-				style={{ aspectRatio: GetImageRatio().ratio }}
+				style={{ aspectRatio: imageRadio.ratio }}
 			>
 				<p className="text-xl">
 					There was an error loading your story, please try again or contact
@@ -92,7 +94,7 @@ const StoryScreen = () => {
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
-				style={{ aspectRatio: GetImageRatio().ratio }}
+				style={{ aspectRatio: imageRadio.ratio }}
 			>
 				<div
 					className="px-4 py-1 text-white border-[0.5px] mb-16"

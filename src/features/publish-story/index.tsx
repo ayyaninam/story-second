@@ -45,6 +45,8 @@ export default function PublishedStory() {
 		enabled: enableQuery,
 	});
 
+	const imageRadio = GetImageRatio({ story: Webstory.data! });
+
 	const isLoading = Webstory.isLoading || !Webstory.data;
 
 	useEffect(() => {
@@ -187,11 +189,11 @@ export default function PublishedStory() {
 							className={cn(
 								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
 								// Based on aspect ratio we need to adjust the parent width
-								GetImageRatio().width === 1 && "md:max-w-[1080px]",
-								GetImageRatio().width === 3 && "md:max-w-[900px]",
-								GetImageRatio().width === 4 && "md:max-w-[1280px]",
-								GetImageRatio().width === 9 && "md:max-w-[780px]",
-								GetImageRatio().width === 16 && "md:max-w-[1620px]"
+								imageRadio.width === 1 && "md:max-w-[1080px]",
+								imageRadio.width === 3 && "md:max-w-[900px]",
+								imageRadio.width === 4 && "md:max-w-[1280px]",
+								imageRadio.width === 9 && "md:max-w-[780px]",
+								imageRadio.width === 16 && "md:max-w-[1620px]"
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">

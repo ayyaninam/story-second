@@ -49,6 +49,15 @@ export const CompositionPropsPortrait = z.object({
 	enableAudio: z.boolean(),
 	enableSubtitles: z.boolean(),
 	durationInFrames: z.number(),
+	segments: z.array(Segment),
+});
+
+export const CompositionPropsSplit = z.object({
+	variant: z.literal("split"),
+	showLoadingVideo: z.boolean().nullish(),
+	enableAudio: z.boolean(),
+	enableSubtitles: z.boolean(),
+	durationInFrames: z.number(),
 	bottomVideoURL: z.string(),
 	segments: z.array(Segment),
 });
@@ -56,6 +65,7 @@ export const CompositionPropsPortrait = z.object({
 export const CompositionProps = z.discriminatedUnion("variant", [
 	CompositionPropsLandscape,
 	CompositionPropsPortrait,
+	CompositionPropsSplit,
 ]);
 export type RemotionPlayerInputProps = z.infer<typeof CompositionProps>;
 export type RemotionPlayerLandscapeInputProps = z.infer<
@@ -63,6 +73,9 @@ export type RemotionPlayerLandscapeInputProps = z.infer<
 >;
 export type RemotionPlayerPortraitInputProps = z.infer<
 	typeof CompositionPropsPortrait
+>;
+export type RemotionPlayerSplitInputProps = z.infer<
+	typeof CompositionPropsSplit
 >;
 export type RemotionPageSegment = z.infer<typeof PageSegment>;
 export type RemotionInterpolationSegment = z.infer<typeof InterpolationSegment>;
@@ -73,10 +86,12 @@ export type RemotionVariant = RemotionPlayerInputProps["variant"];
 export const VIDEO_WIDTH: Record<RemotionVariant, number> = {
 	landscape: 1280,
 	portrait: 720,
+	split: 720,
 };
 export const VIDEO_HEIGHT: Record<RemotionVariant, number> = {
 	landscape: 720,
 	portrait: 1280,
+	split: 1280,
 };
 export const VIDEO_FPS = 30;
 export const SILENT_DURATION = 0.2; // in seconds

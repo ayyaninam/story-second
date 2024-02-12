@@ -10,10 +10,11 @@ import {
 	RemotionPageSegment,
 	RemotionInterpolationSegment,
 	RemotionTransitionSegment,
+	RemotionVariant,
 } from "./constants";
 import { prefetchAssets } from "./prefetch";
 import { mainSchema } from "@/api/schema";
-import { VoiceType } from "@/utils/enums";
+import { VoiceType, StoryType, ImageResolution } from "@/utils/enums";
 import Format from "@/utils/format";
 
 type WebStory = NonNullable<
@@ -161,6 +162,19 @@ export const webStoryToRemotionSegments = async (
 	return segments.flat().map((segment, index) => ({ ...segment, index }));
 };
 
+export const getRemotionVariant = (story: WebStory): RemotionVariant => {
+	// @ts-ignore
+	const storyType: StoryType = story.storyType; // todo: add their openapi schema
+	const imageResolution = story.storySegments[0]?.imageResolution;
+
+	if (storyType === StoryType.SplitScreen) {
+		return "split";
+	} else if (imageResolution === ImageResolution._1024x576) {
+		return "landscape";
+	}
+	return "portrait";
+};
+
 export const webStoryToRemotionInputProps = async (
 	story: WebStory,
 	selectedVoice: VoiceType
@@ -174,14 +188,32 @@ export const webStoryToRemotionInputProps = async (
 		0
 	);
 
-	return {
+	const base = {
 		showLoadingVideo: false,
-		variant: "portrait", // todo: add logic to differentiate between portrait and landscape
 		durationInFrames,
-		segments,
 		enableAudio: true,
 		enableSubtitles: true,
-		bottomVideoURL:
-			"https://ik.imagekit.io/storybird/staging/videos/3c27a33f-948e-4ded-8176-074ddee93285/1_357318118.mp4?tr=f-webm", // todo: change this hardcoded value
+		segments,
 	};
+
+	const variant = getRemotionVariant(story);
+
+	if (variant === "split") {
+		return {
+			...base,
+			variant: "split",
+			bottomVideoURL:
+				"https://ik.imagekit.io/storybird/staging/videos/3c27a33f-948e-4ded-8176-074ddee93285/1_357318118.mp4?tr=f-webm", // todo: change this hardcoded value
+		};
+	} else if (variant === "landscape") {
+		return {
+			...base,
+			variant: "landscape",
+		};
+	} else {
+		return {
+			...base,
+			variant: "portrait",
+		};
+	}
 };

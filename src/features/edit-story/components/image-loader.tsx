@@ -49,8 +49,8 @@ export default function ImageLoader({
 			onComplete={() => setSeenIndices((prev) => [...prev, index])}
 			showAnimation={seenIndices.includes(index)}
 			loadingDuration={imageLoadingDurationMs}
-			width={GetImageRatio().width}
-			height={GetImageRatio().height}
+			width={GetImageRatio({}).width}
+			height={GetImageRatio({}).height}
 			Container={({ children, style, className }) => (
 				<div
 					style={style}

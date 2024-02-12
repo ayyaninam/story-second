@@ -55,6 +55,8 @@ export default function EditStory() {
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
 
+	const imageRadio = GetImageRatio({ story: Webstory.data! });
+
 	useEffect(() => {
 		if (Webstory.data) {
 			setEnableQuery(
@@ -102,7 +104,7 @@ export default function EditStory() {
 								/>
 							</svg>
 							<p className="text-sm">
-								{GetImageRatio().width}:{GetImageRatio().height}
+								{imageRadio.width}:{imageRadio.height}
 							</p>
 						</span>
 					</div>
@@ -194,11 +196,11 @@ export default function EditStory() {
 							className={cn(
 								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
 								// Based on aspect ratio we need to adjust the parent width
-								GetImageRatio().width === 1 && "md:max-w-[1080px]",
-								GetImageRatio().width === 3 && "md:max-w-[900px]",
-								GetImageRatio().width === 4 && "md:max-w-[1280px]",
-								GetImageRatio().width === 9 && "md:max-w-[780px]",
-								GetImageRatio().width === 16 && "md:max-w-[1620px]"
+								imageRadio.width === 1 && "md:max-w-[1080px]",
+								imageRadio.width === 3 && "md:max-w-[900px]",
+								imageRadio.width === 4 && "md:max-w-[1280px]",
+								imageRadio.width === 9 && "md:max-w-[780px]",
+								imageRadio.width === 16 && "md:max-w-[1620px]"
 							)}
 						>
 							{/* eslint-disable-next-line @next/next/no-img-element */}
@@ -212,7 +214,7 @@ export default function EditStory() {
 							/> */}
 							<div
 								className="relative w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
-								style={{ aspectRatio: GetImageRatio().ratio }}
+								style={{ aspectRatio: imageRadio.ratio }}
 							>
 								<StoryScreen />
 							</div>

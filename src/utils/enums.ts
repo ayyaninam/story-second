@@ -64,3 +64,16 @@ export enum VoiceType {
 	Custom,
 	None,
 }
+
+export enum StoryType {
+	StoryBook,
+	Video,
+	SplitScreen,
+}
+
+export enum ImageResolution {
+	_512x512,
+	_1024x1024,
+	_1024x576,
+	_576x1024,
+}

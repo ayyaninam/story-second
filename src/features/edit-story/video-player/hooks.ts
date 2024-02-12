@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { webStoryToRemotionInputProps } from "./utils";
+import { webStoryToRemotionInputProps, getRemotionVariant } from "./utils";
 import { RemotionPlayerInputProps, VIDEO_FPS } from "./constants";
 import { VoiceType } from "@/utils/enums";
 import { mainSchema } from "@/api/schema";
@@ -22,7 +22,8 @@ export const useRemotionPlayerProps = ({
 		showLoadingVideo: true,
 		durationInFrames: 10 * VIDEO_FPS,
 		segments: [],
-		variant: "portrait",
+		// @ts-ignore
+		variant: story ? getRemotionVariant(story) : "landscape",
 		// @ts-ignore
 		generatedImages,
 	});
