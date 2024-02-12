@@ -9,8 +9,7 @@ const container: CSSProperties = {
 };
 
 const videoStyles: CSSProperties = {
-	width: "150%",
-	left: -100,
+	width: "100%",
 	aspectRatio: "9 / 8",
 };
 
