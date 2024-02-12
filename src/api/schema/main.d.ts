@@ -846,6 +846,26 @@ export interface paths {
       };
     };
   };
+  "/api/Amazon/PregenerateAmazonSummary": {
+    /** Pre-generate amazon summary */
+    post: {
+      parameters: {
+        query?: {
+          id?: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/Library": {
     /**
      * Get public stories
@@ -3441,7 +3461,7 @@ export interface components {
      * Format: int32
      * @enum {integer}
      */
-    ImageResolution: _512x512 | _1024x1024 | _1024x576 | _576x1024;
+    ImageResolution: _512x512 | _1024x1024 | _1024x576 | _576x1024 | _1152x1024 | _1024x1152;
     /**
      * Format: int32
      * @description Represents the art style of the image.
@@ -3581,6 +3601,11 @@ export interface components {
        * @description Whether this user's email requires verification.
        */
       verificationRequired: boolean;
+      /**
+       * ProfilePicture
+       * @description The user's profile picture from Social Sign-On.
+       */
+      profilePicture?: string | null;
     };
     /** @description DTO used to report a Comment on a WebStory. */
     ReportCommentDTO: {
@@ -4204,6 +4229,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
+      resolution?: components["schemas"]["ImageResolution"];
       /**
        * IsPublic
        * @description Whether or not the WebStory is public.
@@ -4496,6 +4522,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
+      resolution?: components["schemas"]["ImageResolution"];
       /**
        * StoryTitle
        * @description The title of the story.
@@ -4522,6 +4549,7 @@ export interface components {
        * @description The cover image of the story.
        */
       coverImage?: string | null;
+      storyType?: components["schemas"]["StoryType"];
     };
     /** @description Represents a paged list of items. */
     ReturnOtherUserWebStoryDTOPagedList: {
@@ -4667,6 +4695,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
+      resolution?: components["schemas"]["ImageResolution"];
       /**
        * StoryTitle
        * @description The title of the story.
@@ -4697,6 +4726,11 @@ export interface components {
        * @description A list of generated story segments, each representing a page.
        */
       storySegments?: components["schemas"]["ReturnStorySegmentDTO"][] | null;
+      /**
+       * VideoSegments
+       * @description A list of generated video segments, each representing a 3 second video.
+       */
+      videoSegments?: components["schemas"]["ReturnVideoSegmentDTO"][] | null;
       amazonBook?: components["schemas"]["ReturnAmazonBookDTO"];
       user?: components["schemas"]["ReturnTinyUserDTO"];
       /**
@@ -5390,6 +5424,121 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    /** @description Return model for VideoSegments. */
+    ReturnVideoSegmentDTO: {
+      /**
+       * Created
+       * Format: date-time
+       * @description The date and time the segment was created.
+       */
+      created?: string;
+      /**
+       * ImageRegenerating
+       * @description Whether the image is currently being regenerated.
+       */
+      imageRegenerating?: boolean;
+      /**
+       * Index
+       * Format: int32
+       * @description The index of the segment in the story.
+       */
+      index?: number;
+      /**
+       * TextContent
+       * @description The text content of the segment.
+       */
+      textContent?: string | null;
+      /**
+       * ImageKey
+       * @description The key of the image in the image storage.
+       */
+      imageKey?: string | null;
+      /**
+       * VideoKey
+       * @description The key of the video in the video storage.
+       */
+      videoKey?: string | null;
+      /**
+       * FrameInterpolationKey
+       * @description The key of the frame interpolation in the video storage.
+       */
+      frameInterpolationKey?: string | null;
+      /**
+       * LastImageKey
+       * @description The key of the last image in the image storage.
+       */
+      lastImageKey?: string | null;
+      imageStyle?: components["schemas"]["ImageStyles"];
+      /**
+       * ImagePrompt
+       * @description The prompt of the image.
+       */
+      imagePrompt?: string | null;
+      /**
+       * ImageSeed
+       * Format: int64
+       * @description The seed of the image.
+       */
+      imageSeed?: number | null;
+      /**
+       * ImageCFGScale
+       * Format: double
+       * @description The scale of the image.
+       */
+      imageCFGScale?: number | null;
+      imageResolution?: components["schemas"]["ImageResolution"];
+      /**
+       * ImageSamplingSteps
+       * Format: int32
+       * @description The sampling steps of the image.
+       */
+      imageSamplingSteps?: number | null;
+      /**
+       * ImageAltText
+       * @description The alt text of the image.
+       */
+      imageAltText?: string | null;
+      /**
+       * MaleAudioKey
+       * @description The key of the audio for Male Voice.
+       */
+      maleAudioKey?: string | null;
+      /**
+       * MaleAudioGenerating
+       * @description Whether the story has a male voice clip that is generating.
+       */
+      maleAudioGenerating?: boolean;
+      /**
+       * FemaleAudioKey
+       * @description The key of the audio for Female Voice.
+       */
+      femaleAudioKey?: string | null;
+      /**
+       * FemaleAudioGenerating
+       * @description Whether the story has a female voice clip that is generating.
+       */
+      femaleAudioGenerating?: boolean;
+      /**
+       * CustomAudioKey
+       * @description The key of the audio for Custom Voice.
+       */
+      customAudioKey?: string | null;
+      /**
+       * CustomAudioGenerating
+       * @description Whether the story has a custom voice clip that is generating.
+       */
+      customAudioGenerating?: boolean;
+      /**
+       * PortugueseAudioKey
+       * @description The key of the audio for Portuguese Voice.
+       */
+      portugueseAudioKey?: string | null;
+      /**
+       * PortugueseAudioGenerating
+       * @description Whether the story has a portuguese voice clip that is generating.
+       */
+      portugueseAudioGenerating?: boolean;
+    };
     /** @description DTO used to return a public WebStory. */
     ReturnWebStoryDTO: {
       /**
@@ -5448,6 +5597,17 @@ export interface components {
        */
       coverImage?: string | null;
       /**
+       * RenderedVideoKey
+       * @description The final rendered video key of the webstory.
+       */
+      renderedVideoKey?: string | null;
+      /**
+       * OriginalTiktokInputKey
+       * @description The original tiktok input key of the webstory.
+       */
+      originalTiktokInputKey?: string | null;
+      storyType?: components["schemas"]["StoryType"];
+      /**
        * StoryDone
        * @description Whether the story text generation is done or not.
        */
@@ -5457,6 +5617,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
+      resolution?: components["schemas"]["ImageResolution"];
       /**
        * AIContributionRate
        * Format: float
@@ -5660,6 +5821,11 @@ export interface components {
      * @enum {integer}
      */
     StoryReportReason: InappropriateText | NotLoading | HateSpeech | Other | InappropriateImages;
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
+    StoryType: StoryBook | Video | SplitScreen;
     /** @description Represents the standard response format for API requests. */
     StringApiResponse: {
       data?: string | null;

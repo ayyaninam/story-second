@@ -3,7 +3,11 @@ import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import Routes from "@/routes";
 import { CreateInitialStoryQueryParams } from "@/types";
-import { getAccessToken, withPageAuthRequired } from "@auth0/nextjs-auth0";
+import {
+	getAccessToken,
+	getSession,
+	withPageAuthRequired,
+} from "@auth0/nextjs-auth0";
 import { access } from "fs";
 import { InferGetServerSidePropsType } from "next";
 
@@ -55,6 +59,9 @@ export const getServerSideProps = withPageAuthRequired({
 					audience: env.NEXT_PUBLIC_AUTH0_AUDIENCE,
 				},
 			});
+			const session = await getSession(ctx.req, ctx.res);
+			console.log("session", session);
+			if (!session || !accessToken) return redirectToHomepage;
 			const queryParams = ctx.query;
 			// Access the query params
 			const {
@@ -81,6 +88,16 @@ export const getServerSideProps = withPageAuthRequired({
 			)
 				throw new Error("Missing required params");
 
+			const _user = await api.user.register(
+				{
+					email: session.user.email,
+					name: session.user.nickname,
+					verificationRequired: session.user.email_verified,
+					...(session.user.picture && { profilePicture: session.user.picture }), // Only include profile picture if it exists
+				},
+				accessToken as string
+			);
+			console.log("Creating a story for user: ", _user.data);
 			const { url } = await api.webstory.create(
 				{
 					image_style: convertAndValidateStoryQueryParams(
@@ -108,6 +125,7 @@ export const getServerSideProps = withPageAuthRequired({
 			);
 			console.log("url", url);
 			const [genre, id] = url.split("/");
+
 			// If the url is not in the expected format, redirect to home
 			if (!genre || !id)
 				throw new Error(
