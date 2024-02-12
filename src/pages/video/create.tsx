@@ -60,7 +60,7 @@ export const getServerSideProps = withPageAuthRequired({
 				},
 			});
 			const session = await getSession(ctx.req, ctx.res);
-			console.log("session", session);
+
 			if (!session || !accessToken) return redirectToHomepage;
 			const queryParams = ctx.query;
 			// Access the query params
@@ -93,7 +93,11 @@ export const getServerSideProps = withPageAuthRequired({
 					email: session.user.email,
 					name: session.user.nickname,
 					verificationRequired: session.user.email_verified,
-					...(session.user.picture && { profilePicture: session.user.picture }), // Only include profile picture if it exists
+					...(session.user.picture && session.user?.picture.length > 0
+						? {
+								profilePicture: session.user.picture,
+							}
+						: {}), // Only include profile picture if it exists
 				},
 				accessToken as string
 			);
