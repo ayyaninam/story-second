@@ -163,8 +163,7 @@ export const webStoryToRemotionSegments = async (
 };
 
 export const getRemotionVariant = (story: WebStory): RemotionVariant => {
-	// @ts-ignore
-	const storyType: StoryType = story.storyType; // todo: add their openapi schema
+	const storyType: StoryType = story.storyType;
 	const imageResolution = story.storySegments[0]?.imageResolution;
 
 	if (storyType === StoryType.SplitScreen) {
@@ -202,8 +201,7 @@ export const webStoryToRemotionInputProps = async (
 		return {
 			...base,
 			variant: "split",
-			bottomVideoURL:
-				"https://ik.imagekit.io/storybird/staging/videos/3c27a33f-948e-4ded-8176-074ddee93285/1_357318118.mp4?tr=f-webm", // todo: change this hardcoded value
+			bottomVideoURL: Format.GetVideoUrl(story.originalTiktokInputKey!),
 		};
 	} else if (variant === "landscape") {
 		return {
