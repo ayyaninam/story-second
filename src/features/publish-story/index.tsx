@@ -36,6 +36,7 @@ export default function PublishedStory() {
 	console.log(router.pathname);
 
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
+	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
 
 	// Queries
 	const Webstory = useQuery({
@@ -215,26 +216,30 @@ export default function PublishedStory() {
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								<div
-									className="relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-lg"
-									style={{ aspectRatio: 16 / 9 }}
-								>
+								<div className="relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-lg">
 									<StoryScreen
 										Webstory={Webstory}
 										isError={Webstory.isError}
 										isPlaying={isPlaying}
+										seekedFrame={seekedFrame}
 									/>
 								</div>
-								<div
-									className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
-									style={{ aspectRatio: 16 / 9 }}
-								>
+								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
 									<StoryScreen
 										Webstory={Webstory}
 										isError={Webstory.isError}
 										onPlay={() => {
 											setIsPlaying(true);
-											console.log(">>>> onPlay called");
+										}}
+										onPause={() => {
+											setIsPlaying(false);
+										}}
+										onSeeked={(e) => {
+											setSeekedFrame(e.detail.frame);
+										}}
+										onEnded={() => {
+											setIsPlaying(false);
+											setSeekedFrame(0);
 										}}
 									/>
 								</div>

@@ -22,12 +22,16 @@ type StoryScreenProps = {
 	onPause?: CallbackListener<"pause">;
 	onSeeked?: CallbackListener<"seeked">;
 	isPlaying?: boolean;
+	seekedFrame?: number;
 };
 
 const StoryScreen: FC<StoryScreenProps> = ({
 	Webstory,
 	isError,
 	onPlay,
+	onPause,
+	onSeeked,
+	seekedFrame,
 	isPlaying,
 }) => {
 	const router = useRouter();
@@ -45,6 +49,8 @@ const StoryScreen: FC<StoryScreenProps> = ({
 	// });
 
 	useEffect(() => {
+		console.log(">>>> webstory.data", Webstory.data);
+
 		for (const seg of Webstory.data?.storySegments ?? []) {
 			if (seg.videoKey && !fetchedVideos.includes(seg.videoKey)) {
 				const url = Format.GetVideoUrl(seg.videoKey);
@@ -127,7 +133,15 @@ const StoryScreen: FC<StoryScreenProps> = ({
 	} else if (isStoryLoading) {
 		return <ImageLoader imageData={generatedImages!} />;
 	} else {
-		return <VideoPlayer onPlay={onPlay} isPlaying={isPlaying} />;
+		return (
+			<VideoPlayer
+				Webstory={Webstory}
+				onPlay={onPlay}
+				onPause={onPause}
+				onSeeked={onSeeked}
+				isPlaying={isPlaying}
+			/>
+		);
 	}
 };
 

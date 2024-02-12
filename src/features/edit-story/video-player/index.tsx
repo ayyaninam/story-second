@@ -34,6 +34,7 @@ type RemotionPlayerProps = {
 	onEnded?: CallbackListener<"ended">;
 	onPause?: CallbackListener<"pause">;
 	onSeeked?: CallbackListener<"seeked">;
+	seekedFrame?: number;
 	isPlaying?: boolean;
 } & Omit<Partial<ComponentProps<typeof Player>>, "component">;
 
@@ -46,6 +47,7 @@ const RemotionPlayer = ({
 	onEnded,
 	onPause,
 	onSeeked,
+	seekedFrame,
 	isPlaying,
 	...props
 }: RemotionPlayerProps) => {
@@ -107,13 +109,14 @@ const RemotionPlayer = ({
 			return;
 		}
 
-		console.log(">>>> isPlaying changed", isPlaying);
-
 		if (isPlaying !== undefined) {
 			if (isPlaying) player.play();
 			else player.pause();
 		}
-	}, [isPlaying]);
+		if (seekedFrame !== undefined) {
+			player.seekTo(seekedFrame);
+		}
+	}, [isPlaying, seekedFrame]);
 
 	const renderPlayPauseButton: RenderPlayPauseButton = useCallback(
 		({ playing }: { playing: boolean }) =>
