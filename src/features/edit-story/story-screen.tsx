@@ -10,14 +10,26 @@ import { useRemotionPlayerProps } from "./video-player/hooks";
 import VideoPlayer from "./components/video-player";
 import { FC, useEffect, useRef, useState } from "react";
 import { prefetch } from "remotion";
-import schema from "@/api/schema";
+import { mainSchema as schema } from "@/api/schema";
+import { GetImageRatio } from "@/utils/image-ratio";
+import { CallbackListener } from "@remotion/player";
 
 type StoryScreenProps = {
 	Webstory: schema["ReturnWebStoryDTOApiResponse"];
 	isError: boolean;
+	onPlay?: CallbackListener<"play">;
+	onEnded?: CallbackListener<"ended">;
+	onPause?: CallbackListener<"pause">;
+	onSeeked?: CallbackListener<"seeked">;
+	isPlaying?: boolean;
 };
 
-const StoryScreen: FC<StoryScreenProps> = ({ Webstory, isError }) => {
+const StoryScreen: FC<StoryScreenProps> = ({
+	Webstory,
+	isError,
+	onPlay,
+	isPlaying,
+}) => {
 	const router = useRouter();
 	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
 	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
@@ -81,7 +93,7 @@ const StoryScreen: FC<StoryScreenProps> = ({ Webstory, isError }) => {
 		fetchedVideos.length < (videoArray?.length ?? 1000) ||
 		fetchedAudios.length < (videoArray?.length ?? 1000);
 
-	if (Webstory.isError)
+	if (isError)
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
@@ -115,7 +127,7 @@ const StoryScreen: FC<StoryScreenProps> = ({ Webstory, isError }) => {
 	} else if (isStoryLoading) {
 		return <ImageLoader imageData={generatedImages!} />;
 	} else {
-		return <VideoPlayer />;
+		return <VideoPlayer onPlay={onPlay} isPlaying={isPlaying} />;
 	}
 };
 

@@ -7,6 +7,7 @@ import {
 	PlayerRef,
 	RenderPlayPauseButton,
 	RenderFullscreenButton,
+	CallbackListener,
 } from "@remotion/player";
 
 import {
@@ -29,8 +30,11 @@ const player: React.CSSProperties = {
 
 type RemotionPlayerProps = {
 	inputProps: RemotionPlayerInputProps;
-	onPlay?: () => void;
-	onEnded?: () => void;
+	onPlay?: CallbackListener<"play">;
+	onEnded?: CallbackListener<"ended">;
+	onPause?: CallbackListener<"pause">;
+	onSeeked?: CallbackListener<"seeked">;
+	isPlaying?: boolean;
 } & Omit<Partial<ComponentProps<typeof Player>>, "component">;
 
 const controlBackgroundStyles =
@@ -40,6 +44,9 @@ const RemotionPlayer = ({
 	inputProps,
 	onPlay,
 	onEnded,
+	onPause,
+	onSeeked,
+	isPlaying,
 	...props
 }: RemotionPlayerProps) => {
 	const ref = useRef<PlayerRef>(null);
@@ -69,6 +76,12 @@ const RemotionPlayer = ({
 		if (onEnded) {
 			player.addEventListener("ended", onEnded);
 		}
+		if (onPause) {
+			player.addEventListener("pause", onPause);
+		}
+		if (onSeeked) {
+			player.addEventListener("seeked", onSeeked);
+		}
 
 		return () => {
 			if (onPlay) {
@@ -77,10 +90,30 @@ const RemotionPlayer = ({
 			if (onEnded) {
 				player.removeEventListener("ended", onEnded);
 			}
+			if (onPause) {
+				player.removeEventListener("pause", onPause);
+			}
+			if (onSeeked) {
+				player.removeEventListener("seeked", onSeeked);
+			}
 		};
 
 		// somehow on the past i just did this dep and it worked back then, buut when doing other values it breaks
-	}, [inputProps]); // the dep inputProps is related when remotionPlayerRef has a value
+	}, [onPlay, onEnded, onPause, onSeeked]); // the dep inputProps is related when remotionPlayerRef has a value
+
+	useEffect(() => {
+		const player = ref.current;
+		if (!player) {
+			return;
+		}
+
+		console.log(">>>> isPlaying changed", isPlaying);
+
+		if (isPlaying !== undefined) {
+			if (isPlaying) player.play();
+			else player.pause();
+		}
+	}, [isPlaying]);
 
 	const renderPlayPauseButton: RenderPlayPauseButton = useCallback(
 		({ playing }: { playing: boolean }) =>

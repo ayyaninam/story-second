@@ -6,8 +6,18 @@ import { useRouter } from "next/router";
 import RemotionPlayer from "../video-player";
 import { VoiceType } from "@/utils/enums";
 import { useRemotionPlayerProps } from "../video-player/hooks";
+import { CallbackListener } from "@remotion/player";
+import { FC } from "react";
 
-const VideoPlayer = () => {
+type VideoPlayerProps = {
+	onPlay?: CallbackListener<"play">;
+	onEnded?: CallbackListener<"ended">;
+	onPause?: CallbackListener<"pause">;
+	onSeeked?: CallbackListener<"seeked">;
+	isPlaying?: boolean;
+};
+
+const VideoPlayer: FC<VideoPlayerProps> = ({ onPlay, isPlaying }) => {
 	const router = useRouter();
 	const Webstory = useQuery({
 		queryFn: () =>
@@ -25,7 +35,14 @@ const VideoPlayer = () => {
 			?.filter((seg) => !!seg.imageKey)
 			.map((seg) => ({ ...seg, src: Format.GetVideoUrl(seg.imageKey!) }))!,
 	});
-	return <RemotionPlayer {...remotionPlayerProps} />;
+
+	return (
+		<RemotionPlayer
+			{...remotionPlayerProps}
+			onPlay={onPlay}
+			isPlaying={isPlaying}
+		/>
+	);
 };
 
 export default VideoPlayer;

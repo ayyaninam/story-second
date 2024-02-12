@@ -21,7 +21,7 @@ import StoryScreen from "../edit-story/story-screen";
 import { useMediaQuery } from "usehooks-ts";
 import { GetImageRatio } from "@/utils/image-ratio";
 import { cn } from "@/utils";
-import { components } from "@/api/types";
+import { mainSchema as schema } from "@/api/schema";
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function PublishedStory() {
@@ -30,10 +30,12 @@ export default function PublishedStory() {
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
 	const [storySegments, setStorySegemnts] = useState<
-		components["schemas"]["ReturnStorySegmentDTO"][] | null
+		schema["ReturnStorySegmentDTO"][] | null
 	>();
 	const [index, setIndex] = useState(0);
 	console.log(router.pathname);
+
+	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 
 	// Queries
 	const Webstory = useQuery({
@@ -213,7 +215,29 @@ export default function PublishedStory() {
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								<StoryScreen />
+								<div
+									className="relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-lg"
+									style={{ aspectRatio: 16 / 9 }}
+								>
+									<StoryScreen
+										Webstory={Webstory}
+										isError={Webstory.isError}
+										isPlaying={isPlaying}
+									/>
+								</div>
+								<div
+									className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+									style={{ aspectRatio: 16 / 9 }}
+								>
+									<StoryScreen
+										Webstory={Webstory}
+										isError={Webstory.isError}
+										onPlay={() => {
+											setIsPlaying(true);
+											console.log(">>>> onPlay called");
+										}}
+									/>
+								</div>
 							</div>
 
 							{/* </Loading> */}
