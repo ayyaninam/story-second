@@ -44,7 +44,7 @@ export default function PublishedStory() {
 		// Disable once all the videoKeys are obtained
 		enabled: enableQuery,
 	});
-
+	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
 
 	useEffect(() => {
@@ -187,11 +187,11 @@ export default function PublishedStory() {
 							className={cn(
 								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
 								// Based on aspect ratio we need to adjust the parent width
-								GetImageRatio().width === 1 && "md:max-w-[1080px]",
-								GetImageRatio().width === 3 && "md:max-w-[900px]",
-								GetImageRatio().width === 4 && "md:max-w-[1280px]",
-								GetImageRatio().width === 9 && "md:max-w-[780px]",
-								GetImageRatio().width === 16 && "md:max-w-[1620px]"
+								ImageRatio.width === 1 && "md:max-w-[1080px]",
+								ImageRatio.width === 3 && "md:max-w-[900px]",
+								ImageRatio.width === 4 && "md:max-w-[1280px]",
+								ImageRatio.width === 9 && "md:max-w-[780px]",
+								ImageRatio.width === 16 && "md:max-w-[1620px]"
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">

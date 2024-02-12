@@ -28,6 +28,14 @@ export default function ImageLoader({
 	// Mutations
 
 	// Hooks
+	const Webstory = useQuery({
+		queryFn: () =>
+			api.library.get(
+				router.query.genre!.toString(),
+				router.query.id!.toString()
+			),
+		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+	});
 
 	// Effects
 	useEffect(() => {
@@ -41,6 +49,7 @@ export default function ImageLoader({
 
 	// Short cuts
 	const currentImage = imageData[index]!;
+	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 
 	return (
 		<CustomImageSuspense
@@ -49,8 +58,8 @@ export default function ImageLoader({
 			onComplete={() => setSeenIndices((prev) => [...prev, index])}
 			showAnimation={seenIndices.includes(index)}
 			loadingDuration={imageLoadingDurationMs}
-			width={GetImageRatio().width}
-			height={GetImageRatio().height}
+			width={ImageRatio.width}
+			height={ImageRatio.height}
 			Container={({ children, style, className }) => (
 				<div
 					style={style}

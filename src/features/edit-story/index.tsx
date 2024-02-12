@@ -31,10 +31,15 @@ import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/utils";
 import Routes from "@/routes";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { mainSchema } from "@/api/schema";
 
 const MAX_SUMMARY_LENGTH = 250;
 
-export default function EditStory() {
+export default function EditStory({
+	storyData,
+}: {
+	storyData: mainSchema["ReturnWebStoryDTO"];
+}) {
 	const router = useRouter();
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
@@ -48,12 +53,11 @@ export default function EditStory() {
 				router.query.id!.toString()
 			),
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+		initialData: storyData,
 		refetchInterval: 1000,
 		// Disable once all the videoKeys are obtained
 		enabled: enableQuery,
 	});
-
-	const isLoading = Webstory.isLoading || !Webstory.data;
 
 	useEffect(() => {
 		if (Webstory.data) {
@@ -65,6 +69,9 @@ export default function EditStory() {
 			);
 		}
 	}, [Webstory.data]);
+
+	const isLoading = Webstory.isLoading || !Webstory.data;
+	const ImageRatio = GetImageRatio(Webstory.data.resolution);
 
 	return (
 		<div className="max-w-full min-h-screen bg-secondary">
@@ -102,7 +109,7 @@ export default function EditStory() {
 								/>
 							</svg>
 							<p className="text-sm">
-								{GetImageRatio().width}:{GetImageRatio().height}
+								{ImageRatio.width}:{ImageRatio.height}
 							</p>
 						</span>
 					</div>
@@ -194,11 +201,11 @@ export default function EditStory() {
 							className={cn(
 								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
 								// Based on aspect ratio we need to adjust the parent width
-								GetImageRatio().width === 1 && "md:max-w-[1080px]",
-								GetImageRatio().width === 3 && "md:max-w-[900px]",
-								GetImageRatio().width === 4 && "md:max-w-[1280px]",
-								GetImageRatio().width === 9 && "md:max-w-[780px]",
-								GetImageRatio().width === 16 && "md:max-w-[1620px]"
+								ImageRatio.width === 1 && "md:max-w-[1080px]",
+								ImageRatio.width === 3 && "md:max-w-[900px]",
+								ImageRatio.width === 4 && "md:max-w-[1280px]",
+								ImageRatio.width === 9 && "md:max-w-[780px]",
+								ImageRatio.width === 16 && "md:max-w-[1620px]"
 							)}
 						>
 							{/* eslint-disable-next-line @next/next/no-img-element */}
@@ -212,7 +219,7 @@ export default function EditStory() {
 							/> */}
 							<div
 								className="relative w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
-								style={{ aspectRatio: GetImageRatio().ratio }}
+								style={{ aspectRatio: ImageRatio.ratio }}
 							>
 								<StoryScreen />
 							</div>
