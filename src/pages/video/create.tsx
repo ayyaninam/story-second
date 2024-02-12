@@ -53,12 +53,23 @@ function StoryPage() {
 export const getServerSideProps = withPageAuthRequired({
 	// @ts-expect-error Some weird type error here
 	getServerSideProps: async (ctx) => {
+		let accessToken = undefined;
 		try {
-			const { accessToken } = await getAccessToken(ctx.req, ctx.res, {
+			const Token = await getAccessToken(ctx.req, ctx.res, {
 				authorizationParams: {
 					audience: env.NEXT_PUBLIC_AUTH0_AUDIENCE,
 				},
 			});
+			accessToken = Token.accessToken;
+		} catch (e) {
+			return {
+				redirect: {
+					destination: "/api/auth/login",
+					permanent: false,
+				},
+			};
+		}
+		try {
 			const session = await getSession(ctx.req, ctx.res);
 
 			if (!session || !accessToken) return redirectToHomepage;
@@ -88,20 +99,18 @@ export const getServerSideProps = withPageAuthRequired({
 			)
 				throw new Error("Missing required params");
 
-			const _user = await api.user.register(
-				{
-					email: session.user.email,
-					name: session.user.nickname,
-					verificationRequired: session.user.email_verified,
-					...(session.user.picture && session.user?.picture.length > 0
-						? {
-								profilePicture: session.user.picture,
-							}
-						: {}), // Only include profile picture if it exists
-				},
-				accessToken as string
-			);
-			console.log("Creating a story for user: ", _user.data);
+			await api.user.get(accessToken).catch(async (e) => {
+				await api.user.register(
+					{
+						email: session.user.email,
+						name: session.user.nickname,
+						verificationRequired: session.user.email_verified,
+						profilePicture: session.user?.picture ?? null,
+					},
+					accessToken as string
+				);
+			});
+
 			const story = await api.webstory.create(
 				{
 					image_style: convertAndValidateStoryQueryParams(
@@ -127,7 +136,6 @@ export const getServerSideProps = withPageAuthRequired({
 				},
 				accessToken as string
 			);
-			console.log("data", story);
 			const { url } = story;
 
 			const [genre, id] = url.split("/");
@@ -137,12 +145,7 @@ export const getServerSideProps = withPageAuthRequired({
 				throw new Error(
 					"Invalid response from server, no genre or id provided"
 				);
-			console.log({
-				redirect: {
-					destination: Routes.EditStory(genre, id),
-					permanent: false,
-				},
-			});
+			console.log("Redirecting to", Routes.EditStory(genre, id));
 			return {
 				redirect: {
 					destination: Routes.EditStory(genre, id),

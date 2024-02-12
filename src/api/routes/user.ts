@@ -11,6 +11,13 @@ const user = {
 			.post(`api/User/register`, { body: JSON.stringify(params) })
 			.json();
 	},
+	get: async (
+		token?: string
+	): Promise<mainSchema["UserInfoDTOApiResponse"]> => {
+		return await authFetcher(token || getJwt())
+			.get(`api/User`)
+			.json();
+	},
 };
 
 export default user;
