@@ -190,8 +190,8 @@ export const webStoryToRemotionInputProps = async (
 	const base = {
 		showLoadingVideo: false,
 		durationInFrames,
-		enableAudio: true,
-		enableSubtitles: true,
+		enableAudio: false,
+		enableSubtitles: false,
 		segments,
 	};
 
