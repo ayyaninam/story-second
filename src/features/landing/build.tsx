@@ -1,14 +1,19 @@
-import api from "@/api";
-import {
-	QueryClient,
-	QueryClientProvider,
-	useMutation,
-} from "@tanstack/react-query";
-import React, { useRef, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { StoryImageStyles, StoryLanguages, StoryLengths } from "@/utils/enums";
+import { renderToString } from "react-dom/server";
 import storyLanguages from "@/utils/storyLanguages";
+import {
+	StoryImageStyles,
+	StoryInputTypes,
+	StoryLanguages,
+	StoryLengths,
+	StoryOutputTypes,
+} from "@/utils/enums";
 import Routes from "@/routes";
+import FileUpload from "./components/file-upload";
+import toast, { Toaster } from "react-hot-toast";
+import { CreateInitialStoryQueryParams } from "@/types";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +24,9 @@ const keys = (Enum: any) => {
 const App = () => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const [isPromptClicked, setIsPromptClicked] = useState(false);
+	const [videoFileId, setVideoFileId] = useState<string | null>(null);
 
+	const [isLoading, setIsLoading] = useState(false);
 	const [prompt, setPrompt] = useState("");
 	const [options, setOptions] = useState({
 		language: StoryLanguages.English,
@@ -27,7 +34,9 @@ const App = () => {
 		style: StoryImageStyles.Realistic,
 	});
 
-	const [outputMode, setOutputMode] = useState<"video" | "book">("video");
+	const [outputType, setOutputType] = useState<
+		StoryOutputTypes.Story | StoryOutputTypes.Video
+	>(StoryOutputTypes.Video);
 
 	const expandTextBox = !!isPromptClicked;
 	const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -37,21 +46,28 @@ const App = () => {
 		// @ts-expect-error - TS doesn't know about the scrollHeight property
 		inputRef.current.style.height = `${inputRef.current?.scrollHeight}px`;
 	};
-
-	const CreateWebstory = useMutation({
-		mutationFn: api.webstory.create,
-	});
 	// Hooks
 	// Handlers
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		setIsLoading(true);
 		e.preventDefault();
-
-		const params = {
-			image_style: options.style,
+		const params: CreateInitialStoryQueryParams = {
+			image_style:
+				options.style as CreateInitialStoryQueryParams["image_style"],
 			language: options.language,
 			length: options.length,
 			prompt: prompt,
+			image_resolution: 1,
+			input_type: StoryInputTypes.Text,
+			output_type: outputType,
+			video_key: "",
 		};
+
+		if (videoFileId) {
+			params["input_type"] = StoryInputTypes.Video;
+			params["output_type"] = StoryOutputTypes.SplitScreen;
+			params["video_key"] = videoFileId;
+		}
 		console.log(Routes.CreateStoryFromRoute(params));
 		window.location.href = Routes.CreateStoryFromRoute(params);
 	};
@@ -61,16 +77,7 @@ const App = () => {
 			<div className="first-form">
 				<div style={{ width: "100%", display: "flex" }}>
 					<textarea
-						style={{
-							resize: "none",
-							border: "none",
-							minWidth: "100%",
-							textAlign: "left",
-							paddingTop: "16px",
-							fontSize: "20px",
-							fontWeight: "400",
-							transition: "height 0.6s",
-						}}
+						className="prompt-input"
 						ref={inputRef}
 						onClick={() => setIsPromptClicked(true)}
 						// className="build-form-input w-input"
@@ -156,20 +163,8 @@ const App = () => {
 				)}
 			</div>
 			{expandTextBox && (
-				<div
-					style={{
-						display: "flex",
-						margin: "8px 0px 8px 0px",
-						justifyContent: "space-between",
-					}}
-				>
-					<div
-						style={{
-							display: "flex",
-							gap: "8px",
-							height: "100$",
-						}}
-					>
+				<div className="prompt-actions-container">
+					<div className="prompt-actions">
 						<div
 							style={{
 								display: "flex",
@@ -189,12 +184,13 @@ const App = () => {
 								className="appearance-none"
 								style={{
 									cursor: "pointer",
-									backgroundColor: outputMode === "video" ? "white" : "#F1F5F9",
+									backgroundColor:
+										outputType === StoryOutputTypes.Video ? "white" : "#F1F5F9",
 									padding: "4px 8px",
 									borderRadius: "4px",
 									margin: "auto",
 								}}
-								onClick={() => setOutputMode("video")}
+								onClick={() => setOutputType(StoryOutputTypes.Video)}
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -202,7 +198,11 @@ const App = () => {
 									height="24"
 									viewBox="0 0 24 24"
 									fill="none"
-									stroke={outputMode === "video" ? "#020617" : "#64748B"}
+									stroke={
+										outputType === StoryOutputTypes.Video
+											? "#020617"
+											: "#64748B"
+									}
 									strokeWidth="1"
 									strokeLinecap="round"
 									strokeLinejoin="round"
@@ -216,13 +216,14 @@ const App = () => {
 								name="Book"
 								id="book"
 								style={{ appearance: "none" }}
-								onClick={() => setOutputMode("book")}
+								onClick={() => setOutputType(StoryOutputTypes.Story)}
 							/>
 							<label
 								htmlFor="book"
 								style={{
 									cursor: "pointer",
-									backgroundColor: outputMode === "book" ? "white" : "#F1F5F9",
+									backgroundColor:
+										outputType === StoryOutputTypes.Story ? "white" : "#F1F5F9",
 									padding: "4px 8px",
 									borderRadius: "4px",
 									margin: "auto",
@@ -234,7 +235,11 @@ const App = () => {
 									height="24"
 									viewBox="0 0 24 24"
 									fill="none"
-									stroke={outputMode === "book" ? "#020617" : "#64748B"}
+									stroke={
+										outputType === StoryOutputTypes.Story
+											? "#020617"
+											: "#64748B"
+									}
 									strokeWidth="1"
 									strokeLinecap="round"
 									strokeLinejoin="round"
@@ -244,6 +249,8 @@ const App = () => {
 								</svg>
 							</label>
 						</div>
+						<FileUpload setVideoFileId={setVideoFileId} />
+
 						<select
 							onChange={(e) => {
 								setOptions((prev) => ({
@@ -292,7 +299,7 @@ const App = () => {
 					<button
 						type="submit"
 						disabled={!prompt}
-						className="button hero-submit-button w-button"
+						className="button hero-submit-button w-button button-nosubmit"
 					>
 						<svg
 							width="17"
@@ -319,7 +326,7 @@ const App = () => {
 							/>
 						</svg>
 
-						<span>{CreateWebstory.isPending ? "Loading" : "Produce It"}</span>
+						<span>{isLoading ? "Loading" : "Produce It"}</span>
 						<svg
 							width="16"
 							height="16"
@@ -357,8 +364,16 @@ if (!root) throw new Error("Root element not found");
 // console.log(root?.innerHTML);
 root.innerHTML = "";
 
-createRoot(root).render(
+const CustomInput = () => (
 	<QueryClientProvider client={queryClient}>
 		<App />
 	</QueryClientProvider>
 );
+
+const bottomInput = document.getElementById("prompt-form-2");
+if (!bottomInput) {
+	throw new Error("Bottom-input not found!");
+}
+
+createRoot(root).render(<CustomInput />);
+createRoot(bottomInput).render(<CustomInput />);

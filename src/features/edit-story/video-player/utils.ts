@@ -12,16 +12,16 @@ import {
 	RemotionTransitionSegment,
 } from "./constants";
 import { prefetchAssets } from "./prefetch";
-import schema from "@/api/schema";
+import { mainSchema } from "@/api/schema";
 import { VoiceType } from "@/utils/enums";
 import Format from "@/utils/format";
 
 type WebStory = NonNullable<
-	schema["ReturnWebStoryDTO"] & {
-		storySegments: NonNullable<schema["ReturnStorySegmentDTO"][]>;
+	mainSchema["ReturnWebStoryDTO"] & {
+		storySegments: NonNullable<mainSchema["ReturnStorySegmentDTO"][]>;
 	}
 >;
-type StorySegment = NonNullable<schema["ReturnStorySegmentDTO"]>;
+type StorySegment = NonNullable<mainSchema["ReturnStorySegmentDTO"]>;
 
 const calculateSegmentDuration = async ({
 	audioURL,

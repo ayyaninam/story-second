@@ -18,6 +18,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_AWS_REGION: z.string().min(1),
 		NEXT_PUBLIC_IMAGEKIT_URL: z.string().min(1),
 		NEXT_PUBLIC_ML_API_URL: z.string().min(1),
+		NEXT_PUBLIC_AUTH0_AUDIENCE: z.string().min(1),
 	},
 	/*
 	 * Due to how Next.js bundles environment variables on Edge and Client,
@@ -31,5 +32,6 @@ export const env = createEnv({
 		NEXT_PUBLIC_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION,
 		NEXT_PUBLIC_IMAGEKIT_URL: process.env.NEXT_PUBLIC_IMAGEKIT_URL,
 		NEXT_PUBLIC_ML_API_URL: process.env.NEXT_PUBLIC_ML_API_URL,
+		NEXT_PUBLIC_AUTH0_AUDIENCE: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
 	},
 });

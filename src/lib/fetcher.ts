@@ -31,10 +31,9 @@ export const mlFetcher = (token: string) => {
  * Creates an authenticated fetcher instance by extending the public fetcher.
  * This fetcher should be used in browser environments only.
  */
-export const authFetcher = publicFetcher.extend({
-	headers: {
-		Authorization: isBrowser
-			? "Bearer " + window.localStorage.getItem("jwt") || undefined
-			: undefined,
-	},
-});
+export const authFetcher = (token: string) =>
+	publicFetcher.extend({
+		headers: {
+			Authorization: "Bearer " + token,
+		},
+	});
