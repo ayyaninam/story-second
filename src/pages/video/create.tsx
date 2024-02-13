@@ -53,7 +53,7 @@ function StoryPage() {
 export const getServerSideProps = withPageAuthRequired({
 	// @ts-expect-error Some weird type error here
 	getServerSideProps: async (ctx) => {
-		let accessToken = undefined;
+		let accessToken: string | undefined = undefined;
 		try {
 			const Token = await getAccessToken(ctx.req, ctx.res, {
 				authorizationParams: {
@@ -100,6 +100,7 @@ export const getServerSideProps = withPageAuthRequired({
 				throw new Error("Missing required params");
 
 			await api.user.get(accessToken).catch(async (e) => {
+				// TODO: modify to only run when there is a 400 error code
 				await api.user.register(
 					{
 						email: session.user.email,

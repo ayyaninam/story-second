@@ -1,4 +1,4 @@
-import { authFetcher } from "@/lib/fetcher";
+import { authFetcher, publicFetcher } from "@/lib/fetcher";
 import { getJwt } from "@/utils/auth";
 import { mainSchema } from "../schema";
 
@@ -8,9 +8,7 @@ const library = {
 		slug: string,
 		accessToken?: string
 	): Promise<mainSchema["ReturnWebStoryDTO"]> => {
-		const data: mainSchema["ReturnWebStoryDTOApiResponse"] = await authFetcher(
-			accessToken ?? getJwt()
-		)
+		const data: mainSchema["ReturnWebStoryDTOApiResponse"] = await publicFetcher
 			.get(`api/library/${topLevelCategory}/${slug}`)
 			.json();
 
