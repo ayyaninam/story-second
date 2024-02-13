@@ -243,3 +243,11 @@ button[type="submit"]:disabled {
     transform: rotate(360deg);
   }
 }
+
+.iconButton {
+  transition: transform .2s;
+}
+
+.iconButton:hover {
+  transform: scale(1.2);
+}

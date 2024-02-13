@@ -184,7 +184,6 @@ const App = () => {
 							/>
 							<label
 								htmlFor="video"
-								className="appearance-none"
 								style={{
 									cursor: "pointer",
 									backgroundColor:
@@ -196,6 +195,7 @@ const App = () => {
 								onClick={() => setOutputType(StoryOutputTypes.Video)}
 							>
 								<svg
+									className="iconButton"
 									xmlns="http://www.w3.org/2000/svg"
 									width="24"
 									height="24"
@@ -233,6 +233,7 @@ const App = () => {
 								}}
 							>
 								<svg
+									className="iconButton"
 									xmlns="http://www.w3.org/2000/svg"
 									width="24"
 									height="24"
