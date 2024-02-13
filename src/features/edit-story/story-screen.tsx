@@ -98,11 +98,13 @@ const StoryScreen = () => {
 		(hasOriginalTikTokVideoKey &&
 			!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
 
+	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
+
 	if (Webstory.isError)
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
-				style={{ aspectRatio: imageRadio.ratio }}
+				style={{ aspectRatio: ImageRatio.ratio }}
 			>
 				<p className="text-xl">
 					There was an error loading your story, please try again or contact
@@ -114,7 +116,7 @@ const StoryScreen = () => {
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
-				style={{ aspectRatio: imageRadio.ratio }}
+				style={{ aspectRatio: ImageRatio.ratio }}
 			>
 				<div
 					className="px-4 py-1 text-white border-[0.5px] mb-16"

@@ -23,14 +23,21 @@ import StoryScreen from "../edit-story/story-screen";
 import { useMediaQuery } from "usehooks-ts";
 import { GetImageRatio } from "@/utils/image-ratio";
 import { cn } from "@/utils";
+import { mainSchema } from "@/api/schema";
+import { env } from "@/env.mjs";
+import Routes from "@/routes";
+
 const MAX_SUMMARY_LENGTH = 250;
 
-export default function PublishedStory() {
+export default function PublishedStory({
+	storyData,
+}: {
+	storyData: mainSchema["ReturnWebStoryDTO"];
+}) {
 	const router = useRouter();
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
-	console.log(router.pathname);
 
 	// Queries
 	const Webstory = useQuery({
@@ -41,12 +48,11 @@ export default function PublishedStory() {
 			),
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 		refetchInterval: 1000,
+		initialData: storyData,
 		// Disable once all the videoKeys are obtained
 		enabled: enableQuery,
 	});
-
-	const imageRadio = GetImageRatio({ story: Webstory.data! });
-
+	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
 
 	useEffect(() => {
@@ -67,7 +73,7 @@ export default function PublishedStory() {
 				<div
 					className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm lg:rounded-br-sm lg:rounded-tr-sm lg:rounded-tl-sm lg:rounded-bl-sm`}
 				>
-					<div className="flex items-center gap-x-2">
+					<div className="flex items-center gap-x-2 py-3">
 						<svg
 							width="16"
 							height="16"
@@ -109,7 +115,7 @@ export default function PublishedStory() {
 							</g>
 						</svg>
 					</div>
-					<p className="text-sm">{Format.Title("The Path Of Friendship")}</p>
+					<p className="text-sm">{Format.Title(Webstory.data.storyTitle)}</p>
 				</div>
 				<div className="hidden md:block space-x-2">
 					<div className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium">
@@ -174,12 +180,14 @@ export default function PublishedStory() {
 							/>
 						</svg>
 					</div>
-					<Button
-						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
-						variant="outline"
-					>
-						<Share2 className="mr-2 h-4 w-4" /> Share this video
-					</Button>
+					{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
+						<Button
+							className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
+							variant="outline"
+						>
+							<Share2 className="mr-2 h-4 w-4" /> Share this video
+						</Button>
+					)}
 				</div>
 			</div>
 			<div className={`flex bg-reverse min-h-[calc(100vh-66px)] p-2 gap-x-1.5`}>
@@ -189,11 +197,11 @@ export default function PublishedStory() {
 							className={cn(
 								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
 								// Based on aspect ratio we need to adjust the parent width
-								imageRadio.width === 1 && "md:max-w-[1080px]",
-								imageRadio.width === 3 && "md:max-w-[900px]",
-								imageRadio.width === 4 && "md:max-w-[1280px]",
-								imageRadio.width === 9 && "md:max-w-[780px]",
-								imageRadio.width === 16 && "md:max-w-[1620px]"
+								ImageRatio.width === 1 && "md:max-w-[1080px]",
+								ImageRatio.width === 3 && "md:max-w-[900px]",
+								ImageRatio.width === 4 && "md:max-w-[1280px]",
+								ImageRatio.width === 9 && "md:max-w-[780px]",
+								ImageRatio.width === 16 && "md:max-w-[1620px]"
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
@@ -299,15 +307,19 @@ export default function PublishedStory() {
 					</div>
 					<div className="absolute bottom-4 left-4 items-center flex flex-row gap-x-1">
 						<span
-							className="rounded-full text-xs text-purple-100 bg-purple-500 p-1.5"
+							className="rounded-full text-xs text-purple-100 bg-purple-500 p-1.5 hover:cursor-pointer hover:bg-purple-400 transition-colors duration-200  ease-in-out"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+							onClick={() => router.push(Routes.Landing())}
 						>
 							<div className={`flex gap-x-2.5 px-3 items-center`}>
 								<Video className="mr-1 h-3 w-3" /> Make a video like this
 							</div>
 						</span>
 						<span className="rounded-full text-xs text-muted-foreground">
-							<div className={`flex text-sm gap-x-2.5 px-3 items-center`}>
+							<div
+								className={`flex text-sm gap-x-2.5 px-3 items-center hover:cursor-pointer hover:text-gray-600 transition-colors duration-200  ease-in-out`}
+								onClick={() => router.push(Routes.Landing())}
+							>
 								Try It Free
 							</div>
 						</span>
@@ -317,17 +329,19 @@ export default function PublishedStory() {
 					</div>
 					<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
 						<span
-							className="rounded-full w-8 h-8 bg-popover p-1.5"
+							className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
 						>
 							<ModeToggle />
 						</span>
-						<span
-							className="rounded-full w-8 h-8 bg-popover p-1.5"
-							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-						>
-							<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
-						</span>
+						{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
+							<span
+								className="rounded-full w-8 h-8 bg-popover p-1.5"
+								style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+							>
+								<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
+							</span>
+						)}
 					</div>
 				</div>
 			</div>

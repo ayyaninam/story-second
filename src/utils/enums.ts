@@ -71,9 +71,11 @@ export enum StoryType {
 	SplitScreen,
 }
 
-export enum ImageResolution {
-	_512x512,
-	_1024x1024,
-	_1024x576,
-	_576x1024,
+export enum AspectRatios {
+	"512x512",
+	"1024x1024",
+	"1024x576",
+	"576x1024",
+	"1152x1024",
+	"1024x1152",
 }

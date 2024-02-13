@@ -16,6 +16,10 @@ import {
 	RemotionPlayerInputProps,
 } from "./constants";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/api";
+import { QueryKeys } from "@/lib/queryKeys";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
@@ -36,6 +40,22 @@ const RemotionPlayer = ({
 	onEnded,
 	...props
 }: RemotionPlayerProps) => {
+	const router = useRouter();
+	const Webstory = useQuery({
+		queryFn: () =>
+			api.library.get(
+				router.query.genre!.toString(),
+				router.query.id!.toString()
+			),
+		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+	});
+	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
+
+	const player: React.CSSProperties = {
+		width: "100%",
+		aspectRatio: ImageRatio.ratio,
+	};
+
 	const ref = useRef<PlayerRef>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 

@@ -1,6 +1,10 @@
+import api from "@/api";
+import { QueryKeys } from "@/lib/queryKeys";
 import cn from "@/utils/cn";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
 import { useMap, useReadLocalStorage } from "usehooks-ts";
 
@@ -27,6 +31,16 @@ export default function CustomImageSuspense({
 	}>;
 	onComplete: () => void;
 }) {
+	const router = useRouter();
+	const Webstory = useQuery({
+		queryFn: () =>
+			api.library.get(
+				router.query.genre!.toString(),
+				router.query.id!.toString()
+			),
+		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+	});
+	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 	const startTime = useRef(dayjs());
 	const lastTick = useRef(dayjs());
 	const [grid, setGrid] = useState<number[]>([]);
@@ -160,7 +174,7 @@ export default function CustomImageSuspense({
 				backgroundImage: `url(${imageSrc})`,
 				backgroundSize: "cover",
 				backgroundRepeat: "no-repeat",
-				aspectRatio: GetImageRatio({}).ratio,
+				aspectRatio: ImageRatio.ratio,
 			}}
 			className={`transition-all duration-500`}
 		>

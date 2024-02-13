@@ -15,7 +15,7 @@ import {
 } from "./constants";
 import { prefetchAssets } from "./prefetch";
 import { mainSchema } from "@/api/schema";
-import { VoiceType, StoryType, ImageResolution } from "@/utils/enums";
+import { VoiceType, AspectRatios, StoryOutputTypes } from "@/utils/enums";
 import Format from "@/utils/format";
 
 type WebStory = NonNullable<
@@ -164,12 +164,12 @@ export const webStoryToRemotionSegments = async (
 };
 
 export const getRemotionVariant = (story: WebStory): RemotionVariant => {
-	const storyType: StoryType = story.storyType;
-	const imageResolution = story.storySegments[0]?.imageResolution;
+	const storyType: StoryOutputTypes = story.storyType;
+	const imageResolution = story.resolution;
 
-	if (storyType === StoryType.SplitScreen) {
+	if (storyType === StoryOutputTypes.SplitScreen) {
 		return "split";
-	} else if (imageResolution === ImageResolution._1024x576) {
+	} else if (imageResolution === AspectRatios["1024x576"]) {
 		return "landscape";
 	}
 	return "portrait";
