@@ -59,7 +59,7 @@ const App = () => {
 			language: options.language,
 			length: options.length,
 			prompt: prompt,
-			image_resolution: ImageRatios["16x9"].enumValue,
+			image_resolution: ImageRatios["9x16"].enumValue,
 			input_type: StoryInputTypes.Text,
 			output_type: outputType,
 			video_key: "",
