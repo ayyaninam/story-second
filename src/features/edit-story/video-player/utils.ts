@@ -1,4 +1,5 @@
 import pLimit from "p-limit";
+import sumBy from "lodash/sumBy";
 import { v4 as uuidv4 } from "uuid";
 import {
 	getVideoMetadata,
@@ -202,11 +203,8 @@ export const webStoryToRemotionInputProps = async (
 			return {
 				showLoadingVideo: false,
 				variant,
-				durationInFrames: segments.reduce(
-					(acc, segment) =>
-						acc +
-						(segment.type === "transition" ? 0 : segment.durationInFrames),
-					0
+				durationInFrames: sumBy(segments, (segment: RemotionSegment) =>
+					segment.type === "transition" ? 0 : segment.durationInFrames
 				),
 				enableAudio: true,
 				enableSubtitles: true,
@@ -218,10 +216,10 @@ export const webStoryToRemotionInputProps = async (
 				(await getVideoMetadata(bottomVideoURL)).durationInSeconds * VIDEO_FPS
 			);
 
-			const topVideoDurationInFrames = segments.reduce(
-				(acc, segment) =>
-					acc + (segment.type === "transition" ? 0 : segment.durationInFrames),
-				0
+			const topVideoDurationInFrames = sumBy(
+				segments,
+				(segment: RemotionSegment) =>
+					segment.type === "transition" ? 0 : segment.durationInFrames
 			);
 
 			const durationInFrames = Math.max(
