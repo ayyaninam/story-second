@@ -51,7 +51,7 @@ export default function FileUpload({
 					stroke-width="1"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					className="lucide lucide-file-check"
+					className="lucide lucide-file-check iconButton"
 				>
 					<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
 					<path d="M14 2v4a2 2 0 0 0 2 2h4" />
@@ -70,7 +70,7 @@ export default function FileUpload({
 					stroke-width="1"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					className="lucide lucide-file-video-2"
+					className="lucide lucide-file-video-2 iconButton"
 				>
 					<path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4" />
 					<path d="M14 2v4a2 2 0 0 0 2 2h4" />
