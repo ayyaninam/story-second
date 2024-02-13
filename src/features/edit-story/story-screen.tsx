@@ -38,7 +38,8 @@ const StoryScreen = () => {
 					.waitUntilDone()
 					.then((res) => {
 						setFetchedVideos((prev) => [...prev, url]);
-					});
+					})
+					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
 		for (const seg of Webstory.data?.storySegments ?? []) {
@@ -51,7 +52,8 @@ const StoryScreen = () => {
 					.waitUntilDone()
 					.then((res) => {
 						setFetchedAudios((prev) => [...prev, url]);
-					});
+					})
+					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
 		const originalTikTokVideoKey = Webstory.data?.originalTiktokInputKey;
