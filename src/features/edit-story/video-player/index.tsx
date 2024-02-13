@@ -15,7 +15,7 @@ import {
 	VIDEO_WIDTH,
 	RemotionPlayerInputProps,
 } from "./constants";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetImageRatio, GetImageRatioFromVariant } from "@/utils/image-ratio";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
@@ -245,6 +245,13 @@ const RemotionPlayer = ({
 		return () => observer.disconnect();
 	}, []);
 
+	// TODO: responsive styles
+	const style: React.CSSProperties = {
+		width: "100%",
+		aspectRatio: GetImageRatioFromVariant(inputProps.variant ?? "landscape")
+			.ratio,
+	};
+
 	return (
 		<div ref={containerRef} className="w-full h-full">
 			<Player
@@ -253,9 +260,9 @@ const RemotionPlayer = ({
 				inputProps={inputProps}
 				durationInFrames={inputProps.durationInFrames}
 				fps={VIDEO_FPS}
-				compositionHeight={VIDEO_HEIGHT}
-				compositionWidth={VIDEO_WIDTH}
-				style={player}
+				compositionHeight={VIDEO_HEIGHT[inputProps.variant]}
+				compositionWidth={VIDEO_WIDTH[inputProps.variant]}
+				style={style}
 				className="lg:[&>div]:rounded-bl-lg"
 				autoPlay={false}
 				numberOfSharedAudioTags={0}

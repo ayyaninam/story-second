@@ -1,3 +1,6 @@
+import { mainSchema } from "@/api/schema";
+import { getRemotionVariant } from "@/features/edit-story/video-player/utils";
+import { RemotionVariant } from "@/features/edit-story/video-player/constants";
 import { AspectRatios } from "./enums";
 
 export const ImageRatios = {
@@ -51,4 +54,15 @@ export const GetImageRatio = (resolution: AspectRatios) => {
 			(ratio) => ratio.enumValue === resolution
 		) ?? ImageRatios["16x9"]
 	);
+};
+
+export const GetImageRatioFromVariant = (variant: RemotionVariant) => {
+	switch (variant) {
+		case "landscape":
+			return ImageRatios["16x9"];
+		case "portrait":
+			return ImageRatios["9x16"];
+		case "split":
+			return ImageRatios["9x16"];
+	}
 };

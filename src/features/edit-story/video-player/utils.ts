@@ -1,5 +1,6 @@
 import pLimit from "p-limit";
 import { v4 as uuidv4 } from "uuid";
+import { getVideoMetadata } from "@remotion/media-utils";
 import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import {
 	RemotionSegment,
@@ -10,10 +11,11 @@ import {
 	RemotionPageSegment,
 	RemotionInterpolationSegment,
 	RemotionTransitionSegment,
+	RemotionVariant,
 } from "./constants";
 import { prefetchAssets } from "./prefetch";
 import { mainSchema } from "@/api/schema";
-import { VoiceType } from "@/utils/enums";
+import { VoiceType, AspectRatios, StoryOutputTypes } from "@/utils/enums";
 import Format from "@/utils/format";
 
 type WebStory = NonNullable<
@@ -161,6 +163,18 @@ export const webStoryToRemotionSegments = async (
 	return segments.flat().map((segment, index) => ({ ...segment, index }));
 };
 
+export const getRemotionVariant = (story: WebStory): RemotionVariant => {
+	const storyType: StoryOutputTypes = story.storyType;
+	const imageResolution = story.resolution;
+
+	if (storyType === StoryOutputTypes.SplitScreen) {
+		return "split";
+	} else if (imageResolution === AspectRatios["1024x576"]) {
+		return "landscape";
+	}
+	return "portrait";
+};
+
 export const webStoryToRemotionInputProps = async (
 	story: WebStory,
 	selectedVoice: VoiceType
@@ -169,14 +183,45 @@ export const webStoryToRemotionInputProps = async (
 
 	// await prefetchAssets(segments);
 
-	const durationInFrames = segments.reduce(
-		(acc, segment) => acc + segment.durationInFrames,
+	const bottomVideoURL = Format.GetVideoUrl(story.originalTiktokInputKey!);
+
+	const bottomVideoDurationInFrames = Math.ceil(
+		(await getVideoMetadata(bottomVideoURL)).durationInSeconds * VIDEO_FPS
+	);
+	const topVideoDurationInFrames = segments.reduce(
+		(acc, segment) =>
+			acc + (segment.type === "transition" ? 0 : segment.durationInFrames),
 		0
 	);
 
-	return {
+	const base = {
 		showLoadingVideo: false,
-		durationInFrames,
+		durationInFrames: Math.max(
+			bottomVideoDurationInFrames,
+			topVideoDurationInFrames
+		),
+		enableAudio: false,
+		enableSubtitles: false,
 		segments,
 	};
+
+	const variant = getRemotionVariant(story);
+
+	if (variant === "split") {
+		return {
+			...base,
+			variant: "split",
+			bottomVideoURL,
+		};
+	} else if (variant === "landscape") {
+		return {
+			...base,
+			variant: "landscape",
+		};
+	} else {
+		return {
+			...base,
+			variant: "portrait",
+		};
+	}
 };

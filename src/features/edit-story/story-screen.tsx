@@ -54,6 +54,21 @@ const StoryScreen = () => {
 					});
 			}
 		}
+		const originalTikTokVideoKey = Webstory.data?.originalTiktokInputKey;
+		if (
+			originalTikTokVideoKey &&
+			!fetchedVideos.includes(originalTikTokVideoKey)
+		) {
+			const url = Format.GetVideoUrl(originalTikTokVideoKey);
+			prefetch(url, {
+				method: "blob-url",
+				contentType: "video/webm",
+			})
+				.waitUntilDone()
+				.then(() => {
+					setFetchedVideos((prev) => [...prev, url]);
+				});
+		}
 	}, [Webstory.data]);
 
 	const videoArray = Webstory.data?.storySegments
@@ -69,12 +84,17 @@ const StoryScreen = () => {
 		(Webstory.data?.storySegments?.filter((seg) => !!seg.imageKey)?.length ??
 			0) < 2;
 
+	const originalTikTokVideoKey = Webstory.data?.originalTiktokInputKey;
+	const hasOriginalTikTokVideoKey = Boolean(originalTikTokVideoKey);
+
 	const isStoryLoading =
 		!Webstory.data ||
 		(videoArray?.length ?? 0) !== Webstory.data.storySegments?.length ||
 		// Using large vidArray length to ensure that all videos are fetched
 		fetchedVideos.length < (videoArray?.length ?? 1000) ||
-		fetchedAudios.length < (videoArray?.length ?? 1000);
+		fetchedAudios.length < (videoArray?.length ?? 1000) ||
+		(hasOriginalTikTokVideoKey &&
+			!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
 
 	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 
