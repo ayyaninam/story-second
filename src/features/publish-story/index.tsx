@@ -38,7 +38,6 @@ export default function PublishedStory({
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
-
 	// Queries
 	const Webstory = useQuery({
 		queryFn: () =>
@@ -54,7 +53,6 @@ export default function PublishedStory({
 	});
 	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
-
 	useEffect(() => {
 		if (Webstory.data) {
 			setEnableQuery(
@@ -65,7 +63,7 @@ export default function PublishedStory({
 			);
 		}
 	}, [Webstory.data]);
-
+	// return <div>Hello world</div>;
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
 			{/* Navbar */}
@@ -98,7 +96,6 @@ export default function PublishedStory({
 								fill="#657D8B"
 							/>
 						</svg>
-
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"
@@ -254,7 +251,6 @@ export default function PublishedStory({
 													)}
 										</p>
 									)}
-
 									{(Webstory.data?.summary?.length ?? 0) > MAX_SUMMARY_LENGTH &&
 										!showFullDescription && (
 											<Button
@@ -273,7 +269,7 @@ export default function PublishedStory({
 									) : (
 										<Avatar className="h-11 w-11">
 											<AvatarImage
-												src={Webstory.data.user?.profileName ?? undefined}
+												src={Webstory.data.user?.profilePicture ?? undefined}
 											/>
 											<AvatarFallback>
 												{Format.AvatarName(Webstory.data.user?.profileName)}
