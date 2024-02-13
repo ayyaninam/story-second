@@ -9,6 +9,7 @@ import {
 import { Premount } from "../../../components/premount";
 import { SegmentSplitIntermediate } from "./intermediate";
 import { SegmentSplitSplitBottomVideo } from "./bottom-video";
+import { SegmentSplitTopTheEnd } from "./top-the-end";
 
 const Main: React.FC<RemotionPlayerSplitInputProps> = (inputProps) => {
 	const { segments, durationInFrames } = inputProps;
@@ -62,6 +63,10 @@ const Main: React.FC<RemotionPlayerSplitInputProps> = (inputProps) => {
 							);
 					}
 				})}
+
+				<TransitionSeries.Sequence durationInFrames={durationInFrames}>
+					<SegmentSplitTopTheEnd />
+				</TransitionSeries.Sequence>
 			</TransitionSeries>
 
 			<Series>
