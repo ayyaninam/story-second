@@ -55,3 +55,14 @@ export const GetImageRatio = (resolution: AspectRatios) => {
 		) ?? ImageRatios["16x9"]
 	);
 };
+
+export const GetImageRatioFromVariant = (variant: RemotionVariant) => {
+	switch (variant) {
+		case "landscape":
+			return ImageRatios["16x9"];
+		case "portrait":
+			return ImageRatios["9x16"];
+		case "split":
+			return ImageRatios["9x16"];
+	}
+};

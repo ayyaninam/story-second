@@ -15,7 +15,7 @@ import {
 	VIDEO_WIDTH,
 	RemotionPlayerInputProps,
 } from "./constants";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetImageRatio, GetImageRatioFromVariant } from "@/utils/image-ratio";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
@@ -248,7 +248,8 @@ const RemotionPlayer = ({
 	// TODO: responsive styles
 	const style: React.CSSProperties = {
 		width: "100%",
-		aspectRatio: GetImageRatio({ variant: inputProps.variant }).ratio,
+		aspectRatio: GetImageRatioFromVariant(inputProps.variant ?? "landscape")
+			.ratio,
 	};
 
 	return (
