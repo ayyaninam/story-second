@@ -175,11 +175,22 @@ export const getRemotionVariant = (story: WebStory): RemotionVariant => {
 	return "portrait";
 };
 
+const TO_END_OF_VIDEO = 9999999;
+
+const extendLastSegmentOfTopVideo = (segments: RemotionSegment[]) =>
+	segments.map((segment, index) =>
+		index === segments.length - 1
+			? { ...segment, durationInFrames: TO_END_OF_VIDEO }
+			: segment
+	);
+
 export const webStoryToRemotionInputProps = async (
 	story: WebStory,
 	selectedVoice: VoiceType
 ): Promise<RemotionPlayerInputProps> => {
 	const segments = await webStoryToRemotionSegments(story, selectedVoice);
+
+	const variant = getRemotionVariant(story);
 
 	// await prefetchAssets(segments);
 
@@ -194,18 +205,19 @@ export const webStoryToRemotionInputProps = async (
 		0
 	);
 
+	const durationInFrames = Math.max(
+		bottomVideoDurationInFrames,
+		topVideoDurationInFrames
+	);
+
 	const base = {
 		showLoadingVideo: false,
-		durationInFrames: Math.max(
-			bottomVideoDurationInFrames,
-			topVideoDurationInFrames
-		),
+		durationInFrames,
 		enableAudio: false,
 		enableSubtitles: false,
-		segments,
+		segments:
+			variant === "split" ? extendLastSegmentOfTopVideo(segments) : segments,
 	};
-
-	const variant = getRemotionVariant(story);
 
 	if (variant === "split") {
 		return {
