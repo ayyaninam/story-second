@@ -3,7 +3,11 @@ import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import Routes from "@/routes";
 import { CreateInitialStoryQueryParams } from "@/types";
-import { getAccessToken, withPageAuthRequired } from "@auth0/nextjs-auth0";
+import {
+	getAccessToken,
+	getSession,
+	withPageAuthRequired,
+} from "@auth0/nextjs-auth0";
 import { access } from "fs";
 import { InferGetServerSidePropsType } from "next";
 
@@ -49,12 +53,26 @@ function StoryPage() {
 export const getServerSideProps = withPageAuthRequired({
 	// @ts-expect-error Some weird type error here
 	getServerSideProps: async (ctx) => {
+		let accessToken: string | undefined = undefined;
 		try {
-			const { accessToken } = await getAccessToken(ctx.req, ctx.res, {
+			const Token = await getAccessToken(ctx.req, ctx.res, {
 				authorizationParams: {
 					audience: env.NEXT_PUBLIC_AUTH0_AUDIENCE,
 				},
 			});
+			accessToken = Token.accessToken;
+		} catch (e) {
+			return {
+				redirect: {
+					destination: "/api/auth/login",
+					permanent: false,
+				},
+			};
+		}
+		try {
+			const session = await getSession(ctx.req, ctx.res);
+
+			if (!session || !accessToken) return redirectToHomepage;
 			const queryParams = ctx.query;
 			// Access the query params
 			const {
@@ -73,7 +91,7 @@ export const getServerSideProps = withPageAuthRequired({
 				!image_style ||
 				!language ||
 				!length ||
-				!prompt ||
+				!(prompt || video_key) ||
 				!accessToken ||
 				!output_type ||
 				!input_type ||
@@ -81,7 +99,20 @@ export const getServerSideProps = withPageAuthRequired({
 			)
 				throw new Error("Missing required params");
 
-			const { url } = await api.webstory.create(
+			await api.user.get(accessToken).catch(async (e) => {
+				// TODO: modify to only run when there is a 400 error code
+				await api.user.register(
+					{
+						email: session.user.email,
+						name: session.user.nickname,
+						verificationRequired: session.user.email_verified,
+						profilePicture: session.user?.picture ?? null,
+					},
+					accessToken as string
+				);
+			});
+
+			const story = await api.webstory.create(
 				{
 					image_style: convertAndValidateStoryQueryParams(
 						"image_style",
@@ -106,19 +137,16 @@ export const getServerSideProps = withPageAuthRequired({
 				},
 				accessToken as string
 			);
-			console.log("url", url);
+			const { url } = story;
+
 			const [genre, id] = url.split("/");
+
 			// If the url is not in the expected format, redirect to home
 			if (!genre || !id)
 				throw new Error(
 					"Invalid response from server, no genre or id provided"
 				);
-			console.log({
-				redirect: {
-					destination: Routes.EditStory(genre, id),
-					permanent: false,
-				},
-			});
+			console.log("Redirecting to", Routes.EditStory(genre, id));
 			return {
 				redirect: {
 					destination: Routes.EditStory(genre, id),

@@ -19,6 +19,10 @@ export const env = createEnv({
 		NEXT_PUBLIC_IMAGEKIT_URL: z.string().min(1),
 		NEXT_PUBLIC_ML_API_URL: z.string().min(1),
 		NEXT_PUBLIC_AUTH0_AUDIENCE: z.string().min(1),
+		NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES: z
+			.string()
+			.transform((v) => v === "true")
+			.default(false),
 	},
 	/*
 	 * Due to how Next.js bundles environment variables on Edge and Client,
@@ -33,5 +37,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_IMAGEKIT_URL: process.env.NEXT_PUBLIC_IMAGEKIT_URL,
 		NEXT_PUBLIC_ML_API_URL: process.env.NEXT_PUBLIC_ML_API_URL,
 		NEXT_PUBLIC_AUTH0_AUDIENCE: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
+		NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES:
+			process.env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES,
 	},
 });

@@ -76,11 +76,13 @@ const StoryScreen = () => {
 		fetchedVideos.length < (videoArray?.length ?? 1000) ||
 		fetchedAudios.length < (videoArray?.length ?? 1000);
 
+	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
+
 	if (Webstory.isError)
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
-				style={{ aspectRatio: GetImageRatio().ratio }}
+				style={{ aspectRatio: ImageRatio.ratio }}
 			>
 				<p className="text-xl">
 					There was an error loading your story, please try again or contact
@@ -92,7 +94,7 @@ const StoryScreen = () => {
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
-				style={{ aspectRatio: GetImageRatio().ratio }}
+				style={{ aspectRatio: ImageRatio.ratio }}
 			>
 				<div
 					className="px-4 py-1 text-white border-[0.5px] mb-16"
