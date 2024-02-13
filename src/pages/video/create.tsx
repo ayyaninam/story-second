@@ -3,6 +3,7 @@ import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import Routes from "@/routes";
 import { CreateInitialStoryQueryParams } from "@/types";
+import { AspectRatios } from "@/utils/enums";
 import {
 	getAccessToken,
 	getSession,
@@ -111,7 +112,6 @@ export const getServerSideProps = withPageAuthRequired({
 					accessToken as string
 				);
 			});
-
 			const story = await api.webstory.create(
 				{
 					image_style: convertAndValidateStoryQueryParams(
@@ -132,7 +132,7 @@ export const getServerSideProps = withPageAuthRequired({
 					video_key: convertAndValidateStoryQueryParams("video_key", video_key),
 					image_resolution: convertAndValidateStoryQueryParams(
 						"image_resolution",
-						image_resolution
+						AspectRatios["1152x1024"]
 					),
 				},
 				accessToken as string
