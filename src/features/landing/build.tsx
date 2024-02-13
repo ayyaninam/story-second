@@ -69,7 +69,7 @@ const App = () => {
 			params["input_type"] = StoryInputTypes.Video;
 			params["output_type"] = StoryOutputTypes.SplitScreen;
 			params["video_key"] = videoFileId;
-			params["image_resolution"] = ImageRatios["9x16"].enumValue;
+			params["image_resolution"] = ImageRatios["9x8"].enumValue;
 		}
 		console.log(Routes.CreateStoryFromRoute(params));
 		window.location.href = Routes.CreateStoryFromRoute(params);
