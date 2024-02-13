@@ -1,7 +1,9 @@
 import pLimit from "p-limit";
 import { v4 as uuidv4 } from "uuid";
-import { getVideoMetadata } from "@remotion/media-utils";
-import { getAudioDurationInSeconds } from "@remotion/media-utils";
+import {
+	getVideoMetadata,
+	getAudioDurationInSeconds,
+} from "@remotion/media-utils";
 import {
 	RemotionSegment,
 	VIDEO_FPS,
@@ -13,7 +15,6 @@ import {
 	RemotionTransitionSegment,
 	RemotionVariant,
 } from "./constants";
-import { prefetchAssets } from "./prefetch";
 import { mainSchema } from "@/api/schema";
 import { VoiceType, AspectRatios, StoryOutputTypes } from "@/utils/enums";
 import Format from "@/utils/format";
@@ -192,48 +193,50 @@ export const webStoryToRemotionInputProps = async (
 
 	const variant = getRemotionVariant(story);
 
+	console.log(variant);
+
 	// await prefetchAssets(segments);
+	switch (variant) {
+		case "landscape":
+		case "portrait":
+			return {
+				showLoadingVideo: false,
+				variant,
+				durationInFrames: segments.reduce(
+					(acc, segment) =>
+						acc +
+						(segment.type === "transition" ? 0 : segment.durationInFrames),
+					0
+				),
+				enableAudio: true,
+				enableSubtitles: true,
+				segments,
+			};
+		case "split":
+			const bottomVideoURL = Format.GetVideoUrl(story.originalTiktokInputKey!);
+			const bottomVideoDurationInFrames = Math.ceil(
+				(await getVideoMetadata(bottomVideoURL)).durationInSeconds * VIDEO_FPS
+			);
 
-	const bottomVideoURL = Format.GetVideoUrl(story.originalTiktokInputKey!);
+			const topVideoDurationInFrames = segments.reduce(
+				(acc, segment) =>
+					acc + (segment.type === "transition" ? 0 : segment.durationInFrames),
+				0
+			);
 
-	const bottomVideoDurationInFrames = Math.ceil(
-		(await getVideoMetadata(bottomVideoURL)).durationInSeconds * VIDEO_FPS
-	);
-	const topVideoDurationInFrames = segments.reduce(
-		(acc, segment) =>
-			acc + (segment.type === "transition" ? 0 : segment.durationInFrames),
-		0
-	);
+			const durationInFrames = Math.max(
+				bottomVideoDurationInFrames,
+				topVideoDurationInFrames
+			);
 
-	const durationInFrames = Math.max(
-		bottomVideoDurationInFrames,
-		topVideoDurationInFrames
-	);
-
-	const base = {
-		showLoadingVideo: false,
-		durationInFrames,
-		enableAudio: false,
-		enableSubtitles: false,
-		segments:
-			variant === "split" ? extendLastSegmentOfTopVideo(segments) : segments,
-	};
-
-	if (variant === "split") {
-		return {
-			...base,
-			variant: "split",
-			bottomVideoURL,
-		};
-	} else if (variant === "landscape") {
-		return {
-			...base,
-			variant: "landscape",
-		};
-	} else {
-		return {
-			...base,
-			variant: "portrait",
-		};
+			return {
+				showLoadingVideo: false,
+				durationInFrames,
+				enableAudio: false,
+				enableSubtitles: false,
+				variant,
+				bottomVideoURL,
+				segments: extendLastSegmentOfTopVideo(segments),
+			};
 	}
 };
