@@ -27,8 +27,6 @@ const StoryScreen = () => {
 		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 	});
 
-	const imageRadio = GetImageRatio({ story: Webstory.data! });
-
 	useEffect(() => {
 		for (const seg of Webstory.data?.storySegments ?? []) {
 			if (seg.videoKey && !fetchedVideos.includes(seg.videoKey)) {
