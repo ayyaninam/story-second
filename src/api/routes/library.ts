@@ -7,10 +7,9 @@ const library = {
 		topLevelCategory: string,
 		slug: string,
 		accessToken?: string
-	): Promise<mainSchema["ReturnWebStoryDTO"]> => {
-		const data: mainSchema["ReturnWebStoryDTOApiResponse"] = await publicFetcher
-			.get(`api/library/${topLevelCategory}/${slug}`)
-			.json();
+	): Promise<mainSchema["ReturnVideoStoryDTO"]> => {
+		const data: mainSchema["ReturnVideoStoryDTOApiResponse"] =
+			await publicFetcher.get(`api/library/${topLevelCategory}/${slug}`).json();
 
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries

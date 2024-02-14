@@ -60,7 +60,14 @@ export interface components {
       video_key?: string;
       /** @default 2 */
       image_resolution?: components["schemas"]["ImageResolutionEnum"];
+      /** @default 0 */
+      display_resolution?: components["schemas"]["DisplayResolutionEnum"];
     };
+    /**
+     * DisplayResolutionEnum
+     * @enum {integer}
+     */
+    DisplayResolutionEnum: 0 | 1;
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */

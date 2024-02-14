@@ -1,9 +1,8 @@
 import api from "@/api";
 import { env } from "@/env.mjs";
-import EditStory from "@/features/edit-story";
 import Routes from "@/routes";
 import { CreateInitialStoryQueryParams } from "@/types";
-import { AspectRatios } from "@/utils/enums";
+import { AspectRatios, StoryOutputTypes } from "@/utils/enums";
 import {
 	getAccessToken,
 	getSession,
@@ -146,10 +145,16 @@ export const getServerSideProps = withPageAuthRequired({
 				throw new Error(
 					"Invalid response from server, no genre or id provided"
 				);
-			console.log("Redirecting to", Routes.EditStory(genre, id));
+
+			// If a video key has been passed in we know it's a split screen story
+			const storyType = video_key
+				? StoryOutputTypes.SplitScreen
+				: StoryOutputTypes.Video;
+
+			console.log("Redirecting to", Routes.EditStory(storyType, genre, id));
 			return {
 				redirect: {
-					destination: Routes.EditStory(genre, id),
+					destination: Routes.EditStory(storyType, genre, id),
 					permanent: false,
 				},
 			};

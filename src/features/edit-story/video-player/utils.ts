@@ -21,8 +21,8 @@ import { VoiceType, AspectRatios, StoryOutputTypes } from "@/utils/enums";
 import Format from "@/utils/format";
 
 type WebStory = NonNullable<
-	mainSchema["ReturnWebStoryDTO"] & {
-		storySegments: NonNullable<mainSchema["ReturnStorySegmentDTO"][]>;
+	mainSchema["ReturnVideoStoryDTO"] & {
+		videoSegments: NonNullable<mainSchema["ReturnStorySegmentDTO"][]>;
 	}
 >;
 type StorySegment = NonNullable<mainSchema["ReturnStorySegmentDTO"]>;
@@ -100,7 +100,7 @@ const storySegmentToRemotionSegment = async (
 	const { contentDuration, durationInFrames } = await calculateSegmentDuration({
 		audioURL,
 		segment,
-		isLastSegment: index === story.storySegments.length,
+		isLastSegment: index === story.videoSegments.length,
 	});
 
 	// creating the segments
@@ -153,7 +153,7 @@ export const webStoryToRemotionSegments = async (
 	story: WebStory,
 	selectedVoice: VoiceType
 ): Promise<RemotionSegment[]> => {
-	const storySegmentPromises = story.storySegments.map((storySegment, index) =>
+	const storySegmentPromises = story.videoSegments.map((storySegment, index) =>
 		limit(() =>
 			storySegmentToRemotionSegment(storySegment, index, story, selectedVoice)
 		)
@@ -194,8 +194,6 @@ export const webStoryToRemotionInputProps = async (
 
 	const variant = getRemotionVariant(story);
 
-	console.log(variant);
-
 	// await prefetchAssets(segments);
 	switch (variant) {
 		case "landscape":
@@ -211,7 +209,7 @@ export const webStoryToRemotionInputProps = async (
 				segments,
 			};
 		case "split":
-			const bottomVideoURL = Format.GetVideoUrl(story.originalTiktokInputKey!);
+			const bottomVideoURL = Format.GetVideoUrl(story.originalMediaKey!);
 			const bottomVideoDurationInFrames = Math.ceil(
 				(await getVideoMetadata(bottomVideoURL)).durationInSeconds * VIDEO_FPS
 			);

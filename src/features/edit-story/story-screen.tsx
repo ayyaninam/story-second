@@ -11,24 +11,17 @@ import VideoPlayer from "./components/video-player";
 import { useEffect, useRef, useState } from "react";
 import { prefetch } from "remotion";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { mainSchema } from "@/api/schema";
+import useWebstoryContext from "./providers/WebstoryContext";
 
 const StoryScreen = () => {
 	const router = useRouter();
 	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
 	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
-
-	// Queries
-	const Webstory = useQuery({
-		queryFn: () =>
-			api.library.get(
-				router.query.genre!.toString(),
-				router.query.id!.toString()
-			),
-		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
-	});
+	const [Webstory] = useWebstoryContext();
 
 	useEffect(() => {
-		for (const seg of Webstory.data?.storySegments ?? []) {
+		for (const seg of Webstory?.videoSegments ?? []) {
 			if (seg.videoKey && !fetchedVideos.includes(seg.videoKey)) {
 				const url = Format.GetVideoUrl(seg.videoKey);
 				const fetchedContent = prefetch(url, {
@@ -42,7 +35,7 @@ const StoryScreen = () => {
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-		for (const seg of Webstory.data?.storySegments ?? []) {
+		for (const seg of Webstory.videoSegments ?? []) {
 			if (seg.femaleAudioKey && !fetchedAudios.includes(seg.femaleAudioKey)) {
 				const url = Format.GetImageUrl(seg.femaleAudioKey);
 				const fetchedContent = prefetch(url, {
@@ -56,7 +49,7 @@ const StoryScreen = () => {
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-		const originalTikTokVideoKey = Webstory.data?.originalTiktokInputKey;
+		const originalTikTokVideoKey = Webstory.originalMediaKey;
 		if (
 			originalTikTokVideoKey &&
 			!fetchedVideos.includes(originalTikTokVideoKey)
@@ -71,36 +64,35 @@ const StoryScreen = () => {
 					setFetchedVideos((prev) => [...prev, url]);
 				});
 		}
-	}, [Webstory.data]);
+	}, [Webstory]);
 
-	const videoArray = Webstory.data?.storySegments
+	const videoArray = Webstory.videoSegments
 		?.filter((seg) => !!seg.videoKey)
 		.map((seg) => seg.videoKey);
 
-	const generatedImages = Webstory.data?.storySegments
+	const generatedImages = Webstory.videoSegments
 		?.filter((seg) => !!seg.imageKey)
 		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }));
 
 	const areImagesLoading =
-		!Webstory.data ||
-		(Webstory.data?.storySegments?.filter((seg) => !!seg.imageKey)?.length ??
-			0) < 2;
+		!Webstory ||
+		(Webstory.videoSegments?.filter((seg) => !!seg.imageKey)?.length ?? 0) < 2;
 
-	const originalTikTokVideoKey = Webstory.data?.originalTiktokInputKey;
+	const originalTikTokVideoKey = Webstory.originalMediaKey;
 	const hasOriginalTikTokVideoKey = Boolean(originalTikTokVideoKey);
 
 	const isStoryLoading =
-		!Webstory.data ||
-		(videoArray?.length ?? 0) !== Webstory.data.storySegments?.length ||
+		!Webstory ||
+		(videoArray?.length ?? 0) !== Webstory.videoSegments?.length ||
 		// Using large vidArray length to ensure that all videos are fetched
 		fetchedVideos.length < (videoArray?.length ?? 1000) ||
 		fetchedAudios.length < (videoArray?.length ?? 1000) ||
 		(hasOriginalTikTokVideoKey &&
 			!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
 
-	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
+	const ImageRatio = GetImageRatio(Webstory.resolution);
 
-	if (Webstory.isError)
+	if (!Webstory)
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"

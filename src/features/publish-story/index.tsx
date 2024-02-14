@@ -32,20 +32,23 @@ const MAX_SUMMARY_LENGTH = 250;
 export default function PublishedStory({
 	storyData,
 }: {
-	storyData: mainSchema["ReturnWebStoryDTO"];
+	storyData: mainSchema["ReturnVideoStoryDTO"];
 }) {
 	const router = useRouter();
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
 	// Queries
-	const Webstory = useQuery({
+
+	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
 		queryFn: () =>
-			api.library.get(
+			api.video.get(
 				router.query.genre!.toString(),
-				router.query.id!.toString()
+				router.query.id!.toString(),
+				storyData.storyType
 			),
-		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.STORY, router.pathname],
 		refetchInterval: 1000,
 		initialData: storyData,
 		// Disable once all the videoKeys are obtained
@@ -57,8 +60,8 @@ export default function PublishedStory({
 		if (Webstory.data) {
 			setEnableQuery(
 				!(
-					Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
-					Webstory.data.storySegments?.length > 0
+					Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
+					Webstory.data.videoSegments?.length > 0
 				)
 			);
 		}

@@ -25,7 +25,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			notFound: true,
 		};
 	}
-	const storyData = await api.video.get(genre, id, StoryOutputTypes.Video);
+	const storyData = await api.video.get(
+		genre,
+		id,
+		StoryOutputTypes.SplitScreen
+	);
 
 	return { props: { storyData } };
 };
