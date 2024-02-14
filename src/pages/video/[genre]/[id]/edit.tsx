@@ -1,5 +1,6 @@
 import api from "@/api";
 import { mainSchema } from "@/api/schema";
+import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import { StoryOutputTypes } from "@/utils/enums";
@@ -24,7 +25,22 @@ function StoryPage({
 
 export const getServerSideProps = withPageAuthRequired({
 	getServerSideProps: async (ctx) => {
-		const { accessToken } = await getAccessToken(ctx.req, ctx.res);
+		let accessToken: string | undefined = undefined;
+		try {
+			const Token = await getAccessToken(ctx.req, ctx.res, {
+				authorizationParams: {
+					audience: env.NEXT_PUBLIC_AUTH0_AUDIENCE,
+				},
+			});
+			accessToken = Token.accessToken;
+		} catch (e) {
+			return {
+				redirect: {
+					destination: "/api/auth/login",
+					permanent: false,
+				},
+			};
+		}
 		// @ts-expect-error Not typing correctly
 		const { genre, id } = ctx.params;
 		if (!genre || !id) {
