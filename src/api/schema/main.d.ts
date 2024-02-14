@@ -1404,27 +1404,6 @@ export interface paths {
      */
     post: operations["GenerateGenericAudioSample"];
   };
-  "/api/Trends/{topLevelCategory}": {
-    /**
-     * Get stories under the specified category
-     * @description Get stories under the specified category based on pagination parameters
-     */
-    get: operations["GetStoriesByTopLevelCategory"];
-  };
-  "/api/Trends/{topLevelCategory}/{slug}": {
-    /**
-     * Get one public story by category and slug
-     * @description Get a single public story by its category and slug
-     */
-    get: operations["GetOnePublicStoryByCategoryAndSlug"];
-  };
-  "/api/Trends/{id}/Suggested": {
-    /**
-     * Get suggested stories
-     * @description Get a list of suggested stories based on the provided story id
-     */
-    get: operations["GetSuggestedStories"];
-  };
   "/api/User/Register": {
     /** Registers a new user, unless they already exist. */
     post: {
@@ -2002,13 +1981,6 @@ export interface paths {
      * @description Get stories under the specified category based on pagination parameters
      */
     get: operations["GetStoriesByTopLevelCategory"];
-  };
-  "/api/Video/GetUrl/{id}": {
-    /**
-     * Get one public story by id. Depricated API, returns category/slug url.
-     * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
-     */
-    get: operations["GetOnePublicStoryById"];
   };
   "/api/Video/{topLevelCategory}/{slug}": {
     /**
@@ -4916,6 +4888,32 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    /** @description DTO used to return Scenes information of a WebStory */
+    ReturnScenesDTO: {
+      /**
+       * Id
+       * Format: uuid
+       * @description The unique identifier of the scene.
+       */
+      id?: string;
+      /**
+       * Index
+       * Format: int32
+       * @description The index of the scene.
+       */
+      index?: number;
+      /**
+       * SceneDescription
+       * @description The description of the scene.
+       */
+      sceneDescription?: string | null;
+      /**
+       * Created
+       * Format: date-time
+       * @description The date and time the scene was created.
+       */
+      created?: string;
+    };
     /** @description Return model for Comments. */
     ReturnStoryCommentDTO: {
       /**
@@ -5537,6 +5535,12 @@ export interface components {
        */
       index?: number;
       /**
+       * SceneId
+       * Format: uuid
+       * @description The id of the associated scene.
+       */
+      sceneId?: string | null;
+      /**
        * TextContent
        * @description The text content of the segment.
        */
@@ -5641,6 +5645,11 @@ export interface components {
        * @description The cover image of the story.
        */
       coverImage?: string | null;
+      /**
+       * Scenes
+       * @description The scene informations in the story.
+       */
+      scenes?: components["schemas"]["ReturnScenesDTO"][] | null;
       /**
        * VideoSegments
        * @description A list of generated video segments, each representing a slide
