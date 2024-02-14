@@ -5,6 +5,7 @@ import { renderToString } from "react-dom/server";
 import storyLanguages from "@/utils/storyLanguages";
 import {
 	AspectRatios,
+	DisplayAspectRatios,
 	StoryImageStyles,
 	StoryInputTypes,
 	StoryLanguages,
@@ -62,6 +63,7 @@ const App = () => {
 			input_type: StoryInputTypes.Text,
 			output_type: outputType,
 			video_key: "",
+			display_resolution: DisplayAspectRatios["576x1024"],
 		};
 
 		if (videoFileId) {

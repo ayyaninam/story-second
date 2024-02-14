@@ -2,7 +2,11 @@ import api from "@/api";
 import { env } from "@/env.mjs";
 import Routes from "@/routes";
 import { CreateInitialStoryQueryParams } from "@/types";
-import { AspectRatios, StoryOutputTypes } from "@/utils/enums";
+import {
+	AspectRatios,
+	DisplayAspectRatios,
+	StoryOutputTypes,
+} from "@/utils/enums";
 import {
 	getAccessToken,
 	getSession,
@@ -34,6 +38,7 @@ function convertAndValidateStoryQueryParams<
 		case "input_type":
 		case "output_type":
 		case "image_resolution":
+		case "display_resolution":
 			convertedValue = Number(value);
 			break;
 		case "video_key":
@@ -81,6 +86,7 @@ export const getServerSideProps = withPageAuthRequired({
 				length,
 				prompt,
 				image_resolution,
+				display_resolution,
 				input_type,
 				output_type,
 				video_key,
@@ -131,7 +137,11 @@ export const getServerSideProps = withPageAuthRequired({
 					video_key: convertAndValidateStoryQueryParams("video_key", video_key),
 					image_resolution: convertAndValidateStoryQueryParams(
 						"image_resolution",
-						AspectRatios["1152x1024"]
+						image_resolution
+					),
+					display_resolution: convertAndValidateStoryQueryParams(
+						"display_resolution",
+						display_resolution ?? DisplayAspectRatios["576x1024"] //9x16 by default
 					),
 				},
 				accessToken as string
