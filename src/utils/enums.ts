@@ -73,3 +73,8 @@ export enum AspectRatios {
 	"1152x1024",
 	"1024x1152",
 }
+
+export enum DisplayAspectRatios {
+	"1024x576",
+	"576x1024",
+}
