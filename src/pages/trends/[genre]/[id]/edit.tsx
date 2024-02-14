@@ -14,7 +14,6 @@ function StoryPage({
 	storyData: mainSchema["ReturnVideoStoryDTO"];
 }) {
 	// console.log(accessToken);
-
 	return (
 		<WebStoryProvider initialValue={storyData}>
 			<EditStory />
@@ -35,7 +34,7 @@ export const getServerSideProps = withPageAuthRequired({
 		const storyData = await api.video.get(
 			genre,
 			id,
-			StoryOutputTypes.Video,
+			StoryOutputTypes.SplitScreen,
 			accessToken
 		);
 

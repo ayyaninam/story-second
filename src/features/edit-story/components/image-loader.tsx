@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import CustomImageSuspense from "./custom-image-suspense";
 import { components } from "@/api/schema/main";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { mainSchema } from "@/api/schema";
+import useWebstoryContext from "../providers/WebstoryContext";
 
 export default function ImageLoader({
 	imageData = [],
@@ -28,6 +30,7 @@ export default function ImageLoader({
 	// Mutations
 
 	// Hooks
+	const [Webstory] = useWebstoryContext();
 
 	// Effects
 	useEffect(() => {
@@ -41,6 +44,7 @@ export default function ImageLoader({
 
 	// Short cuts
 	const currentImage = imageData[index]!;
+	const ImageRatio = GetImageRatio(Webstory.resolution);
 
 	return (
 		<CustomImageSuspense
@@ -49,8 +53,8 @@ export default function ImageLoader({
 			onComplete={() => setSeenIndices((prev) => [...prev, index])}
 			showAnimation={seenIndices.includes(index)}
 			loadingDuration={imageLoadingDurationMs}
-			width={GetImageRatio().width}
-			height={GetImageRatio().height}
+			width={ImageRatio.width}
+			height={ImageRatio.height}
 			Container={({ children, style, className }) => (
 				<div
 					style={style}

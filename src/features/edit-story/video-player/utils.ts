@@ -1,6 +1,10 @@
 import pLimit from "p-limit";
+import sumBy from "lodash/sumBy";
 import { v4 as uuidv4 } from "uuid";
-import { getAudioDurationInSeconds } from "@remotion/media-utils";
+import {
+	getVideoMetadata,
+	getAudioDurationInSeconds,
+} from "@remotion/media-utils";
 import {
 	RemotionSegment,
 	VIDEO_FPS,
@@ -10,15 +14,15 @@ import {
 	RemotionPageSegment,
 	RemotionInterpolationSegment,
 	RemotionTransitionSegment,
+	RemotionVariant,
 } from "./constants";
-import { prefetchAssets } from "./prefetch";
 import { mainSchema } from "@/api/schema";
-import { VoiceType } from "@/utils/enums";
+import { VoiceType, AspectRatios, StoryOutputTypes } from "@/utils/enums";
 import Format from "@/utils/format";
 
 type WebStory = NonNullable<
-	mainSchema["ReturnWebStoryDTO"] & {
-		storySegments: NonNullable<mainSchema["ReturnStorySegmentDTO"][]>;
+	mainSchema["ReturnVideoStoryDTO"] & {
+		videoSegments: NonNullable<mainSchema["ReturnStorySegmentDTO"][]>;
 	}
 >;
 type StorySegment = NonNullable<mainSchema["ReturnStorySegmentDTO"]>;
@@ -96,7 +100,7 @@ const storySegmentToRemotionSegment = async (
 	const { contentDuration, durationInFrames } = await calculateSegmentDuration({
 		audioURL,
 		segment,
-		isLastSegment: index === story.storySegments.length,
+		isLastSegment: index === story.videoSegments.length,
 	});
 
 	// creating the segments
@@ -149,7 +153,7 @@ export const webStoryToRemotionSegments = async (
 	story: WebStory,
 	selectedVoice: VoiceType
 ): Promise<RemotionSegment[]> => {
-	const storySegmentPromises = story.storySegments.map((storySegment, index) =>
+	const storySegmentPromises = story.videoSegments.map((storySegment, index) =>
 		limit(() =>
 			storySegmentToRemotionSegment(storySegment, index, story, selectedVoice)
 		)
@@ -161,22 +165,74 @@ export const webStoryToRemotionSegments = async (
 	return segments.flat().map((segment, index) => ({ ...segment, index }));
 };
 
+export const getRemotionVariant = (story: WebStory): RemotionVariant => {
+	const storyType: StoryOutputTypes = story.storyType;
+	const imageResolution = story.resolution;
+
+	if (storyType === StoryOutputTypes.SplitScreen) {
+		return "split";
+	} else if (imageResolution === AspectRatios["1024x576"]) {
+		return "landscape";
+	}
+	return "portrait";
+};
+
+const TO_END_OF_VIDEO = 9999999;
+
+const extendLastSegmentOfTopVideo = (segments: RemotionSegment[]) =>
+	segments.map((segment, index) =>
+		index === segments.length - 1
+			? { ...segment, durationInFrames: TO_END_OF_VIDEO }
+			: segment
+	);
+
 export const webStoryToRemotionInputProps = async (
 	story: WebStory,
 	selectedVoice: VoiceType
 ): Promise<RemotionPlayerInputProps> => {
 	const segments = await webStoryToRemotionSegments(story, selectedVoice);
 
+	const variant = getRemotionVariant(story);
+
 	// await prefetchAssets(segments);
+	switch (variant) {
+		case "landscape":
+		case "portrait":
+			return {
+				showLoadingVideo: false,
+				variant,
+				durationInFrames: sumBy(segments, (segment: RemotionSegment) =>
+					segment.type === "transition" ? 0 : segment.durationInFrames
+				),
+				enableAudio: true,
+				enableSubtitles: true,
+				segments,
+			};
+		case "split":
+			const bottomVideoURL = Format.GetVideoUrl(story.originalMediaKey!);
+			const bottomVideoDurationInFrames = Math.ceil(
+				(await getVideoMetadata(bottomVideoURL)).durationInSeconds * VIDEO_FPS
+			);
 
-	const durationInFrames = segments.reduce(
-		(acc, segment) => acc + segment.durationInFrames,
-		0
-	);
+			const topVideoDurationInFrames = sumBy(
+				segments,
+				(segment: RemotionSegment) =>
+					segment.type === "transition" ? 0 : segment.durationInFrames
+			);
 
-	return {
-		showLoadingVideo: false,
-		durationInFrames,
-		segments,
-	};
+			const durationInFrames = Math.max(
+				bottomVideoDurationInFrames,
+				topVideoDurationInFrames
+			);
+
+			return {
+				showLoadingVideo: false,
+				durationInFrames,
+				enableAudio: false,
+				enableSubtitles: false,
+				variant,
+				bottomVideoURL,
+				segments: extendLastSegmentOfTopVideo(segments),
+			};
+	}
 };

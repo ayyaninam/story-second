@@ -64,3 +64,12 @@ export enum VoiceType {
 	Custom,
 	None,
 }
+
+export enum AspectRatios {
+	"512x512",
+	"1024x1024",
+	"1024x576",
+	"576x1024",
+	"1152x1024",
+	"1024x1152",
+}

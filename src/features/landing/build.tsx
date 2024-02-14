@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import storyLanguages from "@/utils/storyLanguages";
 import {
+	AspectRatios,
 	StoryImageStyles,
 	StoryInputTypes,
 	StoryLanguages,
@@ -12,8 +13,8 @@ import {
 } from "@/utils/enums";
 import Routes from "@/routes";
 import FileUpload from "./components/file-upload";
-import toast, { Toaster } from "react-hot-toast";
 import { CreateInitialStoryQueryParams } from "@/types";
+import { ImageRatios } from "@/utils/image-ratio";
 
 const queryClient = new QueryClient();
 
@@ -57,7 +58,7 @@ const App = () => {
 			language: options.language,
 			length: options.length,
 			prompt: prompt,
-			image_resolution: 1,
+			image_resolution: ImageRatios["9x16"].enumValue,
 			input_type: StoryInputTypes.Text,
 			output_type: outputType,
 			video_key: "",
@@ -67,11 +68,13 @@ const App = () => {
 			params["input_type"] = StoryInputTypes.Video;
 			params["output_type"] = StoryOutputTypes.SplitScreen;
 			params["video_key"] = videoFileId;
+			params["image_resolution"] = ImageRatios["9x8"].enumValue;
 		}
 		console.log(Routes.CreateStoryFromRoute(params));
 		window.location.href = Routes.CreateStoryFromRoute(params);
 	};
 
+	const isButtonDisabled = !prompt && !videoFileId;
 	return (
 		<form style={{ margin: 0 }} onSubmit={onSubmit}>
 			<div className="first-form">
@@ -87,7 +90,7 @@ const App = () => {
 						onChange={handlePromptChange}
 						placeholder="What is your story about?"
 						id="Prompt"
-						required
+						required={!videoFileId}
 						onInput={(e) => {
 							if (inputRef.current) {
 								if (!!isPromptClicked) {
@@ -106,7 +109,7 @@ const App = () => {
 						<button
 							type="submit"
 							// className={`${prompt.length ? "button hero-submit-button w-button" : ""} `}
-							disabled={!prompt}
+							disabled={isButtonDisabled}
 						>
 							<svg
 								width="17"
@@ -117,19 +120,19 @@ const App = () => {
 							>
 								<path
 									d="M0.5 8.30348C0.602416 12.4923 3.97192 15.8618 8.16074 15.9744C8.1505 11.7549 4.71955 8.32397 0.5 8.30348Z"
-									fill={!prompt ? "#1F323D" : "#FFF"}
+									fill={"#FFF"}
 								/>
 								<path
 									d="M16.4693 7.67606C16.3669 3.48724 12.9974 0.117736 8.80859 0.0153198C8.81884 4.23487 12.2498 7.66582 16.4693 7.67606Z"
-									fill={!prompt ? "#1F323D" : "#FFF"}
+									fill={"#FFF"}
 								/>
 								<path
 									d="M8.17051 0.00508118C3.98169 0.107497 0.612182 3.477 0.509766 7.66583C4.72931 7.65558 8.16027 4.22463 8.17051 0.00508118Z"
-									fill={!prompt ? "#1F323D" : "#FFF"}
+									fill={"#FFF"}
 								/>
 								<path
 									d="M8.80836 15.9949H8.61377H16.4998V8.30348C12.2598 8.30348 8.80836 11.7549 8.80836 15.9949Z"
-									fill={!prompt ? "#1F323D" : "#FFF"}
+									fill={"#FFF"}
 								/>
 							</svg>
 
@@ -144,14 +147,14 @@ const App = () => {
 								<g opacity="0.5">
 									<path
 										d="M3.3335 8H12.6668"
-										stroke={!prompt ? "#94ABB8" : "#F8FAFC"}
+										stroke={isButtonDisabled ? "#94ABB8" : "#F8FAFC"}
 										stroke-width="0.866667"
 										stroke-linecap="round"
 										stroke-linejoin="round"
 									/>
 									<path
 										d="M8 3.33333L12.6667 8L8 12.6667"
-										stroke={!prompt ? "#94ABB8" : "#F8FAFC"}
+										stroke={isButtonDisabled ? "#94ABB8" : "#F8FAFC"}
 										stroke-width="0.866667"
 										stroke-linecap="round"
 										stroke-linejoin="round"
@@ -181,7 +184,6 @@ const App = () => {
 							/>
 							<label
 								htmlFor="video"
-								className="appearance-none"
 								style={{
 									cursor: "pointer",
 									backgroundColor:
@@ -193,6 +195,7 @@ const App = () => {
 								onClick={() => setOutputType(StoryOutputTypes.Video)}
 							>
 								<svg
+									className="iconButton"
 									xmlns="http://www.w3.org/2000/svg"
 									width="24"
 									height="24"
@@ -230,6 +233,7 @@ const App = () => {
 								}}
 							>
 								<svg
+									className="iconButton"
 									xmlns="http://www.w3.org/2000/svg"
 									width="24"
 									height="24"
@@ -249,7 +253,10 @@ const App = () => {
 								</svg>
 							</label>
 						</div>
-						<FileUpload setVideoFileId={setVideoFileId} />
+						<FileUpload
+							setVideoFileId={setVideoFileId}
+							videoFileId={videoFileId}
+						/>
 
 						<select
 							onChange={(e) => {
@@ -296,11 +303,7 @@ const App = () => {
 							))}
 						</select>
 					</div>
-					<button
-						type="submit"
-						disabled={!prompt}
-						className="button hero-submit-button w-button button-nosubmit"
-					>
+					<button type="submit" disabled={isButtonDisabled}>
 						<svg
 							width="17"
 							height="16"
@@ -310,19 +313,19 @@ const App = () => {
 						>
 							<path
 								d="M0.5 8.30348C0.602416 12.4923 3.97192 15.8618 8.16074 15.9744C8.1505 11.7549 4.71955 8.32397 0.5 8.30348Z"
-								fill={!prompt ? "#1F323D" : "#FFF"}
+								fill={isButtonDisabled ? "#1F323D" : "#FFF"}
 							/>
 							<path
 								d="M16.4693 7.67606C16.3669 3.48724 12.9974 0.117736 8.80859 0.0153198C8.81884 4.23487 12.2498 7.66582 16.4693 7.67606Z"
-								fill={!prompt ? "#1F323D" : "#FFF"}
+								fill={isButtonDisabled ? "#1F323D" : "#FFF"}
 							/>
 							<path
 								d="M8.17051 0.00508118C3.98169 0.107497 0.612182 3.477 0.509766 7.66583C4.72931 7.65558 8.16027 4.22463 8.17051 0.00508118Z"
-								fill={!prompt ? "#1F323D" : "#FFF"}
+								fill={isButtonDisabled ? "#1F323D" : "#FFF"}
 							/>
 							<path
 								d="M8.80836 15.9949H8.61377H16.4998V8.30348C12.2598 8.30348 8.80836 11.7549 8.80836 15.9949Z"
-								fill={!prompt ? "#1F323D" : "#FFF"}
+								fill={isButtonDisabled ? "#1F323D" : "#FFF"}
 							/>
 						</svg>
 
@@ -337,14 +340,14 @@ const App = () => {
 							<g opacity="0.5">
 								<path
 									d="M3.3335 8H12.6668"
-									stroke={!prompt ? "#94ABB8" : "#F8FAFC"}
+									stroke={isButtonDisabled ? "#94ABB8" : "#F8FAFC"}
 									stroke-width="0.866667"
 									stroke-linecap="round"
 									stroke-linejoin="round"
 								/>
 								<path
 									d="M8 3.33333L12.6667 8L8 12.6667"
-									stroke={!prompt ? "#94ABB8" : "#F8FAFC"}
+									stroke={isButtonDisabled ? "#94ABB8" : "#F8FAFC"}
 									stroke-width="0.866667"
 									stroke-linecap="round"
 									stroke-linejoin="round"
