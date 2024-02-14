@@ -6,7 +6,7 @@ import { mainSchema } from "@/api/schema";
 import { components } from "@/api/schema/main";
 
 interface useRemotionPlayerProps {
-	story: mainSchema["ReturnWebStoryDTO"] | undefined | null;
+	story: mainSchema["ReturnVideoStoryDTO"] | undefined | null;
 	selectedVoice: VoiceType | null;
 	generatedImages: (components["schemas"]["ReturnStorySegmentDTO"] & {
 		src: string;

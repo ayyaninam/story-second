@@ -24,7 +24,7 @@ import Format from "@/utils/format";
 import StoryScreen from "./story-screen";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRemotionPlayerProps } from "./video-player/hooks";
-import { VoiceType } from "@/utils/enums";
+import { StoryOutputTypes, VoiceType } from "@/utils/enums";
 import { ModeToggle } from "./components/mode-toggle";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -33,28 +33,30 @@ import Routes from "@/routes";
 import { GetImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
+import useWebstoryContext, {
+	WebStoryProvider,
+} from "./providers/WebstoryContext";
 
 const MAX_SUMMARY_LENGTH = 250;
 
-export default function EditStory({
-	storyData,
-}: {
-	storyData: mainSchema["ReturnWebStoryDTO"];
-}) {
+export default function EditStory() {
 	const router = useRouter();
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
+	const [story, setStory] = useWebstoryContext();
 
 	// Queries
-	const Webstory = useQuery({
+	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
 		queryFn: () =>
-			api.library.get(
+			api.video.get(
 				router.query.genre!.toString(),
-				router.query.id!.toString()
+				router.query.id!.toString(),
+				story.storyType
 			),
-		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
-		initialData: storyData,
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.STORY, router.pathname],
+		initialData: story,
 		refetchInterval: 1000,
 		// Disable once all the videoKeys are obtained
 		enabled: enableQuery,
@@ -64,11 +66,12 @@ export default function EditStory({
 		if (Webstory.data) {
 			setEnableQuery(
 				!(
-					Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
-					Webstory.data.storySegments?.length > 0
+					Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
+					Webstory.data.videoSegments?.length > 0
 				)
 			);
 		}
+		setStory(Webstory.data);
 	}, [Webstory.data]);
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
@@ -131,6 +134,7 @@ export default function EditStory({
 						onClick={() =>
 							router.push(
 								Routes.ViewStory(
+									Webstory.data.storyType,
 									router.query.genre as string,
 									router.query.id as string
 								)

@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import CustomImageSuspense from "./custom-image-suspense";
 import { components } from "@/api/schema/main";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { mainSchema } from "@/api/schema";
+import useWebstoryContext from "../providers/WebstoryContext";
 
 export default function ImageLoader({
 	imageData = [],
@@ -28,14 +30,7 @@ export default function ImageLoader({
 	// Mutations
 
 	// Hooks
-	const Webstory = useQuery({
-		queryFn: () =>
-			api.library.get(
-				router.query.genre!.toString(),
-				router.query.id!.toString()
-			),
-		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
-	});
+	const [Webstory] = useWebstoryContext();
 
 	// Effects
 	useEffect(() => {
@@ -49,7 +44,7 @@ export default function ImageLoader({
 
 	// Short cuts
 	const currentImage = imageData[index]!;
-	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
+	const ImageRatio = GetImageRatio(Webstory.resolution);
 
 	return (
 		<CustomImageSuspense

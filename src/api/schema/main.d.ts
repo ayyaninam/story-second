@@ -1233,6 +1233,55 @@ export interface paths {
      */
     get: operations["GetLogo"];
   };
+  "/api/StoryBook": {
+    /**
+     * Get public stories
+     * @description Get a list of public stories based on pagination parameters
+     */
+    get: operations["GetPublicStories"];
+  };
+  "/api/StoryBook/Categories": {
+    /**
+     * Get all categories
+     * @description Get a list of all categories in order of decreasing story count
+     */
+    get: operations["GetAllCategories"];
+  };
+  "/api/StoryBook/{topLevelCategory}": {
+    /**
+     * Get stories under the specified category
+     * @description Get stories under the specified category based on pagination parameters
+     */
+    get: operations["GetStoriesByTopLevelCategory"];
+  };
+  "/api/StoryBook/GetUrl/{id}": {
+    /**
+     * Get one public story by id. Depricated API, returns category/slug url.
+     * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
+     */
+    get: operations["GetOnePublicStoryById"];
+  };
+  "/api/StoryBook/Slug/{slug}": {
+    /**
+     * Get one public story by slug
+     * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
+     */
+    get: operations["GetOnePublicStoryBySlug"];
+  };
+  "/api/StoryBook/{topLevelCategory}/{slug}": {
+    /**
+     * Get one public story by category and slug
+     * @description Get a single public story by its category and slug
+     */
+    get: operations["GetOnePublicStoryByCategoryAndSlug"];
+  };
+  "/api/StoryBook/{id}/Suggested": {
+    /**
+     * Get suggested stories
+     * @description Get a list of suggested stories based on the provided story id
+     */
+    get: operations["GetSuggestedStories"];
+  };
   "/api/TextToSpeech/DefaultAudio/{id}": {
     /**
      * Generate audio
@@ -1925,6 +1974,27 @@ export interface paths {
         };
       };
     };
+  };
+  "/api/Video/{topLevelCategory}": {
+    /**
+     * Get stories under the specified category
+     * @description Get stories under the specified category based on pagination parameters
+     */
+    get: operations["GetStoriesByTopLevelCategory"];
+  };
+  "/api/Video/{topLevelCategory}/{slug}": {
+    /**
+     * Get one public story by category and slug
+     * @description Get a single public story by its category and slug
+     */
+    get: operations["GetOnePublicStoryByCategoryAndSlug"];
+  };
+  "/api/Video/{id}/Suggested": {
+    /**
+     * Get suggested stories
+     * @description Get a list of suggested stories based on the provided story id
+     */
+    get: operations["GetSuggestedStories"];
   };
   "/api/WebStory/NoAuth": {
     /** Request a new anonymous story based on the provided parameters */
@@ -3311,6 +3381,11 @@ export interface components {
      * @enum {integer}
      */
     DiscountCodeType: None | BookOrder;
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
+    DisplayResolution: _1024x576 | _576x1024;
     /** @description Represents the payment type for a story item. */
     DownloadVideoDTO: {
       creditSpendType?: components["schemas"]["CreditSpendType"];
@@ -4229,7 +4304,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
-      resolution?: components["schemas"]["ImageResolution"];
+      resolution?: components["schemas"]["DisplayResolution"];
       /**
        * IsPublic
        * @description Whether or not the WebStory is public.
@@ -4522,7 +4597,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
-      resolution?: components["schemas"]["ImageResolution"];
+      resolution?: components["schemas"]["DisplayResolution"];
       /**
        * StoryTitle
        * @description The title of the story.
@@ -4695,7 +4770,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
-      resolution?: components["schemas"]["ImageResolution"];
+      resolution?: components["schemas"]["DisplayResolution"];
       /**
        * StoryTitle
        * @description The title of the story.
@@ -4726,11 +4801,6 @@ export interface components {
        * @description A list of generated story segments, each representing a page.
        */
       storySegments?: components["schemas"]["ReturnStorySegmentDTO"][] | null;
-      /**
-       * VideoSegments
-       * @description A list of generated video segments, each representing a 3 second video.
-       */
-      videoSegments?: components["schemas"]["ReturnVideoSegmentDTO"][] | null;
       amazonBook?: components["schemas"]["ReturnAmazonBookDTO"];
       user?: components["schemas"]["ReturnTinyUserDTO"];
       /**
@@ -4817,6 +4887,32 @@ export interface components {
       succeeded?: boolean;
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
+    };
+    /** @description DTO used to return Scenes information of a WebStory */
+    ReturnScenesDTO: {
+      /**
+       * Id
+       * Format: uuid
+       * @description The unique identifier of the scene.
+       */
+      id?: string;
+      /**
+       * Index
+       * Format: int32
+       * @description The index of the scene.
+       */
+      index?: number;
+      /**
+       * SceneDescription
+       * @description The description of the scene.
+       */
+      sceneDescription?: string | null;
+      /**
+       * Created
+       * Format: date-time
+       * @description The date and time the scene was created.
+       */
+      created?: string;
     };
     /** @description Return model for Comments. */
     ReturnStoryCommentDTO: {
@@ -5433,16 +5529,17 @@ export interface components {
        */
       created?: string;
       /**
-       * ImageRegenerating
-       * @description Whether the image is currently being regenerated.
-       */
-      imageRegenerating?: boolean;
-      /**
        * Index
        * Format: int32
        * @description The index of the segment in the story.
        */
       index?: number;
+      /**
+       * SceneId
+       * Format: uuid
+       * @description The id of the associated scene.
+       */
+      sceneId?: string | null;
       /**
        * TextContent
        * @description The text content of the segment.
@@ -5463,81 +5560,181 @@ export interface components {
        * @description The key of the frame interpolation in the video storage.
        */
       frameInterpolationKey?: string | null;
-      /**
-       * LastImageKey
-       * @description The key of the last image in the image storage.
-       */
-      lastImageKey?: string | null;
       imageStyle?: components["schemas"]["ImageStyles"];
-      /**
-       * ImagePrompt
-       * @description The prompt of the image.
-       */
-      imagePrompt?: string | null;
-      /**
-       * ImageSeed
-       * Format: int64
-       * @description The seed of the image.
-       */
-      imageSeed?: number | null;
-      /**
-       * ImageCFGScale
-       * Format: double
-       * @description The scale of the image.
-       */
-      imageCFGScale?: number | null;
       imageResolution?: components["schemas"]["ImageResolution"];
-      /**
-       * ImageSamplingSteps
-       * Format: int32
-       * @description The sampling steps of the image.
-       */
-      imageSamplingSteps?: number | null;
       /**
        * ImageAltText
        * @description The alt text of the image.
        */
       imageAltText?: string | null;
       /**
+       * VideoFPS
+       * Format: int32
+       * @description The fps of the video.
+       */
+      videoFPS?: number | null;
+      /**
        * MaleAudioKey
        * @description The key of the audio for Male Voice.
        */
       maleAudioKey?: string | null;
-      /**
-       * MaleAudioGenerating
-       * @description Whether the story has a male voice clip that is generating.
-       */
-      maleAudioGenerating?: boolean;
       /**
        * FemaleAudioKey
        * @description The key of the audio for Female Voice.
        */
       femaleAudioKey?: string | null;
       /**
-       * FemaleAudioGenerating
-       * @description Whether the story has a female voice clip that is generating.
-       */
-      femaleAudioGenerating?: boolean;
-      /**
        * CustomAudioKey
        * @description The key of the audio for Custom Voice.
        */
       customAudioKey?: string | null;
       /**
-       * CustomAudioGenerating
-       * @description Whether the story has a custom voice clip that is generating.
-       */
-      customAudioGenerating?: boolean;
-      /**
        * PortugueseAudioKey
        * @description The key of the audio for Portuguese Voice.
        */
       portugueseAudioKey?: string | null;
+    };
+    /** @description DTO used to return a public Video. */
+    ReturnVideoStoryDTO: {
       /**
-       * PortugueseAudioGenerating
-       * @description Whether the story has a portuguese voice clip that is generating.
+       * Id
+       * Format: uuid
+       * @description The unique identifier of the story.
        */
-      portugueseAudioGenerating?: boolean;
+      id?: string;
+      /**
+       * Created
+       * Format: date-time
+       * @description The date and time the story was created.
+       */
+      created?: string;
+      /**
+       * StoryLikes
+       * Format: int32
+       * @description The number of likes the story has received.
+       */
+      storyLikes?: number;
+      /**
+       * StoryTitle
+       * @description The title of the story.
+       */
+      storyTitle?: string | null;
+      /**
+       * Summary
+       * @description The summary of the story.
+       */
+      summary?: string | null;
+      /**
+       * Slug
+       * @description The url slug of the story.
+       */
+      slug?: string | null;
+      /**
+       * TopLevelCategory
+       * @description The top level category of the story
+       */
+      topLevelCategory?: string | null;
+      /**
+       * IsPublic
+       * @description Whether the story is public or not.
+       */
+      isPublic?: boolean;
+      user?: components["schemas"]["ReturnTinyUserDTO"];
+      /**
+       * CoverImage
+       * @description The cover image of the story.
+       */
+      coverImage?: string | null;
+      /**
+       * Scenes
+       * @description The scene informations in the story.
+       */
+      scenes?: components["schemas"]["ReturnScenesDTO"][] | null;
+      /**
+       * VideoSegments
+       * @description A list of generated video segments, each representing a slide
+       */
+      videoSegments?: components["schemas"]["ReturnVideoSegmentDTO"][] | null;
+      storyType?: components["schemas"]["StoryType"];
+      /**
+       * StoryDone
+       * @description Whether the story text generation is done or not.
+       */
+      storyDone?: boolean;
+      /**
+       * VideoDone
+       * @description Whether the story video generation is done or not.
+       */
+      videoDone?: boolean;
+      /**
+       * ImagesDone
+       * @description Whether the story image generation is done or not.
+       */
+      imagesDone?: boolean;
+      resolution?: components["schemas"]["DisplayResolution"];
+      /**
+       * OriginalMediaKey
+       * @description Path to the video/audio uploaded by the user as input.
+       */
+      originalMediaKey?: string | null;
+      /**
+       * RenderedVideoKey
+       * @description The final rendered video key.
+       */
+      renderedVideoKey?: string | null;
+    };
+    /** @description Represents the standard response format for API requests. */
+    ReturnVideoStoryDTOApiResponse: {
+      data?: components["schemas"]["ReturnVideoStoryDTO"];
+      succeeded?: boolean;
+      message?: string | null;
+      status?: components["schemas"]["ApiResponseStatus"];
+    };
+    /** @description Represents the standard response format for API requests. */
+    ReturnVideoStoryDTOListApiResponse: {
+      data?: components["schemas"]["ReturnVideoStoryDTO"][] | null;
+      succeeded?: boolean;
+      message?: string | null;
+      status?: components["schemas"]["ApiResponseStatus"];
+    };
+    /** @description Represents a paged list of items. */
+    ReturnVideoStoryDTOPagedList: {
+      /**
+       * Current Page
+       * Format: int32
+       * @description The current page number.
+       */
+      currentPage: number;
+      /**
+       * Page Size
+       * Format: int32
+       * @description The number of items per page.
+       */
+      pageSize: number;
+      /**
+       * Total Items
+       * Format: int32
+       * @description The total number of items in the list.
+       */
+      totalItems: number;
+      /**
+       * Total Pages
+       * Format: int32
+       * @description The total number of pages in the list.
+       */
+      totalPages: number;
+      /**
+       * Items
+       * @description The items in the current page.
+       */
+      items: components["schemas"]["ReturnVideoStoryDTO"][];
+    };
+    /** @description Represents the standard response format for API requests. */
+    ReturnVideoStoryDTOPagedListApiResponse: {
+      data?: components["schemas"]["ReturnVideoStoryDTOPagedList"];
+      succeeded?: boolean;
+      message?: string | null;
+      status?: components["schemas"]["ApiResponseStatus"];
     };
     /** @description DTO used to return a public WebStory. */
     ReturnWebStoryDTO: {
@@ -5596,16 +5793,6 @@ export interface components {
        * @description The cover image of the story.
        */
       coverImage?: string | null;
-      /**
-       * RenderedVideoKey
-       * @description The final rendered video key of the webstory.
-       */
-      renderedVideoKey?: string | null;
-      /**
-       * OriginalTiktokInputKey
-       * @description The original tiktok input key of the webstory.
-       */
-      originalTiktokInputKey?: string | null;
       storyType?: components["schemas"]["StoryType"];
       /**
        * StoryDone
@@ -5617,7 +5804,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
-      resolution?: components["schemas"]["ImageResolution"];
+      resolution?: components["schemas"]["DisplayResolution"];
       /**
        * AIContributionRate
        * Format: float
@@ -6222,6 +6409,7 @@ export interface operations {
       query?: {
         CurrentPage?: number;
         PageSize?: number;
+        storyType?: components["schemas"]["StoryType"];
         searchTerm?: string;
       };
       path: {
@@ -6232,9 +6420,9 @@ export interface operations {
       /** @description Success */
       200: {
         content: {
-          "text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-          "application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-          "text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+          "text/plain": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+          "application/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+          "text/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
         };
       };
       /** @description Unauthorized */
@@ -6295,15 +6483,16 @@ export interface operations {
       path: {
         topLevelCategory: string;
         slug: string;
+        storyType: components["schemas"]["StoryType"];
       };
     };
     responses: {
       /** @description Success */
       200: {
         content: {
-          "text/plain": components["schemas"]["ReturnWebStoryDTOApiResponse"];
-          "application/json": components["schemas"]["ReturnWebStoryDTOApiResponse"];
-          "text/json": components["schemas"]["ReturnWebStoryDTOApiResponse"];
+          "text/plain": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+          "application/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+          "text/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
         };
       };
       /** @description Unauthorized */
@@ -6321,6 +6510,7 @@ export interface operations {
       query?: {
         CurrentPage?: number;
         PageSize?: number;
+        storyType?: components["schemas"]["StoryType"];
       };
       path: {
         id: string;
@@ -6330,9 +6520,9 @@ export interface operations {
       /** @description Success */
       200: {
         content: {
-          "text/plain": components["schemas"]["ReturnWebStoryDTOListApiResponse"];
-          "application/json": components["schemas"]["ReturnWebStoryDTOListApiResponse"];
-          "text/json": components["schemas"]["ReturnWebStoryDTOListApiResponse"];
+          "text/plain": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
+          "application/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
+          "text/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
         };
       };
       /** @description Unauthorized */

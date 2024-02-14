@@ -65,12 +65,6 @@ export enum VoiceType {
 	None,
 }
 
-export enum StoryType {
-	StoryBook,
-	Video,
-	SplitScreen,
-}
-
 export enum AspectRatios {
 	"512x512",
 	"1024x1024",

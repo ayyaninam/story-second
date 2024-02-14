@@ -20,6 +20,8 @@ import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
+import { mainSchema } from "@/api/schema";
+import useWebstoryContext from "../providers/WebstoryContext";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
@@ -41,15 +43,8 @@ const RemotionPlayer = ({
 	...props
 }: RemotionPlayerProps) => {
 	const router = useRouter();
-	const Webstory = useQuery({
-		queryFn: () =>
-			api.library.get(
-				router.query.genre!.toString(),
-				router.query.id!.toString()
-			),
-		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
-	});
-	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
+	const [Webstory] = useWebstoryContext();
+	const ImageRatio = GetImageRatio(Webstory.resolution);
 
 	const player: React.CSSProperties = {
 		width: "100%",
