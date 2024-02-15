@@ -4,7 +4,6 @@ import Format from "@/utils/format";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import ImageLoader from "./components/image-loader";
-import RemotionPlayer from "./video-player";
 import { VoiceType } from "@/utils/enums";
 import { useRemotionPlayerProps } from "./video-player/hooks";
 import VideoPlayer from "./components/video-player";
@@ -25,6 +24,7 @@ type StoryScreenProps = {
 	onSeeked?: CallbackListener<"seeked">;
 	isPlaying?: boolean;
 	seekedFrame?: number;
+	isMuted?: boolean;
 };
 
 const StoryScreen: FC<StoryScreenProps> = ({
@@ -35,6 +35,7 @@ const StoryScreen: FC<StoryScreenProps> = ({
 	onSeeked,
 	seekedFrame,
 	isPlaying,
+	isMuted,
 }) => {
 	const router = useRouter();
 	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
@@ -164,6 +165,7 @@ const StoryScreen: FC<StoryScreenProps> = ({
 				onSeeked={onSeeked}
 				isPlaying={isPlaying}
 				seekedFrame={seekedFrame}
+				isMuted={isMuted}
 			/>
 		);
 	}

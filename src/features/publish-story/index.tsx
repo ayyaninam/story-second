@@ -281,12 +281,13 @@ export default function PublishedStory({
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								<div className="relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-lg">
+								<div className="relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl">
 									<StoryScreen
 										Webstory={Webstory.data}
 										isError={Webstory.isError}
 										isPlaying={isPlaying}
 										seekedFrame={seekedFrame}
+										isMuted={true}
 									/>
 								</div>
 								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">

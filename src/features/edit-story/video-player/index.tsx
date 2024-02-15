@@ -36,6 +36,7 @@ type RemotionPlayerProps = {
 	onSeeked?: CallbackListener<"seeked">;
 	seekedFrame?: number;
 	isPlaying?: boolean;
+	isMuted?: boolean;
 } & Omit<Partial<ComponentProps<typeof Player>>, "component">;
 
 const controlBackgroundStyles =
@@ -49,6 +50,7 @@ const RemotionPlayer = ({
 	onSeeked,
 	seekedFrame,
 	isPlaying,
+	isMuted,
 	...props
 }: RemotionPlayerProps) => {
 	const router = useRouter();
@@ -126,6 +128,15 @@ const RemotionPlayer = ({
 			player.seekTo(seekedFrame);
 		}
 	}, [isPlaying, seekedFrame]);
+
+	useEffect(() => {
+		const player = ref.current;
+		if (!player) return;
+
+		if (isMuted !== undefined) {
+			if (isMuted) player.mute();
+		}
+	}, [isMuted]);
 
 	const renderPlayPauseButton: RenderPlayPauseButton = useCallback(
 		({ playing }: { playing: boolean }) =>

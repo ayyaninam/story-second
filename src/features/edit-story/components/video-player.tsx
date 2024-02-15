@@ -20,6 +20,7 @@ type VideoPlayerProps = {
 	onSeeked?: CallbackListener<"seeked">;
 	seekedFrame?: number;
 	isPlaying?: boolean;
+	isMuted?: boolean;
 };
 
 const VideoPlayer: FC<VideoPlayerProps> = ({
@@ -29,6 +30,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
 	onSeeked,
 	seekedFrame,
 	isPlaying,
+	isMuted,
 }) => {
 	const router = useRouter();
 	// const Webstory = useQuery({
@@ -56,6 +58,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
 			onSeeked={onSeeked}
 			isPlaying={isPlaying}
 			seekedFrame={seekedFrame}
+			isMuted={isMuted}
 		/>
 	);
 };
