@@ -133,6 +133,15 @@ export default function PublishedStory({
 			await Interactions.refetch();
 		}
 	};
+	useEffect(() => {
+		if (router.query.liked) {
+			handleLikeVideo(router.query.liked === "true");
+
+			const path = router.asPath.split("?")[0] as string;
+			router.replace(path, undefined, { shallow: true });
+		}
+	}, [router.query]);
+
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
 			{/* Navbar */}

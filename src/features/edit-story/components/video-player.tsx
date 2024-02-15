@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import RemotionPlayer from "../video-player";
 import { VoiceType } from "@/utils/enums";
 import { useRemotionPlayerProps } from "../video-player/hooks";
+import { mainSchema } from "@/api/schema";
+import useWebstoryContext from "../providers/WebstoryContext";
 import { CallbackListener } from "@remotion/player";
 import { FC } from "react";
 import { mainSchema as schema } from "@/api/schema";
