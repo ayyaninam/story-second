@@ -40,7 +40,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		id,
 		StoryOutputTypes.SplitScreen
 	);
-	const interactionData = await api.webstory.interactions(id, session?.token);
+	const interactionData = session?.accessToken
+		? await api.webstory.interactions(id, session?.token)
+		: null;
 
 	return { props: { session: { ...session }, storyData, interactionData } };
 };

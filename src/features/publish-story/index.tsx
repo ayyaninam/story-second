@@ -37,7 +37,7 @@ export default function PublishedStory({
 	interactionData,
 }: {
 	storyData: mainSchema["ReturnVideoStoryDTO"];
-	interactionData: mainSchema["ReturnStoryInteractionDTO"];
+	interactionData: mainSchema["ReturnStoryInteractionDTO"] | null;
 }) {
 	const User = useUser();
 	const router = useRouter();

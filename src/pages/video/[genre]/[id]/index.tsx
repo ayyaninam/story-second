@@ -30,7 +30,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		};
 	}
 	const storyData = await api.video.get(genre, id, StoryOutputTypes.Video);
-	const interactionData = await api.webstory.interactions(id, session?.token);
+	const interactionData = session?.accessToken
+		? await api.webstory.interactions(id, session?.token)
+		: null;
 
 	return { props: { session: { ...session }, storyData, interactionData } };
 };
