@@ -1,6 +1,7 @@
 import React, { CSSProperties } from "react";
 import { AbsoluteFill, OffthreadVideo } from "remotion";
 import { RemotionInterpolationSegment, bigZIndexTrick } from "../../constants";
+import LogoWatermark from "./components/LogoWatermark";
 
 const container: CSSProperties = {
   backgroundColor: "#000000",
@@ -21,6 +22,8 @@ export function SegmentPortraitIntermediate({ segment }: RenderSegmentProps) {
   return (
     <AbsoluteFill style={{ ...container, zIndex }}>
       <OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
+
+      <LogoWatermark />
     </AbsoluteFill>
   );
 }

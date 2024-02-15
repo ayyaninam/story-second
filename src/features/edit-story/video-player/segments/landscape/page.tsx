@@ -17,6 +17,7 @@ import {
   PREMOUNT_FRAMES,
   RemotionPlayerInputProps,
 } from "../../constants";
+import LogoWatermark from "./components/LogoWatermark";
 
 const container: CSSProperties = {
   backgroundColor: "#000000",
@@ -40,7 +41,7 @@ type RenderSegmentProps = {
   inputProps: RemotionPlayerInputProps;
 };
 
-export const SegmentPage = ({
+const SegmentPage = ({
   segment,
   nextSegment,
   prevSegment,
@@ -122,6 +123,8 @@ export const SegmentPage = ({
         <OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
       </AbsoluteFill>
 
+      <LogoWatermark />
+
       {inputProps.enableSubtitles && (
         <AbsoluteFill style={subtitleContainer}>
           <p style={storyTextStyle}>{storyText}</p>
@@ -136,3 +139,5 @@ export const SegmentPage = ({
     </AbsoluteFill>
   );
 };
+
+export default SegmentPage;

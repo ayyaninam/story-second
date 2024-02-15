@@ -264,6 +264,7 @@ const RemotionPlayer = ({
 				controls={!inputProps.showLoadingVideo}
 				renderPlayPauseButton={renderPlayPauseButton}
 				renderFullscreenButton={renderFullscreenButton}
+				moveToBeginningWhenEnded={false}
 				{...props}
 			/>
 		</div>

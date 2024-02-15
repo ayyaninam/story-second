@@ -15,6 +15,7 @@ import {
 	RemotionInterpolationSegment,
 	RemotionTransitionSegment,
 	RemotionVariant,
+	PREMOUNT_FRAMES,
 } from "./constants";
 import { mainSchema } from "@/api/schema";
 import { VoiceType, AspectRatios, StoryOutputTypes } from "@/utils/enums";
@@ -31,10 +32,12 @@ const calculateSegmentDuration = async ({
 	audioURL,
 	segment,
 	isLastSegment,
+	variant,
 }: {
 	audioURL: string | null;
 	segment: StorySegment;
 	isLastSegment: boolean;
+	variant: RemotionVariant;
 }) => {
 	const minContentDuration = 2 * VIDEO_FPS; // seconds
 
@@ -68,7 +71,10 @@ const calculateSegmentDuration = async ({
 
 	return {
 		contentDuration,
-		durationInFrames: contentDuration + silentTime,
+		durationInFrames:
+			contentDuration +
+			silentTime +
+			(variant === "landscape" && isLastSegment ? PREMOUNT_FRAMES : 0), // for the end fade-in transition
 	};
 };
 
@@ -76,7 +82,8 @@ const storySegmentToRemotionSegment = async (
 	segment: StorySegment,
 	index: number,
 	story: WebStory,
-	selectedVoice: VoiceType
+	selectedVoice: VoiceType,
+	variant: RemotionVariant
 ): Promise<Omit<RemotionSegment, "index">[]> => {
 	// getting audio url
 	let audioKey = null;
@@ -97,10 +104,12 @@ const storySegmentToRemotionSegment = async (
 	const audioURL = audioKey ? Format.GetPublicBucketObjectUrl(audioKey) : null;
 
 	// calculating segment duration based on audio duration
+	const isLastSegment = index === story.videoSegments.length - 1;
 	const { contentDuration, durationInFrames } = await calculateSegmentDuration({
 		audioURL,
 		segment,
-		isLastSegment: index === story.videoSegments.length,
+		isLastSegment,
+		variant,
 	});
 
 	// creating the segments
@@ -142,20 +151,29 @@ const storySegmentToRemotionSegment = async (
 	}
 
 	// @ts-ignore
-	return [intermediateSegment ?? transitionSegment, pageSegment].filter(
-		Boolean
-	);
+	return [
+		intermediateSegment ?? transitionSegment,
+		pageSegment,
+		isLastSegment ? transitionSegment : undefined,
+	].filter(Boolean);
 };
 
 const limit = pLimit(10);
 
 export const webStoryToRemotionSegments = async (
 	story: WebStory,
-	selectedVoice: VoiceType
+	selectedVoice: VoiceType,
+	variant: RemotionVariant
 ): Promise<RemotionSegment[]> => {
 	const storySegmentPromises = story.videoSegments.map((storySegment, index) =>
 		limit(() =>
-			storySegmentToRemotionSegment(storySegment, index, story, selectedVoice)
+			storySegmentToRemotionSegment(
+				storySegment,
+				index,
+				story,
+				selectedVoice,
+				variant
+			)
 		)
 	);
 
@@ -190,20 +208,30 @@ export const webStoryToRemotionInputProps = async (
 	story: WebStory,
 	selectedVoice: VoiceType
 ): Promise<RemotionPlayerInputProps> => {
-	const segments = await webStoryToRemotionSegments(story, selectedVoice);
-
 	const variant = getRemotionVariant(story);
+
+	const segments = await webStoryToRemotionSegments(
+		story,
+		selectedVoice,
+		variant
+	);
 
 	// await prefetchAssets(segments);
 	switch (variant) {
 		case "landscape":
 		case "portrait":
+			const allPagesSegmentsFrames = sumBy(
+				segments,
+				(segment: RemotionSegment) =>
+					segment.type === "transition" ? 0 : segment.durationInFrames
+			);
+
+			const theEndPageFrames = 5 * VIDEO_FPS;
+
 			return {
 				showLoadingVideo: false,
 				variant,
-				durationInFrames: sumBy(segments, (segment: RemotionSegment) =>
-					segment.type === "transition" ? 0 : segment.durationInFrames
-				),
+				durationInFrames: allPagesSegmentsFrames + theEndPageFrames,
 				enableAudio: true,
 				enableSubtitles: true,
 				segments,
