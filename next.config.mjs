@@ -15,6 +15,15 @@ const nextConfig = {
 			],
 		};
 	},
+	async redirects() {
+		return [
+			{
+				source: "/video/:slug*/view",
+				destination: "/video/:slug*", // Matched parameters can be used in the destination
+				permanent: true,
+			},
+		];
+	},
 	images: {
 		domains: ["ik.imagekit.io"],
 	},
