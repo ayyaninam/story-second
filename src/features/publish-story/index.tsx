@@ -29,15 +29,18 @@ import { env } from "@/env.mjs";
 import Routes from "@/routes";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { getJwt } from "@/utils/jwt";
+import { SessionType } from "@/hooks/useSaveSessionToken";
 
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function PublishedStory({
 	storyData,
 	interactionData,
+	session,
 }: {
 	storyData: mainSchema["ReturnVideoStoryDTO"];
 	interactionData: mainSchema["ReturnStoryInteractionDTO"] | null;
+	session: SessionType;
 }) {
 	const User = useUser();
 	const router = useRouter();
@@ -83,8 +86,17 @@ export default function PublishedStory({
 		}
 	}, [Webstory.data]);
 
+	useEffect(() => {
+		if (router.query.liked) {
+			handleLikeVideo(router.query.liked === "true");
+
+			const path = router.asPath.split("?")[0] as string;
+			router.replace(path, undefined, { shallow: true });
+		}
+	}, [router.query]);
+
 	const handleLikeVideo = async (liked: boolean) => {
-		if (!getJwt()) {
+		if (!session.accessToken) {
 			router.push(
 				Routes.ToAuthPage(
 					Routes.ViewStory(
@@ -95,9 +107,10 @@ export default function PublishedStory({
 					{ liked }
 				)
 			);
+		} else {
+			await LikeVideo.mutateAsync({ id: storyData.id!, params: { liked } });
+			await Interactions.refetch();
 		}
-		await LikeVideo.mutateAsync({ id: storyData.id!, params: { liked } });
-		await Interactions.refetch();
 	};
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>

@@ -15,7 +15,11 @@ export default function PublishPage({
 	useSaveSessionToken(session);
 	return (
 		<WebStoryProvider initialValue={storyData}>
-			<PublishedStory storyData={storyData} interactionData={interactionData} />
+			<PublishedStory
+				storyData={storyData}
+				interactionData={interactionData}
+				session={session}
+			/>
 		</WebStoryProvider>
 	);
 }
@@ -30,9 +34,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		};
 	}
 	const storyData = await api.video.get(genre, id, StoryOutputTypes.Video);
-	const interactionData = session?.accessToken
-		? await api.webstory.interactions(id, session?.token)
-		: null;
+	let interactionData = null;
+	if (session?.accessToken) {
+		interactionData = await api.webstory.interactions(
+			storyData?.id as string,
+			session?.accessToken
+		);
+	}
 
 	return { props: { session: { ...session }, storyData, interactionData } };
 };
