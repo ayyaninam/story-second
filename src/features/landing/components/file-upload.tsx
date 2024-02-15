@@ -1,6 +1,5 @@
-import api from "@/api";
+import video from "@/api/routes/video";
 import TailwindSpinner from "@/features/landing/components/tw-spinner";
-import { cn } from "@/utils";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 
@@ -11,7 +10,7 @@ export default function FileUpload({
 	setVideoFileId: (file: string | null) => void;
 	videoFileId: string | null;
 }) {
-	const UploadFile = useMutation({ mutationFn: api.video.getUploadUrl });
+	const UploadFile = useMutation({ mutationFn: video.getUploadUrl });
 	const [isVideoUploading, setIsVideoUploading] = React.useState(false);
 	// Handle file change
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

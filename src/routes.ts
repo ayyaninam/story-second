@@ -2,6 +2,8 @@ import { CreateInitialStoryQueryParams } from "./types";
 import { StoryOutputTypes } from "./utils/enums";
 
 class Routes {
+	public static defaultRedirect = "/";
+	public static authpage = "/auth/login";
 	static ViewStory(type: StoryOutputTypes, genre: string, id: string) {
 		return `/${this.StoryTypeToPath(type)}/${genre}/${id}`;
 	}
@@ -12,14 +14,17 @@ class Routes {
 		return `/`;
 	}
 	static CreateStoryFromRoute(params: CreateInitialStoryQueryParams) {
-		const stringified = Object.fromEntries(
-			Object.entries(params).map(([key, value]) => [
-				key,
-				(value as string | number).toString(),
-			])
-		);
-		const urlParams = new URLSearchParams(stringified);
+		const urlParams = this.CreateSearchParams(params);
 		return `/create?${urlParams}`;
+	}
+	static ToAuthPage(returnTo = "/", params?: Record<string, any>) {
+		let returnUrl = returnTo;
+
+		if (params && Object.keys(params).length > 0) {
+			const urlParams = this.CreateSearchParams(params);
+			returnUrl += `?${urlParams}`;
+		}
+		return `${this.authpage}?returnTo=${encodeURIComponent(returnUrl)}`;
 	}
 	static Logout(returnTo = "/") {
 		return `/api/auth/logout?returnTo=${returnTo}`;
@@ -39,6 +44,14 @@ class Routes {
 			case StoryOutputTypes.Story:
 				return "story";
 		}
+	}
+	private static CreateSearchParams(params: Record<string, string | number>) {
+		const stringified = Object.fromEntries(
+			Object.entries(params).map(([key, value]) => [key, value.toString()])
+		);
+		const urlParams = new URLSearchParams(stringified);
+		console.log(urlParams.toString());
+		return urlParams;
 	}
 }
 export default Routes;
