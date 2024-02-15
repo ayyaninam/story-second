@@ -4,8 +4,10 @@ import { SegmentPortraitPage } from "./page";
 import {
 	PREMOUNT_FRAMES,
 	RemotionPlayerPortraitInputProps,
+	TO_THE_END_OF_VIDEO,
 } from "../../constants";
 import { SegmentPortraitIntermediate } from "./intermediate";
+import TheEndSegment from "./the-end";
 import { Premount } from "../../../components/premount";
 
 const Main: React.FC<RemotionPlayerPortraitInputProps> = (inputProps) => {
@@ -59,6 +61,15 @@ const Main: React.FC<RemotionPlayerPortraitInputProps> = (inputProps) => {
 						);
 				}
 			})}
+
+			<TransitionSeries.Sequence
+				offset={-PREMOUNT_FRAMES}
+				durationInFrames={TO_THE_END_OF_VIDEO}
+			>
+				<Premount for={PREMOUNT_FRAMES}>
+					<TheEndSegment />
+				</Premount>
+			</TransitionSeries.Sequence>
 		</TransitionSeries>
 	);
 };

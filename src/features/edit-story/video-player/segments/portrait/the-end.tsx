@@ -14,7 +14,7 @@ const logoWatermarkContainer: CSSProperties = {
 };
 
 const logoWatermark: CSSProperties = {
-  width: 300,
+  width: 400,
 };
 
 const animatedContainer: CSSProperties = {
@@ -23,18 +23,17 @@ const animatedContainer: CSSProperties = {
 
 const TheEndSegment = () => {
   const frame = useCurrentFrame();
-  
+
   const fadeInOpacity = interpolate(frame, [0, VIDEO_FPS], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  
 
   const animatedLogoWatermark: CSSProperties = {
     ...logoWatermark,
     opacity: fadeInOpacity,
   };
-
+  
   return (
     <AbsoluteFill style={animatedContainer}>
       <AbsoluteFill style={logoWatermarkContainer}>
