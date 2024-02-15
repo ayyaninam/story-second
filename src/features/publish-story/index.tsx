@@ -62,7 +62,7 @@ export default function PublishedStory({
 
 	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
 		queryFn: () => api.webstory.interactions(storyData.id!),
-		initialData: interactionData,
+		initialData: interactionData ?? undefined,
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.INTERACTIONS, router.pathname],
 	});
