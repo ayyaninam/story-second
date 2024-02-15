@@ -18,10 +18,6 @@ import {
 } from "./constants";
 import { GetImageRatio, GetImageRatioFromVariant } from "@/utils/image-ratio";
 import { useRouter } from "next/router";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/api";
-import { QueryKeys } from "@/lib/queryKeys";
-import { mainSchema } from "@/api/schema";
 import useWebstoryContext from "../providers/WebstoryContext";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {

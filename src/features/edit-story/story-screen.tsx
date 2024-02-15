@@ -1,33 +1,12 @@
-import api from "@/api";
-import { QueryKeys } from "@/lib/queryKeys";
 import Format from "@/utils/format";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import ImageLoader from "./components/image-loader";
-import { VoiceType } from "@/utils/enums";
-import { useRemotionPlayerProps } from "./video-player/hooks";
 import VideoPlayer from "./components/video-player";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { prefetch } from "remotion";
-import { mainSchema as schema } from "@/api/schema";
 import { GetImageRatio } from "@/utils/image-ratio";
-import { mainSchema } from "@/api/schema";
-import useWebstoryContext from "./providers/WebstoryContext";
-import { CallbackListener } from "@remotion/player";
+import { VideoPlayerProps } from "@/types";
 
-type StoryScreenProps = {
-	Webstory: schema["ReturnVideoStoryDTO"];
-	isError: boolean;
-	onPlay?: CallbackListener<"play">;
-	onEnded?: CallbackListener<"ended">;
-	onPause?: CallbackListener<"pause">;
-	onSeeked?: CallbackListener<"seeked">;
-	isPlaying?: boolean;
-	seekedFrame?: number;
-	isMuted?: boolean;
-};
-
-const StoryScreen: FC<StoryScreenProps> = ({
+const StoryScreen: FC<VideoPlayerProps> = ({
 	Webstory,
 	isError,
 	onPlay,
@@ -37,19 +16,8 @@ const StoryScreen: FC<StoryScreenProps> = ({
 	isPlaying,
 	isMuted,
 }) => {
-	const router = useRouter();
 	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
 	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
-
-	// Queries
-	// const Webstory = useQuery({
-	// 	queryFn: () =>
-	// 		api.library.get(
-	// 			router.query.genre!.toString(),
-	// 			router.query.id!.toString()
-	// 		),
-	// 	queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
-	// });
 
 	useEffect(() => {
 		for (const seg of Webstory?.videoSegments ?? []) {
