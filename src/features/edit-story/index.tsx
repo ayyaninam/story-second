@@ -232,7 +232,10 @@ export default function EditStory() {
 								className="relative w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
-								<StoryScreen />
+								<StoryScreen
+									Webstory={Webstory.data}
+									isError={Webstory.isError}
+								/>
 							</div>
 							<div
 								className={cn(
