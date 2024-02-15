@@ -26,7 +26,7 @@ const StoryScreen = () => {
 				const url = Format.GetVideoUrl(seg.videoKey);
 				const fetchedContent = prefetch(url, {
 					method: "blob-url",
-					contentType: "video/webm",
+					contentType: "video/mp4",
 				})
 					.waitUntilDone()
 					.then((res) => {

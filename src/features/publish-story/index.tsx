@@ -30,16 +30,15 @@ import Routes from "@/routes";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { getJwt } from "@/utils/jwt";
 import { SessionType } from "@/hooks/useSaveSessionToken";
+import isBrowser from "@/utils/isBrowser";
 
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function PublishedStory({
 	storyData,
-	interactionData,
 	session,
 }: {
 	storyData: mainSchema["ReturnVideoStoryDTO"];
-	interactionData: mainSchema["ReturnStoryInteractionDTO"] | null;
 	session: SessionType;
 }) {
 	const User = useUser();
@@ -48,6 +47,7 @@ export default function PublishedStory({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
 	// Queries
+
 	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
 		queryFn: () =>
 			api.video.get(
@@ -56,18 +56,17 @@ export default function PublishedStory({
 				storyData.storyType
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.STORY, router.pathname],
+		queryKey: [QueryKeys.STORY, router.asPath],
 		refetchInterval: 1000,
-		initialData: storyData,
 		// Disable once all the videoKeys are obtained
 		enabled: enableQuery,
 	});
 
 	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
-		queryFn: () => api.webstory.interactions(storyData.id!),
-		initialData: interactionData ?? undefined,
+		queryFn: () => api.webstory.interactions(Webstory.data?.id as string),
+		staleTime: 3000,
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.INTERACTIONS, router.pathname],
+		queryKey: ["interactions", router.asPath],
 	});
 
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
@@ -160,7 +159,7 @@ export default function PublishedStory({
 							</g>
 						</svg>
 					</div>
-					<p className="text-sm">{Format.Title(Webstory.data.storyTitle)}</p>
+					<p className="text-sm">{Format.Title(Webstory.data?.storyTitle)}</p>
 				</div>
 				<div className="hidden md:block space-x-2">
 					<div className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium">
@@ -280,19 +279,22 @@ export default function PublishedStory({
 											onClick={() => handleLikeVideo(!Interactions.data?.liked)}
 										>
 											<Heart
-												className={cn(
-													"mr-2 h-4 w-",
-													Interactions.data?.liked && "fill-pink-500"
-												)}
+												className={cn("mr-2 h-4 w-4")}
+												style={{
+													fill:
+														isBrowser && Interactions.data?.liked
+															? "#EC4899"
+															: undefined,
+												}}
 											/>{" "}
 											Like video
 										</Button>
-										{Webstory.data.renderedVideoKey && (
+										{Webstory.data?.renderedVideoKey && (
 											<a
 												href={Format.GetPublicBucketObjectUrl(
-													Webstory.data.renderedVideoKey as string
+													Webstory.data?.renderedVideoKey as string
 												)}
-												download={`${Webstory.data.storyTitle?.replaceAll(" ", "_")}.mp4`}
+												download={`${Webstory.data?.storyTitle?.replaceAll(" ", "_")}.mp4`}
 											>
 												<Button
 													className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
