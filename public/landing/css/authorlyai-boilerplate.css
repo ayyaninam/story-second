@@ -6266,6 +6266,8 @@ blockquote {
 }
 
 .hero-cta-input-holder {
+  /* Calculated based on the layout */
+  height: 65px;
   grid-column-gap: 20px;
   background-color: #fff;
   border-radius: 8px;
