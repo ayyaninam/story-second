@@ -3,14 +3,6 @@ import isBrowser from "./isBrowser";
 import { IncomingMessage, ServerResponse } from "http";
 import Routes from "@/routes";
 
-export const setJwt = (token: string | null) => {
-	if (isBrowser) window.localStorage.setItem("jwt", token ?? "");
-};
-
-export const getJwt = () => {
-	if (isBrowser) return window.localStorage.getItem("jwt") ?? "";
-	throw new Error("Error fetching jwt: fetched browser JWT in the server");
-};
 export const getServerSideSessionWithRedirect = async (
 	req: IncomingMessage & {
 		cookies: Partial<{

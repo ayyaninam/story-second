@@ -1,7 +1,7 @@
 import ky from "ky";
 import { env } from "@/env.mjs";
 import isBrowser from "@/utils/isBrowser";
-import { getJwt } from "@/utils/auth";
+import { getJwt } from "@/utils/jwt";
 
 const baseFetcher = ky.create({ timeout: false });
 /**

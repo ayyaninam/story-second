@@ -161,7 +161,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			},
 		};
 	} catch (e) {
-		console.log(e.message);
 		if (e instanceof AuthError) {
 			return {
 				redirect: {

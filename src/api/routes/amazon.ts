@@ -1,5 +1,5 @@
 import { authFetcher } from "@/lib/fetcher";
-import { getJwt } from "@/utils/auth";
+import { getJwt } from "@/utils/jwt";
 import { mainSchema } from "../schema";
 
 const amazon = {

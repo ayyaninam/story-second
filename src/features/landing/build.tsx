@@ -1,8 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { renderToString } from "react-dom/server";
-import storyLanguages from "@/utils/storyLanguages";
 import {
 	AspectRatios,
 	DisplayAspectRatios,
