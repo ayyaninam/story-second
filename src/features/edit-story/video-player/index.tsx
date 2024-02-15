@@ -16,17 +16,17 @@ import {
 	VIDEO_WIDTH,
 	RemotionPlayerInputProps,
 } from "./constants";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetImageRatio, GetImageRatioFromVariant } from "@/utils/image-ratio";
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/api";
+import { QueryKeys } from "@/lib/queryKeys";
+import { mainSchema } from "@/api/schema";
+import useWebstoryContext from "../providers/WebstoryContext";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
 });
-
-// TODO: responsive styles
-const player: React.CSSProperties = {
-	width: "100%",
-	aspectRatio: GetImageRatio().ratio,
-};
 
 type RemotionPlayerProps = {
 	inputProps: RemotionPlayerInputProps;
@@ -51,6 +51,15 @@ const RemotionPlayer = ({
 	isPlaying,
 	...props
 }: RemotionPlayerProps) => {
+	const router = useRouter();
+	const [Webstory] = useWebstoryContext();
+	const ImageRatio = GetImageRatio(Webstory.resolution);
+
+	const player: React.CSSProperties = {
+		width: "100%",
+		aspectRatio: ImageRatio.ratio,
+	};
+
 	const ref = useRef<PlayerRef>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 
@@ -267,6 +276,13 @@ const RemotionPlayer = ({
 		return () => observer.disconnect();
 	}, []);
 
+	// TODO: responsive styles
+	const style: React.CSSProperties = {
+		width: "100%",
+		aspectRatio: GetImageRatioFromVariant(inputProps.variant ?? "landscape")
+			.ratio,
+	};
+
 	return (
 		<div ref={containerRef} className="w-full h-full">
 			<Player
@@ -275,9 +291,9 @@ const RemotionPlayer = ({
 				inputProps={inputProps}
 				durationInFrames={inputProps.durationInFrames}
 				fps={VIDEO_FPS}
-				compositionHeight={VIDEO_HEIGHT}
-				compositionWidth={VIDEO_WIDTH}
-				style={player}
+				compositionHeight={VIDEO_HEIGHT[inputProps.variant]}
+				compositionWidth={VIDEO_WIDTH[inputProps.variant]}
+				style={style}
 				className="lg:[&>div]:rounded-bl-lg"
 				autoPlay={false}
 				numberOfSharedAudioTags={0}

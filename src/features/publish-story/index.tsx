@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import {
 	ChevronRight,
+	DownloadIcon,
 	Heart,
 	HelpCircle,
 	Share2,
@@ -14,23 +15,38 @@ import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
 import { useMediaQuery } from "usehooks-ts";
 import { GetImageRatio } from "@/utils/image-ratio";
 import { cn } from "@/utils";
-import { mainSchema as schema } from "@/api/schema";
+import { mainSchema } from "@/api/schema";
+import { env } from "@/env.mjs";
+import Routes from "@/routes";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { getJwt } from "@/utils/jwt";
+import { SessionType } from "@/hooks/useSaveSessionToken";
+
 const MAX_SUMMARY_LENGTH = 250;
 
-export default function PublishedStory() {
+export default function PublishedStory({
+	storyData,
+	interactionData,
+	session,
+}: {
+	storyData: mainSchema["ReturnVideoStoryDTO"];
+	interactionData: mainSchema["ReturnStoryInteractionDTO"] | null;
+	session: SessionType;
+}) {
+	const User = useUser();
 	const router = useRouter();
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
 	const [storySegments, setStorySegemnts] = useState<
-		schema["ReturnStorySegmentDTO"][] | null
+		mainSchema["ReturnStorySegmentDTO"][] | null
 	>();
 	const [index, setIndex] = useState(0);
 	console.log(router.pathname);
@@ -39,28 +55,41 @@ export default function PublishedStory() {
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
 
 	// Queries
-	const Webstory = useQuery({
+	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
 		queryFn: () =>
-			api.library.get(
+			api.video.get(
 				router.query.genre!.toString(),
-				router.query.id!.toString()
+				router.query.id!.toString(),
+				storyData.storyType
 			),
-		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.STORY, router.pathname],
 		refetchInterval: 1000,
+		initialData: storyData,
 		// Disable once all the videoKeys are obtained
 		enabled: enableQuery,
 	});
 
+	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
+		queryFn: () => api.webstory.interactions(storyData.id!),
+		initialData: interactionData ?? undefined,
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.INTERACTIONS, router.pathname],
+	});
+
+	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
+
+	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
 
 	useEffect(() => {
 		if (Webstory.data) {
 			if (
-				Webstory.data.storySegments?.every((segment) => !!segment.videoKey) &&
-				Webstory.data.storySegments?.length > 0
+				Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
+				Webstory.data.videoSegments?.length > 0
 			) {
 				setEnableQuery(false);
-				setStorySegemnts(Webstory.data.storySegments);
+				setStorySegemnts(Webstory.data.videoSegments);
 				console.log(">>>> segments", storySegments);
 			}
 
@@ -78,6 +107,32 @@ export default function PublishedStory() {
 		return () => clearInterval(interval);
 	});
 
+	useEffect(() => {
+		if (router.query.liked) {
+			handleLikeVideo(router.query.liked === "true");
+
+			const path = router.asPath.split("?")[0] as string;
+			router.replace(path, undefined, { shallow: true });
+		}
+	}, [router.query]);
+
+	const handleLikeVideo = async (liked: boolean) => {
+		if (!session.accessToken) {
+			router.push(
+				Routes.ToAuthPage(
+					Routes.ViewStory(
+						storyData.storyType,
+						router.query.genre!.toString(),
+						router.query.id!.toString()
+					),
+					{ liked }
+				)
+			);
+		} else {
+			await LikeVideo.mutateAsync({ id: storyData.id!, params: { liked } });
+			await Interactions.refetch();
+		}
+	};
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
 			{/* Navbar */}
@@ -85,7 +140,7 @@ export default function PublishedStory() {
 				<div
 					className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm lg:rounded-br-sm lg:rounded-tr-sm lg:rounded-tl-sm lg:rounded-bl-sm`}
 				>
-					<div className="flex items-center gap-x-2">
+					<div className="flex items-center gap-x-2 py-3">
 						<svg
 							width="16"
 							height="16"
@@ -110,7 +165,6 @@ export default function PublishedStory() {
 								fill="#657D8B"
 							/>
 						</svg>
-
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"
@@ -127,7 +181,7 @@ export default function PublishedStory() {
 							</g>
 						</svg>
 					</div>
-					<p className="text-sm">{Format.Title("The Path Of Friendship")}</p>
+					<p className="text-sm">{Format.Title(Webstory.data.storyTitle)}</p>
 				</div>
 				<div className="hidden md:block space-x-2">
 					<div className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium">
@@ -192,12 +246,14 @@ export default function PublishedStory() {
 							/>
 						</svg>
 					</div>
-					<Button
-						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
-						variant="outline"
-					>
-						<Share2 className="mr-2 h-4 w-4" /> Share this video
-					</Button>
+					{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
+						<Button
+							className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
+							variant="outline"
+						>
+							<Share2 className="mr-2 h-4 w-4" /> Share this video
+						</Button>
+					)}
 				</div>
 			</div>
 
@@ -208,17 +264,17 @@ export default function PublishedStory() {
 							className={cn(
 								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
 								// Based on aspect ratio we need to adjust the parent width
-								GetImageRatio().width === 1 && "md:max-w-[1080px]",
-								GetImageRatio().width === 3 && "md:max-w-[900px]",
-								GetImageRatio().width === 4 && "md:max-w-[1280px]",
-								GetImageRatio().width === 9 && "md:max-w-[780px]",
-								GetImageRatio().width === 16 && "md:max-w-[1620px]"
+								ImageRatio.width === 1 && "md:max-w-[1080px]",
+								ImageRatio.width === 3 && "md:max-w-[900px]",
+								ImageRatio.width === 4 && "md:max-w-[1280px]",
+								ImageRatio.width === 9 && "md:max-w-[780px]",
+								ImageRatio.width === 16 && "md:max-w-[1620px]"
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
 								<div className="relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-lg">
 									<StoryScreen
-										Webstory={Webstory}
+										Webstory={Webstory.data}
 										isError={Webstory.isError}
 										isPlaying={isPlaying}
 										seekedFrame={seekedFrame}
@@ -226,7 +282,7 @@ export default function PublishedStory() {
 								</div>
 								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
 									<StoryScreen
-										Webstory={Webstory}
+										Webstory={Webstory.data}
 										isError={Webstory.isError}
 										onPlay={() => {
 											setIsPlaying(true);
@@ -268,17 +324,33 @@ export default function PublishedStory() {
 									)}
 									<div className="block space-x-2">
 										<Button
-											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
+											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
 											variant="outline"
+											onClick={() => handleLikeVideo(!Interactions.data?.liked)}
 										>
-											<Heart className="mr-2 h-4 w-4" /> Like video
+											<Heart
+												className={cn(
+													"mr-2 h-4 w-",
+													Interactions.data?.liked && "fill-pink-500"
+												)}
+											/>{" "}
+											Like video
 										</Button>
-										<Button
-											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
-											variant="outline"
-										>
-											<Star className="mr-2 h-4 w-4" /> Follow author
-										</Button>
+										{Webstory.data.renderedVideoKey && (
+											<a
+												href={Format.GetPublicBucketObjectUrl(
+													Webstory.data.renderedVideoKey as string
+												)}
+												download={`${Webstory.data.storyTitle?.replaceAll(" ", "_")}.mp4`}
+											>
+												<Button
+													className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+													variant="outline"
+												>
+													<DownloadIcon className="mr-2 h-4 w-4" /> Download
+												</Button>
+											</a>
+										)}
 									</div>
 									{isLoading ? (
 										<Skeleton className="min-w-72 h-[220px] rounded-lg" />
@@ -292,7 +364,6 @@ export default function PublishedStory() {
 													)}
 										</p>
 									)}
-
 									{(Webstory.data?.summary?.length ?? 0) > MAX_SUMMARY_LENGTH &&
 										!showFullDescription && (
 											<Button
@@ -311,7 +382,7 @@ export default function PublishedStory() {
 									) : (
 										<Avatar className="h-11 w-11">
 											<AvatarImage
-												src={Webstory.data.user?.profileName ?? undefined}
+												src={Webstory.data.user?.profilePicture ?? undefined}
 											/>
 											<AvatarFallback>
 												{Format.AvatarName(Webstory.data.user?.profileName)}
@@ -352,15 +423,19 @@ export default function PublishedStory() {
 					</div>
 					<div className="absolute bottom-4 left-4 items-center flex flex-row gap-x-1">
 						<span
-							className="rounded-full text-xs text-purple-100 bg-purple-500 p-1.5"
+							className="rounded-full text-xs text-purple-100 bg-purple-500 p-1.5 hover:cursor-pointer hover:bg-purple-400 transition-colors duration-200  ease-in-out"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+							onClick={() => router.push(Routes.Landing())}
 						>
 							<div className={`flex gap-x-2.5 px-3 items-center`}>
 								<Video className="mr-1 h-3 w-3" /> Make a video like this
 							</div>
 						</span>
 						<span className="rounded-full text-xs text-muted-foreground">
-							<div className={`flex text-sm gap-x-2.5 px-3 items-center`}>
+							<div
+								className={`flex text-sm gap-x-2.5 px-3 items-center hover:cursor-pointer hover:text-gray-600 transition-colors duration-200  ease-in-out`}
+								onClick={() => router.push(Routes.Landing())}
+							>
 								Try It Free
 							</div>
 						</span>
@@ -370,17 +445,19 @@ export default function PublishedStory() {
 					</div>
 					<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
 						<span
-							className="rounded-full w-8 h-8 bg-popover p-1.5"
+							className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
 						>
 							<ModeToggle />
 						</span>
-						<span
-							className="rounded-full w-8 h-8 bg-popover p-1.5"
-							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-						>
-							<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
-						</span>
+						{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
+							<span
+								className="rounded-full w-8 h-8 bg-popover p-1.5"
+								style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+							>
+								<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
+							</span>
+						)}
 					</div>
 				</div>
 			</div>

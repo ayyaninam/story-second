@@ -12,10 +12,12 @@ import { FC, useEffect, useRef, useState } from "react";
 import { prefetch } from "remotion";
 import { mainSchema as schema } from "@/api/schema";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { mainSchema } from "@/api/schema";
+import useWebstoryContext from "./providers/WebstoryContext";
 import { CallbackListener } from "@remotion/player";
 
 type StoryScreenProps = {
-	Webstory: schema["ReturnWebStoryDTOApiResponse"];
+	Webstory: schema["ReturnVideoStoryDTO"];
 	isError: boolean;
 	onPlay?: CallbackListener<"play">;
 	onEnded?: CallbackListener<"ended">;
@@ -49,9 +51,7 @@ const StoryScreen: FC<StoryScreenProps> = ({
 	// });
 
 	useEffect(() => {
-		console.log(">>>> webstory.data", Webstory.data);
-
-		for (const seg of Webstory.data?.storySegments ?? []) {
+		for (const seg of Webstory?.videoSegments ?? []) {
 			if (seg.videoKey && !fetchedVideos.includes(seg.videoKey)) {
 				const url = Format.GetVideoUrl(seg.videoKey);
 				const fetchedContent = prefetch(url, {
@@ -61,10 +61,11 @@ const StoryScreen: FC<StoryScreenProps> = ({
 					.waitUntilDone()
 					.then((res) => {
 						setFetchedVideos((prev) => [...prev, url]);
-					});
+					})
+					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-		for (const seg of Webstory.data?.storySegments ?? []) {
+		for (const seg of Webstory.videoSegments ?? []) {
 			if (seg.femaleAudioKey && !fetchedAudios.includes(seg.femaleAudioKey)) {
 				const url = Format.GetImageUrl(seg.femaleAudioKey);
 				const fetchedContent = prefetch(url, {
@@ -74,36 +75,58 @@ const StoryScreen: FC<StoryScreenProps> = ({
 					.waitUntilDone()
 					.then((res) => {
 						setFetchedAudios((prev) => [...prev, url]);
-					});
+					})
+					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-	}, [Webstory.data]);
+		const originalTikTokVideoKey = Webstory.originalMediaKey;
+		if (
+			originalTikTokVideoKey &&
+			!fetchedVideos.includes(originalTikTokVideoKey)
+		) {
+			const url = Format.GetVideoUrl(originalTikTokVideoKey);
+			prefetch(url, {
+				method: "blob-url",
+				contentType: "video/webm",
+			})
+				.waitUntilDone()
+				.then(() => {
+					setFetchedVideos((prev) => [...prev, url]);
+				});
+		}
+	}, [Webstory]);
 
-	const videoArray = Webstory.data?.storySegments
+	const videoArray = Webstory.videoSegments
 		?.filter((seg) => !!seg.videoKey)
 		.map((seg) => seg.videoKey);
 
-	const generatedImages = Webstory.data?.storySegments
+	const generatedImages = Webstory.videoSegments
 		?.filter((seg) => !!seg.imageKey)
 		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }));
 
 	const areImagesLoading =
-		!Webstory.data ||
-		(Webstory.data?.storySegments?.filter((seg) => !!seg.imageKey)?.length ??
-			0) < 2;
+		!Webstory ||
+		(Webstory.videoSegments?.filter((seg) => !!seg.imageKey)?.length ?? 0) < 2;
+
+	const originalTikTokVideoKey = Webstory.originalMediaKey;
+	const hasOriginalTikTokVideoKey = Boolean(originalTikTokVideoKey);
 
 	const isStoryLoading =
-		!Webstory.data ||
-		(videoArray?.length ?? 0) !== Webstory.data.storySegments?.length ||
+		!Webstory ||
+		(videoArray?.length ?? 0) !== Webstory.videoSegments?.length ||
 		// Using large vidArray length to ensure that all videos are fetched
 		fetchedVideos.length < (videoArray?.length ?? 1000) ||
-		fetchedAudios.length < (videoArray?.length ?? 1000);
+		fetchedAudios.length < (videoArray?.length ?? 1000) ||
+		(hasOriginalTikTokVideoKey &&
+			!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
+
+	const ImageRatio = GetImageRatio(Webstory.resolution);
 
 	if (isError)
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
-				style={{ aspectRatio: GetImageRatio().ratio }}
+				style={{ aspectRatio: ImageRatio.ratio }}
 			>
 				<p className="text-xl">
 					There was an error loading your story, please try again or contact
@@ -115,7 +138,7 @@ const StoryScreen: FC<StoryScreenProps> = ({
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
-				style={{ aspectRatio: GetImageRatio().ratio }}
+				style={{ aspectRatio: ImageRatio.ratio }}
 			>
 				<div
 					className="px-4 py-1 text-white border-[0.5px] mb-16"
@@ -140,6 +163,7 @@ const StoryScreen: FC<StoryScreenProps> = ({
 				onPause={onPause}
 				onSeeked={onSeeked}
 				isPlaying={isPlaying}
+				seekedFrame={seekedFrame}
 			/>
 		);
 	}

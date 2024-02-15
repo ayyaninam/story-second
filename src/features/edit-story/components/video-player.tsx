@@ -11,7 +11,7 @@ import { FC } from "react";
 import { mainSchema as schema } from "@/api/schema";
 
 type VideoPlayerProps = {
-	Webstory: schema["ReturnWebStoryDTOApiResponse"];
+	Webstory: schema["ReturnVideoStoryDTO"];
 	onPlay?: CallbackListener<"play">;
 	onEnded?: CallbackListener<"ended">;
 	onPause?: CallbackListener<"pause">;
@@ -38,12 +38,10 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
 	// 	queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
 	// });
 
-	console.log(">>>> Webstory.data VideoPlayer", Webstory.data);
-
 	const remotionPlayerProps = useRemotionPlayerProps({
-		story: Webstory.data,
+		story: Webstory,
 		selectedVoice: VoiceType.GenericFemale,
-		generatedImages: Webstory.data?.storySegments
+		generatedImages: Webstory.videoSegments
 			?.filter((seg) => !!seg.imageKey)
 			.map((seg) => ({ ...seg, src: Format.GetVideoUrl(seg.imageKey!) }))!,
 	});
@@ -55,6 +53,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
 			onPause={onPause}
 			onSeeked={onSeeked}
 			isPlaying={isPlaying}
+			seekedFrame={seekedFrame}
 		/>
 	);
 };
