@@ -1,13 +1,14 @@
 import ky from "ky";
 import { env } from "@/env.mjs";
 import isBrowser from "@/utils/isBrowser";
-import { getJwt } from "@/utils/auth";
+import { getJwt } from "@/utils/jwt";
 
+const baseFetcher = ky.create({ timeout: false });
 /**
  * Creates a fetcher instance for making public requests.
  * This fetcher should be used in browser environments only.
  */
-export const publicFetcher = ky.create({
+export const publicFetcher = baseFetcher.extend({
 	prefixUrl: env.NEXT_PUBLIC_API_URL,
 	headers: { "Content-Type": "application/json" },
 });
@@ -17,7 +18,7 @@ export const publicFetcher = ky.create({
  * This fetcher should be used in browser environments only.
  */
 export const mlFetcher = (token: string) => {
-	return ky.create({
+	return baseFetcher.extend({
 		prefixUrl: env.NEXT_PUBLIC_ML_API_URL,
 		headers: {
 			"Content-Type": "application/json",
@@ -31,10 +32,9 @@ export const mlFetcher = (token: string) => {
  * Creates an authenticated fetcher instance by extending the public fetcher.
  * This fetcher should be used in browser environments only.
  */
-export const authFetcher = publicFetcher.extend({
-	headers: {
-		Authorization: isBrowser
-			? "Bearer " + window.localStorage.getItem("jwt") || undefined
-			: undefined,
-	},
-});
+export const authFetcher = (token: string) =>
+	publicFetcher.extend({
+		headers: {
+			Authorization: "Bearer " + token,
+		},
+	});

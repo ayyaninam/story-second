@@ -6,22 +6,18 @@ import { useRouter } from "next/router";
 import RemotionPlayer from "../video-player";
 import { VoiceType } from "@/utils/enums";
 import { useRemotionPlayerProps } from "../video-player/hooks";
+import { mainSchema } from "@/api/schema";
+import useWebstoryContext from "../providers/WebstoryContext";
 
 const VideoPlayer = () => {
 	const router = useRouter();
-	const Webstory = useQuery({
-		queryFn: () =>
-			api.library.get(
-				router.query.genre!.toString(),
-				router.query.id!.toString()
-			),
-		queryKey: [QueryKeys.STORY, router.query.genre, router.query.id],
-	});
+
+	const [Webstory] = useWebstoryContext();
 
 	const remotionPlayerProps = useRemotionPlayerProps({
-		story: Webstory.data,
+		story: Webstory,
 		selectedVoice: VoiceType.GenericFemale,
-		generatedImages: Webstory.data?.storySegments
+		generatedImages: Webstory.videoSegments
 			?.filter((seg) => !!seg.imageKey)
 			.map((seg) => ({ ...seg, src: Format.GetVideoUrl(seg.imageKey!) }))!,
 	});

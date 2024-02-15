@@ -46,10 +46,35 @@ export enum StoryLengths {
 	Long,
 }
 
+export enum StoryInputTypes {
+	Text,
+	Audio,
+	Video,
+}
+export enum StoryOutputTypes {
+	Story,
+	Video,
+	SplitScreen,
+}
+
 export enum VoiceType {
 	GenericMale,
 	GenericFemale,
 	Portuguese,
 	Custom,
 	None,
+}
+
+export enum AspectRatios {
+	"512x512",
+	"1024x1024",
+	"1024x576",
+	"576x1024",
+	"1152x1024",
+	"1024x1152",
+}
+
+export enum DisplayAspectRatios {
+	"1024x576",
+	"576x1024",
 }

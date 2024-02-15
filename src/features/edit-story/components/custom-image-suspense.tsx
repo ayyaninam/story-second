@@ -1,7 +1,13 @@
+import api from "@/api";
+import { mainSchema } from "@/api/schema";
+import { QueryKeys } from "@/lib/queryKeys";
 import cn from "@/utils/cn";
+import { GetImageRatio } from "@/utils/image-ratio";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
 import { useMap, useReadLocalStorage } from "usehooks-ts";
+import useWebstoryContext from "../providers/WebstoryContext";
 
 export default function CustomImageSuspense({
 	imageSrc,
@@ -26,6 +32,9 @@ export default function CustomImageSuspense({
 	}>;
 	onComplete: () => void;
 }) {
+	const router = useRouter();
+	const [Webstory] = useWebstoryContext();
+	const ImageRatio = GetImageRatio(Webstory.resolution);
 	const startTime = useRef(dayjs());
 	const lastTick = useRef(dayjs());
 	const [grid, setGrid] = useState<number[]>([]);
@@ -158,8 +167,10 @@ export default function CustomImageSuspense({
 			style={{
 				backgroundImage: `url(${imageSrc})`,
 				backgroundSize: "cover",
+				backgroundRepeat: "no-repeat",
+				aspectRatio: ImageRatio.ratio,
 			}}
-			className="transition-all duration-500"
+			className={`transition-all duration-500`}
 		>
 			{isLoaded && queue.length > 0
 				? twoDArray.map((row, rowIdx) => {

@@ -1,7 +1,9 @@
-import amazon from "./amazon";
-import payment from "./payment";
-import webstory from "./webstory";
-import library from "./library";
-const api = { amazon, payment, webstory, library };
+import amazon from "./routes/amazon";
+import payment from "./routes/payment";
+import webstory from "./routes/webstory";
+import library from "./routes/library";
+import video from "./routes/video";
+import user from "./routes/user";
+const api = { amazon, payment, webstory, library, video, user };
 
 export default api;
