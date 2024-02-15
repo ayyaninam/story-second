@@ -9,7 +9,7 @@ const logoWatermarkContainer: CSSProperties = {
 
 const logoWatermark: CSSProperties = {
 	width: 200,
-	opacity: 0.4,
+	opacity: 0.5,
 };
 
 export const LogoWatermark = () => (
