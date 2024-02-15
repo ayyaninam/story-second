@@ -1,15 +1,17 @@
 import PublishedStory from "@/features/publish-story";
 import api from "@/api";
 import { mainSchema } from "@/api/schema";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { StoryOutputTypes } from "@/utils/enums";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
 export default function PublishPage({
 	storyData,
-}: {
-	storyData: mainSchema["ReturnVideoStoryDTO"];
-}) {
+	session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+	useSaveSessionToken(session);
 	return (
 		<WebStoryProvider initialValue={storyData}>
 			<PublishedStory storyData={storyData} />
@@ -17,7 +19,8 @@ export default function PublishPage({
 	);
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+	const session = await getSession(ctx.req, ctx.res);
 	// @ts-expect-error Not typing correctly
 	const { genre, id } = ctx.params;
 	if (!genre || !id) {
@@ -27,5 +30,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	}
 	const storyData = await api.video.get(genre, id, StoryOutputTypes.Video);
 
-	return { props: { storyData } };
+	return { props: { session: { ...session }, storyData } };
 };

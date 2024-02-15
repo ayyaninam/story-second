@@ -21,6 +21,33 @@ const library = {
 
 		return data.data;
 	},
+	likeVideo: async ({
+		id,
+		params,
+		token,
+	}: {
+		id: string;
+		params: mainSchema["LikeStoryDTO"];
+		token?: string;
+	}): Promise<boolean> => {
+		const data: mainSchema["BooleanApiResponse"] = await authFetcher(
+			token || getJwt()
+		)
+			.patch(`api/Library/${id}/Like`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		if (!data.succeeded) {
+			// TODO:figure out error boundaries
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
 };
 
 export default library;

@@ -1,4 +1,4 @@
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
 import isBrowser from "./isBrowser";
 import { IncomingMessage, ServerResponse } from "http";
 import Routes from "@/routes";
@@ -14,8 +14,14 @@ export const getServerSideSessionWithRedirect = async (
 	returnParams = {}
 ) => {
 	try {
-		const { accessToken } = await getAccessToken(req, res);
-		return accessToken;
+		const session = await getSession(req, res);
+		console.log(session);
+		if (!session?.accessToken)
+			throw new AuthError(
+				"No access token found",
+				Routes.ToAuthPage(returnTo, returnParams)
+			);
+		return session;
 	} catch (e) {
 		throw new AuthError(
 			"Please sign in before accessing this route",

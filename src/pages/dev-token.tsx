@@ -2,20 +2,23 @@ import api from "@/api";
 import Routes from "@/routes";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
 import { StoryOutputTypes } from "@/utils/enums";
-import { GetServerSideProps } from "next";
+import {
+	GetServerSideProps,
+	GetServerSidePropsContext,
+	InferGetServerSidePropsType,
+} from "next";
 
-function StoryPage({ accessToken }: { accessToken: string }) {
-	return accessToken;
+function DevToken({
+	session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+	return <div>{JSON.stringify(session)} </div>;
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	try {
-		const accessToken = await getServerSideSessionWithRedirect(
-			ctx.req,
-			ctx.res
-		);
+		const session = await getServerSideSessionWithRedirect(ctx.req, ctx.res);
 
-		return { props: { accessToken } };
+		return { props: { session: { ...session } } };
 	} catch (e) {
 		if (e instanceof AuthError) {
 			return {
@@ -34,4 +37,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	}
 };
 
-export default StoryPage;
+export default DevToken;
