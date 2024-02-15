@@ -10,11 +10,12 @@ import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 export default function PublishPage({
 	storyData,
 	session,
+	interactionData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	useSaveSessionToken(session);
 	return (
 		<WebStoryProvider initialValue={storyData}>
-			<PublishedStory storyData={storyData} />
+			<PublishedStory storyData={storyData} interactionData={interactionData} />
 		</WebStoryProvider>
 	);
 }
@@ -29,6 +30,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		};
 	}
 	const storyData = await api.video.get(genre, id, StoryOutputTypes.Video);
+	const interactionData = await api.webstory.interactions(id, session?.token);
 
-	return { props: { session: { ...session }, storyData } };
+	return { props: { session: { ...session }, storyData, interactionData } };
 };
