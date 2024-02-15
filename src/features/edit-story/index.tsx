@@ -37,7 +37,7 @@ import useWebstoryContext, {
 	WebStoryProvider,
 } from "./providers/WebstoryContext";
 
-const MAX_SUMMARY_LENGTH = 250;
+const MAX_SUMMARY_LENGTH = 251;
 
 export default function EditStory() {
 	const router = useRouter();

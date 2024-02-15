@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import {
 	ChevronRight,
+	DownloadIcon,
 	Heart,
 	HelpCircle,
 	Share2,
@@ -16,7 +17,7 @@ import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
@@ -26,20 +27,24 @@ import { cn } from "@/utils";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import Routes from "@/routes";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { getJwt } from "@/utils/jwt";
 
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function PublishedStory({
 	storyData,
+	interactionData,
 }: {
 	storyData: mainSchema["ReturnVideoStoryDTO"];
+	interactionData: mainSchema["ReturnStoryInteractionDTO"];
 }) {
+	const User = useUser();
 	const router = useRouter();
 	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
 	// Queries
-
 	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
 		queryFn: () =>
 			api.video.get(
@@ -54,8 +59,19 @@ export default function PublishedStory({
 		// Disable once all the videoKeys are obtained
 		enabled: enableQuery,
 	});
+
+	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
+		queryFn: () => api.webstory.interactions(storyData.id!),
+		initialData: interactionData,
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.INTERACTIONS, router.pathname],
+	});
+
+	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
+
 	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
+
 	useEffect(() => {
 		if (Webstory.data) {
 			setEnableQuery(
@@ -66,7 +82,23 @@ export default function PublishedStory({
 			);
 		}
 	}, [Webstory.data]);
-	// return <div>Hello world</div>;
+
+	const handleLikeVideo = async (liked: boolean) => {
+		if (!getJwt()) {
+			router.push(
+				Routes.ToAuthPage(
+					Routes.ViewStory(
+						storyData.storyType,
+						router.query.genre!.toString(),
+						router.query.id!.toString()
+					),
+					{ liked }
+				)
+			);
+		}
+		await LikeVideo.mutateAsync({ id: storyData.id!, params: { liked } });
+		await Interactions.refetch();
+	};
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
 			{/* Navbar */}
@@ -230,17 +262,33 @@ export default function PublishedStory({
 									)}
 									<div className="block space-x-2">
 										<Button
-											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
+											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
 											variant="outline"
+											onClick={() => handleLikeVideo(!Interactions.data?.liked)}
 										>
-											<Heart className="mr-2 h-4 w-4" /> Like video
+											<Heart
+												className={cn(
+													"mr-2 h-4 w-",
+													Interactions.data?.liked && "fill-pink-500"
+												)}
+											/>{" "}
+											Like video
 										</Button>
-										<Button
-											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
-											variant="outline"
-										>
-											<Star className="mr-2 h-4 w-4" /> Follow author
-										</Button>
+										{Webstory.data.renderedVideoKey && (
+											<a
+												href={Format.GetPublicBucketObjectUrl(
+													Webstory.data.renderedVideoKey as string
+												)}
+												download={`${Webstory.data.storyTitle?.replaceAll(" ", "_")}.mp4`}
+											>
+												<Button
+													className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+													variant="outline"
+												>
+													<DownloadIcon className="mr-2 h-4 w-4" /> Download
+												</Button>
+											</a>
+										)}
 									</div>
 									{isLoading ? (
 										<Skeleton className="min-w-72 h-[220px] rounded-lg" />

@@ -3,20 +3,22 @@ import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import Routes from "@/routes";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
 import { StoryOutputTypes } from "@/utils/enums";
 import { getAccessToken, withPageAuthRequired } from "@auth0/nextjs-auth0";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import {
+	GetServerSideProps,
+	GetServerSidePropsContext,
+	InferGetServerSidePropsType,
+} from "next";
 
 function StoryPage({
-	accessToken,
+	session,
 	storyData,
-}: {
-	accessToken: string;
-	storyData: mainSchema["ReturnVideoStoryDTO"];
-}) {
-	// console.log(accessToken);
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+	useSaveSessionToken(session);
 	return (
 		<WebStoryProvider initialValue={storyData}>
 			<EditStory />
@@ -24,7 +26,7 @@ function StoryPage({
 	);
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	try {
 		// @ts-expect-error Not typing correctly
 		const { genre, id } = ctx.params;
@@ -33,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				notFound: true,
 			};
 		}
-		const accessToken = await getServerSideSessionWithRedirect(
+		const session = await getServerSideSessionWithRedirect(
 			ctx.req,
 			ctx.res,
 			Routes.EditStory(StoryOutputTypes.SplitScreen, genre, id)
@@ -45,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			StoryOutputTypes.SplitScreen
 		);
 
-		return { props: { accessToken, storyData } };
+		return { props: { session: { ...session }, storyData } };
 	} catch (e) {
 		if (e instanceof AuthError) {
 			return {
