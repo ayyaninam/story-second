@@ -1,6 +1,6 @@
 import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
-import { getJwt } from "@/utils/auth";
+import { getJwt } from "@/utils/jwt";
 import { StoryOutputTypes } from "@/utils/enums";
 
 const video = {
