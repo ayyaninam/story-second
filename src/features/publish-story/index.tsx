@@ -66,7 +66,7 @@ export default function PublishedStory({
 		queryFn: () => api.webstory.interactions(Webstory.data?.id as string),
 		staleTime: 3000,
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: ["interactions", router.asPath],
+		queryKey: [QueryKeys.INTERACTIONS, router.asPath],
 	});
 
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
