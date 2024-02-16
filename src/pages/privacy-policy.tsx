@@ -5,21 +5,20 @@ export default function PrivacyPolicy() {
 				Privacy Policy
 			</h1>
 			<p className="mt-8">
-				This Privacy Policy describes how StoryBird (together with its
-				affiliates companies - “StoryBird,” “we,” “our,” or “us”) collect(s),
-				store(s), use(s) and disclose(s) personal data regarding individuals
-				(“you”) who:
+				This Privacy Policy describes how Authorly (together with its affiliates
+				companies - “Authorly,” “we,” “our,” or “us”) collect(s), store(s),
+				use(s) and disclose(s) personal data regarding individuals (“you”) who:
 			</p>
 			<ol className="mt-4 px-6" style={{ listStyleType: "lower-roman" }}>
 				<li>
 					visit(s) or otherwise interact(s) with our website(s) (“Visitors”),
-					available at www.StoryBird.ai or any other website, webpage, e-mail,
+					available at www.Authorly.ai or any other website, webpage, e-mail,
 					text message or online ad under our control (collectively -
 					“Website(s))”);
 				</li>
 				<li>
 					Users accessing and using Services, including, but not limited to,
-					StoryBird and StoryBird Dashboard, via the Website, or the StoryBird
+					Authorly and Authorly Dashboard, via the Website, or the Authorly
 					desktop or App, addons or extensions upon authorization from Customer.
 				</li>
 			</ol>
@@ -109,7 +108,7 @@ const privacyData = {
 				},
 				{
 					title: "Customer Data Containing Personal Data",
-					text: "Users may choose to upload or submit to our Service certain content, materials and data on behalf of their Account or the Account owner (our Customer), which includes Personal Data  (collectively “Customer Data”). For the purpose of this Privacy Policy, User Terms of Service, and other related agreements, Account owner is the Customer who has entered into a commercial agreement with StoryBird. Personal Data which is included in Customer Data will only be processed by StoryBird on behalf of our Customer (who owns the Customer’s Account), in accordance with our Data Processing Addendum (to the extent applicable), other agreements with such Customer, and this Privacy Policy.",
+					text: "Users may choose to upload or submit to our Service certain content, materials and data on behalf of their Account or the Account owner (our Customer), which includes Personal Data  (collectively “Customer Data”). For the purpose of this Privacy Policy, User Terms of Service, and other related agreements, Account owner is the Customer who has entered into a commercial agreement with Authorly. Personal Data which is included in Customer Data will only be processed by Authorly on behalf of our Customer (who owns the Customer’s Account), in accordance with our Data Processing Addendum (to the extent applicable), other agreements with such Customer, and this Privacy Policy.",
 				},
 				{
 					title: "Data Concerning Service Integrations",
@@ -177,7 +176,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "StoryBird is headquartered in Seattle, Washington, in the United States of America, and we do not presently have any customers in the European Union that we are aware of. While privacy laws may vary between jurisdictions, StoryBird, its affiliates and Service Providers are each committed to protect Personal Data in accordance with this Privacy Policy, customary industry standards, and such appropriate lawful mechanisms and contractual terms requiring adequate data protection, regardless of any lesser legal requirements that may apply in the jurisdiction from which such data originated.  Notwithstanding the foregoing, Customer Data may only be processed in such locations as permitted in our Data Processing Addendum and other commercial agreements with such Customer.",
+					text: "Authorly is headquartered in Seattle, Washington, in the United States of America, and we do not presently have any customers in the European Union that we are aware of. While privacy laws may vary between jurisdictions, Authorly, its affiliates and Service Providers are each committed to protect Personal Data in accordance with this Privacy Policy, customary industry standards, and such appropriate lawful mechanisms and contractual terms requiring adequate data protection, regardless of any lesser legal requirements that may apply in the jurisdiction from which such data originated.  Notwithstanding the foregoing, Customer Data may only be processed in such locations as permitted in our Data Processing Addendum and other commercial agreements with such Customer.",
 				},
 				{
 					title: "Data Retention",
@@ -210,7 +209,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "Our Service Providers shall be deemed as ‘Data Processors’ in circumstances where StoryBird assumes the role of ‘Data Controller’; and where StoryBird acts as the Data Processor for our Customer, the Service Provider shall be deemed our ‘Sub-Processor’ (as further described in Section 9 below).",
+					text: "Our Service Providers shall be deemed as ‘Data Processors’ in circumstances where Authorly assumes the role of ‘Data Controller’; and where Authorly acts as the Data Processor for our Customer, the Service Provider shall be deemed our ‘Sub-Processor’ (as further described in Section 9 below).",
 				},
 				{
 					title: "Third Party Website(s) and Services",
@@ -230,11 +229,11 @@ const privacyData = {
 				},
 				{
 					title: "Protecting Rights and Safety",
-					text: "We may share your Personal Data with others if we believe in good faith that this will help protect the rights, property or personal safety of StoryBird, any of our Users or Customers, or any members of the general public.",
+					text: "We may share your Personal Data with others if we believe in good faith that this will help protect the rights, property or personal safety of Authorly, any of our Users or Customers, or any members of the general public.",
 				},
 				{
-					title: "StoryBird Subsidiaries and Affiliated Companies",
-					text: "We may share Personal Data internally within our group, for the purposes described in this Privacy Policy. In addition,  should StoryBird or any of its subsidiaries, affiliates, parent, sister, daughter, or related entities undergo any change in control, including by means of merger, acquisition or purchase of substantially all of its assets, your Personal Data may be shared with the parties involved in such an event. For the avoidance of doubt, StoryBird may share your Personal Data in additional manners, pursuant to your explicit approval, or if we are legally obligated to do so, or if we have successfully rendered such data non-personal and anonymous. We may transfer, share or otherwise use non-personal data at our sole discretion and without the need for further approval.",
+					title: "Authorly Subsidiaries and Affiliated Companies",
+					text: "We may share Personal Data internally within our group, for the purposes described in this Privacy Policy. In addition,  should Authorly or any of its subsidiaries, affiliates, parent, sister, daughter, or related entities undergo any change in control, including by means of merger, acquisition or purchase of substantially all of its assets, your Personal Data may be shared with the parties involved in such an event. For the avoidance of doubt, Authorly may share your Personal Data in additional manners, pursuant to your explicit approval, or if we are legally obligated to do so, or if we have successfully rendered such data non-personal and anonymous. We may transfer, share or otherwise use non-personal data at our sole discretion and without the need for further approval.",
 				},
 			],
 		},
@@ -268,7 +267,7 @@ const privacyData = {
 				},
 				{
 					title: "Promotional Communications",
-					text: "We may also notify you about new features, additional offerings, events and special opportunities or any other information we think our Users will find valuable. We may provide such notices through any of the contact means available to us (e.g. phone, mobile or email), through the Service, or through our marketing campaigns on any other Website(s) or platforms. If you do not wish to receive such promotional communications, you may notify StoryBird at any time by sending an e-mail to support@storybird.ai, changing your communications preferences in your User Profile settings, or by following the “unsubscribe”, “stop”, “opt-out” or “change email preferences” instructions contained in the promotional communications you receive.",
+					text: "We may also notify you about new features, additional offerings, events and special opportunities or any other information we think our Users will find valuable. We may provide such notices through any of the contact means available to us (e.g. phone, mobile or email), through the Service, or through our marketing campaigns on any other Website(s) or platforms. If you do not wish to receive such promotional communications, you may notify Authorly at any time by sending an e-mail to support@storybird.ai, changing your communications preferences in your User Profile settings, or by following the “unsubscribe”, “stop”, “opt-out” or “change email preferences” instructions contained in the promotional communications you receive.",
 				},
 			],
 		},
@@ -294,7 +293,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "If EU General Data Protection Regulation (GDPR) or the California Consumer Privacy Act (CCPA) applies to you and you wish to exercise those rights under the applicable law, such as the right to request access to, and rectification or erasure of your Personal Data held with StoryBird, or to restrict or object to such Personal Data’s processing, or to port such Personal Data, or the right to equal services and prices (each to the extent available to you under the laws which apply to you) – please contact us by email at support@storybird.ai.",
+					text: "If EU General Data Protection Regulation (GDPR) or the California Consumer Privacy Act (CCPA) applies to you and you wish to exercise those rights under the applicable law, such as the right to request access to, and rectification or erasure of your Personal Data held with Authorly, or to restrict or object to such Personal Data’s processing, or to port such Personal Data, or the right to equal services and prices (each to the extent available to you under the laws which apply to you) – please contact us by email at support@storybird.ai.",
 				},
 				{
 					title: "",
@@ -302,7 +301,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "If you would like to make any requests or queries regarding Personal Data we process on your Account owner’s (our Customer’s) behalf, please contact the Account’s Admin directly. For example, if you are an User who wishes to access, correct, or delete data processed by StoryBird on behalf of a Customer, please direct your request to the relevant Customer.",
+					text: "If you would like to make any requests or queries regarding Personal Data we process on your Account owner’s (our Customer’s) behalf, please contact the Account’s Admin directly. For example, if you are an User who wishes to access, correct, or delete data processed by Authorly on behalf of a Customer, please direct your request to the relevant Customer.",
 				},
 			],
 		},
@@ -315,19 +314,19 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "Certain data protection laws and regulations, such as the GDPR or the CCPA, typically distinguish between two main roles for parties processing Personal Data: the “Data Controller” (or under the CCPA, “business”), who determines the purposes and means of processing; and the “Data Processor” (or under the CCPA, “service provider”), who processes the data on behalf of the Data Controller (or business). Below we explain how these roles apply to our Service, to the extent that such laws and regulations apply. Notwithstanding the foregoing, currently, StoryBird, does not fall under the ambit of the CCPA as a “business.”",
+					text: "Certain data protection laws and regulations, such as the GDPR or the CCPA, typically distinguish between two main roles for parties processing Personal Data: the “Data Controller” (or under the CCPA, “business”), who determines the purposes and means of processing; and the “Data Processor” (or under the CCPA, “service provider”), who processes the data on behalf of the Data Controller (or business). Below we explain how these roles apply to our Service, to the extent that such laws and regulations apply. Notwithstanding the foregoing, currently, Authorly, does not fall under the ambit of the CCPA as a “business.”",
 				},
 				{
 					title: "",
-					text: "StoryBird is the “Data Controller” of  its Visitors’ and Customers’ Personal Data,  as well as User Data consisting of profile and contact details, as well as  usage, preferences, engagement and analytics data. With respect to such data, we assume the responsibilities of Data Controller (solely to the extent applicable under law), as set forth in this Privacy Policy. In such instances, our Service Providers processing such data will assume the role of “Data Processor.”",
+					text: "Authorly is the “Data Controller” of  its Visitors’ and Customers’ Personal Data,  as well as User Data consisting of profile and contact details, as well as  usage, preferences, engagement and analytics data. With respect to such data, we assume the responsibilities of Data Controller (solely to the extent applicable under law), as set forth in this Privacy Policy. In such instances, our Service Providers processing such data will assume the role of “Data Processor.”",
 				},
 				{
 					title: "",
-					text: "If any of our Users upload or submit Customer Data or other content to our Service which includes Personal Data (e.g., by submitting their own clients’ contact details to one of their Boards), such data will only be processed by StoryBird on behalf of our Customer, which is the owner of the respective Account, along with all other User Data processed on such Customer’s behalf.",
+					text: "If any of our Users upload or submit Customer Data or other content to our Service which includes Personal Data (e.g., by submitting their own clients’ contact details to one of their Boards), such data will only be processed by Authorly on behalf of our Customer, which is the owner of the respective Account, along with all other User Data processed on such Customer’s behalf.",
 				},
 				{
 					title: "",
-					text: "In such instances, our Customer shall be deemed the “Data Controller” of such data, and StoryBird will process such data on the Customer’s behalf, as its “Data Processor”, in accordance with its reasonable instructions, subject to our Terms, our Data Processing Addendum with such Customer (to the extent applicable) and other commercial agreements. StoryBird’s Service Providers shall act as designated Sub-Processors in these instances. The Customer will be responsible for meeting any legal requirements applicable to Data Controllers (such as establishing a legal basis for processing and responding to Data Subject Rights requests concerning the data they control).",
+					text: "In such instances, our Customer shall be deemed the “Data Controller” of such data, and Authorly will process such data on the Customer’s behalf, as its “Data Processor”, in accordance with its reasonable instructions, subject to our Terms, our Data Processing Addendum with such Customer (to the extent applicable) and other commercial agreements. Authorly’s Service Providers shall act as designated Sub-Processors in these instances. The Customer will be responsible for meeting any legal requirements applicable to Data Controllers (such as establishing a legal basis for processing and responding to Data Subject Rights requests concerning the data they control).",
 				},
 			],
 		},
@@ -349,11 +348,11 @@ const privacyData = {
 				{
 					title:
 						"Our Service is Not Designed to Attract Children Under the Age of 13",
-					text: "We do not knowingly collect Personal Data directly from children and do not wish to do so. If we learn that a person under the age of 13 is using the Service, we will attempt to prohibit and block such use and will make our best efforts to promptly delete any Personal Data stored with us with regard to such child. If you believe that we might have any such data, please contact us by email at support@storybird.ai.",
+					text: "We do not knowingly collect Personal Data directly from children and do not wish to do so. If we learn that a person under the age of 13 is using the Service, we will attempt to prohibit and block such use and will make our best efforts to promptly delete any Personal Data stored with us with regard to such child. If you believe that we might have any such data, please contact us by email at support@authorly.ai.",
 				},
 				{
 					title: "Questions, Concerns or Complaints",
-					text: "If you have any comments or questions regarding our Privacy Policy, or if you have any concerns regarding your Personal Data held with us, please contact StoryBird’s support at support@storybird.ai.",
+					text: "If you have any comments or questions regarding our Privacy Policy, or if you have any concerns regarding your Personal Data held with us, please contact Authorly’s support at support@storybird.ai.",
 				},
 				{
 					title: "",
