@@ -11,7 +11,7 @@ const StoryScreenBgBlur: FC<StoryScreenBgBlurProps> = ({
 }) => {
 	return (
 		<div
-			className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-${blur}`}
+			className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-lg`}
 		>
 			<StoryScreen
 				Webstory={Webstory}
