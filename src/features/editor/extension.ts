@@ -8,15 +8,7 @@ export default Node.create({
 
 	group: "block",
 
-	atom: true,
-
-	addAttributes() {
-		return {
-			count: {
-				default: 0,
-			},
-		};
-	},
+	content: "inline*",
 
 	parseHTML() {
 		return [
@@ -26,8 +18,37 @@ export default Node.create({
 		];
 	},
 
+	addKeyboardShortcuts() {
+		return {
+			"Mod-Enter": () => {
+				return this.editor
+					.chain()
+					.insertContentAt(this.editor.state.selection.head, {
+						type: this.type.name,
+					})
+					.focus()
+					.run();
+			},
+		};
+	},
+	onUpdate() {
+		const anchor = this.editor.state.selection.$anchor;
+		const parent = anchor.parent;
+
+		if (parent.content.size > 30) {
+			// add a new node right after this
+			const newNode = this.editor
+				.chain()
+				.insertContentAt(anchor.after(), {
+					type: this.type.name,
+				})
+				.focus()
+				.run();
+		}
+	},
+
 	renderHTML({ HTMLAttributes }) {
-		return ["react-component", mergeAttributes(HTMLAttributes)];
+		return ["react-component", mergeAttributes(HTMLAttributes), 0];
 	},
 
 	addNodeView() {
