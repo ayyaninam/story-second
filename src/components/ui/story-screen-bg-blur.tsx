@@ -10,19 +10,17 @@ const StoryScreenBgBlur: FC<StoryScreenBgBlurProps> = ({
 	seekedFrame,
 }) => {
 	return (
-		<>
-			<div
-				className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-${blur}`}
-			>
-				<StoryScreen
-					Webstory={Webstory}
-					isError={isError}
-					isPlaying={isPlaying}
-					seekedFrame={seekedFrame}
-					isMuted={true}
-				/>
-			</div>
-		</>
+		<div
+			className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-${blur}`}
+		>
+			<StoryScreen
+				Webstory={Webstory}
+				isError={isError}
+				isPlaying={isPlaying}
+				seekedFrame={seekedFrame}
+				isMuted={true}
+			/>
+		</div>
 	);
 };
 

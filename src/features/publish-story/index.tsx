@@ -286,6 +286,18 @@ export default function PublishedStory({
 									isPlaying={isPlaying}
 									seekedFrame={seekedFrame}
 								/>
+								{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
+								 <div
+									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
+								>
+									<StoryScreen
+										Webstory={Webstory.data}
+										isError={Webstory.isError}
+										isPlaying={isPlaying}
+										seekedFrame={seekedFrame}
+										isMuted={true}
+									/>
+								</div> */}
 								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
 									<StoryScreen
 										Webstory={Webstory.data}
