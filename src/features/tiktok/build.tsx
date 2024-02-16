@@ -88,7 +88,7 @@ const App = () => {
 						name="Prompt"
 						data-name="Prompt"
 						onChange={handlePromptChange}
-						placeholder="What is your story about?"
+						placeholder="Upload a TikTok draft here."
 						id="Prompt"
 						required={!videoFileId}
 						onInput={(e) => {
