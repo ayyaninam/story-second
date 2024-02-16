@@ -34,7 +34,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-		for (const seg of Webstory.videoSegments ?? []) {
+		for (const seg of Webstory?.videoSegments ?? []) {
 			if (seg.femaleAudioKey && !fetchedAudios.includes(seg.femaleAudioKey)) {
 				const url = Format.GetImageUrl(seg.femaleAudioKey);
 				const fetchedContent = prefetch(url, {
@@ -48,7 +48,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-		const originalTikTokVideoKey = Webstory.originalMediaKey;
+		const originalTikTokVideoKey = Webstory?.originalMediaKey;
 		if (
 			originalTikTokVideoKey &&
 			!fetchedVideos.includes(originalTikTokVideoKey)
@@ -65,11 +65,11 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 		}
 	}, [Webstory]);
 
-	const videoArray = Webstory.videoSegments
+	const videoArray = Webstory?.videoSegments
 		?.filter((seg) => !!seg.videoKey)
 		.map((seg) => seg.videoKey);
 
-	const generatedImages = Webstory.videoSegments
+	const generatedImages = Webstory?.videoSegments
 		?.filter((seg) => !!seg.imageKey)
 		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }));
 
@@ -77,7 +77,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 		!Webstory ||
 		(Webstory.videoSegments?.filter((seg) => !!seg.imageKey)?.length ?? 0) < 2;
 
-	const originalTikTokVideoKey = Webstory.originalMediaKey;
+	const originalTikTokVideoKey = Webstory?.originalMediaKey;
 	const hasOriginalTikTokVideoKey = Boolean(originalTikTokVideoKey);
 
 	const isStoryLoading =
@@ -89,7 +89,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 		(hasOriginalTikTokVideoKey &&
 			!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
 
-	const ImageRatio = GetImageRatio(Webstory.resolution);
+	const ImageRatio = GetImageRatio(Webstory?.resolution);
 
 	if (isError)
 		return (

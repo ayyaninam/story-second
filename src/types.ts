@@ -10,7 +10,7 @@ export interface AuthPromptProps {
 }
 
 export type VideoPlayerProps = {
-	Webstory: mainSchema["ReturnVideoStoryDTO"];
+	Webstory?: mainSchema["ReturnVideoStoryDTO"];
 	isError?: boolean;
 	onPlay?: CallbackListener<"play">;
 	onEnded?: CallbackListener<"ended">;
@@ -20,3 +20,11 @@ export type VideoPlayerProps = {
 	seekedFrame?: number;
 	isMuted?: boolean;
 }; 
+
+export type StoryScreenBgBlurProps = {
+	Webstory?: mainSchema["ReturnVideoStoryDTO"];
+	isError?: boolean;
+	isPlaying?: boolean;
+	seekedFrame?: number;
+	blur: string;
+}

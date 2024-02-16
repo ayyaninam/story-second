@@ -29,6 +29,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { getJwt } from "@/utils/jwt";
 import { SessionType } from "@/hooks/useSaveSessionToken";
 import isBrowser from "@/utils/isBrowser";
+import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -39,9 +40,7 @@ export default function PublishedStory({
 	storyData: mainSchema["ReturnVideoStoryDTO"];
 	session: SessionType;
 }) {
-	const User = useUser();
 	const router = useRouter();
-	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
 	const [storySegments, setStorySegemnts] = useState<
@@ -280,15 +279,13 @@ export default function PublishedStory({
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								<div className="relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl">
-									<StoryScreen
-										Webstory={Webstory.data}
-										isError={Webstory.isError}
-										isPlaying={isPlaying}
-										seekedFrame={seekedFrame}
-										isMuted={true}
-									/>
-								</div>
+								<StoryScreenBgBlur
+									blur="3xl"
+									Webstory={Webstory.data}
+									isError={Webstory.isError}
+									isPlaying={isPlaying}
+									seekedFrame={seekedFrame}
+								/>
 								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
 									<StoryScreen
 										Webstory={Webstory.data}
