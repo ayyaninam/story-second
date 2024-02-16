@@ -133,7 +133,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: 'If you reside or are using the Service (i) in a territory governed by privacy laws which determine that "consent" is the only or most appropriate legal basis for processing Personal Data (in general, or specifically with respect to the types of Personal Data you choose to share via the Service), your acceptance of our Terms and of this Privacy Policy will be deemed as your consent to the processing of your Personal Data for all purposes detailed in this Privacy Policy. If you wish to revoke such consent, please contact us by email at support@storybird.ai.',
+					text: 'If you reside or are using the Service (i) in a territory governed by privacy laws which determine that "consent" is the only or most appropriate legal basis for processing Personal Data (in general, or specifically with respect to the types of Personal Data you choose to share via the Service), your acceptance of our Terms and of this Privacy Policy will be deemed as your consent to the processing of your Personal Data for all purposes detailed in this Privacy Policy. If you wish to revoke such consent, please contact us by email at support@authorly.ai.',
 				},
 				{
 					title: "",
@@ -184,7 +184,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "Please note that except as required by applicable law or our specific agreements with you, we will not be obligated to retain your Personal Data for any particular period, and we are free to securely delete it or restrict access to it for any reason and at any time, with or without notice to you. If you have any  questions   about  our   data   retention   policy,   please   contact   us   by   email at support@storybird.ai.",
+					text: "Please note that except as required by applicable law or our specific agreements with you, we will not be obligated to retain your Personal Data for any particular period, and we are free to securely delete it or restrict access to it for any reason and at any time, with or without notice to you. If you have any  questions   about  our   data   retention   policy,   please   contact   us   by   email at support@authorly.ai.",
 				},
 			],
 		},
@@ -225,7 +225,7 @@ const privacyData = {
 				},
 				{
 					title: "Sharing Your Feedback or Recommendations",
-					text: "If you submit a public review or feedback, note that we may (at our discretion) store and present your review to other users of our Website(s) and Service (including other Customers). If you wish to remove your public review, please contact us at support@storybird.ai. If you choose to send others an e-mail or message inviting them to use the Service, we will use the contact information you provide us to automatically send such an invitation email or message on your behalf. Your name and e-mail address may be included in the invitation email or message.  The Company reserves the right, in our sole discretion, to select (or not select) which public reviews, and/or feedback to use, publish, or to refrain from the same.  Your submission of reviews, and/or feedback constitutes consent to use the same without further permission, nor compensation of any kind or nature, and use the same in any manner consistent with our business interests.  Reviews and/or feedback that may be interpreted as foul, profane, slanderous, defamatory, bullying, bigoted, or otherwise inappropriate in our sole opinion, may not be used.",
+					text: "If you submit a public review or feedback, note that we may (at our discretion) store and present your review to other users of our Website(s) and Service (including other Customers). If you wish to remove your public review, please contact us at support@authorly.ai. If you choose to send others an e-mail or message inviting them to use the Service, we will use the contact information you provide us to automatically send such an invitation email or message on your behalf. Your name and e-mail address may be included in the invitation email or message.  The Company reserves the right, in our sole discretion, to select (or not select) which public reviews, and/or feedback to use, publish, or to refrain from the same.  Your submission of reviews, and/or feedback constitutes consent to use the same without further permission, nor compensation of any kind or nature, and use the same in any manner consistent with our business interests.  Reviews and/or feedback that may be interpreted as foul, profane, slanderous, defamatory, bullying, bigoted, or otherwise inappropriate in our sole opinion, may not be used.",
 				},
 				{
 					title: "Protecting Rights and Safety",
@@ -267,7 +267,7 @@ const privacyData = {
 				},
 				{
 					title: "Promotional Communications",
-					text: "We may also notify you about new features, additional offerings, events and special opportunities or any other information we think our Users will find valuable. We may provide such notices through any of the contact means available to us (e.g. phone, mobile or email), through the Service, or through our marketing campaigns on any other Website(s) or platforms. If you do not wish to receive such promotional communications, you may notify Authorly at any time by sending an e-mail to support@storybird.ai, changing your communications preferences in your User Profile settings, or by following the “unsubscribe”, “stop”, “opt-out” or “change email preferences” instructions contained in the promotional communications you receive.",
+					text: "We may also notify you about new features, additional offerings, events and special opportunities or any other information we think our Users will find valuable. We may provide such notices through any of the contact means available to us (e.g. phone, mobile or email), through the Service, or through our marketing campaigns on any other Website(s) or platforms. If you do not wish to receive such promotional communications, you may notify Authorly at any time by sending an e-mail to support@authorly.ai, changing your communications preferences in your User Profile settings, or by following the “unsubscribe”, “stop”, “opt-out” or “change email preferences” instructions contained in the promotional communications you receive.",
 				},
 			],
 		},
@@ -293,7 +293,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "If EU General Data Protection Regulation (GDPR) or the California Consumer Privacy Act (CCPA) applies to you and you wish to exercise those rights under the applicable law, such as the right to request access to, and rectification or erasure of your Personal Data held with Authorly, or to restrict or object to such Personal Data’s processing, or to port such Personal Data, or the right to equal services and prices (each to the extent available to you under the laws which apply to you) – please contact us by email at support@storybird.ai.",
+					text: "If EU General Data Protection Regulation (GDPR) or the California Consumer Privacy Act (CCPA) applies to you and you wish to exercise those rights under the applicable law, such as the right to request access to, and rectification or erasure of your Personal Data held with Authorly, or to restrict or object to such Personal Data’s processing, or to port such Personal Data, or the right to equal services and prices (each to the extent available to you under the laws which apply to you) – please contact us by email at support@authorly.ai.",
 				},
 				{
 					title: "",
@@ -352,7 +352,7 @@ const privacyData = {
 				},
 				{
 					title: "Questions, Concerns or Complaints",
-					text: "If you have any comments or questions regarding our Privacy Policy, or if you have any concerns regarding your Personal Data held with us, please contact Authorly’s support at support@storybird.ai.",
+					text: "If you have any comments or questions regarding our Privacy Policy, or if you have any concerns regarding your Personal Data held with us, please contact Authorly’s support at support@authorly.ai.",
 				},
 				{
 					title: "",
