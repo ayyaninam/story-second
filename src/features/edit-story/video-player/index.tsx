@@ -7,6 +7,7 @@ import {
 	PlayerRef,
 	RenderPlayPauseButton,
 	RenderFullscreenButton,
+	CallbackListener,
 } from "@remotion/player";
 
 import {
@@ -17,10 +18,6 @@ import {
 } from "./constants";
 import { GetImageRatio, GetImageRatioFromVariant } from "@/utils/image-ratio";
 import { useRouter } from "next/router";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/api";
-import { QueryKeys } from "@/lib/queryKeys";
-import { mainSchema } from "@/api/schema";
 import useWebstoryContext from "../providers/WebstoryContext";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
@@ -29,8 +26,13 @@ const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 
 type RemotionPlayerProps = {
 	inputProps: RemotionPlayerInputProps;
-	onPlay?: () => void;
-	onEnded?: () => void;
+	onPlay?: CallbackListener<"play">;
+	onEnded?: CallbackListener<"ended">;
+	onPause?: CallbackListener<"pause">;
+	onSeeked?: CallbackListener<"seeked">;
+	seekedFrame?: number;
+	isPlaying?: boolean;
+	isMuted?: boolean;
 } & Omit<Partial<ComponentProps<typeof Player>>, "component">;
 
 const controlBackgroundStyles =
@@ -40,6 +42,11 @@ const RemotionPlayer = ({
 	inputProps,
 	onPlay,
 	onEnded,
+	onPause,
+	onSeeked,
+	seekedFrame,
+	isPlaying,
+	isMuted,
 	...props
 }: RemotionPlayerProps) => {
 	const router = useRouter();
@@ -78,6 +85,12 @@ const RemotionPlayer = ({
 		if (onEnded) {
 			player.addEventListener("ended", onEnded);
 		}
+		if (onPause) {
+			player.addEventListener("pause", onPause);
+		}
+		if (onSeeked) {
+			player.addEventListener("seeked", onSeeked);
+		}
 
 		return () => {
 			if (onPlay) {
@@ -86,10 +99,40 @@ const RemotionPlayer = ({
 			if (onEnded) {
 				player.removeEventListener("ended", onEnded);
 			}
+			if (onPause) {
+				player.removeEventListener("pause", onPause);
+			}
+			if (onSeeked) {
+				player.removeEventListener("seeked", onSeeked);
+			}
 		};
 
 		// somehow on the past i just did this dep and it worked back then, buut when doing other values it breaks
-	}, [inputProps]); // the dep inputProps is related when remotionPlayerRef has a value
+	}, [onPlay, onEnded, onPause, onSeeked]); // the dep inputProps is related when remotionPlayerRef has a value
+
+	useEffect(() => {
+		const player = ref.current;
+		if (!player) {
+			return;
+		}
+
+		if (isPlaying !== undefined) {
+			if (isPlaying) player.play();
+			else player.pause();
+		}
+		if (seekedFrame !== undefined) {
+			player.seekTo(seekedFrame);
+		}
+	}, [isPlaying, seekedFrame]);
+
+	useEffect(() => {
+		const player = ref.current;
+		if (!player) return;
+
+		if (isMuted !== undefined) {
+			if (isMuted) player.mute();
+		}
+	}, [isMuted]);
 
 	const renderPlayPauseButton: RenderPlayPauseButton = useCallback(
 		({ playing }: { playing: boolean }) =>
