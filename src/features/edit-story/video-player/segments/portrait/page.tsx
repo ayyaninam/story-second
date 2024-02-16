@@ -17,6 +17,7 @@ import {
   RemotionPlayerInputProps,
   INCREASED_LAST_PAGE_DURATION,
 } from "../../constants";
+import LogoWatermark from "./components/LogoWatermark";
 
 const container: CSSProperties = {
   backgroundColor: "#000000",
@@ -121,6 +122,8 @@ export const SegmentPortraitPage = ({
       <AbsoluteFill>
         <OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
       </AbsoluteFill>
+
+      <LogoWatermark />
 
       {inputProps.enableSubtitles && (
         <AbsoluteFill style={subtitleContainer}>

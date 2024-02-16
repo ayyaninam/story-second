@@ -55,7 +55,7 @@ export default function EditStory() {
 				story.storyType
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.STORY, router.pathname],
+		queryKey: [QueryKeys.STORY, router.asPath],
 		initialData: story,
 		refetchInterval: 1000,
 		// Disable once all the videoKeys are obtained

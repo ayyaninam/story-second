@@ -1,16 +1,16 @@
 import React from "react";
 import { TransitionSeries } from "@remotion/transitions";
-import { SegmentPage as SegmentLandscapePage } from "./page";
-import { SegmentIntermediate as SegmentLandscapeIntermediate } from "./intermediate";
-import { TheEndSegment } from "./the-end";
+
+import SegmentPage from "./page";
+import SegmentIntermediate from "./intermediate";
+import TheEndSegment from "./the-end";
+
 import {
-	VIDEO_FPS,
 	PREMOUNT_FRAMES,
 	RemotionPlayerLandscapeInputProps,
+	TO_THE_END_OF_VIDEO,
 } from "../../constants";
 import { Premount } from "../../../components/premount";
-
-const THE_END_DURATION = 5 * VIDEO_FPS; // in seconds
 
 const Main: React.FC<RemotionPlayerLandscapeInputProps> = (inputProps) => {
 	const { segments } = inputProps;
@@ -23,7 +23,7 @@ const Main: React.FC<RemotionPlayerLandscapeInputProps> = (inputProps) => {
 					case "intermediate":
 						const segmentPage =
 							segment.type === "page" ? (
-								<SegmentLandscapePage
+								<SegmentPage
 									segment={segment}
 									prevSegment={
 										index - 1 < segments.length
@@ -38,7 +38,7 @@ const Main: React.FC<RemotionPlayerLandscapeInputProps> = (inputProps) => {
 									inputProps={inputProps}
 								/>
 							) : (
-								<SegmentLandscapeIntermediate segment={segment} />
+								<SegmentIntermediate segment={segment} />
 							);
 
 						if (index === 0) {
@@ -63,8 +63,13 @@ const Main: React.FC<RemotionPlayerLandscapeInputProps> = (inputProps) => {
 						);
 				}
 			})}
-			<TransitionSeries.Sequence durationInFrames={THE_END_DURATION}>
-				<TheEndSegment />
+			<TransitionSeries.Sequence
+				offset={-PREMOUNT_FRAMES}
+				durationInFrames={TO_THE_END_OF_VIDEO}
+			>
+				<Premount for={PREMOUNT_FRAMES}>
+					<TheEndSegment />
+				</Premount>
 			</TransitionSeries.Sequence>
 		</TransitionSeries>
 	);
