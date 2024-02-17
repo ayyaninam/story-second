@@ -1,6 +1,176 @@
 import React, { useEffect, useState, useRef } from "react";
 
+const initialData = [
+	{
+		value: "this is segment one! ",
+		id: 0,
+	},
+	{
+		value: "this is segment two! ",
+		id: 1,
+	},
+	{
+		value: "this is segment three! ",
+		id: 2,
+	},
+	{
+		value: "this is segment four! ",
+		id: 3,
+	},
+	{
+		value: "this is segment five! ",
+		id: 4,
+	},
+	{
+		value: "this is segment six! ",
+		id: 5,
+	},
+	{
+		value: "this is segment seven! ",
+		id: 6,
+	},
+	{
+		value: "this is segment eight! ",
+		id: 7,
+	},
+	{
+		value: "this is segment nine! ",
+		id: 8,
+	},
+	{
+		value: "this is segment ten! ",
+		id: 9,
+	},
+];
+
+type Data = { value: string; id: number };
+const getDiff = (initialData: Data[], currentData: Data[]) => {
+	let edits: Data[] = [];
+	let additions: Data[] = [];
+	let subtractions: Data[] = [];
+
+	// Grouping segments by id while maintaining order
+	const initialDataMap = new Map<number, Data[]>();
+	const currentDataMap = new Map<number, Data[]>();
+
+	initialData.forEach((el) => {
+		if (initialDataMap.has(el.id)) {
+			initialDataMap.get(el.id)?.push(el);
+		} else {
+			initialDataMap.set(el.id, [el]);
+		}
+	});
+
+	currentData.forEach((el) => {
+		if (currentDataMap.has(el.id)) {
+			currentDataMap.get(el.id)?.push(el);
+		} else {
+			currentDataMap.set(el.id, [el]);
+		}
+	});
+
+	Array.from(
+		new Set([...initialDataMap.keys(), ...currentDataMap.keys()])
+	).forEach((el) => {
+		if (initialDataMap.has(el) && currentDataMap.has(el)) {
+			const initialSegments = initialDataMap.get(el)!;
+			const currentSegments = currentDataMap.get(el)!;
+
+			if (
+				currentSegments[0] &&
+				initialSegments[0]?.value !== currentSegments[0]?.value
+			) {
+				edits.push(currentSegments[0]); // if initial value is not equal the new value, then it's an edit
+			}
+			if (currentSegments.length > 1) {
+				additions.push(...currentSegments.slice(1)); // any additional segments with the same ids are considered additions
+			}
+		} else if (!initialDataMap.has(el)) {
+			additions.push(...currentDataMap.get(el)); // if the id is not in the initial data, then it's an addition
+		} else if (!currentDataMap.has(el)) {
+			subtractions.push(...initialDataMap.get(el)); // if the id is not in the current data, then it's a subtraction
+		}
+	});
+
+	return { edits, additions, subtractions };
+};
+
 const Editor2 = () => {
+	const [data, setData] = useState(initialData);
+	useEffect(() => {
+		console.log(getDiff(initialData, data));
+	}, [data]);
+
+	return (
+		<>
+			{data.map((item, index) => (
+				<div key={index} className="space-x-1">
+					<span>({item.id})</span>
+					<input
+						onChange={(e) =>
+							setData((prev) => [
+								...prev.slice(0, index),
+								{ id: item.id, value: e.target.value },
+								...prev.slice(index + 1),
+							])
+						}
+						value={item.value}
+					/>
+					<button
+						onClick={(e) =>
+							setData((prev) => [
+								...prev.slice(0, index + 1),
+								{ id: item.id, value: "" },
+								...prev.slice(index + 1),
+							])
+						}
+					>
+						+
+					</button>
+					<button
+						onClick={(e) =>
+							setData((prev) => [
+								...prev.slice(0, index),
+								...prev.slice(index + 1),
+							])
+						}
+					>
+						-
+					</button>
+				</div>
+			))}
+			<hr />
+			<div>
+				<h2>Edits</h2>
+				{getDiff(initialData, data).edits.map((item, index) => (
+					<div>
+						id:{item.id}, val: {item.value}
+					</div>
+				))}
+			</div>
+			<hr />
+			<div>
+				<h2>Additions</h2>
+				{getDiff(initialData, data).additions.map((item, index) => (
+					<div>
+						id:{item.id}, val: {item.value}
+					</div>
+				))}
+			</div>
+			<hr />
+			<div>
+				<h2>Subtractions</h2>
+				{getDiff(initialData, data).subtractions.map((item, index) => (
+					<div>
+						id:{item.id}, val: {item.value}
+					</div>
+				))}
+			</div>
+		</>
+	);
+};
+
+const EditComponent = () => {
 	// Initialize with an array of objects, each object holds a value and a ref
 	const [inputs, setInputs] = useState(() =>
 		["Hi"].map((text) => ({
@@ -105,56 +275,3 @@ const Editor2 = () => {
 };
 
 export default Editor2;
-
-// import { useEffect, useRef, useState } from "react";
-
-// const Editor2 = () => {
-// 	const [value, setValue] = useState([
-// 		"Hello, 1 ",
-// 		"And this 2",
-// 		"This is section 3",
-// 	]);
-// 	const refs = [useRef(null), useRef(null), useRef(null)];
-// 	useEffect(() => {
-// 		if (value[0].length > 20 && document.activeElement === refs[0]?.current) {
-// 			refs[1]?.current.focus();
-// 		} else if (
-// 			value[1].length > 20 &&
-// 			document.activeElement === refs[1]?.current
-// 		) {
-// 			refs[2]?.current.focus();
-// 		} else if (
-// 			value[2].length > 20 &&
-// 			document.activeElement === refs[2]?.current
-// 		) {
-// 			console.log("value[2]", value[2]);
-// 		}
-// 	}, [value]);
-
-// 	return (
-// 		<div>
-// 			<input
-// 				ref={refs[0]}
-// 				type="text"
-// 				id="1"
-// 				value={value[0]}
-// 				onChange={(e) => setValue((prev) => [e.target.value, prev[1], prev[2]])}
-// 			/>
-// 			<input
-// 				ref={refs[1]}
-// 				type="text"
-// 				id="2"
-// 				value={value[1]}
-// 				onChange={(e) => setValue((prev) => [prev[0], e.target.value, prev[2]])}
-// 			/>
-// 			<input
-// 				ref={refs[2]}
-// 				type="text"
-// 				id="3"
-// 				value={value[2]}
-// 				onChange={(e) => setValue((prev) => [prev[0], prev[1], e.target.value])}
-// 			/>
-// 		</div>
-// 	);
-// };
-// export default Editor2;
