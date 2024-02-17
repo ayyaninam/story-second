@@ -10,8 +10,6 @@ import {
 	Video,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import MadeInAuthorly from "public/publish/made-in-authorly.svg";
-import MadeInAuthorlyDark from "public/publish/made-in-authorly-dark.svg";
 
 import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,6 +29,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { getJwt } from "@/utils/jwt";
 import { SessionType } from "@/hooks/useSaveSessionToken";
 import isBrowser from "@/utils/isBrowser";
+import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -41,11 +40,18 @@ export default function PublishedStory({
 	storyData: mainSchema["ReturnVideoStoryDTO"];
 	session: SessionType;
 }) {
-	const User = useUser();
 	const router = useRouter();
-	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
+	const [storySegments, setStorySegemnts] = useState<
+		mainSchema["ReturnStorySegmentDTO"][] | null
+	>();
+	const [index, setIndex] = useState(0);
+	console.log(router.pathname);
+
+	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
+	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
+
 	// Queries
 
 	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
@@ -76,14 +82,28 @@ export default function PublishedStory({
 
 	useEffect(() => {
 		if (Webstory.data) {
-			setEnableQuery(
-				!(
-					Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
-					Webstory.data.videoSegments?.length > 0
-				)
-			);
+			if (
+				Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
+				Webstory.data.videoSegments?.length > 0
+			) {
+				setEnableQuery(false);
+				setStorySegemnts(Webstory.data.videoSegments);
+				console.log(">>>> segments", storySegments);
+			}
+
+			// console.log(">>>> video keys", Webstory.data.storySegments, );
 		}
 	}, [Webstory.data]);
+
+	useEffect(() => {
+		const interval = storySegments
+			? setInterval(() => {
+					setIndex((prev) => (prev + 1) % storySegments.length);
+				}, 5000)
+			: undefined;
+
+		return () => clearInterval(interval);
+	});
 
 	useEffect(() => {
 		if (router.query.liked) {
@@ -111,6 +131,15 @@ export default function PublishedStory({
 			await Interactions.refetch();
 		}
 	};
+	useEffect(() => {
+		if (router.query.liked) {
+			handleLikeVideo(router.query.liked === "true");
+
+			const path = router.asPath.split("?")[0] as string;
+			router.replace(path, undefined, { shallow: true });
+		}
+	}, [router.query]);
+
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
 			{/* Navbar */}
@@ -234,6 +263,7 @@ export default function PublishedStory({
 					)}
 				</div>
 			</div>
+
 			<div className={`flex bg-reverse min-h-[calc(100vh-66px)] p-2 gap-x-1.5`}>
 				<div className="relative w-full lg:px-20 pb-10 items-center">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
@@ -249,8 +279,46 @@ export default function PublishedStory({
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								<StoryScreen />
+								<StoryScreenBgBlur
+									blur="3xl"
+									Webstory={Webstory.data}
+									isError={Webstory.isError}
+									isPlaying={isPlaying}
+									seekedFrame={seekedFrame}
+								/>
+								{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
+								 <div
+									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
+								>
+									<StoryScreen
+										Webstory={Webstory.data}
+										isError={Webstory.isError}
+										isPlaying={isPlaying}
+										seekedFrame={seekedFrame}
+										isMuted={true}
+									/>
+								</div> */}
+								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
+									<StoryScreen
+										Webstory={Webstory.data}
+										isError={Webstory.isError}
+										onPlay={() => {
+											setIsPlaying(true);
+										}}
+										onPause={() => {
+											setIsPlaying(false);
+										}}
+										onSeeked={(e) => {
+											setSeekedFrame(e.detail.frame);
+										}}
+										onEnded={() => {
+											setIsPlaying(false);
+											setSeekedFrame(0);
+										}}
+									/>
+								</div>
 							</div>
+
 							{/* </Loading> */}
 							<div
 								className={`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`}
@@ -354,17 +422,24 @@ export default function PublishedStory({
 													Stories
 												</p>
 												<p className="text-slate-300"> • </p>
-												{/* <a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
 											</span>
 										</span>
 									)}
 								</div>
 							</div>
+							{/* 
+								<p>
+													{(Webstory.data.user?.videoCount ?? 0) +
+														(Webstory.data.user?.storyCount ?? 0)}{" "}
+													Stories
+												</p>
+												<p className="text-slate-300"> • </p>
+								<a
+													className="p-0 m-0 text-muted-foreground font-normal"
+													href="#"
+												>
+													See all
+												</a> */}
 						</div>
 					</div>
 					<div className="absolute bottom-4 left-4 items-center flex flex-row gap-x-1">
