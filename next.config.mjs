@@ -21,6 +21,10 @@ const nextConfig = {
 					source: "/404",
 					destination: "/landing/404.html",
 				},
+				{
+					source: "/tiktok",
+					destination: "/tiktok/index.html",
+				},
 			],
 		};
 	},

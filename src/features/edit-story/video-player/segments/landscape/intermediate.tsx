@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
 import { AbsoluteFill, OffthreadVideo } from "remotion";
+import LogoWatermark from "./components/LogoWatermark";
 import { RemotionInterpolationSegment, bigZIndexTrick } from "../../constants";
 
 const container: CSSProperties = {
@@ -14,13 +15,17 @@ type RenderSegmentProps = {
   segment: RemotionInterpolationSegment;
 };
 
-export function SegmentIntermediate({ segment }: RenderSegmentProps) {
+const SegmentIntermediate = ({ segment }: RenderSegmentProps) => {
   // this trick avoids showing the next segment before it should be
   const zIndex = bigZIndexTrick - segment.index;
 
   return (
     <AbsoluteFill style={{ ...container, zIndex }}>
       <OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
+
+      <LogoWatermark />
     </AbsoluteFill>
   );
-}
+};
+
+export default SegmentIntermediate;
