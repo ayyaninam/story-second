@@ -7,6 +7,15 @@ const data = ["Hello, this is section one! ", "And this is section 2 :)."];
 const Editor = () => {
 	const editor = useEditor({
 		extensions: [StarterKit, ReactComponent],
+		// editorProps: {
+		// 	handleTextInput: (view, from, to, text) => {
+		// 		editor
+		// 			?.chain()
+		// 			.insertContentAt(from, `<react-component>${text}</react-component>`)
+		// 			.focus()
+		// 			.run();
+		// 	},
+		// },
 		content: `<p>
     This is still the text editor you’re used to, but enriched with node views.
   </p>
