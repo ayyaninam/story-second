@@ -6267,7 +6267,7 @@ blockquote {
 
 .hero-cta-input-holder {
   /* Calculated based on the layout */
-  height: 65px;
+  min-height: 65px;
   grid-column-gap: 20px;
   background-color: #fff;
   border-radius: 8px;
@@ -12798,5 +12798,5 @@ blockquote {
   src: url('../fonts/AttilaSansClassic-Medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
