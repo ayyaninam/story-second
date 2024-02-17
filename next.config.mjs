@@ -1,6 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
+	// Make custominput file cached so that it won't be get-pull again
+	async headers() {
+		return [
+			{
+				source: "/landing/fonts/:font",
+				headers: [{ key: "Cache-Control", value: "max-age=10000" }],
+			},
+			{
+				source: "/landing/custominput.js",
+				headers: [{ key: "Cache-Control", value: "max-age=10000" }],
+			},
+		];
+	},
 	async rewrites() {
 		return {
 			afterFiles: [
