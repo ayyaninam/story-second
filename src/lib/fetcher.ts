@@ -3,7 +3,7 @@ import { env } from "@/env.mjs";
 import isBrowser from "@/utils/isBrowser";
 import { getJwt } from "@/utils/jwt";
 
-const baseFetcher = ky.create({ timeout: false });
+const baseFetcher = ky.create({ timeout: false, cache: "no-cache" });
 /**
  * Creates a fetcher instance for making public requests.
  * This fetcher should be used in browser environments only.

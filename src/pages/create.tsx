@@ -73,21 +73,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			video_key,
 		} = queryParams;
 
-		const accessToken = await getServerSideSessionWithRedirect(
-			ctx.req,
-			ctx.res,
-			Routes.CreateStoryFromRoute({
-				...queryParams,
-			})
-		);
-
 		// Redirect to home if any of the required query params are missing
 		if (
 			!image_style ||
 			!language ||
 			!length ||
 			!(prompt || video_key) ||
-			!accessToken ||
 			!output_type ||
 			!input_type ||
 			!image_resolution
@@ -95,22 +86,26 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			throw new Error("Missing required params");
 		}
 
-		const session = await getSession(ctx.req, ctx.res);
+		const session = await getServerSideSessionWithRedirect(
+			ctx.req,
+			ctx.res,
+			Routes.CreateStoryFromRoute({
+				...queryParams,
+			})
+		);
 
-		if (!session || !accessToken) return redirectToHomepage;
-
-		// await api.user.get(accessToken).catch(async (e) => {
-		// 	// TODO: modify to only run when there is a 400 error code
-		// 	await api.user.register(
-		// 		{
-		// 			email: session.user.email,
-		// 			name: session.user.nickname,
-		// 			verificationRequired: session.user.email_verified,
-		// 			profilePicture: session.user?.picture ?? null,
-		// 		},
-		// 		accessToken as string
-		// 	);
-		// });
+		await api.user.get(session.accessToken).catch(async (e) => {
+			// TODO: modify to only run when there is a 400 error code
+			await api.user.register(
+				{
+					email: session.user.email,
+					name: session.user.nickname,
+					verificationRequired: session.user.email_verified,
+					profilePicture: session.user?.picture ?? null,
+				},
+				session.accessToken as string
+			);
+		});
 		const story = await api.webstory.create(
 			{
 				image_style: convertAndValidateStoryQueryParams(
@@ -138,7 +133,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 					display_resolution ?? DisplayAspectRatios["576x1024"] //9x16 by default
 				),
 			},
-			accessToken as string
+			session.accessToken as string
 		);
 		const { url } = story;
 

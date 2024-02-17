@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import {
 	ChevronRight,
+	DownloadIcon,
 	Heart,
 	HelpCircle,
 	Share2,
@@ -9,14 +10,12 @@ import {
 	Video,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import MadeInAuthorly from "public/publish/made-in-authorly.svg";
-import MadeInAuthorlyDark from "public/publish/made-in-authorly-dark.svg";
 
 import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
@@ -26,18 +25,33 @@ import { cn } from "@/utils";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import Routes from "@/routes";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { getJwt } from "@/utils/jwt";
+import { SessionType } from "@/hooks/useSaveSessionToken";
+import isBrowser from "@/utils/isBrowser";
+import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
 
 const MAX_SUMMARY_LENGTH = 250;
 
 export default function PublishedStory({
 	storyData,
+	session,
 }: {
 	storyData: mainSchema["ReturnVideoStoryDTO"];
+	session: SessionType;
 }) {
 	const router = useRouter();
-	const isDesktop = useMediaQuery("(min-width: 1280px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
+	const [storySegments, setStorySegemnts] = useState<
+		mainSchema["ReturnStorySegmentDTO"][] | null
+	>();
+	const [index, setIndex] = useState(0);
+	console.log(router.pathname);
+
+	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
+	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
+
 	// Queries
 
 	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
@@ -48,25 +62,84 @@ export default function PublishedStory({
 				storyData.storyType
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.STORY, router.pathname],
+		queryKey: [QueryKeys.STORY, router.asPath],
 		refetchInterval: 1000,
-		initialData: storyData,
 		// Disable once all the videoKeys are obtained
 		enabled: enableQuery,
 	});
+
+	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
+		queryFn: () => api.webstory.interactions(Webstory.data?.id as string),
+		staleTime: 3000,
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.INTERACTIONS, router.asPath],
+	});
+
+	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
+
 	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
+
 	useEffect(() => {
 		if (Webstory.data) {
-			setEnableQuery(
-				!(
-					Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
-					Webstory.data.videoSegments?.length > 0
-				)
-			);
+			if (
+				Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
+				Webstory.data.videoSegments?.length > 0
+			) {
+				setEnableQuery(false);
+				setStorySegemnts(Webstory.data.videoSegments);
+				console.log(">>>> segments", storySegments);
+			}
+
+			// console.log(">>>> video keys", Webstory.data.storySegments, );
 		}
 	}, [Webstory.data]);
-	// return <div>Hello world</div>;
+
+	useEffect(() => {
+		const interval = storySegments
+			? setInterval(() => {
+					setIndex((prev) => (prev + 1) % storySegments.length);
+				}, 5000)
+			: undefined;
+
+		return () => clearInterval(interval);
+	});
+
+	useEffect(() => {
+		if (router.query.liked) {
+			handleLikeVideo(router.query.liked === "true");
+
+			const path = router.asPath.split("?")[0] as string;
+			router.replace(path, undefined, { shallow: true });
+		}
+	}, [router.query]);
+
+	const handleLikeVideo = async (liked: boolean) => {
+		if (!session.accessToken) {
+			router.push(
+				Routes.ToAuthPage(
+					Routes.ViewStory(
+						storyData.storyType,
+						router.query.genre!.toString(),
+						router.query.id!.toString()
+					),
+					{ liked }
+				)
+			);
+		} else {
+			await LikeVideo.mutateAsync({ id: storyData.id!, params: { liked } });
+			await Interactions.refetch();
+		}
+	};
+	useEffect(() => {
+		if (router.query.liked) {
+			handleLikeVideo(router.query.liked === "true");
+
+			const path = router.asPath.split("?")[0] as string;
+			router.replace(path, undefined, { shallow: true });
+		}
+	}, [router.query]);
+
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
 			{/* Navbar */}
@@ -115,7 +188,7 @@ export default function PublishedStory({
 							</g>
 						</svg>
 					</div>
-					<p className="text-sm">{Format.Title(Webstory.data.storyTitle)}</p>
+					<p className="text-sm">{Format.Title(Webstory.data?.storyTitle)}</p>
 				</div>
 				<div className="hidden md:block space-x-2">
 					<div className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium">
@@ -190,6 +263,7 @@ export default function PublishedStory({
 					)}
 				</div>
 			</div>
+
 			<div className={`flex bg-reverse min-h-[calc(100vh-66px)] p-2 gap-x-1.5`}>
 				<div className="relative w-full lg:px-20 pb-10 items-center">
 					<div className="flex flex-col md:flex-row items-center justify-center h-full">
@@ -205,8 +279,46 @@ export default function PublishedStory({
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								<StoryScreen />
+								<StoryScreenBgBlur
+									blur="3xl"
+									Webstory={Webstory.data}
+									isError={Webstory.isError}
+									isPlaying={isPlaying}
+									seekedFrame={seekedFrame}
+								/>
+								{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
+								 <div
+									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
+								>
+									<StoryScreen
+										Webstory={Webstory.data}
+										isError={Webstory.isError}
+										isPlaying={isPlaying}
+										seekedFrame={seekedFrame}
+										isMuted={true}
+									/>
+								</div> */}
+								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
+									<StoryScreen
+										Webstory={Webstory.data}
+										isError={Webstory.isError}
+										onPlay={() => {
+											setIsPlaying(true);
+										}}
+										onPause={() => {
+											setIsPlaying(false);
+										}}
+										onSeeked={(e) => {
+											setSeekedFrame(e.detail.frame);
+										}}
+										onEnded={() => {
+											setIsPlaying(false);
+											setSeekedFrame(0);
+										}}
+									/>
+								</div>
 							</div>
+
 							{/* </Loading> */}
 							<div
 								className={`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`}
@@ -230,17 +342,36 @@ export default function PublishedStory({
 									)}
 									<div className="block space-x-2">
 										<Button
-											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
+											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
 											variant="outline"
+											onClick={() => handleLikeVideo(!Interactions.data?.liked)}
 										>
-											<Heart className="mr-2 h-4 w-4" /> Like video
+											<Heart
+												className={cn("mr-2 h-4 w-4")}
+												style={{
+													fill:
+														isBrowser && Interactions.data?.liked
+															? "#EC4899"
+															: undefined,
+												}}
+											/>{" "}
+											Like video
 										</Button>
-										<Button
-											className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
-											variant="outline"
-										>
-											<Star className="mr-2 h-4 w-4" /> Follow author
-										</Button>
+										{Webstory.data?.renderedVideoKey && (
+											<a
+												href={Format.GetPublicBucketObjectUrl(
+													Webstory.data?.renderedVideoKey as string
+												)}
+												download={`${Webstory.data?.storyTitle?.replaceAll(" ", "_")}.mp4`}
+											>
+												<Button
+													className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+													variant="outline"
+												>
+													<DownloadIcon className="mr-2 h-4 w-4" /> Download
+												</Button>
+											</a>
+										)}
 									</div>
 									{isLoading ? (
 										<Skeleton className="min-w-72 h-[220px] rounded-lg" />
@@ -291,17 +422,24 @@ export default function PublishedStory({
 													Stories
 												</p>
 												<p className="text-slate-300"> • </p>
-												{/* <a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
 											</span>
 										</span>
 									)}
 								</div>
 							</div>
+							{/* 
+								<p>
+													{(Webstory.data.user?.videoCount ?? 0) +
+														(Webstory.data.user?.storyCount ?? 0)}{" "}
+													Stories
+												</p>
+												<p className="text-slate-300"> • </p>
+								<a
+													className="p-0 m-0 text-muted-foreground font-normal"
+													href="#"
+												>
+													See all
+												</a> */}
 						</div>
 					</div>
 					<div className="absolute bottom-4 left-4 items-center flex flex-row gap-x-1">

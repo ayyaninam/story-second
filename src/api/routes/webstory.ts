@@ -16,12 +16,29 @@ const webstory = {
 		image_style: number;
 		url: string;
 	}> => {
-		console.log(params, token);
 		return await mlFetcher(token || getJwt())
 			.post(`create`, {
 				body: JSON.stringify(params),
 			})
 			.json();
+	},
+	interactions: async (
+		id: string,
+		token?: string
+	): Promise<mainSchema["ReturnStoryInteractionDTO"]> => {
+		const data: mainSchema["ReturnStoryInteractionDTOApiResponse"] =
+			await authFetcher(token || getJwt())
+				.get(`api/WebStory/${id}/Interactions`)
+				.json();
+		if (!data.succeeded) {
+			// TODO:figure out error boundaries
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
 	},
 };
 

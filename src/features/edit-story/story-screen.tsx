@@ -1,24 +1,23 @@
-import api from "@/api";
-import { QueryKeys } from "@/lib/queryKeys";
 import Format from "@/utils/format";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import ImageLoader from "./components/image-loader";
-import RemotionPlayer from "./video-player";
-import { VoiceType } from "@/utils/enums";
-import { useRemotionPlayerProps } from "./video-player/hooks";
 import VideoPlayer from "./components/video-player";
-import { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { prefetch } from "remotion";
 import { GetImageRatio } from "@/utils/image-ratio";
-import { mainSchema } from "@/api/schema";
-import useWebstoryContext from "./providers/WebstoryContext";
+import { VideoPlayerProps } from "@/types";
 
-const StoryScreen = () => {
-	const router = useRouter();
+const StoryScreen: FC<VideoPlayerProps> = ({
+	Webstory,
+	isError,
+	onPlay,
+	onPause,
+	onSeeked,
+	seekedFrame,
+	isPlaying,
+	isMuted,
+}) => {
 	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
 	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
-	const [Webstory] = useWebstoryContext();
 
 	useEffect(() => {
 		for (const seg of Webstory?.videoSegments ?? []) {
@@ -26,7 +25,7 @@ const StoryScreen = () => {
 				const url = Format.GetVideoUrl(seg.videoKey);
 				const fetchedContent = prefetch(url, {
 					method: "blob-url",
-					contentType: "video/webm",
+					contentType: "video/mp4",
 				})
 					.waitUntilDone()
 					.then((res) => {
@@ -35,7 +34,7 @@ const StoryScreen = () => {
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-		for (const seg of Webstory.videoSegments ?? []) {
+		for (const seg of Webstory?.videoSegments ?? []) {
 			if (seg.femaleAudioKey && !fetchedAudios.includes(seg.femaleAudioKey)) {
 				const url = Format.GetImageUrl(seg.femaleAudioKey);
 				const fetchedContent = prefetch(url, {
@@ -49,7 +48,7 @@ const StoryScreen = () => {
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-		const originalTikTokVideoKey = Webstory.originalMediaKey;
+		const originalTikTokVideoKey = Webstory?.originalMediaKey;
 		if (
 			originalTikTokVideoKey &&
 			!fetchedVideos.includes(originalTikTokVideoKey)
@@ -66,11 +65,11 @@ const StoryScreen = () => {
 		}
 	}, [Webstory]);
 
-	const videoArray = Webstory.videoSegments
+	const videoArray = Webstory?.videoSegments
 		?.filter((seg) => !!seg.videoKey)
 		.map((seg) => seg.videoKey);
 
-	const generatedImages = Webstory.videoSegments
+	const generatedImages = Webstory?.videoSegments
 		?.filter((seg) => !!seg.imageKey)
 		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }));
 
@@ -78,7 +77,7 @@ const StoryScreen = () => {
 		!Webstory ||
 		(Webstory.videoSegments?.filter((seg) => !!seg.imageKey)?.length ?? 0) < 2;
 
-	const originalTikTokVideoKey = Webstory.originalMediaKey;
+	const originalTikTokVideoKey = Webstory?.originalMediaKey;
 	const hasOriginalTikTokVideoKey = Boolean(originalTikTokVideoKey);
 
 	const isStoryLoading =
@@ -90,9 +89,9 @@ const StoryScreen = () => {
 		(hasOriginalTikTokVideoKey &&
 			!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
 
-	const ImageRatio = GetImageRatio(Webstory.resolution);
+	const ImageRatio = GetImageRatio(Webstory?.resolution);
 
-	if (!Webstory)
+	if (isError)
 		return (
 			<div
 				className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
@@ -126,7 +125,17 @@ const StoryScreen = () => {
 	} else if (isStoryLoading) {
 		return <ImageLoader imageData={generatedImages!} />;
 	} else {
-		return <VideoPlayer />;
+		return (
+			<VideoPlayer
+				Webstory={Webstory}
+				onPlay={onPlay}
+				onPause={onPause}
+				onSeeked={onSeeked}
+				isPlaying={isPlaying}
+				seekedFrame={seekedFrame}
+				isMuted={isMuted}
+			/>
+		);
 	}
 };
 
