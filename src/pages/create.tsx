@@ -106,6 +106,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				session.accessToken as string
 			);
 		});
+		console.log("Got user");
 		const story = await api.webstory.create(
 			{
 				image_style: convertAndValidateStoryQueryParams(
