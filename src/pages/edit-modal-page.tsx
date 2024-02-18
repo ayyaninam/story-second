@@ -21,9 +21,34 @@ import {
 	Palette,
 	Volume2,
 	Info,
+	CheckIcon,
+	ChevronDownIcon,
+	ChevronUpIcon,
+	ScrollText,
+	Undo2,
+	Zap,
+	EyeOff,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
+import * as Select from "@radix-ui/react-select";
+import React from "react";
+
+type SelectItemProps = {
+	value: string;
+	disabled?: boolean;
+};
+
+const SelectItem = ({
+	children,
+	...props
+}: PropsWithChildren<SelectItemProps>) => {
+	return (
+		<Select.Item {...props}>
+			<Select.ItemText>{children}</Select.ItemText>
+		</Select.Item>
+	);
+};
 
 function RegenerateSegmentBar() {
 	return (
@@ -38,11 +63,65 @@ function RegenerateSegmentBar() {
 				className="bg-slate-50 border-none outline-none px-1 flex-grow"
 				placeholder="I nodded eagerly"
 			/>
-			<div className="flex p-1 m-1 shadow-sm bg-purple-700 gap-1 rounded-md items-center">
-				<SparkleIcon width={"18px"} height={"18px"} color="#FFFFFF" />
-				<p className="text-sm text-slate-50">Regenerate Segment</p>
-				<ChevronDown width={"18px"} height={"18px"} color="#FFFFFF" />
-			</div>
+			<Select.Root>
+				<Select.Trigger
+					className="inline-flex items-center justify-center rounded-md p-1 m-1 text-sm bg-purple-700 gap-1 text-white shadow-md"
+					aria-label="Food"
+				>
+					<Select.Value />
+					<Select.Icon>
+						<ChevronDownIcon />
+					</Select.Icon>
+				</Select.Trigger>
+				<Select.Portal>
+					<Select.Content className="overflow-hidden bg-white rounded-sm">
+						<Select.ScrollUpButton className="flex items-center justify-center h-[25px] bg-white text-purple-400 cursor-default">
+							<ChevronUpIcon />
+						</Select.ScrollUpButton>
+						<Select.Viewport>
+							<SelectItem value="regenerate-segment">
+								<div className="flex p-1  gap-1 items-center">
+									<SparkleIcon className="flex p-1 gap-1 items-center" />
+									<p className="text-sm">Regenerate Segment</p>
+								</div>
+							</SelectItem>
+							<SelectItem value="regenerate-video-n-script">
+								<div className="flex p-1  gap-1 items-center">
+									<RefreshCw width={"18px"} height={"18px"} />
+									<p className="text-sm">Regenerate Video & Script</p>
+								</div>
+							</SelectItem>
+							<SelectItem value="use-script-to-regenerate-video">
+								<div className="flex p-1  gap-1 items-center">
+									<ScrollText width={"18px"} height={"18px"} />
+									<p className="text-sm">Use Script To Regenerate Video</p>
+								</div>
+							</SelectItem>
+							<SelectItem value="undo-script-edits">
+								<div className="flex p-1  gap-1 items-center">
+									<Undo2 width={"18px"} height={"18px"} />
+									<p className="text-sm">Undo Script Edits</p>
+								</div>
+							</SelectItem>
+							<SelectItem value="regenerate-script">
+								<div className="flex p-1  gap-1 items-center">
+									<Zap width={"18px"} height={"18px"} />
+									<p className="text-sm">Regenerate Script</p>
+								</div>
+							</SelectItem>
+							<SelectItem value="hide-segment">
+								<div className="flex p-1 gap-1 items-center">
+									<EyeOff width={"18px"} height={"18px"} />
+									<p className="text-sm">Hide Segment</p>
+								</div>
+							</SelectItem>
+						</Select.Viewport>
+						<Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-purple-500 cursor-default">
+							<ChevronDownIcon />
+						</Select.ScrollDownButton>
+					</Select.Content>
+				</Select.Portal>
+			</Select.Root>
 		</div>
 	);
 }
