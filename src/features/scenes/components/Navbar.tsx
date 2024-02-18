@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useState } from "react";
 import EditSegmentModal from "./EditSegmentModal";
 
+import GenerateIcon from "@/components/icons/dashboard/generate-icon";
+
 export default function Navbar({
 	ImageRatio,
 	WebstoryData,
@@ -26,12 +28,7 @@ export default function Navbar({
 	return (
 		<div className="flex justify-between bg-background rounded-tl-lg rounded-tr-lg border-b-[0.5px] border-border p-4">
 			<div className="flex gap-x-2.5 items-center">
-				<Image
-					src={"/rectangle.svg"}
-					width={40}
-					height={40}
-					alt="Story Thumb"
-				/>
+				<GenerateIcon />
 				<div className="items-center">
 					<div className="flex items-center gap-x-2 text-slate-500">
 						<p className="text-sm rounded-sm font-bold text-slate-950">

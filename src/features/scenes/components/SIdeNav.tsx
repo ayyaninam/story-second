@@ -5,11 +5,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { mainSchema } from "@/api/schema";
 import Format from "@/utils/format";
-import ExploreIcon from "../../../../public/scenes/explore-icon";
+import ExploreIcon from "@/components/icons/dashboard/explore-icon";
 import { Command } from "lucide-react";
-import GenerateIcon from "../../../../public/scenes/generate-icon";
-import LibraryIcon from "../../../../public/scenes/library-icon";
-import ChallengesIcon from "../../../../public/scenes/challenges-icon";
+import GenerateIcon from "@/components/icons/dashboard/generate-icon";
+import LibraryIcon from "@/components/icons/dashboard/library-icon";
+import ChallengesIcon from "@/components/icons/dashboard/challenges-icon";
 
 export default function SideNav({
 	isLoading,
@@ -19,7 +19,7 @@ export default function SideNav({
 	isLoading?: boolean;
 }) {
 	return (
-		<div className="w-[20%] flex flex-col-reverse justify-between">
+		<div className="w-[275px] flex flex-col-reverse justify-between">
 			<div className="flex-col m-5 space-y-1 items-center text-background">
 				<p>Base Plan</p>
 
@@ -79,35 +79,35 @@ export default function SideNav({
 						<ExploreIcon /> <p>Explore</p>{" "}
 						<div className="flex flex-grow justify-end items-center">
 							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm">E</p>
+							<p className="ml-1 text-sm text-muted-foreground">E</p>
 						</div>
 					</div>
 					<div className="flex gap-2 items-center text-secondary">
 						<GenerateIcon /> <p>Generate</p>{" "}
 						<div className="flex flex-grow justify-end items-center">
 							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm">G</p>
+							<p className="ml-1 text-sm text-muted-foreground">G</p>
 						</div>
 					</div>
 					<div className="flex gap-2 items-center text-secondary">
 						<LibraryIcon /> <p>Library</p>{" "}
 						<div className="flex flex-grow justify-end items-center">
 							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm">L</p>
+							<p className="ml-1 text-sm text-muted-foreground">L</p>
 						</div>
 					</div>
 					<div className="flex gap-2 items-center text-secondary">
 						<ChallengesIcon /> <p>Challenges</p>{" "}
 						<div className="flex flex-grow justify-end items-center">
 							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm">C</p>
+							<p className="ml-1 text-sm text-muted-foreground">C</p>
 						</div>
 					</div>
 					<div className="flex gap-2 items-center text-secondary">
 						<ExploreIcon /> <p>Free Credits</p>{" "}
 						<div className="flex flex-grow justify-end items-center">
 							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm">F</p>
+							<p className="ml-1 text-sm text-muted-foreground">F</p>
 						</div>
 					</div>
 				</div>

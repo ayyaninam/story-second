@@ -15,7 +15,7 @@ import Stepper from "./components/Stepper";
 import { StepperStep } from "@/utils/enums";
 import Navbar from "./components/Navbar";
 import VideoEditor from "./components/VideoEditor";
-import SideNav from "./components/SIdeNav";
+import SideNav from "./components/SideNav";
 
 export default function StoryScenes() {
 	const router = useRouter();
@@ -56,9 +56,9 @@ export default function StoryScenes() {
 	const ImageRatio = GetImageRatio(Webstory.data.resolution);
 
 	return (
-		<div className="flex w-full min-h-screen bg-primary">
+		<div className="flex w-full min-h-screen bg-primary py-5">
 			<SideNav isLoading={isLoading} WebstoryData={Webstory.data} />
-			<div className="max-w-full min-h-screen m-5 rounded-lg bg-secondary w-[80%]">
+			<div className="max-w-full  mx-5 rounded-lg bg-secondary w-[80%]">
 				{/* Navbar */}
 				<Navbar
 					ImageRatio={ImageRatio}
@@ -71,7 +71,7 @@ export default function StoryScenes() {
 
 				{/* MainSection */}
 				<div
-					className={`flex bg-background rounded-bl-lg rounded-br-lg min-h-[calc(100vh-196px)] p-2 gap-x-1.5`}
+					className={`flex bg-background rounded-bl-lg rounded-br-lg p-2 gap-x-1.5`}
 				>
 					{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
 						<div className="p-2 space-y-3 hidden sm:block">
