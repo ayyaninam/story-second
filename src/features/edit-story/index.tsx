@@ -24,7 +24,7 @@ import Format from "@/utils/format";
 import StoryScreen from "./story-screen";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRemotionPlayerProps } from "./video-player/hooks";
-import { StoryOutputTypes, VoiceType } from "@/utils/enums";
+import { StepperStep, StoryOutputTypes, VoiceType } from "@/utils/enums";
 import { ModeToggle } from "./components/mode-toggle";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -36,6 +36,7 @@ import { env } from "@/env.mjs";
 import useWebstoryContext, {
 	WebStoryProvider,
 } from "./providers/WebstoryContext";
+import Stepper from "../scenes/components/Stepper";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -147,38 +148,7 @@ export default function EditStory() {
 			</div>
 
 			{/* Stepper */}
-			<div className="w-full min-h-8 flex items-center justify-center">
-				<Badge
-					variant="outline"
-					className="bg-primary-foreground font-normal text-sm"
-				>
-					<LucideSparkles className="stroke-purple-600 mr-1 h-4 w-4" />
-					Story
-				</Badge>
-				<ChevronRight className="w-4 h-4 opacity-50" />
-				<Badge
-					variant="outline"
-					className="bg-primary-foreground font-normal text-sm"
-				>
-					<LucideSparkles className="stroke-purple-600 mr-1 h-4 w-4" />
-					Scenes
-				</Badge>
-				<ChevronRight className="w-4 h-4 opacity-50" />
-				<Badge
-					variant="outline"
-					className="bg-primary-foreground font-normal text-sm"
-				>
-					Final
-				</Badge>
-				<ChevronRight className="w-4 h-4 opacity-50" />
-				<Badge
-					variant="outline"
-					className="bg-primary-foreground font-normal text-sm border border-purple-500 bg-purple-100 text-purple-900"
-					style={{ boxShadow: "0px 4px 4px 0px rgba(206, 122, 255, 0.40)" }}
-				>
-					Share
-				</Badge>
-			</div>
+			<Stepper step={StepperStep.Share} />
 
 			{/* MainSection */}
 			<div
@@ -232,7 +202,10 @@ export default function EditStory() {
 								className="relative w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
-								<StoryScreen />
+								<StoryScreen
+									Webstory={Webstory.data}
+									isError={Webstory.isError}
+								/>
 							</div>
 							<div
 								className={cn(

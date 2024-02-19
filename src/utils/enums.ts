@@ -78,3 +78,10 @@ export enum DisplayAspectRatios {
 	"1024x576",
 	"576x1024",
 }
+
+export enum StepperStep {
+	Script,
+	Storyboard,
+	Scenes,
+	Share
+}
