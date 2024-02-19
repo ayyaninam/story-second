@@ -1205,6 +1205,52 @@ export interface paths {
       };
     };
   };
+  "/api/Payment/CreateSubscription": {
+    /** Create a subscription for the user. */
+    post: {
+      requestBody?: {
+        content: {
+          "application/json-patch+json": components["schemas"]["CreateSubscriptionDTO"];
+          "application/json": components["schemas"]["CreateSubscriptionDTO"];
+          "text/json": components["schemas"]["CreateSubscriptionDTO"];
+          "application/*+json": components["schemas"]["CreateSubscriptionDTO"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["StringApiResponse"];
+            "application/json": components["schemas"]["StringApiResponse"];
+            "text/json": components["schemas"]["StringApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/Payment/CancelSubscription": {
+    /** Cancel a subscription for the user. */
+    post: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["StringApiResponse"];
+            "application/json": components["schemas"]["StringApiResponse"];
+            "text/json": components["schemas"]["StringApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/generate_story": {
     /**
      * Generate a story from plugin
@@ -1995,6 +2041,13 @@ export interface paths {
      * @description Get a list of suggested stories based on the provided story id
      */
     get: operations["GetSuggestedStories"];
+  };
+  "/api/Video/{id}/RenderVideo": {
+    /**
+     * Render a video
+     * @description Render a video based on the provided story id
+     */
+    put: operations["RenderVideo"];
   };
   "/api/WebStory/NoAuth": {
     /** Request a new anonymous story based on the provided parameters */
@@ -3160,6 +3213,26 @@ export interface components {
       generateParagraph?: boolean;
       imageStyle?: components["schemas"]["ImageStyles"];
     };
+    AmazonBook: {
+      coverPDFUrl?: string | null;
+      gutsPDFUrl?: string | null;
+      authorFirstName?: string | null;
+      authorLastName?: string | null;
+      amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
+      amazonUrl?: string | null;
+      /** Format: date-time */
+      amazonPublishDate?: string | null;
+      amazonRejectReason?: string | null;
+      asin?: string | null;
+      /** Format: date-time */
+      created?: string;
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+    };
     /** @description DTO used to save metadata to DB. */
     AmazonBookMetaDataDTO: {
       /** @description The title of the book. */
@@ -3190,6 +3263,28 @@ export interface components {
       ageGroupMax?: string | null;
       amazonMarketplace?: components["schemas"]["AmazonMarketplace"];
       amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
+    };
+    AmazonBookRoyalty: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      asin?: string | null;
+      /** Format: int32 */
+      totalSales?: number;
+      /** Format: double */
+      lifetimeRoyalties?: number;
+      /** Format: double */
+      unclaimedRoyalties?: number;
+      /** Format: double */
+      processingRoyalties?: number;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      amazonRoyaltyTransactions?: components["schemas"]["AmazonRoyaltyTransaction"][] | null;
     };
     /** @description Represents the latest snapshot of one amazon book's royalty. */
     AmazonBooksRevenueDTO: {
@@ -3247,6 +3342,28 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    AmazonKdpMetaData: {
+      /** Format: uuid */
+      id?: string;
+      title?: string | null;
+      subtitle?: string | null;
+      prefix?: string | null;
+      firstName?: string | null;
+      middleName?: string | null;
+      lastName?: string | null;
+      suffix?: string | null;
+      summary?: string | null;
+      categories?: string | null;
+      seoKeywords?: string | null;
+      ageGroupMin?: string | null;
+      ageGroupMax?: string | null;
+      amazonMarketplace?: string | null;
+      /** Format: date-time */
+      created?: string;
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+    };
     /**
      * Format: int32
      * @enum {integer}
@@ -3271,11 +3388,80 @@ export interface components {
     AmazonRequestPaymentTypeDTO: {
       creditSpendType?: components["schemas"]["CreditSpendType"];
     };
+    AmazonRoyaltyTransaction: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      asin?: string | null;
+      /** Format: double */
+      royaltyAdded?: number;
+      /** Format: double */
+      royaltyWithdrawn?: number;
+      /** Format: uuid */
+      transferId?: string | null;
+      stripePayoutId?: string | null;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      /** Format: uuid */
+      amazonBookRoyaltyId?: string;
+      amazonBookRoyalty?: components["schemas"]["AmazonBookRoyalty"];
+    };
     /**
      * Format: int32
      * @enum {integer}
      */
     ApiResponseStatus: Success | Unauthorized | NotFound | BadRequest | ServerError | Forbidden | PaymentRequired;
+    BookOrder: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      coverPDFUrl?: string | null;
+      gutsPDFUrl?: string | null;
+      authorFirstName?: string | null;
+      authorLastName?: string | null;
+      /** Format: int32 */
+      quantity?: number;
+      bookOrderLifecycle?: components["schemas"]["BookOrderLifecycle"];
+      orderReference?: string | null;
+      /** Format: double */
+      orderPrice?: number;
+      /** Format: double */
+      shippingPrice?: number;
+      /** Format: double */
+      totalPrice?: number;
+      paymentIntentId?: string | null;
+      noAuth?: boolean;
+      paid?: boolean;
+      name?: string | null;
+      address1?: string | null;
+      address2?: string | null;
+      city?: string | null;
+      postal?: string | null;
+      country?: string | null;
+      phone?: string | null;
+      email?: string | null;
+      state?: string | null;
+      shippingClassification?: components["schemas"]["ShippingClassification"];
+      shippingMethodName?: string | null;
+      trackingNumber?: string | null;
+      dispatchDateUTC?: string | null;
+      estimatedDeliveryUTC?: string | null;
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+      /** Format: uuid */
+      discountCodeId?: string | null;
+      discountCode?: components["schemas"]["DiscountCode"];
+    };
     /**
      * Format: int32
      * @enum {integer}
@@ -3288,9 +3474,39 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    Characters: {
+      /** Format: uuid */
+      webStoryId?: string;
+      /** Format: int32 */
+      characterId?: number;
+      characterName?: string | null;
+      characterDescription?: string | null;
+      characterImage?: string | null;
+      /** Format: date-time */
+      created?: string;
+      webStory?: components["schemas"]["WebStory"];
+    };
     CheckPaymentStatusDTO: {
       /** @description The type of payment */
       creditSpendType?: components["schemas"]["CreditSpendType"][] | null;
+    };
+    CommentReport: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      commentReportReason?: components["schemas"]["CommentReportReason"];
+      otherReason?: string | null;
+      isResolved?: boolean;
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+      /** Format: uuid */
+      commentId?: string;
+      storyComment?: components["schemas"]["StoryComment"];
     };
     /**
      * Format: int32
@@ -3346,6 +3562,29 @@ export interface components {
       phoneNumber?: string | null;
       country?: string | null;
     };
+    /** @description Request body for creating a subscription. */
+    CreateSubscriptionDTO: {
+      subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
+      subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
+    };
+    CreditPurchase: {
+      /** Format: uuid */
+      id?: string;
+      creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
+      /** Format: double */
+      amount?: number;
+      /** Format: int32 */
+      creditsIssued?: number;
+      /** Format: int32 */
+      creditsRemaining?: number;
+      /** Format: date-time */
+      dateIssued?: string;
+      /** Format: date-time */
+      expiryDate?: string;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+    };
     /** @description DTO used to return User's Token balance and earliest expiry tokens. */
     CreditPurchaseDTO: {
       /** Format: uuid */
@@ -3370,12 +3609,41 @@ export interface components {
      * @enum {integer}
      */
     CreditPurchaseType: Gift | Teaser | Leaflet | Anthology | Library | Supplement;
+    CreditSpend: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      creditSpendType?: components["schemas"]["CreditSpendType"];
+      /** Format: int32 */
+      creditsSpent?: number;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+    };
     /**
      * Format: int32
      * @description The type of credit spend
      * @enum {integer}
      */
     CreditSpendType: StoryGeneration | StorySegmentEdit | AudioGeneration | AudioRegeneration | ImageRegeneration | AmazonPublishing | AmazonPublishingPDFOnly | WatermarkedEBookPDF | OriginalEBookPDF | RegenerateSegmentWithAI | AddNewPage | VideoLandscape | VideoPortrait | VideoLandscapeSubtitle | ImageScribble | EnrollStoryInContest | WatermarkedStoryBookPDF | OriginalStoryBookPDF;
+    DiscountCode: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      code?: string | null;
+      /** Format: int32 */
+      discountPercentage?: number;
+      isActive?: boolean;
+      /** Format: date-time */
+      expirationDate?: string;
+      discountCodeType?: components["schemas"]["DiscountCodeType"];
+      bookOrders?: components["schemas"]["BookOrder"][] | null;
+    };
     /**
      * Format: int32
      * @enum {integer}
@@ -3409,6 +3677,17 @@ export interface components {
        */
       readabilityParam?: string | null;
       imageStyle?: components["schemas"]["ImageStyles"];
+    };
+    EditStoryCommentLog: {
+      /** Format: uuid */
+      id?: string;
+      oldCommentText?: string | null;
+      newCommentText?: string | null;
+      /** Format: date-time */
+      editTime?: string;
+      /** Format: uuid */
+      commentId?: string;
+      storyComment?: components["schemas"]["StoryComment"];
     };
     /** @description DTO used to edit a StorySegment in a WebStory. */
     EditStorySegmentDTO: {
@@ -3444,6 +3723,31 @@ export interface components {
       name?: string | null;
       email?: string | null;
       message?: string | null;
+    };
+    EmailNotificationPreferences: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      amazonFailedEmail?: boolean;
+      amazonProcessingEmail?: boolean;
+      amazonPublishEmail?: boolean;
+      amazonRequestedEmail?: boolean;
+      bookOrderFailedEmail?: boolean;
+      bookOrderedEmail?: boolean;
+      bookOrderShippedEmail?: boolean;
+      lowTokensEmail?: boolean;
+      tokensPurchasedEmail?: boolean;
+      tokensSpentEmail?: boolean;
+      reportConfirmationEmail?: boolean;
+      publishedStoryDeletedEmail?: boolean;
+      storyPublishedEmail?: boolean;
+      newCommentOnStoryEmail?: boolean;
+      /** Format: date-time */
+      lastUpdated?: string | null;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
     };
     /** @description DTO used to update a user's email notification preferences. */
     EmailNotificationPreferencesDTO: {
@@ -3645,6 +3949,30 @@ export interface components {
     /** @description Represents the payment type for a story item. */
     PaymentTypeDTO: {
       creditSpendType?: components["schemas"]["CreditSpendType"];
+    };
+    PayoutAccount: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      isBank?: boolean;
+      stripeId?: string | null;
+      bankName?: string | null;
+      cardBrand?: string | null;
+      last4?: string | null;
+      routingNumber?: string | null;
+      /** Format: int32 */
+      expiryMonth?: number;
+      /** Format: int32 */
+      expiryYear?: number;
+      canReceivePayouts?: boolean;
+      currency?: string | null;
+      isDefault?: boolean;
+      /** Format: date-time */
+      lastSynced?: string;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
     };
     PromptResponse: {
       prompt?: string | null;
@@ -4797,6 +5125,11 @@ export interface components {
        */
       isPublic?: boolean;
       /**
+       * Scenes
+       * @description The scenes of the story.
+       */
+      scenes?: components["schemas"]["Scene"][] | null;
+      /**
        * StorySegments
        * @description A list of generated story segments, each representing a page.
        */
@@ -4889,7 +5222,7 @@ export interface components {
       status?: components["schemas"]["ApiResponseStatus"];
     };
     /** @description DTO used to return Scenes information of a WebStory */
-    ReturnScenesDTO: {
+    ReturnSceneDTO: {
       /**
        * Id
        * Format: uuid
@@ -4913,6 +5246,16 @@ export interface components {
        * @description The date and time the scene was created.
        */
       created?: string;
+      /**
+       * StorySegments
+       * @description The story segments in this scene.
+       */
+      storySegments?: components["schemas"]["ReturnStorySegmentDTO"][] | null;
+      /**
+       * VideoSegments
+       * @description The video segments in this scene.
+       */
+      videoSegments?: components["schemas"]["ReturnVideoSegmentDTO"][] | null;
     };
     /** @description Return model for Comments. */
     ReturnStoryCommentDTO: {
@@ -5161,6 +5504,12 @@ export interface components {
        * @description The index of the segment in the story.
        */
       index?: number;
+      /**
+       * SceneId
+       * Format: uuid
+       * @description The Id of the associated Scene
+       */
+      sceneId?: string;
       /**
        * TextContent
        * @description The text content of the segment.
@@ -5649,12 +5998,7 @@ export interface components {
        * Scenes
        * @description The scene informations in the story.
        */
-      scenes?: components["schemas"]["ReturnScenesDTO"][] | null;
-      /**
-       * VideoSegments
-       * @description A list of generated video segments, each representing a slide
-       */
-      videoSegments?: components["schemas"]["ReturnVideoSegmentDTO"][] | null;
+      scenes?: components["schemas"]["ReturnSceneDTO"][] | null;
       storyType?: components["schemas"]["StoryType"];
       /**
        * StoryDone
@@ -5783,10 +6127,10 @@ export interface components {
       isPublic?: boolean;
       user?: components["schemas"]["ReturnTinyUserDTO"];
       /**
-       * StorySegments
-       * @description A list of generated story segments, each representing a page.
+       * Scenes
+       * @description The scenes of the story.
        */
-      storySegments?: components["schemas"]["ReturnStorySegmentDTO"][] | null;
+      scenes?: components["schemas"]["ReturnSceneDTO"][] | null;
       amazonBook?: components["schemas"]["ReturnAmazonBookDTO"];
       /**
        * CoverImage
@@ -5910,6 +6254,20 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    Scene: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      /** Format: uuid */
+      webStoryId?: string;
+      /** Format: int32 */
+      index?: number;
+      sceneDescription?: string | null;
+      webStory?: components["schemas"]["WebStory"];
+      storySegments?: components["schemas"]["StorySegment"][] | null;
+      videoSegments?: components["schemas"]["VideoSegment"][] | null;
+    };
     /**
      * Format: int32
      * @enum {integer}
@@ -5938,6 +6296,52 @@ export interface components {
      * @enum {integer}
      */
     SortType: Latest | TotalLikes;
+    StoryComment: {
+      /** Format: uuid */
+      id?: string;
+      commentText?: string | null;
+      /** Format: date-time */
+      created?: string;
+      isDeleted?: boolean;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      editStoryCommentLogs?: components["schemas"]["EditStoryCommentLog"][] | null;
+      commentReports?: components["schemas"]["CommentReport"][] | null;
+    };
+    StoryContest: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      name?: string | null;
+      description?: string | null;
+      contestImage?: string | null;
+      isActive?: boolean;
+      /** Format: date-time */
+      startDate?: string;
+      /** Format: date-time */
+      endDate?: string;
+      entries?: components["schemas"]["StoryContestEntry"][] | null;
+    };
+    StoryContestEntry: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      /** Format: uuid */
+      storyContestId?: string;
+      storyContest?: components["schemas"]["StoryContest"];
+      /** Format: int32 */
+      finalVotes?: number | null;
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      isWinner?: boolean | null;
+    };
     /** @description Represents one story contest. */
     StoryContestsDTO: {
       /**
@@ -5981,11 +6385,28 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    StoryItem: {
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      itemKey?: string | null;
+      storyItemType?: components["schemas"]["StoryItemType"];
+      /** Format: int32 */
+      downloadsCount?: number;
+      /** Format: date-time */
+      created?: string;
+      storyItemSubType?: components["schemas"]["StoryItemSubType"];
+    };
     /**
      * Format: int32
      * @enum {integer}
      */
     StoryItemSubType: Default | Male | Female | Portuguese | Custom | StoryBook | EBook;
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
+    StoryItemType: WatermarkedPDF | OriginalPDF | VideoLandscape | VideoPortrait | VideoLandscapeSubtitle;
     /**
      * Format: int32
      * @enum {integer}
@@ -5996,6 +6417,18 @@ export interface components {
      * @enum {integer}
      */
     StoryLength: Short | Medium | Long;
+    StoryLike: {
+      /** Format: uuid */
+      userId?: string;
+      /** Format: uuid */
+      storyId?: string;
+      userAuthId?: string | null;
+      user?: components["schemas"]["UserAccount"];
+      webStory?: components["schemas"]["WebStory"];
+      /** Format: date-time */
+      created?: string;
+      isEnabled?: boolean | null;
+    };
     /** @description Story Privacy setting. */
     StoryPrivacyUpdate: {
       /** @description Story ID. */
@@ -6003,11 +6436,63 @@ export interface components {
       /** @description Privacy Setting */
       isPublic?: boolean;
     };
+    StoryReport: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      storyReportReason?: components["schemas"]["StoryReportReason"];
+      otherReason?: string | null;
+      isResolved?: boolean;
+      /** Format: uuid */
+      webStoryId?: string | null;
+      webStory?: components["schemas"]["WebStory"];
+      /** Format: uuid */
+      userId?: string | null;
+      user?: components["schemas"]["UserAccount"];
+    };
     /**
      * Format: int32
      * @enum {integer}
      */
     StoryReportReason: InappropriateText | NotLoading | HateSpeech | Other | InappropriateImages;
+    StorySegment: {
+      textContent?: string | null;
+      characterContent?: string | null;
+      imageKey?: string | null;
+      videoKey?: string | null;
+      frameInterpolationKey?: string | null;
+      lastImageKey?: string | null;
+      /** Format: int32 */
+      ind?: number;
+      imageRegenerating?: boolean;
+      maleAudioKey?: string | null;
+      maleAudioGenerating?: boolean;
+      femaleAudioKey?: string | null;
+      femaleAudioGenerating?: boolean;
+      customAudioKey?: string | null;
+      customAudioGenerating?: boolean;
+      portugueseAudioKey?: string | null;
+      portugueseAudioGenerating?: boolean;
+      imageStyle?: components["schemas"]["ImageStyles"];
+      imagePrompt?: string | null;
+      /** Format: int64 */
+      imageSeed?: number | null;
+      /** Format: double */
+      imageCFGScale?: number | null;
+      imageResolution?: components["schemas"]["ImageResolution"];
+      /** Format: int32 */
+      imageSamplingSteps?: number | null;
+      imageAltText?: string | null;
+      /** Format: date-time */
+      created?: string;
+      /** Format: uuid */
+      webStoryId?: string;
+      webStory?: components["schemas"]["WebStory"];
+      /** Format: uuid */
+      sceneId?: string | null;
+      scene?: components["schemas"]["Scene"];
+    };
     /**
      * Format: int32
      * @enum {integer}
@@ -6058,6 +6543,32 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    StripePayment: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      stripePaymentIntentId?: string | null;
+      /** Format: double */
+      amountPaid?: number;
+      /** Format: double */
+      amountCredited?: number;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+    };
+    /**
+     * Format: int32
+     * @description The duration of the subscription.
+     * @enum {integer}
+     */
+    SubscriptionPeriod: Monthly | Annual;
+    /**
+     * Format: int32
+     * @description The type of Subscription Plan.
+     * @enum {integer}
+     */
+    SubscriptionPlan: Free | Basic | Pro | Premium;
     /** @description DTO used to return User's Token Transaction list. */
     TokenTransactionDTO: {
       /** Format: uuid */
@@ -6187,6 +6698,60 @@ export interface components {
       succeeded?: boolean;
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
+    };
+    UserAccount: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      name?: string | null;
+      lastName?: string | null;
+      email?: string | null;
+      phoneNumber?: string | null;
+      /** Format: date-time */
+      dateOfBirth?: string | null;
+      profileName?: string | null;
+      bio?: string | null;
+      profilePicture?: string | null;
+      kycVerified?: components["schemas"]["KYCLifeCycle"];
+      address?: string | null;
+      country?: string | null;
+      photoID?: string | null;
+      photoIDType?: string | null;
+      photoIDNumber?: string | null;
+      emailVerified?: boolean;
+      verificationId?: string | null;
+      authId?: string | null;
+      stripeCustomerId?: string | null;
+      cardBrand?: string | null;
+      cardLast4?: string | null;
+      /** Format: int32 */
+      cardExpiryMonth?: number | null;
+      /** Format: int32 */
+      cardExpiryYear?: number | null;
+      stripeConnectAccountId?: string | null;
+      voiceRecordingPath?: string | null;
+      voiceRecordingName?: string | null;
+      defaultPublic?: boolean;
+      /** Format: int32 */
+      storyCount?: number | null;
+      /** Format: int32 */
+      videoCount?: number | null;
+      subscription?: components["schemas"]["UserSubscription"];
+      amazonBook?: components["schemas"]["AmazonBook"][] | null;
+      webStories?: components["schemas"]["WebStory"][] | null;
+      likes?: components["schemas"]["StoryLike"][] | null;
+      bookOrders?: components["schemas"]["BookOrder"][] | null;
+      storyReports?: components["schemas"]["StoryReport"][] | null;
+      creditPurchases?: components["schemas"]["CreditPurchase"][] | null;
+      creditSpends?: components["schemas"]["CreditSpend"][] | null;
+      emailNotificationPreferences?: components["schemas"]["EmailNotificationPreferences"];
+      storyComments?: components["schemas"]["StoryComment"][] | null;
+      commentReports?: components["schemas"]["CommentReport"][] | null;
+      amazonBookRoyalties?: components["schemas"]["AmazonBookRoyalty"][] | null;
+      amazonRoyaltyTransactions?: components["schemas"]["AmazonRoyaltyTransaction"][] | null;
+      payoutAccounts?: components["schemas"]["PayoutAccount"][] | null;
+      stripePayments?: components["schemas"]["StripePayment"][] | null;
     };
     /** @description Return model for the user's account details. */
     UserInfoDTO: {
@@ -6334,6 +6899,29 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    UserSubscription: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      stripeSubscriptionId?: string | null;
+      plan?: components["schemas"]["SubscriptionPlan"];
+      period?: components["schemas"]["SubscriptionPeriod"];
+      isActive?: boolean;
+      /** Format: date-time */
+      startDate?: string | null;
+      /** Format: date-time */
+      endDate?: string | null;
+      /** Format: date-time */
+      nextBillingDate?: string | null;
+      /** Format: date-time */
+      lastRenewalDate?: string | null;
+      /** Format: date-time */
+      canceledDate?: string | null;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
+    };
     /** @description DTO used to verify a user's email address. */
     VerifyEmailDTO: {
       /**
@@ -6341,6 +6929,111 @@ export interface components {
        * @description The verification id sent to the user's email address.
        */
       verificationId: string;
+    };
+    VideoSegment: {
+      /** Format: uuid */
+      webStoryId?: string;
+      /** Format: int32 */
+      ind?: number;
+      textContent?: string | null;
+      characterContent?: string | null;
+      imageKey?: string | null;
+      videoKey?: string | null;
+      frameInterpolationKey?: string | null;
+      lastImageKey?: string | null;
+      imageRegenerating?: boolean;
+      maleAudioKey?: string | null;
+      maleAudioGenerating?: boolean;
+      femaleAudioKey?: string | null;
+      femaleAudioGenerating?: boolean;
+      customAudioKey?: string | null;
+      customAudioGenerating?: boolean;
+      portugueseAudioKey?: string | null;
+      portugueseAudioGenerating?: boolean;
+      imageStyle?: components["schemas"]["ImageStyles"];
+      imagePrompt?: string | null;
+      /** Format: int64 */
+      imageSeed?: number | null;
+      /** Format: double */
+      imageCFGScale?: number | null;
+      imageResolution?: components["schemas"]["ImageResolution"];
+      /** Format: int32 */
+      imageSamplingSteps?: number | null;
+      imageAltText?: string | null;
+      /** Format: int64 */
+      videoSeed?: number | null;
+      /** Format: double */
+      videoCFGScale?: number | null;
+      /** Format: int32 */
+      videoMotionBucketId?: number | null;
+      /** Format: int32 */
+      videoSamplingSteps?: number | null;
+      /** Format: int32 */
+      videoFPS?: number | null;
+      /** Format: date-time */
+      created?: string;
+      webStory?: components["schemas"]["WebStory"];
+      /** Format: uuid */
+      sceneId?: string | null;
+      scene?: components["schemas"]["Scene"];
+    };
+    WebStory: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      storyDone?: boolean;
+      videoDone?: boolean;
+      imagesDone?: boolean;
+      isPublic?: boolean;
+      pluginGenerated?: boolean | null;
+      deleted?: boolean;
+      /** Format: uuid */
+      claimingToken?: string;
+      invalidateRender?: boolean | null;
+      hasMaleVoice?: boolean;
+      hasFemaleVoice?: boolean;
+      hasCustomVoice?: boolean;
+      hasPortugueseVoice?: boolean;
+      maleVoiceDone?: boolean;
+      femaleVoiceDone?: boolean;
+      customVoiceDone?: boolean;
+      portugueseVoiceDone?: boolean;
+      storyPrompt?: string | null;
+      language?: string | null;
+      topLevelCategory?: string | null;
+      slug?: string | null;
+      storyTitle?: string | null;
+      summary?: string | null;
+      /** Format: int32 */
+      storyLikes?: number;
+      coverImage?: string | null;
+      coverImageContent?: string | null;
+      /** Format: float */
+      aiContributionRate?: number;
+      renderedVideoKey?: string | null;
+      originalMediaKey?: string | null;
+      storyType?: components["schemas"]["StoryType"];
+      resolution?: components["schemas"]["DisplayResolution"];
+      /** Format: uuid */
+      userId?: string | null;
+      user?: components["schemas"]["UserAccount"];
+      storySegments?: components["schemas"]["StorySegment"][] | null;
+      videoSegments?: components["schemas"]["VideoSegment"][] | null;
+      characters?: components["schemas"]["Characters"][] | null;
+      scenes?: components["schemas"]["Scene"][] | null;
+      likes?: components["schemas"]["StoryLike"][] | null;
+      amazonKdpMetaData?: components["schemas"]["AmazonKdpMetaData"];
+      amazonBook?: components["schemas"]["AmazonBook"];
+      bookOrders?: components["schemas"]["BookOrder"][] | null;
+      storyReports?: components["schemas"]["StoryReport"][] | null;
+      creditSpends?: components["schemas"]["CreditSpend"][] | null;
+      storyComments?: components["schemas"]["StoryComment"][] | null;
+      commentReports?: components["schemas"]["CommentReport"][] | null;
+      storyItems?: components["schemas"]["StoryItem"][] | null;
+      amazonBookRoyalties?: components["schemas"]["AmazonBookRoyalty"];
+      amazonRoyaltyTransactions?: components["schemas"]["AmazonRoyaltyTransaction"][] | null;
+      storyContestEntries?: components["schemas"]["StoryContestEntry"][] | null;
     };
   };
   responses: never;
@@ -6740,6 +7433,34 @@ export interface operations {
       /** @description Success */
       200: {
         content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Render a video
+   * @description Render a video based on the provided story id
+   */
+  RenderVideo: {
+    parameters: {
+      query?: {
+        storyItemSubType?: components["schemas"]["StoryItemSubType"];
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "text/plain": components["schemas"]["StringApiResponse"];
+          "application/json": components["schemas"]["StringApiResponse"];
+          "text/json": components["schemas"]["StringApiResponse"];
+        };
       };
       /** @description Unauthorized */
       401: {
