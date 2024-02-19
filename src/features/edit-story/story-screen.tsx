@@ -20,8 +20,9 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
 
 	useEffect(() => {
-		for (const seg of Webstory?.videoSegments ?? []) {
-			if (seg.videoKey && !fetchedVideos.includes(seg.videoKey)) {
+		for (const seg of Webstory?.scenes?.flatMap((el) => el.videoSegments) ??
+			[]) {
+			if (seg?.videoKey && !fetchedVideos.includes(seg.videoKey)) {
 				const url = Format.GetVideoUrl(seg.videoKey);
 				const fetchedContent = prefetch(url, {
 					method: "blob-url",
@@ -34,8 +35,9 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
-		for (const seg of Webstory?.videoSegments ?? []) {
-			if (seg.femaleAudioKey && !fetchedAudios.includes(seg.femaleAudioKey)) {
+		for (const seg of Webstory?.scenes?.flatMap((el) => el.videoSegments) ??
+			[]) {
+			if (seg?.femaleAudioKey && !fetchedAudios.includes(seg.femaleAudioKey)) {
 				const url = Format.GetImageUrl(seg.femaleAudioKey);
 				const fetchedContent = prefetch(url, {
 					method: "blob-url",
@@ -65,24 +67,29 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 		}
 	}, [Webstory]);
 
-	const videoArray = Webstory?.videoSegments
-		?.filter((seg) => !!seg.videoKey)
-		.map((seg) => seg.videoKey);
+	const videoArray = Webstory?.scenes
+		?.flatMap((el) => el.videoSegments)
+		?.filter((seg) => !!seg?.videoKey)
+		.map((seg) => seg?.videoKey);
 
-	const generatedImages = Webstory?.videoSegments
-		?.filter((seg) => !!seg.imageKey)
-		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg.imageKey!) }));
+	const generatedImages = Webstory?.scenes
+		?.flatMap((el) => el.videoSegments)
+		?.filter((seg) => !!seg?.imageKey)
+		.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg?.imageKey!) }));
 
 	const areImagesLoading =
 		!Webstory ||
-		(Webstory.videoSegments?.filter((seg) => !!seg.imageKey)?.length ?? 0) < 2;
+		(Webstory.scenes
+			?.flatMap((el) => el.videoSegments)
+			?.filter((seg) => !!seg?.imageKey)?.length ?? 0) < 2;
 
 	const originalTikTokVideoKey = Webstory?.originalMediaKey;
 	const hasOriginalTikTokVideoKey = Boolean(originalTikTokVideoKey);
 
 	const isStoryLoading =
 		!Webstory ||
-		(videoArray?.length ?? 0) !== Webstory.videoSegments?.length ||
+		(videoArray?.length ?? 0) !==
+			Webstory.scenes?.flatMap((el) => el.videoSegments)?.length ||
 		// Using large vidArray length to ensure that all videos are fetched
 		fetchedVideos.length < (videoArray?.length ?? 1000) ||
 		fetchedAudios.length < (videoArray?.length ?? 1000) ||

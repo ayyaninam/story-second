@@ -21,6 +21,14 @@ export interface paths {
     /** Regenerate Image */
     post: operations["regenerate_image_regenerate_image_post"];
   };
+  "/edit-segment": {
+    /** Edit Segment */
+    put: operations["edit_segment_edit_segment_put"];
+  };
+  "/edit-scene": {
+    /** Edit Scene */
+    put: operations["edit_scene_edit_scene_put"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -38,6 +46,7 @@ export interface components {
      *     language?: StoryLanguageEnum, # The language of the story
      *     video_key?: str, # The video key if the input is a video
      *     image_resolution?: ImageResolutionEnum, # The resolution of the images
+     *     display_resolution?: DisplayResolutionEnum, # The resolution of the display
      * }
      */
     CreateStoryRequest: {
@@ -68,6 +77,39 @@ export interface components {
      * @enum {integer}
      */
     DisplayResolutionEnum: 0 | 1;
+    /** EditSceneOperation */
+    EditSceneOperation: {
+      operation: components["schemas"]["EditType"];
+      /** Details */
+      details: components["schemas"]["SceneEdit"] | components["schemas"]["SceneAdd"] | components["schemas"]["SceneDelete"] | null;
+    };
+    /** EditSceneRequest */
+    EditSceneRequest: {
+      /** Story Id */
+      story_id: string;
+      story_type: components["schemas"]["OutputTypeEnum"];
+      /** Edits */
+      edits: components["schemas"]["EditSceneOperation"][];
+    };
+    /** EditSegmentOperation */
+    EditSegmentOperation: {
+      operation: components["schemas"]["EditType"];
+      /** Details */
+      details: components["schemas"]["SegmentEdit"] | components["schemas"]["SegmentAdd"] | components["schemas"]["SegmentDelete"] | null;
+    };
+    /** EditSegmentRequest */
+    EditSegmentRequest: {
+      /** Story Id */
+      story_id: string;
+      story_type: components["schemas"]["OutputTypeEnum"];
+      /** Edits */
+      edits: components["schemas"]["EditSegmentOperation"][];
+    };
+    /**
+     * EditType
+     * @enum {integer}
+     */
+    EditType: 0 | 1 | 2;
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
@@ -100,6 +142,51 @@ export interface components {
       /** Segment Idx */
       segment_idx: number;
       image_style: components["schemas"]["ImageStyleEnum"];
+    };
+    /** SceneAdd */
+    SceneAdd: {
+      /** Ind */
+      Ind: number;
+      /** Scenedescriptions */
+      SceneDescriptions: string[];
+    };
+    /** SceneDelete */
+    SceneDelete: {
+      /** Ind */
+      Ind: number;
+    };
+    /** SceneEdit */
+    SceneEdit: {
+      /** Ind */
+      Ind: number;
+      /** Scenedescription */
+      SceneDescription: string;
+    };
+    /** SegmentAdd */
+    SegmentAdd: {
+      /** Ind */
+      Ind: number;
+      /** Segments */
+      segments: components["schemas"]["SegmentData"][];
+    };
+    /** SegmentData */
+    SegmentData: {
+      /** Text */
+      text: string;
+      /** Sceneid */
+      sceneId: string;
+    };
+    /** SegmentDelete */
+    SegmentDelete: {
+      /** Ind */
+      Ind: number;
+    };
+    /** SegmentEdit */
+    SegmentEdit: {
+      /** Ind */
+      Ind: number;
+      /** Text */
+      Text: string;
     };
     /**
      * StoryLanguageEnum
@@ -183,6 +270,50 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["RegenerateImageRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Edit Segment */
+  edit_segment_edit_segment_put: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EditSegmentRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Edit Scene */
+  edit_scene_edit_scene_put: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EditSceneRequest"];
       };
     };
     responses: {

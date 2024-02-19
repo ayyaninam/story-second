@@ -165,19 +165,21 @@ export const webStoryToRemotionSegments = async (
 	selectedVoice: VoiceType,
 	variant: RemotionVariant
 ): Promise<RemotionSegment[]> => {
-	const storySegmentPromises = story.videoSegments.map((storySegment, index) =>
-		limit(() =>
-			storySegmentToRemotionSegment(
-				storySegment,
-				index,
-				story,
-				selectedVoice,
-				variant
+	const storySegmentPromises = story.scenes
+		?.flatMap((el) => el.storySegments!)
+		.map((storySegment, index) =>
+			limit(() =>
+				storySegmentToRemotionSegment(
+					storySegment,
+					index,
+					story,
+					selectedVoice,
+					variant
+				)
 			)
-		)
-	);
+		);
 
-	const segments = await Promise.all(storySegmentPromises);
+	const segments = await Promise.all(storySegmentPromises!);
 
 	// @ts-ignore
 	return segments.flat().map((segment, index) => ({ ...segment, index }));
