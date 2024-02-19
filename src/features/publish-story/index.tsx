@@ -43,8 +43,8 @@ export default function PublishedStory({
 	const router = useRouter();
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
-	const [storySegments, setStorySegemnts] = useState<
-		mainSchema["ReturnStorySegmentDTO"][] | null
+	const [storySegments, setStorySegments] = useState<
+		mainSchema["ReturnVideoSegmentDTO"][] | null
 	>();
 	const [index, setIndex] = useState(0);
 	console.log(router.pathname);
@@ -83,11 +83,15 @@ export default function PublishedStory({
 	useEffect(() => {
 		if (Webstory.data) {
 			if (
-				Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
-				Webstory.data.videoSegments?.length > 0
+				Webstory.data?.scenes
+					?.flatMap((el) => el?.videoSegments)
+					?.every((segment) => !!segment?.videoKey) &&
+				Webstory.data?.scenes?.flatMap((el) => el.videoSegments)?.length > 0
 			) {
 				setEnableQuery(false);
-				setStorySegemnts(Webstory.data.videoSegments);
+				setStorySegments(
+					Webstory?.data?.scenes?.flatMap((el) => el?.videoSegments!)
+				);
 				console.log(">>>> segments", storySegments);
 			}
 

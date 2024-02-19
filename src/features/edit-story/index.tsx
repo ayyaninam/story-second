@@ -66,8 +66,10 @@ export default function EditStory() {
 		if (Webstory.data) {
 			setEnableQuery(
 				!(
-					Webstory.data.videoSegments?.every((segment) => !!segment.videoKey) &&
-					Webstory.data.videoSegments?.length > 0
+					Webstory.data.scenes
+						?.flatMap((el) => el.videoSegments)
+						.every((segment) => !!segment?.videoKey) &&
+					Webstory.data.scenes?.flatMap((el) => el.videoSegments)?.length > 0
 				)
 			);
 		}
