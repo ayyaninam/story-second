@@ -141,7 +141,25 @@ export interface components {
       story_id: string;
       /** Segment Idx */
       segment_idx: number;
+      story_type: components["schemas"]["OutputTypeEnum"];
+      /** Prompt */
+      prompt: string;
       image_style: components["schemas"]["ImageStyleEnum"];
+      /**
+       * Seed
+       * @default 5282123
+       */
+      seed?: number;
+      /**
+       * Sampling Steps
+       * @default 8
+       */
+      sampling_steps?: number;
+      /**
+       * Cfg Scale
+       * @default 2
+       */
+      cfg_scale?: number;
     };
     /** SceneAdd */
     SceneAdd: {
