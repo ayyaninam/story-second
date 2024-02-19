@@ -1,10 +1,12 @@
 import { mainSchema } from "@/api/schema";
 import { StoryImageStyles } from "@/utils/enums";
+import { nanoid } from "nanoid";
 
 export enum StoryStatus {
+	READY,
 	FAILED,
 	PENDING,
-	READY,
+	COMPLETE,
 }
 
 export type Segment = {
@@ -49,75 +51,70 @@ export type EditStoryDraft = {
 export type EditStoryAction =
 	| {
 			type: "create_scene";
-			id: number;
+			index: number;
 			scene: Scene;
 	  }
 	| {
 			type: "edit_scene";
-			id: number;
+			index: number;
 			scene: Scene;
 	  }
 	| {
 			type: "delete_scene";
-			id: number;
+			index: number;
 	  }
 	| {
 			type: "create_segment";
-			sceneId: number;
-			segmentId: number;
+			sceneIndex: number;
+			segmentIndex: number;
 			segment: Segment;
 	  }
 	| {
 			type: "edit_segment";
-			sceneId: number;
-			segmentId: number;
+			sceneIndex: number;
+			segmentIndex: number;
 			segment: Segment;
 	  }
 	| {
 			type: "delete_segment";
-			sceneId: number;
-			segmentId: number;
+			sceneIndex: number;
+			segmentIndex: number;
 	  };
 
 const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 	switch (action.type) {
 		case "create_segment": {
-			const { sceneId, segment, segmentId } = action;
-			const sceneIdx = draft.scenes.findIndex((el) => el.id === sceneId);
-			const segmentIdx = draft.scenes[sceneIdx]?.segments.findIndex(
-				(el) => el.id === segmentId
-			);
-			draft.scenes[sceneIdx]?.segments.splice(segmentIdx + 1, 0, segment);
+			const { sceneIndex, segment, segmentIndex } = action;
+			// const segmentId = draft.scenes[sceneIdx]?.segments[segmentIndex]?.id;
+			draft.scenes[sceneIndex]?.segments.splice(segmentIndex + 1, 0, {
+				...segment,
+			});
 
 			break;
 		}
 		case "edit_segment": {
-			const { sceneId, segment, segmentId } = action;
-			draft.scenes
-				.find((el) => el.id === sceneId)
-				?.segments.splice(segmentId, 1, segment);
+			const { sceneIndex, segment, segmentIndex } = action;
+			draft.scenes[sceneIndex]?.segments.splice(segmentIndex, 1, segment);
 			break;
 		}
 		case "delete_segment": {
-			const { sceneId, segmentId } = action;
-			draft.scenes
-				.find((el) => el.id === sceneId)
-				?.segments.splice(segmentId, 1);
+			const { sceneIndex, segmentIndex } = action;
+			draft.scenes[sceneIndex]?.segments.splice(segmentIndex, 1);
 			break;
 		}
 		case "create_scene": {
-			const { id } = action;
-			draft.scenes.splice(id, 1);
+			const { index, scene } = action;
+			draft.scenes.splice(index + 1, 0, scene);
 			break;
 		}
 		case "edit_scene": {
-			const { id, scene } = action;
-			draft.scenes.splice(id, 1, scene);
+			const { index, scene } = action;
+			draft.scenes.splice(index, 1, scene);
 			break;
 		}
 		case "delete_scene": {
-			const { id } = action;
-			draft.scenes.splice(id, 1);
+			const { index } = action;
+			draft.scenes.splice(index, 1);
 			break;
 		}
 	}

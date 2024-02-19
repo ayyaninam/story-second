@@ -83,9 +83,6 @@ export default function VideoEditor({
 							</div>
 						</div>
 						<SceneEditor initialData={WebstoryData!} />
-						{WebstoryData?.videoSegments?.map((el, index) => (
-							<div key={index}>{el.textContent}</div>
-						))}
 
 						<div className="gap-x-2.5">
 							<div className="w-full inline-flex border-t-border border-t-2 text-slate-400 text-xs py-1">
