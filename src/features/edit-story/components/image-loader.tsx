@@ -17,7 +17,7 @@ export default function ImageLoader({
 	imageLoadingDurationMs = 2000,
 	displayLoaderAfterFirstShow = false,
 }: {
-	imageData: (components["schemas"]["ReturnStorySegmentDTO"] & {
+	imageData: (components["schemas"]["ReturnVideoSegmentDTO"] & {
 		src: string;
 	})[];
 	imageLoadingDurationMs?: number;
