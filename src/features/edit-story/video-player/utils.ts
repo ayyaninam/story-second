@@ -1,9 +1,5 @@
 import pLimit from "p-limit";
-import {
-	RemotionSegment,
-	RemotionPlayerInputProps,
-	RemotionVariant,
-} from "./constants";
+import { RemotionPlayerInputProps, RemotionVariant } from "./constants";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
 import { VoiceType, AspectRatios, StoryOutputTypes } from "@/utils/enums";
@@ -40,40 +36,42 @@ export const webStoryToRemotionInputProps = async (
 	const variant = getRemotionVariant(story);
 
 	const segments = await processSegmentPromises({
-		segmentsPromises: story.videoSegments.map((segment, index) => {
-			let audioKey = null;
-			switch (selectedVoice) {
-				case VoiceType.GenericMale:
-					audioKey = segment.maleAudioKey;
-					break;
-				case VoiceType.GenericFemale:
-					audioKey = segment.femaleAudioKey;
-					break;
-				case VoiceType.Portuguese:
-					audioKey = segment.portugueseAudioKey;
-					break;
-				case VoiceType.Custom:
-					audioKey = segment.customAudioKey;
-					break;
-			}
-			const audioURL = audioKey
-				? Format.GetPublicBucketObjectUrl(audioKey)
-				: null;
+		segmentsPromises: story
+			.scenes!.flatMap((el) => el.videoSegments!)
+			.map((segment, index, segments) => {
+				let audioKey = null;
+				switch (selectedVoice) {
+					case VoiceType.GenericMale:
+						audioKey = segment.maleAudioKey;
+						break;
+					case VoiceType.GenericFemale:
+						audioKey = segment.femaleAudioKey;
+						break;
+					case VoiceType.Portuguese:
+						audioKey = segment.portugueseAudioKey;
+						break;
+					case VoiceType.Custom:
+						audioKey = segment.customAudioKey;
+						break;
+				}
+				const audioURL = audioKey
+					? Format.GetPublicBucketObjectUrl(audioKey)
+					: null;
 
-			return limit(() =>
-				toRemotionSegment({
-					audioURL,
-					videoURL: segment.videoKey
-						? Format.GetVideoUrl(segment.videoKey)
-						: null,
-					interpolationURL: segment.frameInterpolationKey
-						? Format.GetVideoUrl(segment.frameInterpolationKey)
-						: null,
-					storyText: segment.textContent as string,
-					isLastSegment: story.videoSegments.length - 1 === index,
-				})
-			);
-		}),
+				return limit(() =>
+					toRemotionSegment({
+						audioURL,
+						videoURL: segment.videoKey
+							? Format.GetVideoUrl(segment.videoKey)
+							: null,
+						interpolationURL: segment.frameInterpolationKey
+							? Format.GetVideoUrl(segment.frameInterpolationKey)
+							: null,
+						storyText: segment.textContent!,
+						isLastSegment: segments.length - 1 === index,
+					})
+				);
+			}),
 	});
 
 	return toRemotionInputProps({
