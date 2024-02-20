@@ -1,5 +1,5 @@
 import { mainSchema } from "@/api/schema";
-import { EditStoryDraft, StoryStatus } from "../reducers/edit-reducer";
+import { EditStoryDraft, Segment, StoryStatus } from "../reducers/edit-reducer";
 import React from "react";
 import { nanoid } from "nanoid";
 
@@ -31,3 +31,112 @@ export const WebstoryToStoryDraft = (
 		title: Webstory.storyTitle!,
 	};
 };
+
+export const GenerateStoryDiff = (
+	previous: EditStoryDraft,
+	current: EditStoryDraft
+) => {
+	let edits: Segment[] = [];
+	let additions: Segment[] = [];
+	let subtractions: Segment[] = [];
+
+	//
+	const previousMap = new Map<number, Segment[]>();
+	const currentMap = new Map<number, Segment[]>();
+
+	// separate previous and current indexes into sets
+	const previousSegments = previous.scenes.flatMap((el) => el.segments);
+	const currentSegments = current.scenes.flatMap((el) => el.segments);
+
+	previousSegments.forEach((el) => {
+		if (previousMap.has(el.id)) {
+			previousMap.get(el.id)?.push(el);
+		} else {
+			previousMap.set(el.id, [el]);
+		}
+	});
+	currentSegments.forEach((el) => {
+		if (currentMap.has(el.id)) {
+			currentMap.get(el.id)?.push(el);
+		} else {
+			currentMap.set(el.id, [el]);
+		}
+	});
+	const mapArray = Array.from(
+		new Set([...previousMap.keys(), ...currentMap.keys()])
+	);
+
+	mapArray.forEach((el) => {
+		if (previousMap.has(el) && currentMap.has(el)) {
+			const initialSegments = previousMap.get(el)!;
+			const currentSegments = currentMap.get(el)!;
+
+			if (
+				currentSegments[0] &&
+				initialSegments[0]?.textContent !== currentSegments[0]?.textContent
+			) {
+				edits.push(currentSegments[0]); // if initial value is not equal the new value, then it's an edit
+			}
+			if (currentSegments.length > 1) {
+				additions.push(...currentSegments.slice(1)); // any additional segments with the same ids are considered additions
+			}
+		} else if (!previousMap.has(el)) {
+			additions.push(...(currentMap.get(el) ?? [])); // if the id is not in the initial data, then it's an addition
+		} else if (!currentMap.has(el)) {
+			subtractions.push(...(previousMap.get(el) ?? [])); // if the id is not in the current data, then it's a subtraction
+		}
+	});
+
+	return { edits, additions, subtractions };
+};
+
+// const getDiff = (initialData: Data[], currentData: Data[]) => {
+// 	let edits: Data[] = [];
+// 	let additions: Data[] = [];
+// 	let subtractions: Data[] = [];
+
+// 	// Grouping segments by id while maintaining order
+// 	const initialDataMap = new Map<number, Data[]>();
+// 	const currentDataMap = new Map<number, Data[]>();
+
+// 	initialData.forEach((el) => {
+// 		if (initialDataMap.has(el.id)) {
+// 			initialDataMap.get(el.id)?.push(el);
+// 		} else {
+// 			initialDataMap.set(el.id, [el]);
+// 		}
+// 	});
+
+// 	currentData.forEach((el) => {
+// 		if (currentDataMap.has(el.id)) {
+// 			currentDataMap.get(el.id)?.push(el);
+// 		} else {
+// 			currentDataMap.set(el.id, [el]);
+// 		}
+// 	});
+
+// 	Array.from(
+// 		new Set([...initialDataMap.keys(), ...currentDataMap.keys()])
+// 	).forEach((el) => {
+// 		if (initialDataMap.has(el) && currentDataMap.has(el)) {
+// 			const initialSegments = initialDataMap.get(el)!;
+// 			const currentSegments = currentDataMap.get(el)!;
+
+// 			if (
+// 				currentSegments[0] &&
+// 				initialSegments[0]?.value !== currentSegments[0]?.value
+// 			) {
+// 				edits.push(currentSegments[0]); // if initial value is not equal the new value, then it's an edit
+// 			}
+// 			if (currentSegments.length > 1) {
+// 				additions.push(...currentSegments.slice(1)); // any additional segments with the same ids are considered additions
+// 			}
+// 		} else if (!initialDataMap.has(el)) {
+// 			additions.push(...currentDataMap.get(el)); // if the id is not in the initial data, then it's an addition
+// 		} else if (!currentDataMap.has(el)) {
+// 			subtractions.push(...initialDataMap.get(el)); // if the id is not in the current data, then it's a subtraction
+// 		}
+// 	});
+
+// 	return { edits, additions, subtractions };
+// };

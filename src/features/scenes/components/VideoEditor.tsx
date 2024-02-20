@@ -1,7 +1,6 @@
 import { AspectRatios } from "@/utils/enums";
 import { cn } from "@/utils";
 import StoryScreen from "@/features/edit-story/story-screen";
-import { mainSchema } from "@/api/schema";
 import {
 	ChevronDown,
 	Film,
@@ -14,14 +13,29 @@ import {
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Format from "@/utils/format";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
 import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Img from "../../../../public/images/temp/video-player.png";
-import SceneEditor from "./SceneEditor";
+
+import { useImmerReducer } from "use-immer";
+import editStoryReducer, {
+	EditStoryAction,
+	EditStoryDraft,
+	Scene,
+	Segment,
+	StoryStatus,
+} from "../reducers/edit-reducer";
+import { StoryImageStyles } from "@/utils/enums";
+import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
+import { mainSchema, mlSchema } from "@/api/schema";
+import React, { useEffect, useRef, useState } from "react";
+import { nanoid } from "nanoid";
+import AutosizeInput from "react-input-autosize";
+import { useMutation } from "@tanstack/react-query";
+import api from "@/api";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -44,7 +58,175 @@ export default function VideoEditor({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
-	console.log(WebstoryData);
+
+	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
+		WebstoryToStoryDraft(WebstoryData)
+	);
+	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
+		editStoryReducer,
+		WebstoryToStoryDraft(WebstoryData)
+	);
+
+	const diff = GenerateStoryDiff(previousStory, story);
+	const numEdits =
+		diff.additions.length + diff.subtractions.length + diff.edits.length;
+	const EditScene = useMutation({
+		mutationFn: api.video.editScene,
+	});
+	const EditSegment = useMutation({
+		mutationFn: api.video.editSegment,
+		onSuccess(data, variables, context) {
+			console.log(data);
+		},
+	});
+
+	const handleEditSegment = () => {
+		const diff = GenerateStoryDiff(previousStory, story);
+		let edits: { operation: 0 | 1 | 2; details: mlSchema["SegmentEdit"] }[] =
+			diff.edits.map((segment) => ({
+				details: { Ind: segment.id, Text: segment.textContent },
+				operation: 0,
+			}));
+		EditSegment.mutateAsync({
+			story_id: WebstoryData.id as string,
+			story_type: WebstoryData?.storyType,
+			edits: [...diff.edits, ...diff.additions, ...diff.subtractions].map(
+				(el) => ({ details: { Ind } })
+			),
+		});
+	};
+
+	const refs = useRef<HTMLDivElement[][]>(
+		// Putting an absurdly high number of arrays to make things simpler
+		Array.from({ length: 40 ?? 0 }, () => [])
+	);
+
+	const handleInput = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		scene: Scene,
+		sceneIndex: number,
+		segment: Segment,
+		segmentIndex: number
+	) => {
+		const content = e.target.value ?? "";
+		if (
+			// (No break) space or punctuation
+			([" ", "\u00A0"].includes(content.slice(-1)) && content.length > 40) ||
+			content.length > 50
+		) {
+			dispatch({
+				type: "edit_segment",
+				sceneIndex: sceneIndex,
+				segmentIndex: segmentIndex,
+				segment: {
+					...segment,
+					textContent: e.target.value.slice(0, -1),
+				},
+			});
+			dispatch({
+				type: "create_segment",
+				sceneIndex: sceneIndex,
+				segment: {
+					audioKey: "",
+					textContent: content.slice(-1),
+					audioStatus: StoryStatus.READY,
+					id: segment.id,
+					imageKey: "",
+					imageStatus: StoryStatus.READY,
+					videoKey: "",
+					videoStatus: StoryStatus.READY,
+				},
+				segmentIndex: segmentIndex,
+			});
+			refs.current[sceneIndex][segmentIndex]?.blur();
+			refs.current[sceneIndex][segmentIndex + 1]?.focus();
+		} else if (
+			segment.textContent.length > 0 &&
+			e.target.value.length === 0 &&
+			scene.segments.length === 1
+		) {
+			dispatch({
+				type: "delete_scene",
+				index: sceneIndex,
+			});
+			refs.current[sceneIndex][segmentIndex]?.blur();
+			refs.current[sceneIndex - 1][
+				story.scenes[sceneIndex - 1]?.segments.length - 1
+			]?.focus();
+		} else if (segment.textContent.length > 0 && e.target.value.length === 0) {
+			dispatch({
+				type: "delete_segment",
+				sceneIndex: sceneIndex,
+				segmentIndex: segmentIndex,
+			});
+			refs.current[sceneIndex][segmentIndex]?.blur();
+			refs.current[sceneIndex][segmentIndex - 1]?.focus();
+		} else {
+			dispatch({
+				type: "edit_segment",
+				sceneIndex: sceneIndex,
+				segmentIndex: segmentIndex,
+				segment: {
+					...segment,
+					textContent: e.target.value ?? "",
+				},
+			});
+		}
+	};
+
+	const handleEnter = (
+		scene: Scene,
+		sceneIndex: number,
+		segment: Segment,
+		segmentIndex: number
+	) => {
+		// If the segment is the last segment in the scene, create a new scene
+		if (segmentIndex === scene.segments.length - 1) {
+			dispatch({
+				type: "create_scene",
+				scene: {
+					segments: [
+						{
+							audioKey: "",
+							textContent: " ",
+							audioStatus: StoryStatus.READY,
+							id: scene.segments.slice(-1)[0]?.id,
+							imageKey: "",
+							imageStatus: StoryStatus.READY,
+							videoKey: "",
+							videoStatus: StoryStatus.READY,
+						},
+					],
+					id: scene.id,
+				},
+
+				index: sceneIndex,
+			});
+			refs.current[sceneIndex][segmentIndex]?.blur();
+			refs.current[sceneIndex + 1][0]?.focus();
+		}
+		// Else, create a new segment
+		else {
+			dispatch({
+				type: "create_segment",
+				sceneIndex: sceneIndex,
+				segment: {
+					audioKey: "",
+					textContent: " ",
+					audioStatus: StoryStatus.READY,
+					id: segment.id,
+					imageKey: "",
+					imageStatus: StoryStatus.READY,
+					videoKey: "",
+					videoStatus: StoryStatus.READY,
+				},
+				segmentIndex: segmentIndex,
+			});
+			refs.current[sceneIndex][segmentIndex]?.blur();
+			refs.current[sceneIndex][segmentIndex + 1]?.focus();
+		}
+	};
+
 	return (
 		<div className="relative rounded-lg border-[1px] w-full justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
 			<div className="flex justify-center m-10 ">
@@ -82,7 +264,54 @@ export default function VideoEditor({
 								<p className="ms-1">by Anthony Deloso</p>
 							</div>
 						</div>
-						<SceneEditor initialData={WebstoryData!} />
+						<div className="space-y-2">
+							{story.scenes.map((scene, sceneIndex) => (
+								<div key={sceneIndex} className="">
+									<span className="flex flex-wrap text-sm hover:bg-slate-100 rounded-md">
+										{scene.segments.map((segment, segmentIndex) => (
+											<div
+												key={`${segmentIndex}`}
+												style={{ backgroundColor: "transparent" }}
+												className=""
+											>
+												<AutosizeInput
+													onKeyDown={(e) => {
+														if (e.key === "Enter") {
+															handleEnter(
+																scene,
+																sceneIndex,
+																segment,
+																segmentIndex
+															);
+														}
+													}}
+													name={segmentIndex.toString()}
+													inputClassName="active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none"
+													inputStyle={{
+														outline: "none",
+														backgroundColor: "inherit",
+													}}
+													ref={(el) =>
+														(refs.current[sceneIndex][segmentIndex] = el)
+													}
+													value={segment.textContent}
+													onChange={(e) => {
+														handleInput(
+															e,
+															scene,
+															sceneIndex,
+															segment,
+															segmentIndex
+														);
+													}}
+												/>
+												<span> </span>
+											</div>
+										))}
+									</span>
+								</div>
+							))}
+						</div>
 
 						<div className="gap-x-2.5">
 							<div className="w-full inline-flex border-t-border border-t-2 text-slate-400 text-xs py-1">
@@ -91,8 +320,8 @@ export default function VideoEditor({
 							</div>
 							<div className="hidden md:block text-muted-foreground space-x-2 items-center">
 								<Button className="p-2 bg-purple-600" variant="default">
-									<Sparkle className="mr-2 h-4 w-4 text-xs" /> Regenerate 1
-									Edited Scene
+									<Sparkle className="mr-2 h-4 w-4 text-xs" /> Make {numEdits}{" "}
+									Edits
 								</Button>
 								<Button className="p-2 text-xs align-top" variant="outline">
 									Or, Save Draft

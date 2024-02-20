@@ -1,5 +1,5 @@
 import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
-import { mainSchema } from "../schema";
+import { mainSchema, mlSchema } from "../schema";
 import { getJwt } from "@/utils/jwt";
 import { StoryOutputTypes } from "@/utils/enums";
 
@@ -34,6 +34,30 @@ const video = {
 		}
 
 		return data.data;
+	},
+	editScene: async (
+		params: mlSchema["EditSceneRequest"],
+		accessToken?: string
+	): Promise<Object> => {
+		const data: string = await authFetcher(accessToken ?? getJwt())
+			.get(`edit-scene`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		return JSON.parse(data);
+	},
+	editSegment: async (
+		params: mlSchema["EditSegmentRequest"],
+		accessToken?: string
+	) => {
+		const data: string = await authFetcher(accessToken ?? getJwt())
+			.put(`edit-segment`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		return JSON.parse(data);
 	},
 };
 
