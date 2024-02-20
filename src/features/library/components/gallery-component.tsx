@@ -40,7 +40,9 @@ function LibraryGalleryComponent({
 				</div>
 				<Button
 					type="button"
-					className={"flex py-2 px-4 gap-1 justify-center gap-1 rounded-[52px]"}
+					className={
+						"flex py-2 px-4 gap-1 justify-center gap-1 rounded-[52px] text-primary h-fit"
+					}
 					style={navigationButtonStyles}
 					onClick={() => {
 						if (!isIndependentGalleryPage && setSelectedOrientationTab) {

@@ -5,16 +5,12 @@ import LibraryHomePage from "./components/home-page";
 import LibraryGalleryPage from "./components/gallery-page";
 import { VideoOrientation } from "@/types";
 
-const container: CSSProperties = {
-	backgroundColor: "#ffffff",
-};
-
 function LibraryPage() {
 	const [selectedOrientationTab, setSelectedOrientationTab] = useState(
 		VIDEO_ORIENTATIONS.ALL.id
 	);
 	return (
-		<div className="min-h-[100vh]" style={container}>
+		<div className="min-h-[100vh] bg-background">
 			<LibraryHeader
 				selectedOrientationTab={selectedOrientationTab}
 				setSelectedOrientationTab={setSelectedOrientationTab}
@@ -25,6 +21,7 @@ function LibraryPage() {
 				/>
 			) : (
 				<LibraryGalleryPage
+					key={selectedOrientationTab}
 					orientation={selectedOrientationTab as VideoOrientation}
 				/>
 			)}

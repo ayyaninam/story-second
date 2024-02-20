@@ -11,12 +11,23 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useTheme } from "next-themes";
 
-const mainHeaderContainer: CSSProperties = {
-	background:
-		"radial-gradient(10.83% 5455.25% at 0% 50%, rgba(159, 234, 225, 0.5) 0%, rgba(159, 234, 225, 0) 100%),linear-gradient(0deg, #FFFFFF, #FFFFFF)",
-	boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
+const mainHeaderContainer: {
+	[key: string]: CSSProperties;
+} = {
+	light: {
+		background:
+			"radial-gradient(10.83% 5455.25% at 0% 50%, rgba(159, 234, 225, 0.5) 0%, rgba(159, 234, 225, 0) 100%),linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+		boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
+	},
+	dark: {
+		background:
+			"radial-gradient(10.83% 5455.25% at 0% 50%, rgba(40, 90, 85, 0.5) 0%, rgba(40, 90, 85, 0) 100%), linear-gradient(0deg, #2E2E2E, #2E2E2E)",
+		boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
+	},
 };
+
 const createNewButton: CSSProperties = {
 	background:
 		"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-Purple-700, #8F22CE)",
@@ -41,17 +52,18 @@ export const LibraryHeader = ({
 	selectedOrientationTab: string;
 	setSelectedOrientationTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+	const { theme } = useTheme();
 	return (
 		<div
 			style={{
 				position: "sticky",
 				top: "0",
 			}}
-			className="flex flex-col items-start pb-[1px] z-50 bg-primary"
+			className="flex flex-col items-start pb-[1px] z-50 bg-background"
 		>
 			<div
 				className="flex justify-between items-center px-[20px] py-[14px] w-full"
-				style={mainHeaderContainer}
+				style={mainHeaderContainer[theme]}
 			>
 				<div className="flex items-start w-[250px]">
 					<Image
@@ -155,7 +167,7 @@ export const LibraryHeader = ({
 						<SelectTrigger className="ml-auto max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
 							<SelectValue placeholder="Sort by" />
 						</SelectTrigger>
-						<SelectContent className="bg-white text-[#000000] border-muted-foreground">
+						<SelectContent className="bg-white text-[#000000] border-muted">
 							<SelectItem value="recent">Most Recent</SelectItem>
 							<SelectItem value="asc">Ascending</SelectItem>
 							<SelectItem value="dsc">Descending</SelectItem>
