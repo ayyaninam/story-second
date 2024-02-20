@@ -49,7 +49,6 @@ export const ImageRatios = {
 };
 
 export const GetImageRatio = (resolution: AspectRatios) => {
-	return ImageRatios["9x16"]; // TODO: Remove this post-demo
 	return (
 		Object.values(ImageRatios).find(
 			(ratio) => ratio.enumValue === resolution
