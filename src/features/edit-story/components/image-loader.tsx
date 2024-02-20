@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import CustomImageSuspense from "./custom-image-suspense";
 import { components } from "@/api/schema/main";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
 import useWebstoryContext from "../providers/WebstoryContext";
 
@@ -44,7 +44,7 @@ export default function ImageLoader({
 
 	// Short cuts
 	const currentImage = imageData[index]!;
-	const ImageRatio = GetImageRatio(Webstory.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.resolution);
 
 	return (
 		<CustomImageSuspense
