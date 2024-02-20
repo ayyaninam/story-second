@@ -35,6 +35,31 @@ const video = {
 
 		return data.data;
 	},
+	render: async ({
+		id,
+		accessToken,
+	}: {
+		id: string;
+		accessToken?: string;
+	}): Promise<string> => {
+		const data: mainSchema["StringApiResponse"] = await authFetcher(
+			accessToken ?? getJwt()
+		)
+			.put(`api/Video/${id}/RenderVideo`, {
+				searchParams: { storyItemSubType: 2 },
+			})
+			.json();
+
+		if (!data.succeeded) {
+			// TODO:figure out error boundaries
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
 };
 
 export default video;
