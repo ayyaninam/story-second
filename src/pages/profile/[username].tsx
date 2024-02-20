@@ -47,6 +47,17 @@ const profileSchema = z.object({
 	dateOfBirth: z.date({ required_error: "DOB is required" }),
 });
 
+const preferenceSchema = z.object({
+	storyVisibility: z.boolean(),
+	amazonStatus: z.boolean(),
+	tokenPurchase: z.boolean(),
+	tokenUsage: z.boolean(),
+	lowBalance: z.boolean(),
+	storyGenerated: z.boolean(),
+	reportUpdated: z.boolean(),
+	commentUsage: z.boolean(),
+});
+
 type Profile = z.infer<typeof profileSchema>;
 
 const Profile = () => {
@@ -67,6 +78,7 @@ const Profile = () => {
 	});
 
 	const preferenceForm = useForm({
+		resolver: zodResolver(preferenceSchema),
 		defaultValues: {
 			storyVisibility: true,
 			amazonStatus: true,

@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import clsx from "clsx";
 import { useCallback } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFormState, useWatch } from "react-hook-form";
 
 const PreferenceInput = ({
 	name,
@@ -26,6 +26,7 @@ const PreferenceInput = ({
 	rightLabel?: string;
 	className?: string;
 }) => {
+	const preferenceValues = form.watch(name);
 	return (
 		<div className={clsx("flex items-center", className)}>
 			<div className="w-6/12">
@@ -40,7 +41,8 @@ const PreferenceInput = ({
 						form.setValue(name, checked);
 						form.trigger(name);
 					}}
-					checked={form.getValues()?.[name]}
+					checked={preferenceValues}
+					// checked={form.getValues()?.[name]}
 				/>
 				{rightLabel && <Label htmlFor={name}>Public</Label>}
 			</div>
