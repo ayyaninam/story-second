@@ -47,6 +47,9 @@ function LibraryHomePage({
 							? Format.GetImageUrl(story.coverImage)
 							: null,
 						description: story.summary,
+						topLevelCategory: story.topLevelCategory,
+						slug: story.slug,
+						storyType: story.storyType,
 					};
 					if (isWideOrientation) {
 						acc[VIDEO_ORIENTATIONS.WIDE.id] = [

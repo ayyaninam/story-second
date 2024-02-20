@@ -1,5 +1,5 @@
 import { mlSchema, mainSchema } from "@/api/schema";
-import { StoryLengths } from "./utils/enums";
+import { StoryLengths, StoryOutputTypes } from "./utils/enums";
 import { CallbackListener } from "@remotion/player";
 
 export type CreateInitialStoryQueryParams = mlSchema["CreateStoryRequest"];
@@ -37,6 +37,9 @@ export type VideoThumbnail = {
   title?: string | null;
   thumbnail?: string | null;
   description?: string | null;
+  storyType: StoryOutputTypes;
+  topLevelCategory?: string | null;
+  slug?: string | null;
 };
 
 export type GalleryData = {

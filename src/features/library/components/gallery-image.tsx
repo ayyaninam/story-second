@@ -3,24 +3,39 @@ import { VIDEO_ORIENTATIONS } from "../constants";
 import { cn } from "@/utils";
 import { GalleryData, VideoOrientation, VideoThumbnail } from "@/types";
 import { Button } from "@/components/ui/button";
+import Routes from "@/routes";
+import { useRouter } from "next/router";
 
 function GalleryImage({
-	thumbnail,
+	story,
 	galleryDetails,
 }: {
-	thumbnail: VideoThumbnail;
+	story: VideoThumbnail;
 	galleryDetails: GalleryData[VideoOrientation];
 }) {
 	const [isHovered, setIsHovered] = React.useState(false);
+	const router = useRouter();
 	return (
 		<div
-			key={thumbnail.id}
+			key={story.id}
 			className={cn(
-				"flex flex-col items-start rounded-[8px] border border-[#1f29371f] bg-white",
-				thumbnail.expand ? "row-span-2 col-span-2" : "row-span-1 col-span-1"
+				"flex flex-col items-start rounded-[8px] border border-[#1f29371f] bg-white cursor-pointer",
+				story.expand ? "row-span-2 col-span-2" : "row-span-1 col-span-1"
 			)}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
+			onClick={() => {
+				console.log("story", story);
+				router.push(
+					Routes.ToAuthPage(
+						Routes.ViewStory(
+							story.storyType,
+							story.topLevelCategory as string,
+							story.slug as string
+						)
+					)
+				);
+			}}
 		>
 			<div
 				className={cn(
@@ -30,7 +45,7 @@ function GalleryImage({
 						: "aspect-[9/16]"
 				)}
 				style={{
-					backgroundImage: `url(${thumbnail.thumbnail})`,
+					backgroundImage: `url(${story.thumbnail})`,
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 				}}
@@ -69,10 +84,10 @@ function GalleryImage({
 				>
 					<div className="flex flex-col gap-[-4px]">
 						<span className="line-clamp-1 text-white overflow-hidden text-ellipsis font-semibold leading-6 text-sm">
-							{thumbnail.title}
+							{story.title}
 						</span>
 						<p className="line-clamp-2 overflow-hidden text-ellipsis font-normal text-sm text-[#ffffffab]">
-							{thumbnail.description}
+							{story.description}
 						</p>
 					</div>
 					<div className="flex gap-2 w-full">

@@ -157,7 +157,7 @@ export default function App({ Component, pageProps }: AppProps) {
 					<Toaster />
 					<ThemeProvider
 						attribute="class"
-						defaultTheme="system"
+						defaultTheme="light"
 						enableSystem
 						disableTransitionOnChange
 					>

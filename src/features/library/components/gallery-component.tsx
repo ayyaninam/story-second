@@ -84,10 +84,10 @@ function LibraryGalleryComponent({
 					"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 grid-flow-row"
 				}
 			>
-				{thumbnails.map((thumbnail) => (
+				{thumbnails.map((story) => (
 					<GalleryImage
-						key={thumbnail.id}
-						thumbnail={thumbnail}
+						key={story.id}
+						story={story}
 						galleryDetails={galleryDetails}
 					/>
 				))}
