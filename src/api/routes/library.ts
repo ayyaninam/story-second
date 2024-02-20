@@ -21,6 +21,28 @@ const library = {
 
 		return data.data;
 	},
+	getStories: async ({
+		params
+	}: {
+		params: {currentPage: number;
+		pageSize: number;
+		liked?: boolean;
+		sortType?: string;}
+	}): Promise<mainSchema["ReturnWebStoryDTOPagedList"]> => {
+		const data: mainSchema["ReturnWebStoryDTOPagedListApiResponse"] =
+			await authFetcher(getJwt()).get("api/Library", {
+				searchParams: params,
+			}).json();
+		if (!data.succeeded) {
+			// TODO:figure out error boundaries
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
 	likeVideo: async ({
 		id,
 		params,

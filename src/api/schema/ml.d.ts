@@ -17,6 +17,10 @@ export interface paths {
     /** Create Story */
     post: operations["create_story_create_post"];
   };
+  "/create-segment": {
+    /** Create Segment */
+    post: operations["create_segment_create_segment_post"];
+  };
   "/regenerate-image": {
     /** Regenerate Image */
     post: operations["regenerate_image_regenerate_image_post"];
@@ -35,6 +39,20 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    /** CreateSegmentRequest */
+    CreateSegmentRequest: {
+      /** Story Id */
+      story_id: string;
+      /** Segment Idx */
+      segment_idx: number;
+      /** Segment */
+      segment: string;
+      image_style: components["schemas"]["ImageStyleEnum"];
+      image_resolution: components["schemas"]["ImageResolutionEnum"];
+      /** Test Interpolation */
+      test_interpolation: boolean;
+      story_type: components["schemas"]["OutputTypeEnum"];
+    };
     /**
      * CreateStoryRequest
      * @description data = {
@@ -146,8 +164,13 @@ export interface components {
       prompt: string;
       image_style: components["schemas"]["ImageStyleEnum"];
       /**
+       * Cover Image
+       * @default false
+       */
+      cover_image?: boolean;
+      /**
        * Seed
-       * @default 5282123
+       * @default 13548457
        */
       seed?: number;
       /**
@@ -266,6 +289,28 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateStoryRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Create Segment */
+  create_segment_create_segment_post: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateSegmentRequest"];
       };
     };
     responses: {

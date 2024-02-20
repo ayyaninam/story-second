@@ -1,5 +1,5 @@
 import React from "react";
-import { GalleryData, VideoOrientation } from "@/types";
+import { GalleryData, VideoOrientation, VideoThumbnail } from "@/types";
 import { Button } from "@/components/ui/button";
 import GalleryImage from "./gallery-image";
 
@@ -13,10 +13,12 @@ function LibraryGalleryComponent({
 	galleryDetails,
 	isIndependentGalleryPage = false,
 	setSelectedOrientationTab,
+	thumbnails,
 }: {
 	galleryDetails: GalleryData[VideoOrientation];
 	isIndependentGalleryPage?: boolean;
 	setSelectedOrientationTab?: React.Dispatch<React.SetStateAction<string>>;
+	thumbnails: VideoThumbnail[];
 }) {
 	return (
 		<>
@@ -82,7 +84,7 @@ function LibraryGalleryComponent({
 					"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 grid-flow-row"
 				}
 			>
-				{galleryDetails.thumbnails.map((thumbnail) => (
+				{thumbnails.map((thumbnail) => (
 					<GalleryImage
 						key={thumbnail.id}
 						thumbnail={thumbnail}

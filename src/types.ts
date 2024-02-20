@@ -32,11 +32,11 @@ export type StoryScreenBgBlurProps = {
 export type VideoOrientation = "wide" | "vertical" | "book";
 
 export type VideoThumbnail = {
-	  id: string;
+  id?: string;
   expand?: boolean;
-  title: string;
-  thumbnail: string;
-  description: string;
+  title?: string | null;
+  thumbnail?: string | null;
+  description?: string | null;
 };
 
 export type GalleryData = {
@@ -50,6 +50,5 @@ export type GalleryData = {
       subtitle: string;
       buttonText: string;
     };
-    thumbnails: VideoThumbnail[];
   };
 };

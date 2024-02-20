@@ -35,7 +35,7 @@ function LibraryHeroSection() {
 						<Button
 							variant="secondary"
 							size="sm"
-							className="bg-teal-600 hover:bg-teal-700 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-teal-700"
+							className="bg-teal-600 hover:bg-teal-700 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-teal-700 text-background"
 						>
 							<svg
 								width="16"
@@ -67,7 +67,7 @@ function LibraryHeroSection() {
 						</Button>
 						<Button
 							size="sm"
-							className="bg-white hover:bg-gray-100 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-[#DEE0E3]"
+							className="bg-white hover:bg-gray-100 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-[#DEE0E3] text-primary"
 						>
 							<svg
 								width="16"
