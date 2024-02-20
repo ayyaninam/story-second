@@ -1,7 +1,9 @@
 import React, { CSSProperties, useState } from "react";
-import { LibraryHeader } from "./components/library-header";
+import { LibraryHeader } from "./components/header";
 import { VIDEO_ORIENTATIONS } from "./constants";
-import LibraryHomePage from "./components/library-home-page";
+import LibraryHomePage from "./components/home-page";
+import LibraryGalleryPage from "./components/gallery-page";
+import { VideoOrientation } from "@/types";
 
 const container: CSSProperties = {
 	backgroundColor: "#ffffff",
@@ -17,18 +19,15 @@ function LibraryPage() {
 				selectedOrientationTab={selectedOrientationTab}
 				setSelectedOrientationTab={setSelectedOrientationTab}
 			/>
-			{selectedOrientationTab === VIDEO_ORIENTATIONS.ALL.id && (
-				<LibraryHomePage />
+			{selectedOrientationTab === VIDEO_ORIENTATIONS.ALL.id ? (
+				<LibraryHomePage
+					setSelectedOrientationTab={setSelectedOrientationTab}
+				/>
+			) : (
+				<LibraryGalleryPage
+					orientation={selectedOrientationTab as VideoOrientation}
+				/>
 			)}
-			{/* {selectedOrientationTab === VIDEO_ORIENTATIONS.VERTICAL.id && (
-                <VerticalOrientationLibraryPage />
-            )}
-            {selectedOrientationTab === VIDEO_ORIENTATIONS.WIDE.id && (
-                <WideOrientationLibraryPage />
-            )}
-            {selectedOrientationTab === VIDEO_ORIENTATIONS.BOOK.id && (
-                <BookOrientationLibraryPage />
-            )} */}
 		</div>
 	);
 }

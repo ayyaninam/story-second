@@ -39,7 +39,7 @@ export const LibraryHeader = ({
 				position: "sticky",
 				top: "0",
 			}}
-			className="flex flex-col items-start pb-[1px]"
+			className="flex flex-col items-start pb-[1px] z-10 bg-primary"
 		>
 			<div
 				className="flex flex-col self-stretch item-start w-full"
