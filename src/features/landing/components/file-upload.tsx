@@ -6,9 +6,11 @@ import React from "react";
 export default function FileUpload({
 	setVideoFileId,
 	videoFileId,
+	showToast,
 }: {
 	setVideoFileId: (file: string | null) => void;
 	videoFileId: string | null;
+	showToast: (toast: { msg: string; persist?: boolean }) => void;
 }) {
 	const UploadFile = useMutation({ mutationFn: video.getUploadUrl });
 	const [isVideoUploading, setIsVideoUploading] = React.useState(false);
@@ -16,6 +18,7 @@ export default function FileUpload({
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
 			setIsVideoUploading(true);
+			showToast({ msg: "Uploading video...", persist: true });
 			const file = e.target.files[0];
 			if (file.type.startsWith("video/")) {
 				const uploadData = await UploadFile.mutateAsync({
@@ -30,6 +33,7 @@ export default function FileUpload({
 				});
 				console.log(uploadData.data.objectKey);
 				setVideoFileId(uploadData.data.objectKey ?? "");
+				showToast({ msg: "Video Uploaded!" });
 			}
 		}
 		setIsVideoUploading(false);
