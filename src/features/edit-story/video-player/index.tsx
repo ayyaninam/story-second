@@ -16,7 +16,10 @@ import {
 	VIDEO_WIDTH,
 	RemotionPlayerInputProps,
 } from "./constants";
-import { GetImageRatio, GetImageRatioFromVariant } from "@/utils/image-ratio";
+import {
+	GetDisplayImageRatio,
+	GetDisplayImageRatioFromVariant,
+} from "@/utils/image-ratio";
 import { useRouter } from "next/router";
 import useWebstoryContext from "../providers/WebstoryContext";
 
@@ -51,7 +54,7 @@ const RemotionPlayer = ({
 }: RemotionPlayerProps) => {
 	const router = useRouter();
 	const [Webstory] = useWebstoryContext();
-	const ImageRatio = GetImageRatio(Webstory.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.resolution);
 
 	const player: React.CSSProperties = {
 		width: "100%",
@@ -286,8 +289,9 @@ const RemotionPlayer = ({
 	// TODO: responsive styles
 	const style: React.CSSProperties = {
 		width: "100%",
-		aspectRatio: GetImageRatioFromVariant(inputProps.variant ?? "landscape")
-			.ratio,
+		aspectRatio: GetDisplayImageRatioFromVariant(
+			inputProps.variant ?? "landscape"
+		).ratio,
 	};
 
 	return (

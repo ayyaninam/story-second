@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import {
 	ChevronRight,
+	DownloadCloudIcon,
 	DownloadIcon,
 	Heart,
 	HelpCircle,
+	LogOutIcon,
 	Share2,
 	Star,
 	Video,
@@ -20,7 +22,7 @@ import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
 import { useMediaQuery } from "usehooks-ts";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { cn } from "@/utils";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
@@ -74,10 +76,17 @@ export default function PublishedStory({
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.INTERACTIONS, router.asPath],
 	});
+	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
+		queryFn: () => api.user.get(session.accessToken),
+		staleTime: 3000,
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.USER],
+	});
 
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
+	const RenderVideo = useMutation({ mutationFn: api.video.render });
 
-	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
 
 	useEffect(() => {
@@ -135,14 +144,24 @@ export default function PublishedStory({
 			await Interactions.refetch();
 		}
 	};
-	useEffect(() => {
-		if (router.query.liked) {
-			handleLikeVideo(router.query.liked === "true");
-
-			const path = router.asPath.split("?")[0] as string;
-			router.replace(path, undefined, { shallow: true });
+	const handleRenderVideo = async () => {
+		if (!session.accessToken) {
+			router.push(
+				Routes.ToAuthPage(
+					Routes.ViewStory(
+						storyData.storyType,
+						router.query.genre!.toString(),
+						router.query.id!.toString()
+					)
+				)
+			);
+		} else {
+			await RenderVideo.mutateAsync({
+				id: storyData.id!,
+				accessToken: session.accessToken,
+			});
 		}
-	}, [router.query]);
+	};
 
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
@@ -265,6 +284,16 @@ export default function PublishedStory({
 							<Share2 className="mr-2 h-4 w-4" /> Share this video
 						</Button>
 					)}
+					<Button
+						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
+						variant="outline"
+					>
+						<LogOutIcon
+							className="mr-2 h-4 w-4"
+							onClick={() => router.push(Routes.Logout())}
+						/>{" "}
+						Log Out
+					</Button>
 				</div>
 			</div>
 
@@ -361,7 +390,10 @@ export default function PublishedStory({
 											/>{" "}
 											Like video
 										</Button>
-										{Webstory.data?.renderedVideoKey && (
+
+										{User?.data?.data?.id !==
+										Webstory.data?.user?.id ? null : Webstory.data
+												?.renderedVideoKey ? (
 											<a
 												href={Format.GetPublicBucketObjectUrl(
 													Webstory.data?.renderedVideoKey as string
@@ -369,12 +401,36 @@ export default function PublishedStory({
 												download={`${Webstory.data?.storyTitle?.replaceAll(" ", "_")}.mp4`}
 											>
 												<Button
+													onClick={async (e) => {
+														const presignedUrl = await RenderVideo.mutateAsync({
+															id: storyData.id!,
+															accessToken: session.accessToken,
+														});
+														console.log(presignedUrl);
+														const link = document.createElement("a");
+														link.href = presignedUrl;
+														link.download = "";
+
+														document.body.appendChild(link);
+														link.click();
+
+														document.body.removeChild(link);
+													}}
 													className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
 													variant="outline"
 												>
 													<DownloadIcon className="mr-2 h-4 w-4" /> Download
 												</Button>
 											</a>
+										) : (
+											<Button
+												className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+												variant="outline"
+												onClick={handleRenderVideo}
+											>
+												<DownloadCloudIcon className="mr-2 h-4 w-4" />{" "}
+												{RenderVideo.isPending ? "Loading" : "Render"}
+											</Button>
 										)}
 									</div>
 									{isLoading ? (

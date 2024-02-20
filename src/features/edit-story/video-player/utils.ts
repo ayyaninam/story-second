@@ -2,7 +2,7 @@ import pLimit from "p-limit";
 import { RemotionPlayerInputProps, RemotionVariant } from "./constants";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
-import { VoiceType, AspectRatios, StoryOutputTypes } from "@/utils/enums";
+import {VoiceType, AspectRatios, StoryOutputTypes, DisplayAspectRatios} from "@/utils/enums";
 import {
 	toRemotionInputProps,
 	toRemotionSegment,
@@ -21,7 +21,7 @@ export const getRemotionVariant = (story: WebStory): RemotionVariant => {
 
 	if (storyType === StoryOutputTypes.SplitScreen) {
 		return "split";
-	} else if (imageResolution === AspectRatios["1024x576"]) {
+	} else if (imageResolution === DisplayAspectRatios["1024x576"]) {
 		return "landscape";
 	}
 	return "portrait";
