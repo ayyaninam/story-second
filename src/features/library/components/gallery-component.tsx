@@ -75,7 +75,11 @@ function LibraryGalleryComponent({
 						: galleryDetails.header.buttonText}
 				</Button>
 			</div>
-			<div className={"grid grid-cols-5 gap-4 grid-flow-row"}>
+			<div
+				className={
+					"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 grid-flow-row"
+				}
+			>
 				{galleryDetails.thumbnails.map((thumbnail) => (
 					<GalleryImage
 						key={thumbnail.id}
