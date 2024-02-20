@@ -3,7 +3,7 @@ import ImageLoader from "./components/image-loader";
 import VideoPlayer from "./components/video-player";
 import { FC, useEffect, useState } from "react";
 import { prefetch } from "remotion";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { VideoPlayerProps } from "@/types";
 
 const StoryScreen: FC<VideoPlayerProps> = ({
@@ -96,7 +96,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 		(hasOriginalTikTokVideoKey &&
 			!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
 
-	const ImageRatio = GetImageRatio(Webstory?.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
 
 	if (isError)
 		return (

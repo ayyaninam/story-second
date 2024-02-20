@@ -22,7 +22,7 @@ import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
 import { useMediaQuery } from "usehooks-ts";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { cn } from "@/utils";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
@@ -86,7 +86,7 @@ export default function PublishedStory({
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
 	const RenderVideo = useMutation({ mutationFn: api.video.render });
 
-	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
 
 	useEffect(() => {
