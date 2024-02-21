@@ -51,6 +51,7 @@ const App = () => {
 	// Handlers
 	console.log(isLoading);
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		setIsLoading(true);
 		e.preventDefault();
 		setIsLoading(true);
 		setTimeout(() => {
@@ -76,6 +77,7 @@ const App = () => {
 			console.log(Routes.CreateStoryFromRoute(params));
 			window.location.href = Routes.CreateStoryFromRoute(params);
 		}, 500);
+		setIsLoading(true);
 	};
 
 	const [isButtonDisabled, setIsButtonDisabled] = useState(
