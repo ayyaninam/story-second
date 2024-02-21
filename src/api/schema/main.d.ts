@@ -3415,7 +3415,7 @@ export interface components {
      * Format: int32
      * @enum {integer}
      */
-    ApiResponseStatus: Success | Unauthorized | NotFound | BadRequest | ServerError | Forbidden | PaymentRequired;
+    ApiResponseStatus: Success | Unauthorized | NotFound | BadRequest | ServerError | Forbidden | PaymentRequired | OkNoContent;
     BookOrder: {
       /** Format: uuid */
       id?: string;
@@ -3629,7 +3629,7 @@ export interface components {
      * @description The type of credit spend
      * @enum {integer}
      */
-    CreditSpendType: StoryGeneration | StorySegmentEdit | AudioGeneration | AudioRegeneration | ImageRegeneration | AmazonPublishing | AmazonPublishingPDFOnly | WatermarkedEBookPDF | OriginalEBookPDF | RegenerateSegmentWithAI | AddNewPage | VideoLandscape | VideoPortrait | VideoLandscapeSubtitle | ImageScribble | EnrollStoryInContest | WatermarkedStoryBookPDF | OriginalStoryBookPDF;
+    CreditSpendType: StoryGeneration | StorySegmentEdit | AudioGeneration | AudioRegeneration | ImageRegeneration | AmazonPublishing | AmazonPublishingPDFOnly | WatermarkedEBookPDF | OriginalEBookPDF | RegenerateSegmentWithAI | AddNewPage | VideoLandscape | VideoPortrait | VideoLandscapeSubtitle | ImageScribble | EnrollStoryInContest | WatermarkedStoryBookPDF | OriginalStoryBookPDF | OneStoryBookGeneration | OneVideoGeneration;
     DiscountCode: {
       /** Format: uuid */
       id?: string;
@@ -6737,7 +6737,8 @@ export interface components {
       storyCount?: number | null;
       /** Format: int32 */
       videoCount?: number | null;
-      subscription?: components["schemas"]["UserSubscription"];
+      subscriptions?: components["schemas"]["UserSubscription"][] | null;
+      allowance?: components["schemas"]["UserAllowance"];
       amazonBook?: components["schemas"]["AmazonBook"][] | null;
       webStories?: components["schemas"]["WebStory"][] | null;
       likes?: components["schemas"]["StoryLike"][] | null;
@@ -6752,6 +6753,21 @@ export interface components {
       amazonRoyaltyTransactions?: components["schemas"]["AmazonRoyaltyTransaction"][] | null;
       payoutAccounts?: components["schemas"]["PayoutAccount"][] | null;
       stripePayments?: components["schemas"]["StripePayment"][] | null;
+    };
+    UserAllowance: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      created?: string;
+      /** Format: int32 */
+      storyBooks?: number;
+      /** Format: int32 */
+      videos?: number;
+      /** Format: int32 */
+      credits?: number;
+      /** Format: uuid */
+      userId?: string;
+      user?: components["schemas"]["UserAccount"];
     };
     /** @description Return model for the user's account details. */
     UserInfoDTO: {
@@ -6836,6 +6852,7 @@ export interface components {
        * @description The expiry year of the user's card.
        */
       cardExpiryYear?: number | null;
+      subscription?: components["schemas"]["UserSubscriptionDTO"];
       emailNotificationPreferences?: components["schemas"]["EmailNotificationPreferencesDTO"];
       /**
        * EmailVerified
@@ -6921,6 +6938,36 @@ export interface components {
       /** Format: uuid */
       userId?: string;
       user?: components["schemas"]["UserAccount"];
+    };
+    /** @description DTO used to receive User's Subscription details. */
+    UserSubscriptionDTO: {
+      subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
+      subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
+      /**
+       * Format: int32
+       * @description The number of story generations the user has.
+       */
+      storyGenerations?: number;
+      /**
+       * Format: int32
+       * @description The number of video generations the user has.
+       */
+      videoGenerations?: number;
+      /**
+       * Format: int32
+       * @description The number of credits the user has for misc. features.
+       */
+      credits?: number;
+      /**
+       * Format: date-time
+       * @description The date and time the user's subscription was created.
+       */
+      startDate?: string | null;
+      /**
+       * Format: date-time
+       * @description The date and time the user's subscription will expire.
+       */
+      endDate?: string | null;
     };
     /** @description DTO used to verify a user's email address. */
     VerifyEmailDTO: {
@@ -7104,6 +7151,8 @@ export interface operations {
         PageSize?: number;
         storyType?: components["schemas"]["StoryType"];
         searchTerm?: string;
+        resolution?: components["schemas"]["DisplayResolution"];
+        isDescending?: boolean;
       };
       path: {
         topLevelCategory: string;

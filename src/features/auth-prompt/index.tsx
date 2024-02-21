@@ -126,7 +126,7 @@ export default function AuthPrompt({ onLogIn, onSignUp }: AuthPromptProps) {
 				</svg>
 
 				{/* This can be replaced with some dynamic data as well */}
-				<div className="w-full space-y-3 max-w-[80%]">
+				<div className="w-full space-y-3 max-w-[80%] text-background">
 					<div className="w-full text-base">
 						“This library has saved me countless hours of work and helped me
 						deliver stunning designs to my clients faster than ever before.”

@@ -35,6 +35,26 @@ const video = {
 
 		return data.data;
 	},
+	render: async ({
+		id,
+		accessToken,
+	}: {
+		id: string;
+		accessToken?: string;
+	}): Promise<string | undefined | null> => {
+		const data: mainSchema["StringApiResponse"] = await authFetcher(
+			accessToken ?? getJwt()
+		)
+			.put(`api/Video/${id}/RenderVideo`, {
+				searchParams: { storyItemSubType: 2 },
+			})
+			.json();
+		const status = data.status;
+		if (status === 204) return null;
+		// console.log(response.data);
+		if (!data.data) return null;
+		return data?.data;
+	},
 };
 
 export default video;

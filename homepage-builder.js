@@ -4,7 +4,7 @@ require("dotenv").config();
 esbuild
 	.build({
 		entryPoints: ["./src/features/landing/build.tsx"],
-		outfile: "./public/landing/custominput.js",
+		outfile: "./public/landing/prompt-script.js",
 		bundle: true,
 		minify: true,
 		sourcemap: false,
@@ -20,6 +20,7 @@ esbuild
 			"process.env.NEXT_PUBLIC_ML_API_URL": `"${process.env.NEXT_PUBLIC_ML_API_URL}"`,
 			"process.env.NEXT_PUBLIC_AUTH0_AUDIENCE": `"${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}"`,
 			"process.env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES": `"${process.env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES}"`,
+			"process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": `"${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}"`,
 		},
 	})
 	.then(() => console.log("⚡Bundle build complete ⚡"))

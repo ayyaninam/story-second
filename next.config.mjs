@@ -8,10 +8,10 @@ const nextConfig = {
 				source: "/landing/fonts/:font",
 				headers: [{ key: "Cache-Control", value: "max-age=10000" }],
 			},
-			{
-				source: "/landing/custominput.js",
-				headers: [{ key: "Cache-Control", value: "max-age=10000" }],
-			},
+			// {
+			// 	source: "/landing/custominput.js",
+			// 	headers: [{ key: "Cache-Control", value: "max-age=10000" }],
+			// },
 		];
 	},
 	async rewrites() {
