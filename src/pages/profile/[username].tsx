@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import api from "@/api";
 import { pick } from "lodash";
-import { parse, parseISO } from "date-fns";
+import { parse, parseISO, subDays } from "date-fns";
 
 const profileSchema = z.object({
 	profileName: z
@@ -36,8 +36,14 @@ const profileSchema = z.object({
 		.min(1, "Last name is required"),
 	phoneNumber: z
 		.string({ required_error: "Phone is required" })
+		.regex(
+			/^\+?\d{1,4}?[-.\s]?((\(?\d{1,3}?\)?[-.\s]?)?(\d{1,4}[-.\s]?)*\d{1,4}|\d{10})$/,
+			"Invalid Phone number"
+		)
 		.refine(validator.isMobilePhone),
-	dateOfBirth: z.date({ required_error: "DOB is required" }),
+	dateOfBirth: z
+		.date({ required_error: "DOB is required" })
+		.max(subDays(new Date(), 1), "Invalid DOB"),
 });
 
 const preferenceSchema = z.object({
