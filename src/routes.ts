@@ -27,7 +27,7 @@ class Routes {
 		return `${this.authpage}?returnTo=${encodeURIComponent(returnUrl)}`;
 	}
 	static Logout(returnTo = "/") {
-		return `/api/auth/logout?returnTo=${returnTo}`;
+		return `/auth/logout?returnTo=${returnTo}`;
 	}
 	static Login(returnTo = "/") {
 		return `/api/auth/login?returnTo=${encodeURIComponent(returnTo)}`;

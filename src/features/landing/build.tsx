@@ -46,6 +46,7 @@ const App = () => {
 		// @ts-expect-error - TS doesn't know about the scrollHeight property
 		inputRef.current.style.height = `${inputRef.current?.scrollHeight}px`;
 	};
+
 	// Hooks
 	// Handlers
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,87 +75,16 @@ const App = () => {
 		window.location.href = Routes.CreateStoryFromRoute(params);
 	};
 
+	const [isButtonDisabled, setIsButtonDisabled] = useState(
+		(!prompt && !videoFileId) || isLoading
+	);
+
 	useEffect(() => {
 		setIsButtonDisabled((!prompt && !videoFileId) || isLoading);
 	}, [prompt, videoFileId, isLoading]);
 
-	const [isButtonDisabled, setIsButtonDisabled] = useState(
-		(!prompt && !videoFileId) || isLoading
-	);
-	const [showToast, setShowToast] = useState<{ show: boolean; msg?: string }>({
-		show: false,
-	});
-
-	const PendingIcon = () => {
-		return (
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="#FFA500"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				className="lucide lucide-circle-dashed"
-			>
-				<path d="M10.1 2.182a10 10 0 0 1 3.8 0" />
-				<path d="M13.9 21.818a10 10 0 0 1-3.8 0" />
-				<path d="M17.609 3.721a10 10 0 0 1 2.69 2.7" />
-				<path d="M2.182 13.9a10 10 0 0 1 0-3.8" />
-				<path d="M20.279 17.609a10 10 0 0 1-2.7 2.69" />
-				<path d="M21.818 10.1a10 10 0 0 1 0 3.8" />
-				<path d="M3.721 6.391a10 10 0 0 1 2.7-2.69" />
-				<path d="M6.391 20.279a10 10 0 0 1-2.69-2.7" />
-			</svg>
-		);
-	};
-
-	const SuccessIcon = () => {
-		return (
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="#008000"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				className="lucide lucide-check-circle"
-			>
-				<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-				<path d="m9 11 3 3L22 4" />
-			</svg>
-		);
-	};
-
 	return (
 		<form style={{ margin: 0 }} onSubmit={onSubmit}>
-			{showToast.show && (
-				<div
-					style={{
-						display: "flex",
-						color: showToast.msg === "Video Uploaded!" ? "#008000" : "#FFA500",
-						textAlign: "center",
-						width: "full",
-						justifyContent: "center",
-						alignItems: "center",
-						gap: 5,
-						fontWeight: "bold",
-					}}
-				>
-					{showToast.msg === "Video Uploaded!" ? (
-						<SuccessIcon />
-					) : (
-						<PendingIcon />
-					)}
-
-					<p>{showToast.msg}</p>
-				</div>
-			)}
 			<div className="first-form">
 				<div style={{ width: "100%", display: "flex" }}>
 					<textarea
@@ -334,14 +264,6 @@ const App = () => {
 						<FileUpload
 							setVideoFileId={setVideoFileId}
 							videoFileId={videoFileId}
-							showToast={({ msg, persist }) => {
-								if (persist) {
-									setShowToast({ show: true, msg });
-								} else {
-									setShowToast({ show: true, msg });
-									setTimeout(() => setShowToast({ show: false }), 3000);
-								}
-							}}
 						/>
 
 						<select

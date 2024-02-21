@@ -1,16 +1,14 @@
 import video from "@/api/routes/video";
-import TailwindSpinner from "@/features/landing/components/tw-spinner";
+import TailwindSpinner from "@/features/tiktok/components/tw-spinner";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 
 export default function FileUpload({
 	setVideoFileId,
 	videoFileId,
-	showToast,
 }: {
 	setVideoFileId: (file: string | null) => void;
 	videoFileId: string | null;
-	showToast: (toast: { msg: string; persist?: boolean }) => void;
 }) {
 	const UploadFile = useMutation({ mutationFn: video.getUploadUrl });
 	const [isVideoUploading, setIsVideoUploading] = React.useState(false);
@@ -18,7 +16,6 @@ export default function FileUpload({
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
 			setIsVideoUploading(true);
-			showToast({ msg: "Uploading video...", persist: true });
 			const file = e.target.files[0];
 			if (file.type.startsWith("video/")) {
 				const uploadData = await UploadFile.mutateAsync({
@@ -33,7 +30,6 @@ export default function FileUpload({
 				});
 				console.log(uploadData.data.objectKey);
 				setVideoFileId(uploadData.data.objectKey ?? "");
-				showToast({ msg: "Video Uploaded!" });
 			}
 		}
 		setIsVideoUploading(false);
@@ -88,8 +84,7 @@ export default function FileUpload({
 		<div
 			style={{
 				display: "flex",
-				backgroundColor:
-					videoFileId || isVideoUploading ? "#FFFFFF" : "#F1F5F9",
+				backgroundColor: "#F1F5F9",
 				// backgroundColor: "#F1F5F9",
 				borderRadius: "8px",
 				padding: "2px",
@@ -108,12 +103,22 @@ export default function FileUpload({
 				htmlFor="upload-video"
 				style={{
 					cursor: "pointer",
-					padding: "4px 8px",
+					padding: "2px 8px",
 					borderRadius: "4px",
 					margin: "auto",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
 				}}
 			>
 				<Icon />
+				<p style={{ fontSize: 14 }}>
+					{isVideoUploading
+						? "Loading"
+						: UploadFile.data?.data
+							? "Uploaded"
+							: ""}
+				</p>
 			</label>
 		</div>
 	);
