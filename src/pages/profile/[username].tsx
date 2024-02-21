@@ -2,30 +2,23 @@
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Control, useForm, useFormState } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
-import { get } from "lodash";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import Head from "next/head";
 import validator from "validator";
 import { ProfileForm } from "@/features/profile/Profile";
 import { PreferencesForm } from "@/features/profile/PreferencesForm";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
+import api from "@/api";
+import { pick } from "lodash";
+import { parse, parseISO } from "date-fns";
 
 const profileSchema = z.object({
-	username: z
+	profileName: z
 		.string({ required_error: "Username is required" })
 		.min(1, "Please enter username"),
 	email: z
@@ -35,13 +28,13 @@ const profileSchema = z.object({
 		.string({ required_error: "Bio is required" })
 		.min(50, "Bio should contain atleast 50 characters")
 		.max(1500, "Bio should be lest than 1500 character"),
-	firstName: z
+	name: z
 		.string({ required_error: "First name is required" })
 		.min(1, "First name is required"),
 	lastName: z
 		.string({ required_error: "Last name is required" })
 		.min(1, "Last name is required"),
-	phone: z
+	phoneNumber: z
 		.string({ required_error: "Phone is required" })
 		.refine(validator.isMobilePhone),
 	dateOfBirth: z.date({ required_error: "DOB is required" }),
@@ -64,18 +57,44 @@ const Profile = () => {
 	const router = useRouter();
 	const { username, step = "profile" } = router.query ?? {};
 
+	const { data, isPending, refetch } = useQuery({
+		queryKey: [QueryKeys.USER, username],
+		queryFn: () => api.user.get(),
+		enabled: !!username,
+	});
+
+	const basicDetails: Record<string, any> = useMemo(() => {
+		if (!data?.data) {
+			return {};
+		}
+		const _basicDetails: Record<string, any> = pick(data.data, [
+			"name",
+			"email",
+			"lastName",
+			"bio",
+			"profileName",
+			"phoneNumber",
+			"dateOfBirth",
+		]);
+
+		if (_basicDetails?.dateOfBirth) {
+			_basicDetails["dateOfBirth"] = parseISO(_basicDetails.dateOfBirth);
+		}
+
+		return _basicDetails;
+	}, [data]);
+
 	const form = useForm<z.infer<typeof profileSchema>>({
 		resolver: zodResolver(profileSchema),
-		defaultValues: {
-			firstName: "",
-			lastName: "",
-			username: "abc",
-			bio: "etetetet",
-			email: "",
-			dateOfBirth: new Date(),
-			phone: "",
-		},
+		defaultValues: basicDetails,
 	});
+
+	useEffect(() => {
+		if (Object.keys(basicDetails).length === 0) {
+			return;
+		}
+		form.reset(basicDetails);
+	}, [form, basicDetails]);
 
 	const preferenceForm = useForm({
 		resolver: zodResolver(preferenceSchema),
@@ -159,50 +178,54 @@ const Profile = () => {
 							</ToggleGroupItem>
 						</ToggleGroup>
 					</div>
-					<div id="tab-section" className="ml-28 w-4/6">
-						<div className="py-8">
-							{step === "profile" && (
-								<>
-									<p className="text-2xl font-bold">Profile</p>
-									<p className="text-base font-extralight text-muted-foreground">
-										This is how others will see you on the site.
-									</p>
-									<Separator className="my-8" />
-									<ProfileForm<Profile> form={form} />
-								</>
-							)}
-							{step === "amazonStatus" && (
-								<>
-									<h1>Still in progress...</h1>
-								</>
-							)}
-							{step === "my-items" && (
-								<>
-									<h1>Still in progress...</h1>
-								</>
-							)}
-							{step === "payouts" && (
-								<>
-									<h1>Still in progress...</h1>
-								</>
-							)}
-							{step === "payment" && (
-								<>
-									<h1>Still in progress...</h1>
-								</>
-							)}
-							{step === "wallets" && (
-								<>
-									<h1>Still in progress...</h1>
-								</>
-							)}
-							{step === "preferences" && (
-								<>
-									<PreferencesForm form={preferenceForm} />
-								</>
-							)}
+					{isPending ? (
+						<p className="ml-28 mt-10">Loading...</p>
+					) : (
+						<div id="tab-section" className="ml-28 w-4/6">
+							<div className="py-8">
+								{step === "profile" && (
+									<>
+										<p className="text-2xl font-bold">Profile</p>
+										<p className="text-base font-extralight text-muted-foreground">
+											This is how others will see you on the site.
+										</p>
+										<Separator className="my-8" />
+										<ProfileForm<Profile> form={form} refetch={refetch} />
+									</>
+								)}
+								{step === "amazonStatus" && (
+									<>
+										<h1>Still in progress...</h1>
+									</>
+								)}
+								{step === "my-items" && (
+									<>
+										<h1>Still in progress...</h1>
+									</>
+								)}
+								{step === "payouts" && (
+									<>
+										<h1>Still in progress...</h1>
+									</>
+								)}
+								{step === "payment" && (
+									<>
+										<h1>Still in progress...</h1>
+									</>
+								)}
+								{step === "wallets" && (
+									<>
+										<h1>Still in progress...</h1>
+									</>
+								)}
+								{step === "preferences" && (
+									<>
+										<PreferencesForm form={preferenceForm} />
+									</>
+								)}
+							</div>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
 		</>
