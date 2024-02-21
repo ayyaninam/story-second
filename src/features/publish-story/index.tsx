@@ -76,6 +76,7 @@ export default function PublishedStory({
 	});
 
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
+	const UpdateDetails = useMutation({ mutationFn: api.user.updateDetails });
 
 	const ImageRatio = GetImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;

@@ -80,6 +80,8 @@ export default function VideoEditor({
 		},
 	});
 
+	console.log(diff);
+
 	const handleEditSegment = () => {
 		const diff = GenerateStoryDiff(previousStory, story);
 		let edits: { operation: 0 | 1 | 2; details: mlSchema["SegmentEdit"] }[] =
