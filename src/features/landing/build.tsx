@@ -49,9 +49,10 @@ const App = () => {
 
 	// Hooks
 	// Handlers
+	console.log(isLoading);
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		setIsLoading(true);
 		e.preventDefault();
+		setIsLoading(true);
 		const params: CreateInitialStoryQueryParams = {
 			image_style:
 				options.style as CreateInitialStoryQueryParams["image_style"],
