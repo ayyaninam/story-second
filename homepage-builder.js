@@ -4,7 +4,7 @@ require("dotenv").config();
 esbuild
 	.build({
 		entryPoints: ["./src/features/landing/build.tsx"],
-		outfile: "./public/landing/custominput.js",
+		outfile: "./public/landing/prompt-script.js",
 		bundle: true,
 		minify: true,
 		sourcemap: false,

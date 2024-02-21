@@ -4,7 +4,7 @@ require("dotenv").config();
 esbuild
 	.build({
 		entryPoints: ["./src/features/tiktok/build.tsx"],
-		outfile: "./public/tiktok/custominput.js",
+		outfile: "./public/tiktok/prompt-script.js",
 		bundle: true,
 		minify: true,
 		sourcemap: false,
