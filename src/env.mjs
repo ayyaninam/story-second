@@ -23,6 +23,7 @@ export const env = createEnv({
 			.string()
 			.transform((v) => v === "true")
 			.default(false),
+		NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1),
 	},
 	/*
 	 * Due to how Next.js bundles environment variables on Edge and Client,
@@ -39,5 +40,6 @@ export const env = createEnv({
 		NEXT_PUBLIC_AUTH0_AUDIENCE: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
 		NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES:
 			process.env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES,
+		NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 	},
 });

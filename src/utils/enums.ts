@@ -78,3 +78,15 @@ export enum DisplayAspectRatios {
 	"1024x576",
 	"576x1024",
 }
+
+export enum SubscriptionPlan {
+	Free,
+	Basic,
+	Pro,
+	Premium,
+}
+
+export enum SubscriptionPeriod {
+	Monthly,
+	Annual,
+}
