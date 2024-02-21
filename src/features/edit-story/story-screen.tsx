@@ -6,6 +6,17 @@ import { prefetch } from "remotion";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { VideoPlayerProps } from "@/types";
 
+const loadingTexts = [
+	"Starting your story",
+	"Building the characters",
+	"Creating the narration",
+	"Generating the plot",
+	"Adding the climax",
+	"Finalizing the story",
+	"Almost there",
+	"Finishing up",
+];
+
 const StoryScreen: FC<VideoPlayerProps> = ({
 	Webstory,
 	isError,
@@ -18,6 +29,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 }) => {
 	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
 	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
+	const [loadingTextIndex, setLoadingTextIndex] = useState<number>(0);
 
 	useEffect(() => {
 		for (const seg of Webstory?.scenes?.flatMap((el) => el.videoSegments) ??
@@ -66,6 +78,19 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 				});
 		}
 	}, [Webstory]);
+
+	useEffect(() => {
+		const timePerText = 5000;
+		const interval = setInterval(() => {
+			setLoadingTextIndex((prev) => prev + 1);
+		}, timePerText);
+		setTimeout(
+			() => {
+				clearInterval(interval);
+			},
+			timePerText * (loadingTexts.length - 1)
+		);
+	}, []);
 
 	const videoArray = Webstory?.scenes
 		?.flatMap((el) => el.videoSegments)
@@ -124,7 +149,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 					}}
 				>
 					<p className="font-medium font-mono text-lg">
-						Working on your story...
+						{loadingTexts[loadingTextIndex % loadingTexts.length]}
 					</p>
 				</div>
 			</div>
