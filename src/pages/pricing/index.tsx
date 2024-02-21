@@ -20,7 +20,7 @@ export interface PricingTierFrequency {
 	subscriptionPeriod: SubscriptionPeriod;
 }
 
-export interface PricingTier {
+interface PricingTierBase {
 	name: string;
 	id: string;
 	discountPrice: string | Record<string, string>;
@@ -31,8 +31,19 @@ export interface PricingTier {
 	highlighted?: boolean;
 	cta: string;
 	soldOut?: boolean;
-	subscriptionPlan: SubscriptionPlan;
 }
+
+interface WithSubscriptionPlan {
+	subscriptionPlan: SubscriptionPlan;
+	href?: string;
+}
+
+interface WithHref {
+	subscriptionPlan?: never;
+	href: string;
+}
+
+type PricingTier = PricingTierBase & (WithSubscriptionPlan | WithHref);
 
 export const frequencies = [
 	{
@@ -55,30 +66,32 @@ export const tiers: PricingTier[] = [
 	{
 		name: "Free",
 		id: "0",
+		href: "/subscribe",
 		price: { "1": "$0", "2": "$0" },
 		discountPrice: { "1": "", "2": "" },
 		description: `Get all goodies for free, no credit card required.`,
 		features: [
-			`Multi-platform compatibility`,
-			`Real-time notification system`,
-			`Advanced user permissions`,
+			`1 video generation`,
+			`1 story generation`,
+			`20 tokens for your editing`,
+			`Free plans do NOT replenish`,
 		],
 		featured: false,
 		highlighted: false,
 		soldOut: false,
 		cta: `Sign up`,
-		subscriptionPlan: SubscriptionPlan.Free,
 	},
 	{
-		name: "Basic",
+		name: "Starter",
 		id: "1",
-		price: { "1": "$3.99", "2": "$39.99" },
+		price: { "1": "$11.99", "2": "$119.99" },
 		discountPrice: { "1": "", "2": "" },
 		description: `When you grow, need more power and flexibility.`,
 		features: [
-			`All in the free plan plus`,
-			`Customizable templates`,
-			`Integration with third-party apps`,
+			`2 videos / month`,
+			`5 stories / month`,
+			`Slow Generation Time`,
+			`$7 for extra video, $2 for extra story`,
 		],
 		featured: false,
 		highlighted: true,
@@ -87,38 +100,22 @@ export const tiers: PricingTier[] = [
 		subscriptionPlan: SubscriptionPlan.Basic,
 	},
 	{
-		name: "Pro",
+		name: "Creator",
 		id: "2",
-		price: { "1": "$14.99", "2": "$149.99" },
+		href: "/contact-us",
+		price: { "1": "79.99", "2": "$799.99" },
 		discountPrice: { "1": "", "2": "" },
 		description: `When you grow, need more power and flexibility.`,
 		features: [
-			`All in the pro plan plus`,
-			`Priority support`,
-			`Enterprise-grade security`,
+			`12 videos / month`,
+			`25 stories / month`,
+			`Fast Generation Time`,
+			`$6 for extra video, $1.5 for extra story`,
 		],
-		featured: false,
+		featured: true,
 		highlighted: true,
 		soldOut: false,
 		cta: `Get started`,
-		subscriptionPlan: SubscriptionPlan.Pro,
-	},
-	{
-		name: "Premium",
-		id: "3",
-		price: { "1": "$19.99", "2": "$199.99" },
-		discountPrice: { "1": "", "2": "" },
-		description: `When you grow, need more power and flexibility.`,
-		features: [
-			`All in the pro plan plus`,
-			`Priority support`,
-			`Enterprise-grade security`,
-		],
-		featured: true,
-		highlighted: false,
-		soldOut: false,
-		cta: `Get started`,
-		subscriptionPlan: SubscriptionPlan.Premium,
 	},
 ];
 
@@ -292,13 +289,19 @@ export default function PricingPage() {
 								</p>
 
 								<Link
-									href={{
-										pathname: "/pricing/checkout",
-										query: {
-											plan: tier.subscriptionPlan,
-											period: frequency.subscriptionPeriod,
-										},
-									}}
+									href={
+										tier.subscriptionPlan
+											? {
+													pathname: "/pricing/checkout",
+													query: {
+														plan: tier.subscriptionPlan,
+														period: frequency.subscriptionPeriod,
+													},
+												}
+											: {
+													pathname: tier.href,
+												}
+									}
 									aria-describedby={tier.id}
 									className={cn(
 										"flex mt-6 shadow-sm",

@@ -11,18 +11,21 @@ import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
 import { Button } from "@/components/ui/button";
 import { mainSchema } from "@/api/schema";
 import PaymentCard, { getUserHasCard } from "@/features/pricing/payment-card";
+import { useRouter } from "next/router";
 
 const base_url = "http://localhost:3000/";
 
 export default function PricingPage() {
 	const searchParams = useSearchParams();
+	const router = useRouter();
+
 	const { setupStripe, confirmSetup, confirmPayment } = useStripeSetup();
 
 	// todo: refactor into something like "const [user] = useGetUser();"
 	const [user, setUser] = useState<mainSchema["UserInfoDTO"] | null>(null);
 
 	const [userWantsToChangePayment, setUserWantsToChangePayment] =
-		useState<boolean>(false);
+		useState(false);
 
 	const queryPlan = searchParams.get("plan");
 	const queryPeriod = searchParams.get("period");
@@ -172,7 +175,7 @@ export default function PricingPage() {
 						<div>
 							{userHasPaidSubscription
 								? "User have paid subscription"
-								: "User have free subscription"}
+								: "User does not have paid subscription"}
 						</div>
 						{userHasPaidSubscription && (
 							<div>
@@ -185,6 +188,10 @@ export default function PricingPage() {
 							</div>
 						)}
 					</div>
+
+					<Button className="mt-10" onClick={() => router.back()}>
+						go back
+					</Button>
 				</div>
 			</div>
 		</div>
