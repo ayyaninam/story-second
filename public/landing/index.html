@@ -142,7 +142,7 @@
           </div>
         </nav>
         <div data-w-id="835e7a36-0bd9-c0ee-0eee-ba31bc15d20b" class="nav-button-wrapper">
-          <a href="/api/auth/login?returnTo=%2F%3Ferror%3DSigned%20in%2C%20please%20create%20your%20video%20in%20the%20prompt%20box%20below!" id="login-button" class="primary-button-black w-button">Log In</a>
+          <a href="/api/auth/login?returnTo=%2F%3Fsuccess%3DSigned%20in%2C%20please%20create%20your%20video%20in%20the%20prompt%20box%20below!" id="login-button" class="primary-button-black w-button">Log In</a>
         </div>
         <div class="menu-button w-nav-button"><img src="landing/images/menu-btn.svg" loading="lazy" alt="icon" height="16" class="image-burger"></div>
       </div>
@@ -1473,7 +1473,7 @@
           console.log("User not logged in")
         } else {
           loginButton.innerHTML = "Dashboard"
-          loginButton.href = "/?error=Please enter your prompt in the prompt box below to get started"
+          loginButton.href = "/?success=Please enter your prompt in the prompt box below to get started"
         }
       })
 
@@ -1494,6 +1494,25 @@
       }).showToast();
       
       params.delete("error");
+      window.history.replaceState({}, '', `${location.pathname}${params.toString().length ? `?${params}` : ""}`);
+    }
+    else if (params.get("success")) {
+      const success = params.get("success")
+      
+      Toastify({
+        text: success,
+        duration: 5000,
+        gravity: "top", // `top` or `bottom`
+        position: "center", // `left`, `center` or `right`
+        style: {
+          background: "white",
+          color: "#334155",
+          "stroke": "black"
+        },
+        onClick: function(){} // Callback after click
+      }).showToast();
+      
+      params.delete("success");
       window.history.replaceState({}, '', `${location.pathname}${params.toString().length ? `?${params}` : ""}`);
     }
 

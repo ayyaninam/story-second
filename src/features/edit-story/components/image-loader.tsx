@@ -51,7 +51,7 @@ export default function ImageLoader({
 		: null;
 	const ImagesGenerated = Webstory.scenes
 		?.flatMap((el) => el.videoSegments)
-		.filter((el) => el?.imageKey?.length ?? 0 > 0);
+		.filter((el) => (el?.imageKey?.length ?? 0) > 0);
 	const VideosGenerated = Webstory.scenes
 		?.flatMap((el) => el.videoSegments)
 		.filter((el) => el?.videoKey?.length ?? 0 > 0);

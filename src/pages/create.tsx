@@ -165,10 +165,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			? StoryOutputTypes.SplitScreen
 			: StoryOutputTypes.Video;
 
-		console.log("Redirecting to", Routes.EditStory(storyType, genre, id));
+		console.log("Redirecting to", Routes.ViewStory(storyType, genre, id));
 		return {
 			redirect: {
-				destination: Routes.EditStory(storyType, genre, id),
+				destination: Routes.ViewStory(storyType, genre, id),
 				permanent: false,
 			},
 		};

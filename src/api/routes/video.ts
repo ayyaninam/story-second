@@ -41,7 +41,7 @@ const video = {
 	}: {
 		id: string;
 		accessToken?: string;
-	}): Promise<string> => {
+	}): Promise<string | undefined | null> => {
 		const data: mainSchema["StringApiResponse"] = await authFetcher(
 			accessToken ?? getJwt()
 		)
@@ -49,16 +49,12 @@ const video = {
 				searchParams: { storyItemSubType: 2 },
 			})
 			.json();
-
-		if (!data.succeeded) {
-			// TODO:figure out error boundaries
-		}
-
-		if (!data.data) {
-			throw new Error("No data returned");
-		}
-
-		return data.data;
+		console.log(data);
+		const status = data.status;
+		if (status === 204) return null;
+		// console.log(response.data);
+		if (!data.data) return null;
+		return data?.data;
 	},
 };
 
