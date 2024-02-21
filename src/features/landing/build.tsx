@@ -315,7 +315,7 @@ const App = () => {
 							))}
 						</select>
 					</div>
-					<button type="submit" disabled={true}>
+					<button type="submit" disabled={isButtonDisabled || isLoading}>
 						<svg
 							width="17"
 							height="16"
