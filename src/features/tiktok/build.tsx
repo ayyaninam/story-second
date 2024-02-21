@@ -74,7 +74,14 @@ const App = () => {
 		window.location.href = Routes.CreateStoryFromRoute(params);
 	};
 
-	const isButtonDisabled = !prompt && !videoFileId;
+	const [isButtonDisabled, setIsButtonDisabled] = useState(
+		(!prompt && !videoFileId) || isLoading
+	);
+
+	useEffect(() => {
+		setIsButtonDisabled((!prompt && !videoFileId) || isLoading);
+	}, [prompt, videoFileId, isLoading]);
+
 	return (
 		<form style={{ margin: 0 }} onSubmit={onSubmit}>
 			<div className="first-form">

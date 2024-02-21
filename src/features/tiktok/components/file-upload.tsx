@@ -84,8 +84,7 @@ export default function FileUpload({
 		<div
 			style={{
 				display: "flex",
-				backgroundColor:
-					videoFileId || isVideoUploading ? "#FFFFFF" : "#F1F5F9",
+				backgroundColor: "#F1F5F9",
 				// backgroundColor: "#F1F5F9",
 				borderRadius: "8px",
 				padding: "2px",
@@ -112,7 +111,13 @@ export default function FileUpload({
 				}}
 			>
 				<Icon />
-				<p>Upload TikTok</p>
+				<p>
+					{isVideoUploading
+						? "Loading"
+						: UploadFile.data?.data
+							? "Video Uploaded"
+							: "Upload TikTok"}
+				</p>
 			</label>
 		</div>
 	);

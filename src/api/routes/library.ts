@@ -21,6 +21,25 @@ const library = {
 
 		return data.data;
 	},
+	getMultiple: async (
+		params: {},
+		accessToken?: string
+	): Promise<mainSchema["ReturnWebStoryDTOPagedList"]> => {
+		const data: mainSchema["ReturnWebStoryDTOPagedListApiResponse"] =
+			await publicFetcher
+				.get(`api/library`, { searchParams: { ...params } })
+				.json();
+
+		if (!data.succeeded) {
+			// TODO:figure out error boundaries
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
 	likeVideo: async ({
 		id,
 		params,

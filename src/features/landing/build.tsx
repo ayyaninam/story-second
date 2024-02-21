@@ -46,35 +46,47 @@ const App = () => {
 		// @ts-expect-error - TS doesn't know about the scrollHeight property
 		inputRef.current.style.height = `${inputRef.current?.scrollHeight}px`;
 	};
+
 	// Hooks
 	// Handlers
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		setIsLoading(true);
 		e.preventDefault();
-		const params: CreateInitialStoryQueryParams = {
-			image_style:
-				options.style as CreateInitialStoryQueryParams["image_style"],
-			language: options.language,
-			length: options.length,
-			prompt: prompt,
-			image_resolution: ImageRatios["9x16"].enumValue,
-			input_type: StoryInputTypes.Text,
-			output_type: outputType,
-			video_key: "",
-			display_resolution: DisplayAspectRatios["576x1024"],
-		};
+		setIsLoading(true);
+		setTimeout(() => {
+			const params: CreateInitialStoryQueryParams = {
+				image_style:
+					options.style as CreateInitialStoryQueryParams["image_style"],
+				language: options.language,
+				length: options.length,
+				prompt: prompt,
+				image_resolution: ImageRatios["9x16"].enumValue,
+				input_type: StoryInputTypes.Text,
+				output_type: outputType,
+				video_key: "",
+				display_resolution: DisplayAspectRatios["576x1024"],
+			};
 
-		if (videoFileId) {
-			params["input_type"] = StoryInputTypes.Video;
-			params["output_type"] = StoryOutputTypes.SplitScreen;
-			params["video_key"] = videoFileId;
-			params["image_resolution"] = ImageRatios["9x8"].enumValue;
-		}
-		console.log(Routes.CreateStoryFromRoute(params));
-		window.location.href = Routes.CreateStoryFromRoute(params);
+			if (videoFileId) {
+				params["input_type"] = StoryInputTypes.Video;
+				params["output_type"] = StoryOutputTypes.SplitScreen;
+				params["video_key"] = videoFileId;
+				params["image_resolution"] = ImageRatios["9x8"].enumValue;
+			}
+			console.log(Routes.CreateStoryFromRoute(params));
+			window.location.href = Routes.CreateStoryFromRoute(params);
+		}, 500);
+		setIsLoading(true);
 	};
 
-	const isButtonDisabled = !prompt && !videoFileId;
+	const [isButtonDisabled, setIsButtonDisabled] = useState(
+		(!prompt && !videoFileId) || isLoading
+	);
+
+	useEffect(() => {
+		setIsButtonDisabled((!prompt && !videoFileId) || isLoading);
+	}, [prompt, videoFileId, isLoading]);
+
 	return (
 		<form style={{ margin: 0 }} onSubmit={onSubmit}>
 			<div className="first-form">
@@ -109,7 +121,7 @@ const App = () => {
 						<button
 							type="submit"
 							// className={`${prompt.length ? "button hero-submit-button w-button" : ""} `}
-							disabled={isButtonDisabled}
+							disabled={isButtonDisabled || isLoading}
 						>
 							<svg
 								width="17"

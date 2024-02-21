@@ -32,6 +32,8 @@ import { getJwt } from "@/utils/jwt";
 import { SessionType } from "@/hooks/useSaveSessionToken";
 import isBrowser from "@/utils/isBrowser";
 import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
+import useWebstoryContext from "../edit-story/providers/WebstoryContext";
+import toast from "react-hot-toast";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -49,10 +51,11 @@ export default function PublishedStory({
 		mainSchema["ReturnVideoSegmentDTO"][] | null
 	>();
 	const [index, setIndex] = useState(0);
-	console.log(router.pathname);
+	const [story, setStory] = useWebstoryContext();
 
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
+	const [isVideoDownloading, setIsVideoDownloading] = useState(false);
 
 	// Queries
 
@@ -84,7 +87,9 @@ export default function PublishedStory({
 	});
 
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
-	const RenderVideo = useMutation({ mutationFn: api.video.render });
+	const RenderVideo = useMutation({
+		mutationFn: api.video.render,
+	});
 
 	const ImageRatio = GetDisplayImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
@@ -101,8 +106,8 @@ export default function PublishedStory({
 				setStorySegments(
 					Webstory?.data?.scenes?.flatMap((el) => el?.videoSegments!)
 				);
-				console.log(">>>> segments", storySegments);
 			}
+			setStory(Webstory.data);
 
 			// console.log(">>>> video keys", Webstory.data.storySegments, );
 		}
@@ -160,8 +165,16 @@ export default function PublishedStory({
 				id: storyData.id!,
 				accessToken: session.accessToken,
 			});
+			toast.success("Video is being rendered. Please check again in 2 minutes");
 		}
 	};
+
+	const numVideoSegmentsReady = Webstory.data?.scenes
+		?.flatMap((el) => el.videoSegments)
+		.filter((el) => (el?.videoKey?.length ?? 0) > 0).length;
+	const numTotalVideoSegments = Webstory.data?.scenes?.flatMap(
+		(el) => el.videoSegments
+	).length;
 
 	return (
 		<div className={`max-w-full min-h-screen bg-reverse items-center`}>
@@ -276,23 +289,25 @@ export default function PublishedStory({
 							/>
 						</svg>
 					</div>
-					{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
-						<Button
-							className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
-							variant="outline"
-						>
-							<Share2 className="mr-2 h-4 w-4" /> Share this video
-						</Button>
-					)}
+
 					<Button
-						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end`}
+						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+						onClick={(e) => {
+							navigator.clipboard.writeText(window.location.href);
+							toast.success("Link copied to clipboard");
+						}}
 						variant="outline"
 					>
-						<LogOutIcon
-							className="mr-2 h-4 w-4"
-							onClick={() => router.push(Routes.Logout())}
-						/>{" "}
-						Log Out
+						<Share2 className="mr-2 h-4 w-4" /> Share this video
+					</Button>
+					<Button
+						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+						variant="outline"
+						onClick={() => {
+							router.push(Routes.Logout("/"));
+						}}
+					>
+						<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
 					</Button>
 				</div>
 			</div>
@@ -391,37 +406,40 @@ export default function PublishedStory({
 											Like video
 										</Button>
 
-										{User?.data?.data?.id !==
-										Webstory.data?.user?.id ? null : Webstory.data
+										{User?.data?.data?.id !== Webstory.data?.user?.id ||
+										(numVideoSegmentsReady ?? 0) <
+											(numTotalVideoSegments ?? 0) ||
+										!Webstory.data?.storyDone ? null : Webstory.data
 												?.renderedVideoKey ? (
-											<a
-												href={Format.GetPublicBucketObjectUrl(
-													Webstory.data?.renderedVideoKey as string
-												)}
-												download={`${Webstory.data?.storyTitle?.replaceAll(" ", "_")}.mp4`}
+											<Button
+												onClick={async (e) => {
+													setIsVideoDownloading(true);
+													const presignedUrl = await RenderVideo.mutateAsync({
+														id: storyData.id!,
+														accessToken: session.accessToken,
+													});
+													if (!presignedUrl) return;
+													let link = document.createElement("a");
+
+													link.href = presignedUrl;
+
+													link.download = `download.mp4`;
+													link.target = "_blank";
+
+													console.log(link.download);
+
+													document.body.appendChild(link);
+													link.click();
+													document.body.removeChild(link);
+													setIsVideoDownloading(false);
+												}}
+												className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+												variant="outline"
+												disabled={isVideoDownloading}
 											>
-												<Button
-													onClick={async (e) => {
-														const presignedUrl = await RenderVideo.mutateAsync({
-															id: storyData.id!,
-															accessToken: session.accessToken,
-														});
-														console.log(presignedUrl);
-														const link = document.createElement("a");
-														link.href = presignedUrl;
-														link.download = "";
-
-														document.body.appendChild(link);
-														link.click();
-
-														document.body.removeChild(link);
-													}}
-													className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
-													variant="outline"
-												>
-													<DownloadIcon className="mr-2 h-4 w-4" /> Download
-												</Button>
-											</a>
+												<DownloadIcon className="mr-2 h-4 w-4" />{" "}
+												{isVideoDownloading ? "Loading" : "Download"}
+											</Button>
 										) : (
 											<Button
 												className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
