@@ -46,6 +46,7 @@ const App = () => {
 		// @ts-expect-error - TS doesn't know about the scrollHeight property
 		inputRef.current.style.height = `${inputRef.current?.scrollHeight}px`;
 	};
+
 	// Hooks
 	// Handlers
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,7 +75,14 @@ const App = () => {
 		window.location.href = Routes.CreateStoryFromRoute(params);
 	};
 
-	const isButtonDisabled = !prompt && !videoFileId;
+	const [isButtonDisabled, setIsButtonDisabled] = useState(
+		(!prompt && !videoFileId) || isLoading
+	);
+
+	useEffect(() => {
+		setIsButtonDisabled((!prompt && !videoFileId) || isLoading);
+	}, [prompt, videoFileId, isLoading]);
+
 	return (
 		<form style={{ margin: 0 }} onSubmit={onSubmit}>
 			<div className="first-form">
