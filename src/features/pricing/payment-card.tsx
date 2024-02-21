@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
@@ -65,10 +66,12 @@ export default function PaymentCard({
 	const handleRemoveCard = async () => {
 		try {
 			await api.payment.removeCard();
+			toast.success("Remove card successfully");
 			toggleModal();
 			onRemove();
 		} catch (error) {
 			console.error("Failed to remove card:", error);
+			toast.error("Failed to remove card");
 		}
 	};
 

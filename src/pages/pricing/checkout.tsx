@@ -1,6 +1,7 @@
 "use client";
 import api from "@/api";
 import cn from "@/utils/cn";
+import toast from "react-hot-toast";
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import StripeForm from "@/features/pricing/stripe-form";
@@ -72,10 +73,15 @@ export default function PricingPage() {
 			const { error } = (await confirmSetup(`${base_url}/pricing`)) || {};
 			if (error) {
 				console.error("Confirm Setup failed: ", error);
+				toast.error("Confirm Setup failed");
 				return;
 			}
 
+			toast.success("Added card successfully");
 			updateUserDataAfter1Second();
+		} catch (e: any) {
+			console.error("Error Adding Card: ", e.message);
+			toast.error("Error Adding Card");
 		} finally {
 			setSubmitting(false);
 		}
@@ -91,6 +97,7 @@ export default function PricingPage() {
 			const { error } = (await confirmSetup(`${base_url}/pricing`)) || {};
 			if (error) {
 				console.error("Confirm Setup failed: ", error);
+				toast.error("Confirm Setup failed");
 				return;
 			}
 
@@ -100,27 +107,36 @@ export default function PricingPage() {
 			});
 			if (!succeeded) {
 				console.error("Create Subscription backend failed: ");
+				toast.error("Create Subscription backend failed");
 				return;
 			}
 
 			updateUserDataAfter1Second();
+			toast.success("Create subscription successfully");
 
 			const { error: stripeError } = await confirmPayment();
 			if (stripeError) {
 				console.error("Stripe failed confirming payment: ", stripeError);
+				toast.error("Stripe failed confirming payment");
 				return;
 			}
 		} catch (e: any) {
 			console.error("Error Paying Subscription: ", e.message);
+			toast.error("Error Paying Subscription");
 		} finally {
 			setSubmitting(false);
 		}
 	};
 
 	const cancelSubscription = () => {
-		api.payment.cancelSubscription().then();
+		try {
+			api.payment.cancelSubscription().then();
 
-		updateUserDataAfter1Second();
+			updateUserDataAfter1Second();
+		} catch (e: any) {
+			console.error("Error Canceling Subscription: ", e.message);
+			toast.error("Error Canceling Subscription");
+		}
 	};
 
 	if (subscriptionPlan === null || subscriptionPeriod === null || !user) {
