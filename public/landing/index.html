@@ -1456,7 +1456,21 @@
   <script src="landing/custominput.js" type="text/javascript"></script>
   <script src="landing/js/authorlyai-boilerplate.js" type="text/javascript"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+
   <script>
+      const client = auth0.createAuth0Client({
+      domain: 'auth.authorly.ai',
+      clientId: 'WpHVGdmaV50dY7LM94O9bfXzEhcEDvcr',
+      audience: 'https://api.authorly.ai/'
+    }).then(auth0 => {
+      const token = auth0.getTokenSilently().then(token => {
+        console.log(token)
+        // window.localStorage.setItem("jwt", token)
+      })
+    });
+
+
     var loginButton = document.getElementById("login-button")
     if (window.localStorage.getItem("jwt")) {
       loginButton.innerHTML = "Dashboard"
