@@ -10,6 +10,8 @@ import {
 	Sparkle,
 	Upload,
 	Video,
+	Settings2,
+	MoreHorizontal,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Format from "@/utils/format";
@@ -19,6 +21,7 @@ import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Img from "../../../../public/images/temp/video-player.png";
+import * as Dialog from "@radix-ui/react-dialog";
 
 import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
@@ -36,6 +39,8 @@ import { nanoid } from "nanoid";
 import AutosizeInput from "react-input-autosize";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api";
+import EditSegmentModalItem from "./EditSegmentModalItem";
+import EditSegmentModal from "./EditSegmentModal";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -58,6 +63,15 @@ export default function VideoEditor({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
+	const [showActionItems, setShowActionItems] = useState<{
+		index?: number;
+		scene?: number;
+	}>();
+	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
+		open?: boolean;
+		scene?: Scene;
+		sceneId?: number;
+	}>();
 
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
 		WebstoryToStoryDraft(WebstoryData)
@@ -231,6 +245,26 @@ export default function VideoEditor({
 
 	return (
 		<div className="relative rounded-lg border-[1px] w-full justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
+			{editSegmentsModalState?.scene !== undefined &&
+				editSegmentsModalState?.sceneId !== undefined && (
+					<EditSegmentModal
+						open={
+							editSegmentsModalState?.open &&
+							editSegmentsModalState.scene !== undefined &&
+							editSegmentsModalState.sceneId !== undefined
+						}
+						onClose={() => setEditSegmentsModalState({})}
+						scene={editSegmentsModalState?.scene!}
+						sceneId={editSegmentsModalState?.sceneId}
+						onSceneEdit={(scene, index) => {
+							dispatch({
+								type: "edit_scene",
+								scene: scene,
+								index: index,
+							});
+						}}
+					/>
+				)}
 			<div className="flex justify-center m-10 ">
 				<Badge
 					variant="outline"
@@ -266,7 +300,10 @@ export default function VideoEditor({
 								<p className="ms-1">by Anthony Deloso</p>
 							</div>
 						</div>
-						<div className="space-y-2">
+						<div
+							className="space-y-2"
+							onMouseLeave={() => setShowActionItems({})}
+						>
 							{story.scenes.map((scene, sceneIndex) => (
 								<div key={sceneIndex} className="">
 									<span className="flex flex-wrap text-sm hover:bg-slate-100 rounded-md">
@@ -274,7 +311,13 @@ export default function VideoEditor({
 											<div
 												key={`${segmentIndex}`}
 												style={{ backgroundColor: "transparent" }}
-												className=""
+												className="flex flex-wrap w-full justify-between"
+												onMouseEnter={() => {
+													setShowActionItems({
+														index: segmentIndex,
+														scene: sceneIndex,
+													});
+												}}
 											>
 												<AutosizeInput
 													onKeyDown={(e) => {
@@ -307,7 +350,35 @@ export default function VideoEditor({
 														);
 													}}
 												/>
-												<span> </span>
+												{showActionItems?.index === segmentIndex &&
+													showActionItems.scene === sceneIndex && (
+														<div className="flex items-center gap-1 text-slate-950 text-xs">
+															{" "}
+															<Sparkle
+																width={16}
+																height={16}
+																color="#A734EA"
+																className="hover:cursor-pointer"
+															/>{" "}
+															<Settings2
+																width={16}
+																height={16}
+																className="hover:cursor-pointer"
+																onClick={() =>
+																	setEditSegmentsModalState({
+																		open: true,
+																		scene: scene,
+																		sceneId: sceneIndex,
+																	})
+																}
+															/>{" "}
+															<MoreHorizontal
+																width={16}
+																height={16}
+																className="hover:cursor-pointer"
+															/>{" "}
+														</div>
+													)}
 											</div>
 										))}
 									</span>

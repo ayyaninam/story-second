@@ -9,15 +9,17 @@ export enum StoryStatus {
 	COMPLETE,
 }
 
+export type Settings = {
+	samplingSteps: number; // 2-10
+	denoising: number; // 0-1,
+	prompt: string;
+	style: StoryImageStyles;
+	voice: string;
+};
+
 export type Segment = {
 	id: number;
-	settings?: {
-		samplingSteps: number; // 2-10
-		denoising: number; // 0-1,
-		prompt: string;
-		style: StoryImageStyles;
-		voice: string;
-	};
+	settings?: Settings;
 	textContent: string;
 	imageKey: string;
 	videoKey: string;

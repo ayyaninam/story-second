@@ -1,6 +1,11 @@
 "use client";
-import { Compass, FlipVertical, Menu } from "lucide-react";
-
+import {
+	Compass,
+	CrossIcon,
+	FlipVertical,
+	Menu,
+	Settings2,
+} from "lucide-react";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";

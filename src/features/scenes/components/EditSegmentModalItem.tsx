@@ -33,6 +33,8 @@ import Image from "next/image";
 import { PropsWithChildren, useState } from "react";
 import * as Select from "@radix-ui/react-select";
 import React from "react";
+import { Segment, Settings } from "../reducers/edit-reducer";
+import { StoryImageStyles } from "@/utils/enums";
 
 type SelectItemProps = {
 	value: string;
@@ -50,7 +52,13 @@ const SelectItem = ({
 	);
 };
 
-function RegenerateSegmentBar() {
+function RegenerateSegmentBar({
+	textContent,
+	onTextContentChange,
+}: {
+	textContent: string;
+	onTextContentChange: (change: string) => void;
+}) {
 	return (
 		<div className="flex w-full rounded-sm border-border border-[1px] justify-between">
 			<Image
@@ -61,7 +69,11 @@ function RegenerateSegmentBar() {
 			/>
 			<input
 				className="bg-slate-50 border-none outline-none px-1 flex-grow"
-				placeholder="I nodded eagerly"
+				placeholder="Type something here..."
+				value={textContent}
+				onChange={(e) => {
+					onTextContentChange(e.target.value);
+				}}
 			/>
 			<Select.Root>
 				<Select.Trigger
@@ -80,37 +92,37 @@ function RegenerateSegmentBar() {
 						</Select.ScrollUpButton>
 						<Select.Viewport>
 							<SelectItem value="regenerate-segment">
-								<div className="flex p-1  gap-1 items-center">
-									<SparkleIcon className="flex p-1 gap-1 items-center" />
+								<div className="flex gap-1 items-center hover:cursor-pointer hover:bg-slate-100">
+									<SparkleIcon width={"18px"} height={"18px"} />
 									<p className="text-sm">Regenerate Segment</p>
 								</div>
 							</SelectItem>
 							<SelectItem value="regenerate-video-n-script">
-								<div className="flex p-1  gap-1 items-center">
+								<div className="flex gap-1 items-center hover:cursor-pointer hover:bg-slate-100">
 									<RefreshCw width={"18px"} height={"18px"} />
 									<p className="text-sm">Regenerate Video & Script</p>
 								</div>
 							</SelectItem>
 							<SelectItem value="use-script-to-regenerate-video">
-								<div className="flex p-1  gap-1 items-center">
+								<div className="flex gap-1 items-center hover:cursor-pointer hover:bg-slate-100">
 									<ScrollText width={"18px"} height={"18px"} />
 									<p className="text-sm">Use Script To Regenerate Video</p>
 								</div>
 							</SelectItem>
 							<SelectItem value="undo-script-edits">
-								<div className="flex p-1  gap-1 items-center">
+								<div className="flex gap-1 items-center hover:cursor-pointer hover:bg-slate-100">
 									<Undo2 width={"18px"} height={"18px"} />
 									<p className="text-sm">Undo Script Edits</p>
 								</div>
 							</SelectItem>
 							<SelectItem value="regenerate-script">
-								<div className="flex p-1  gap-1 items-center">
+								<div className="flex gap-1 items-center hover:cursor-pointer hover:bg-slate-100">
 									<Zap width={"18px"} height={"18px"} />
 									<p className="text-sm">Regenerate Script</p>
 								</div>
 							</SelectItem>
 							<SelectItem value="hide-segment">
-								<div className="flex p-1 gap-1 items-center">
+								<div className="flex gap-1 items-center hover:cursor-pointer hover:bg-slate-100">
 									<EyeOff width={"18px"} height={"18px"} />
 									<p className="text-sm">Hide Segment</p>
 								</div>
@@ -158,7 +170,13 @@ function AdvancedEditingBar({
 	);
 }
 
-function AdvancedEditingOptions() {
+function AdvancedEditingOptions({
+	settings,
+	onSettingsChange,
+}: {
+	settings?: Settings;
+	onSettingsChange: (settings: Settings) => void;
+}) {
 	return (
 		<div className="bg-indigo-100 border-[1px] border-indigo-100 rounded-sm p-5">
 			<label
@@ -173,6 +191,22 @@ function AdvancedEditingOptions() {
 				rows={2}
 				className="w-full bg-slate-50 m-1 rounded-md p-2"
 				placeholder="Write your video animation prompt here"
+				value={settings?.prompt ?? ""}
+				onChange={(e) => {
+					if (settings)
+						onSettingsChange({
+							...settings,
+							prompt: e.target.value,
+						});
+					else
+						onSettingsChange({
+							denoising: 0,
+							prompt: e.target.value,
+							samplingSteps: 1,
+							style: StoryImageStyles.Realistic,
+							voice: "",
+						});
+				}}
 			/>
 
 			<div className="flex gap-6">
@@ -187,12 +221,47 @@ function AdvancedEditingOptions() {
 					<select
 						id="video-animation-style"
 						className="w-full bg-slate-50 m-1 rounded-md p-2"
+						value={settings?.style ?? StoryImageStyles.Realistic}
+						onChange={(e) => {
+							if (settings)
+								onSettingsChange({
+									...settings,
+									style: e.target.value as StoryImageStyles,
+								});
+							else
+								onSettingsChange({
+									denoising: 0,
+									prompt: "",
+									samplingSteps: 1,
+									style: e.target.value as StoryImageStyles,
+									voice: "",
+								});
+						}}
 					>
-						<option value="majestic">Majestic</option>
-						<option value="majestic1">Majestic 1</option>
-						<option value="majestic2">Majestic 2</option>
-						<option value="majestic3">Majestic 3</option>
-						<option value="majestic4">Majestic 4</option>
+						<option value={StoryImageStyles.Realistic}>
+							{StoryImageStyles.Realistic}
+						</option>
+						<option value={StoryImageStyles.Auto}>
+							{StoryImageStyles.Auto}
+						</option>
+						<option value={StoryImageStyles.Cartoon}>
+							{StoryImageStyles.Cartoon}
+						</option>
+						<option value={StoryImageStyles.Sketch}>
+							{StoryImageStyles.Sketch}
+						</option>
+						<option value={StoryImageStyles.WaterColor}>
+							{StoryImageStyles.WaterColor}
+						</option>
+						<option value={StoryImageStyles.SciFi}>
+							{StoryImageStyles.SciFi}
+						</option>
+						<option value={StoryImageStyles.Anime}>
+							{StoryImageStyles.Anime}
+						</option>
+						<option value={StoryImageStyles.Horror}>
+							{StoryImageStyles.Horror}
+						</option>
 					</select>
 				</div>
 				<div className="w-[50%] ">
@@ -208,6 +277,22 @@ function AdvancedEditingOptions() {
 						max={1000}
 						step={10}
 						placeholder="300"
+						value={settings?.denoising ?? 0}
+						onChange={(e) => {
+							if (settings)
+								onSettingsChange({
+									...settings,
+									denoising: parseInt(e.target.value),
+								});
+							else
+								onSettingsChange({
+									denoising: parseInt(e.target.value),
+									prompt: "",
+									samplingSteps: 1,
+									style: StoryImageStyles.Realistic,
+									voice: "",
+								});
+						}}
 					/>
 				</div>
 			</div>
@@ -222,12 +307,28 @@ function AdvancedEditingOptions() {
 				id="seed"
 				className="w-full bg-slate-50 rounded-md p-2"
 				placeholder="I nodded eagerly"
+				value={settings?.voice ?? ""}
+				onChange={(e) => {
+					if (settings)
+						onSettingsChange({
+							...settings,
+							voice: e.target.value,
+						});
+					else
+						onSettingsChange({
+							denoising: 0,
+							prompt: "",
+							samplingSteps: 1,
+							style: StoryImageStyles.Realistic,
+							voice: e.target.value,
+						});
+				}}
 			/>
 		</div>
 	);
 }
 
-function VerticalControlButtons() {
+function VerticalControlButtons({ onDelete }: { onDelete: () => void }) {
 	return (
 		<div className="space-y-2">
 			<GripVertical
@@ -243,6 +344,7 @@ function VerticalControlButtons() {
 				height={"22px"}
 				color="#020817"
 				strokeWidth={1}
+				onClick={onDelete}
 			/>
 			<RefreshCw
 				className="hover:cursor-pointer"
@@ -255,19 +357,46 @@ function VerticalControlButtons() {
 	);
 }
 
-export default function EditModalPage() {
+export default function EditSegmentModalItem({
+	segment,
+	onSegmentEdit,
+	onSegmentDelete,
+}: {
+	segment: Segment;
+	onSegmentEdit: (updatedSegment: Segment) => void;
+	onSegmentDelete: () => void;
+}) {
 	const [isChecked, setIsChecked] = useState(false);
+
 	return (
 		<div className="flex bg-slate-100 rounded-md border-border border-[1px] p-2 m-2 gap-2">
-			<VerticalControlButtons />
+			<VerticalControlButtons onDelete={onSegmentDelete} />
 			<div className="w-full text-slate-950 space-y-2">
-				<RegenerateSegmentBar />
+				<RegenerateSegmentBar
+					textContent={segment.textContent || ""}
+					onTextContentChange={(change) =>
+						onSegmentEdit({
+							...segment,
+							textContent: change,
+						})
+					}
+				/>
 				<AdvancedEditingBar
 					onCheckedChange={(checked) => {
 						setIsChecked(checked);
 					}}
 				/>
-				{isChecked && <AdvancedEditingOptions />}
+				{isChecked && (
+					<AdvancedEditingOptions
+						settings={segment.settings}
+						onSettingsChange={(settings) => {
+							onSegmentEdit({
+								...segment,
+								settings: settings,
+							});
+						}}
+					/>
+				)}
 			</div>
 		</div>
 	);
