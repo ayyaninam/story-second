@@ -26,6 +26,19 @@ const user = {
 			})
 			.json<mainSchema["StringApiResponse"]>();
 	},
+	toggleStoryPrivacy: async (token?: string) => {
+		return await authFetcher(token || getJwt())
+			.put("api/User/ToggleDefaultStoryPrivacy")
+			.json<mainSchema["StringApiResponse"]>();
+	},
+	updateEmailNotificationPreferences: async (
+		data: mainSchema["EmailNotificationPreferencesDTO"],
+		token?: string
+	) => {
+		return await authFetcher(token || getJwt())
+			.put("api/User/EmailNotificationPreferences", { json: data })
+			.json<mainSchema["StringApiResponse"]>();
+	},
 };
 
 export default user;
