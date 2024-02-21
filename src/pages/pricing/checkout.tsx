@@ -11,18 +11,21 @@ import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
 import { Button } from "@/components/ui/button";
 import { mainSchema } from "@/api/schema";
 import PaymentCard, { getUserHasCard } from "@/features/pricing/payment-card";
+import { useRouter } from "next/router";
 
 const base_url = "http://localhost:3000/";
 
 export default function PricingPage() {
 	const searchParams = useSearchParams();
+	const router = useRouter();
+
 	const { setupStripe, confirmSetup, confirmPayment } = useStripeSetup();
 
 	// todo: refactor into something like "const [user] = useGetUser();"
 	const [user, setUser] = useState<mainSchema["UserInfoDTO"] | null>(null);
 
 	const [userWantsToChangePayment, setUserWantsToChangePayment] =
-		useState<boolean>(false);
+		useState(false);
 
 	const queryPlan = searchParams.get("plan");
 	const queryPeriod = searchParams.get("period");
@@ -45,13 +48,21 @@ export default function PricingPage() {
 		}
 	}, [queryPlan, queryPeriod]);
 
+	const updateUserData = async () => {
+		const user = await api.user.get();
+		if (user.data) {
+			setUser(user.data);
+		}
+	};
+
+	const updateUserDataAfter1Second = () => {
+		setTimeout(() => {
+			updateUserData().then();
+		}, 1000);
+	};
+
 	useEffect(() => {
-		(async () => {
-			const user = await api.user.get();
-			if (user.data) {
-				setUser(user.data);
-			}
-		})();
+		updateUserData().then();
 	}, []);
 
 	const onAddCard = async () => {
@@ -63,6 +74,8 @@ export default function PricingPage() {
 				console.error("Confirm Setup failed: ", error);
 				return;
 			}
+
+			updateUserDataAfter1Second();
 		} finally {
 			setSubmitting(false);
 		}
@@ -90,6 +103,8 @@ export default function PricingPage() {
 				return;
 			}
 
+			updateUserDataAfter1Second();
+
 			const { error: stripeError } = await confirmPayment();
 			if (stripeError) {
 				console.error("Stripe failed confirming payment: ", stripeError);
@@ -100,6 +115,12 @@ export default function PricingPage() {
 		} finally {
 			setSubmitting(false);
 		}
+	};
+
+	const cancelSubscription = () => {
+		api.payment.cancelSubscription().then();
+
+		updateUserDataAfter1Second();
 	};
 
 	if (subscriptionPlan === null || subscriptionPeriod === null || !user) {
@@ -150,6 +171,7 @@ export default function PricingPage() {
 							<PaymentCard
 								editable
 								onEdit={() => setUserWantsToChangePayment(true)}
+								onRemove={() => updateUserDataAfter1Second()}
 							/>
 							<Button
 								size="lg"
@@ -172,19 +194,23 @@ export default function PricingPage() {
 						<div>
 							{userHasPaidSubscription
 								? "User have paid subscription"
-								: "User have free subscription"}
+								: "User does not have paid subscription"}
 						</div>
 						{userHasPaidSubscription && (
 							<div>
 								<div>
 									<span>User plan: {user.subscription?.subscriptionPlan}</span>
 								</div>
-								<Button onClick={() => api.payment.cancelSubscription()}>
+								<Button onClick={() => cancelSubscription()}>
 									Cancel Subscription
 								</Button>
 							</div>
 						)}
 					</div>
+
+					<Button className="mt-10" onClick={() => router.back()}>
+						go back
+					</Button>
 				</div>
 			</div>
 		</div>

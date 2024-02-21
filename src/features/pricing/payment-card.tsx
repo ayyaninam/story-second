@@ -38,9 +38,11 @@ export const getUserHasCard = (user: mainSchema["UserInfoDTO"] | undefined) => {
 export default function PaymentCard({
 	editable,
 	onEdit,
+	onRemove,
 }: {
 	editable?: boolean;
 	onEdit: () => void;
+	onRemove: () => void;
 }) {
 	// todo: refactor into something like "const [user] = useGetUser();"
 	const [user, setUser] = useState<mainSchema["UserInfoDTO"] | null>(null);
@@ -64,6 +66,7 @@ export default function PaymentCard({
 		try {
 			await api.payment.removeCard();
 			toggleModal();
+			onRemove();
 		} catch (error) {
 			console.error("Failed to remove card:", error);
 		}
