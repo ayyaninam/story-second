@@ -290,7 +290,7 @@ export default function PublishedStory({
 					>
 						<LogOutIcon
 							className="mr-2 h-4 w-4"
-							onClick={() => router.push(Routes.Logout())}
+							onClick={() => router.push(Routes.Logout("/"))}
 						/>{" "}
 						Log Out
 					</Button>
