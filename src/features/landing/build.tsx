@@ -53,27 +53,29 @@ const App = () => {
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsLoading(true);
-		const params: CreateInitialStoryQueryParams = {
-			image_style:
-				options.style as CreateInitialStoryQueryParams["image_style"],
-			language: options.language,
-			length: options.length,
-			prompt: prompt,
-			image_resolution: ImageRatios["9x16"].enumValue,
-			input_type: StoryInputTypes.Text,
-			output_type: outputType,
-			video_key: "",
-			display_resolution: DisplayAspectRatios["576x1024"],
-		};
+		setTimeout(() => {
+			const params: CreateInitialStoryQueryParams = {
+				image_style:
+					options.style as CreateInitialStoryQueryParams["image_style"],
+				language: options.language,
+				length: options.length,
+				prompt: prompt,
+				image_resolution: ImageRatios["9x16"].enumValue,
+				input_type: StoryInputTypes.Text,
+				output_type: outputType,
+				video_key: "",
+				display_resolution: DisplayAspectRatios["576x1024"],
+			};
 
-		if (videoFileId) {
-			params["input_type"] = StoryInputTypes.Video;
-			params["output_type"] = StoryOutputTypes.SplitScreen;
-			params["video_key"] = videoFileId;
-			params["image_resolution"] = ImageRatios["9x8"].enumValue;
-		}
-		console.log(Routes.CreateStoryFromRoute(params));
-		window.location.href = Routes.CreateStoryFromRoute(params);
+			if (videoFileId) {
+				params["input_type"] = StoryInputTypes.Video;
+				params["output_type"] = StoryOutputTypes.SplitScreen;
+				params["video_key"] = videoFileId;
+				params["image_resolution"] = ImageRatios["9x8"].enumValue;
+			}
+			console.log(Routes.CreateStoryFromRoute(params));
+			window.location.href = Routes.CreateStoryFromRoute(params);
+		}, 500);
 	};
 
 	const [isButtonDisabled, setIsButtonDisabled] = useState(
