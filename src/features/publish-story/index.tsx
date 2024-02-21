@@ -420,16 +420,9 @@ export default function PublishedStory({
 													});
 													if (!presignedUrl) return;
 													let link = document.createElement("a");
-													const blob = await fetch(presignedUrl).then((res) =>
-														res.blob()
-													);
-													const objUrl = URL.createObjectURL(blob);
 
-													link.href = objUrl;
-													// link.setAttribute(
-													// 	"download",
-													// 	`${Webstory.data?.storyTitle ?? "download"}.mp4`
-													// );
+													link.href = presignedUrl;
+
 													link.download = `download.mp4`;
 													link.target = "_blank";
 

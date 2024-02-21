@@ -49,7 +49,6 @@ const video = {
 				searchParams: { storyItemSubType: 2 },
 			})
 			.json();
-		console.log(data);
 		const status = data.status;
 		if (status === 204) return null;
 		// console.log(response.data);
