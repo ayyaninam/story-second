@@ -68,9 +68,9 @@ export default function PublishedStory({
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],
-		refetchInterval: 1000,
+		refetchInterval: enableQuery ? 1000 : 5000,
 		// Disable once all the videoKeys are obtained
-		enabled: enableQuery,
+		// enabled: enableQuery,
 	});
 
 	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
