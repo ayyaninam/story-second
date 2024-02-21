@@ -1459,23 +1459,22 @@
   <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
 
   <script>
-      const client = auth0.createAuth0Client({
-      domain: 'auth.authorly.ai',
-      clientId: 'WpHVGdmaV50dY7LM94O9bfXzEhcEDvcr',
-      audience: 'https://api.authorly.ai/'
-    }).then(auth0 => {
-      const token = auth0.getTokenSilently().then(token => {
-        console.log(token)
-        // window.localStorage.setItem("jwt", token)
+    const client = new auth0.Auth0Client({ domain: 'https://auth.authorly.ai',
+      clientId: 'WpHVGdmaV50dY7LM94O9bfXzEhcEDvcr' });
+    const loginButton = document.getElementById("login-button")
+
+      const token = client.getTokenSilently({audience: 'https://api.authorly.ai/'}).then((token, error) => {
+      }).catch((error) => {
+        // TODO: This is a terrible, hacky solution as I couldn't get the actual getToken to work. Whoever is working on this please fix it :)
+        if (error.message === "Login required") {
+          console.log("User not logged in")
+        } else {
+          loginButton.innerHTML = "Dashboard"
+          loginButton.href = "/?error=Please enter your prompt in the prompt box below to get started"
+        }
       })
-    });
 
 
-    var loginButton = document.getElementById("login-button")
-    if (window.localStorage.getItem("jwt")) {
-      loginButton.innerHTML = "Dashboard"
-      loginButton.href = "/?error=Please enter your prompt in the prompt box below to get started"
-    }
 
     const params = new URLSearchParams(window.location.search);
     if (params.get("error")) {

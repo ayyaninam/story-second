@@ -10,8 +10,12 @@ class Routes {
 	static EditStory(type: StoryOutputTypes, genre: string, id: string) {
 		return `/${this.StoryTypeToPath(type)}/${genre}/${id}/edit`;
 	}
-	static Landing() {
-		return `/`;
+	static Landing(errorMessage?: string) {
+		let res = "/";
+		if (errorMessage) {
+			res += `?error=${encodeURIComponent(errorMessage)}`;
+		}
+		return res;
 	}
 	static CreateStoryFromRoute(params: CreateInitialStoryQueryParams) {
 		const urlParams = this.CreateSearchParams(params);
