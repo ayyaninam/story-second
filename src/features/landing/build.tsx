@@ -117,7 +117,7 @@ const App = () => {
 						<button
 							type="submit"
 							// className={`${prompt.length ? "button hero-submit-button w-button" : ""} `}
-							disabled={isButtonDisabled}
+							disabled={isButtonDisabled || isLoading}
 						>
 							<svg
 								width="17"
@@ -311,7 +311,7 @@ const App = () => {
 							))}
 						</select>
 					</div>
-					<button type="submit" disabled={isButtonDisabled}>
+					<button type="submit" disabled={isButtonDisabled || isLoading}>
 						<svg
 							width="17"
 							height="16"
