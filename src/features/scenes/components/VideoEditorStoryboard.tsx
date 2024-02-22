@@ -115,7 +115,7 @@ function StoryboardView({
 		scene?: number;
 	}>();
 	return (
-		<div className="w-[80%] m-auto">
+		<div className="w-[80%] h-[60%] bg-white rounded-lg">
 			<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 				<div className="flex items-center gap-1">
 					<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
