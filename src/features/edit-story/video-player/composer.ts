@@ -24,7 +24,7 @@ const calculateSegmentDuration = async ({
 	audioURL: string | null;
 	isLastSegment: boolean;
 }) => {
-	const minContentDuration = 2 * VIDEO_FPS;
+	const minContentDuration = 3 * VIDEO_FPS;
 
 	const silentTime = 2 * SILENT_DURATION * VIDEO_FPS;
 
