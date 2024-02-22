@@ -314,7 +314,7 @@ export default function VideoEditor({
 	}, [selectedSegment]);
 
 	return (
-		<div className="relative rounded-lg border-[1px] w-full justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
+		<div className="relative rounded-lg border-[1px] w-full justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2 min-h-screen overflow-y-scroll">
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<EditSegmentModal

@@ -11,12 +11,40 @@ import LibraryIcon from "./icons/LibraryIcon";
 import FreeCreditsIcon from "./icons/FreeCreditsIcon";
 import ChallengesIcon from "./icons/ChallengesIcon";
 import { Command } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
+const menuItems = [
+	{
+		icon: <ExploreIcon />,
+		text: "Explore",
+		shortcut: "E",
+	},
+	{
+		icon: <GenerateIcon />,
+		text: "Generate",
+		shortcut: "G",
+	},
+	{
+		icon: <LibraryIcon />,
+		text: "Library",
+		shortcut: "L",
+	},
+	{
+		icon: <ChallengesIcon />,
+		text: "Challenges",
+		shortcut: "C",
+	},
+	{
+		icon: <FreeCreditsIcon />,
+		text: "Free Credits",
+		shortcut: "F",
+	},
+];
 export default function SideNav() {
 	return (
-		<div className="w-[15.5rem] flex flex-col justify-between mr-4">
-			<div className="ml-3.5">
-				<div className="flex mt-5 mb-4 items-center justify-between">
+		<div className="w-[18rem] flex flex-col justify-between">
+			<div>
+				<div className="ml-3.5 flex mt-5 mb-4 items-center justify-between mr-4">
 					<StoryLogo />
 
 					<Avatar className="h-8 w-8 border-[1px] border-gray-200">
@@ -27,72 +55,110 @@ export default function SideNav() {
 						</AvatarFallback>
 					</Avatar>
 				</div>
-				<div>
-					<div className="flex gap-2 items-center text-secondary">
-						<ExploreIcon /> <p>Explore</p>{" "}
-						<div className="flex flex-grow justify-end items-center">
-							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm text-muted-foreground">E</p>
+				<div className="space-y-1">
+					{menuItems.map((menuItem, index) => (
+						<div
+							key={index}
+							aria-selected={index === 0}
+							className="menuItem ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-secondary"
+						>
+							{menuItem.icon}
+							{menuItem.text}
+							<div className="flex gap-2 flex-grow justify-end items-center opacity-65">
+								<Command
+									className="h-5 w-5 p-0.5"
+									style={{
+										borderRadius: "4px",
+										border: "1px solid rgba(255, 255, 255, 0.05)",
+										background: "rgba(255, 255, 255, 0.05)",
+									}}
+								/>
+								<span
+									className="flex h-5 w-5 text-sm text-white items-center justify-center"
+									style={{
+										borderRadius: "4px",
+										border: "1px solid rgba(255, 255, 255, 0.05)",
+										background: "rgba(255, 255, 255, 0.05)",
+									}}
+								>
+									{menuItem.shortcut}
+								</span>
+							</div>
 						</div>
-					</div>
-					<div className="flex gap-2 items-center text-secondary">
-						<GenerateIcon /> <p>Generate</p>{" "}
-						<div className="flex flex-grow justify-end items-center">
-							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm text-muted-foreground">G</p>
-						</div>
-					</div>
-					<div className="flex gap-2 items-center text-secondary">
-						<LibraryIcon /> <p>Library</p>{" "}
-						<div className="flex flex-grow justify-end items-center">
-							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm text-muted-foreground">L</p>
-						</div>
-					</div>
-					<div className="flex gap-2 items-center text-secondary">
-						<ChallengesIcon /> <p>Challenges</p>{" "}
-						<div className="flex flex-grow justify-end items-center">
-							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm text-muted-foreground">C</p>
-						</div>
-					</div>
-					<div className="flex gap-2 items-center text-secondary">
-						<FreeCreditsIcon /> <p>Free Credits</p>{" "}
-						<div className="flex flex-grow justify-end items-center">
-							<Command className="h-4 w-4 stroke-muted-foreground" />
-							<p className="ml-1 text-sm text-muted-foreground">F</p>
-						</div>
-					</div>
+					))}
 				</div>
 			</div>
-			<div className="w-full flex-col mx-1.5 my-6 items-center text-background">
-				<p>Base Plan</p>
+			<div className="w-full flex-col px-1.5 my-6 items-center text-white">
+				<div className="my-2 mx-3 space-y-2">
+					<p className="font-medium text-sm">Base Plan</p>
 
-				<div className="flex text-xs items-center gap-2">
-					<div className="flex border-slate-700 border-[1px] p-1 rounded-sm">
-						1/10
+					<div className="grid grid-cols-2 gap-1 text-sm pr-4">
+						<div className="flex gap-x-2 items-center">
+							<span
+								className="p-1.5 rounded-sm"
+								style={{
+									background: "rgba(255, 255, 255, 0.05)",
+									boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+								}}
+							>
+								1/1
+							</span>
+							<span>Videos</span>
+						</div>
+						<div className="flex gap-x-2 items-center">
+							<span
+								className="p-1.5 rounded-sm"
+								style={{
+									background: "rgba(255, 255, 255, 0.05)",
+									boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+								}}
+							>
+								0/5
+							</span>
+							<span>Storybooks</span>
+						</div>
+						<div className="flex gap-x-2 items-center">
+							<span
+								className="p-1.5 rounded-sm"
+								style={{
+									background: "rgba(255, 255, 255, 0.05)",
+									boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+								}}
+							>
+								32
+							</span>
+							<span>Credits</span>
+						</div>
+						<div className="flex gap-x-2 items-center">
+							<span
+								className="p-1.5 rounded-sm"
+								style={{
+									background: "rgba(255, 255, 255, 0.05)",
+									boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+								}}
+							>
+								17
+							</span>
+							<span>Days till Reset</span>
+						</div>
 					</div>
-					Videos
-					<div className="flex border-slate-700 border-[1px] p-1 rounded-sm">
-						0/10
-					</div>
-					Stories
-				</div>
 
-				<div className="flex text-xs items-center gap-2">
-					<div className="flex border-slate-700 border-[1px] p-1 rounded-sm">
-						32
+					<div className="flex gap-x-2.5 items-center">
+						<Switch
+							style={{
+								border: "1px solid #50071D",
+								color: "#FF3370",
+								backgroundColor: "#50071D",
+								boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+							}}
+						/>
+						<p className="text-xs">Generate In Turbo Mode</p>
 					</div>
-					Credits
-					<div className="flex border-slate-700 border-[1px] p-1 rounded-sm">
-						17
-					</div>
-					Days till Reset
 				</div>
 
 				<Button
 					variant="outline"
-					className="min-w-full rounded-lg bg-transparent py-1.5 px-2 font-normal shadow-[inset_0px_0px_12px_0px_rgba(255, 255, 255, 0.08)]"
+					className="min-w-full rounded-lg bg-transparent py-1.5 font-normal shadow-[inset_0px_0px_12px_0px_rgba(255, 255, 255, 0.08)]"
 					style={{ border: "1px solid rgba(255, 255, 255, 0.12)" }}
 				>
 					Upgrade Authorly

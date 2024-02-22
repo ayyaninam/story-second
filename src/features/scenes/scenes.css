@@ -1,0 +1,10 @@
+.menuItem[aria-selected="true"],
+.menuItem:hover {
+    border-radius: 8px 0px 0px 8px;
+    border: 0.5px solid rgba(206, 122, 255, 0.20);
+    background: radial-gradient(50.88% 100% at 0% 50%, rgba(187, 85, 247, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%);
+}
+
+.menuItem[aria-selected="true"] {
+    border: 0.5px solid rgba(206, 122, 255, 0.10);
+}
