@@ -1,5 +1,5 @@
 import { mlSchema, mainSchema } from "@/api/schema";
-import { StoryLengths } from "./utils/enums";
+import { SegmentModifications, StoryLengths } from "./utils/enums";
 import { CallbackListener } from "@remotion/player";
 
 export type CreateInitialStoryQueryParams = mlSchema["CreateStoryRequest"];
@@ -19,7 +19,7 @@ export type VideoPlayerProps = {
 	isPlaying?: boolean;
 	seekedFrame?: number;
 	isMuted?: boolean;
-}; 
+};
 
 export type StoryScreenBgBlurProps = {
 	Webstory?: mainSchema["ReturnVideoStoryDTO"];
@@ -27,4 +27,18 @@ export type StoryScreenBgBlurProps = {
 	isPlaying?: boolean;
 	seekedFrame?: number;
 	blur: string;
-}
+};
+
+export type SegmentModificationData =
+	| {
+			operation: SegmentModifications.Add;
+			details: mlSchema["SegmentAdd"];
+	  }
+	| {
+			operation: SegmentModifications.Edit;
+			details: mlSchema["SegmentEdit"];
+	  }
+	| {
+			operation: SegmentModifications.Delete;
+			details: mlSchema["SegmentDelete"];
+	  };

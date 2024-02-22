@@ -1,12 +1,12 @@
 export enum StoryImageStyles {
-	Realistic="Realistic",
-	Auto="Auto",
-	Cartoon="Cartoon",
-	Sketch="Sketch",
-	WaterColor="WaterColor",
-	SciFi="SciFi",
-	Anime="Anime",
-	Horror="Horror",
+	Realistic = "Realistic",
+	Auto = "Auto",
+	Cartoon = "Cartoon",
+	Sketch = "Sketch",
+	WaterColor = "WaterColor",
+	SciFi = "SciFi",
+	Anime = "Anime",
+	Horror = "Horror",
 }
 
 export enum StoryLanguages {
@@ -83,5 +83,16 @@ export enum StepperStep {
 	Script,
 	Storyboard,
 	Scenes,
-	Share
+	Share,
+}
+
+export enum SegmentModifications {
+	Edit,
+	Add,
+	Delete,
+}
+export enum SceneEdits {
+	Edit,
+	Add,
+	Delete,
 }

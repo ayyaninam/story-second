@@ -30,7 +30,7 @@ import {
 	EyeOff,
 } from "lucide-react";
 import Image from "next/image";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import * as Select from "@radix-ui/react-select";
 import React from "react";
 import { Segment, Settings } from "../reducers/edit-reducer";
@@ -55,9 +55,13 @@ const SelectItem = ({
 function RegenerateSegmentBar({
 	textContent,
 	onTextContentChange,
+	onRegenerateImage,
+	regeneratingImage,
 }: {
 	textContent: string;
 	onTextContentChange: (change: string) => void;
+	onRegenerateImage: () => void;
+	regeneratingImage: boolean;
 }) {
 	return (
 		<div className="flex w-full rounded-sm border-border border-[1px] justify-between">
@@ -68,14 +72,18 @@ function RegenerateSegmentBar({
 				height={42}
 			/>
 			<input
-				className="bg-slate-50 border-none outline-none px-1 flex-grow"
+				className="bg-slate-50 border-none outline-none px-1 flex-grow text-gray-600"
 				placeholder="Type something here..."
+				disabled
 				value={textContent}
 				onChange={(e) => {
 					onTextContentChange(e.target.value);
 				}}
 			/>
-			<Select.Root>
+			<Button className="bg-purple-600" onClick={() => onRegenerateImage()}>
+				{regeneratingImage ? "Loading" : "Regenerate Image"}
+			</Button>
+			{/* <Select.Root>
 				<Select.Trigger
 					className="inline-flex items-center justify-center rounded-md p-1 m-1 text-sm bg-purple-700 gap-1 text-white shadow-md"
 					aria-label="Food"
@@ -97,16 +105,16 @@ function RegenerateSegmentBar({
 									<p className="text-sm">Regenerate Segment</p>
 								</div>
 							</SelectItem>
-							<SelectItem value="regenerate-video-n-script">
+							<SelectItem value="regenerate-image-n-script">
 								<div className="flex gap-1 items-center hover:cursor-pointer hover:bg-slate-100">
 									<RefreshCw width={"18px"} height={"18px"} />
-									<p className="text-sm">Regenerate Video & Script</p>
+									<p className="text-sm">Regenerate Image & Script</p>
 								</div>
 							</SelectItem>
-							<SelectItem value="use-script-to-regenerate-video">
+							<SelectItem value="use-script-to-regenerate-image">
 								<div className="flex gap-1 items-center hover:cursor-pointer hover:bg-slate-100">
 									<ScrollText width={"18px"} height={"18px"} />
-									<p className="text-sm">Use Script To Regenerate Video</p>
+									<p className="text-sm">Use Script To Regenerate Image</p>
 								</div>
 							</SelectItem>
 							<SelectItem value="undo-script-edits">
@@ -133,7 +141,7 @@ function RegenerateSegmentBar({
 						</Select.ScrollDownButton>
 					</Select.Content>
 				</Select.Portal>
-			</Select.Root>
+			</Select.Root> */}
 		</div>
 	);
 }
@@ -180,17 +188,17 @@ function AdvancedEditingOptions({
 	return (
 		<div className="bg-indigo-100 border-[1px] border-indigo-100 rounded-sm p-5">
 			<label
-				htmlFor="video-animation-prompt"
+				htmlFor="image-animation-prompt"
 				className="flex items-center gap-1"
 			>
-				Video Animation Prompt
+				Image Prompt
 				<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 			</label>
 			<textarea
-				id="video-animation-prompt"
+				id="image-animation-prompt"
 				rows={2}
 				className="w-full bg-slate-50 m-1 rounded-md p-2"
-				placeholder="Write your video animation prompt here"
+				placeholder="Write your image animation prompt here"
 				value={settings?.prompt ?? ""}
 				onChange={(e) => {
 					if (settings)
@@ -212,14 +220,14 @@ function AdvancedEditingOptions({
 			<div className="flex gap-6">
 				<div className="w-[50%] ">
 					<label
-						htmlFor="video-animation-style"
+						htmlFor="image-animation-style"
 						className="flex items-center gap-1"
 					>
-						Video Animation Style
+						Image Style
 						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 					</label>
 					<select
-						id="video-animation-style"
+						id="image-animation-style"
 						className="w-full bg-slate-50 m-1 rounded-md p-2"
 						value={settings?.style ?? StoryImageStyles.Realistic}
 						onChange={(e) => {
@@ -274,10 +282,10 @@ function AdvancedEditingOptions({
 						className="w-full bg-slate-50 m-1 rounded-md p-2"
 						type="number"
 						min={0}
-						max={1000}
-						step={10}
-						placeholder="300"
-						value={settings?.denoising ?? 0}
+						max={5}
+						step={0.25}
+						placeholder="2"
+						value={settings?.denoising ?? 2}
 						onChange={(e) => {
 							if (settings)
 								onSettingsChange({
@@ -290,40 +298,81 @@ function AdvancedEditingOptions({
 									prompt: "",
 									samplingSteps: 1,
 									style: StoryImageStyles.Realistic,
+									seed: 1,
 									voice: "",
 								});
 						}}
 					/>
 				</div>
 			</div>
-			<label
-				htmlFor="video-animation-prompt"
-				className="flex items-center gap-1"
-			>
-				Seed
-				<Info width={"18px"} height={"18px"} color="#A6B6FC" />
-			</label>
-			<input
-				id="seed"
-				className="w-full bg-slate-50 rounded-md p-2"
-				placeholder="I nodded eagerly"
-				value={settings?.voice ?? ""}
-				onChange={(e) => {
-					if (settings)
-						onSettingsChange({
-							...settings,
-							voice: e.target.value,
-						});
-					else
-						onSettingsChange({
-							denoising: 0,
-							prompt: "",
-							samplingSteps: 1,
-							style: StoryImageStyles.Realistic,
-							voice: e.target.value,
-						});
-				}}
-			/>
+			<div className="flex gap-6">
+				<div className="w-[50%] ">
+					<label
+						htmlFor="image-animation-prompt"
+						className="flex items-center gap-1"
+					>
+						Seed
+						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
+					</label>
+					<input
+						id="seed"
+						type="number"
+						min={0}
+						max={2e16 - 1}
+						className="w-full bg-slate-50 rounded-md p-2"
+						placeholder="2"
+						value={settings?.seed ?? 1}
+						onChange={(e) => {
+							if (settings)
+								onSettingsChange({
+									...settings,
+									seed: parseInt(e.target.value),
+								});
+							else
+								onSettingsChange({
+									denoising: 0,
+									prompt: "",
+									samplingSteps: 1,
+									style: StoryImageStyles.Realistic,
+									seed: parseInt(e.target.value),
+								});
+						}}
+					/>
+				</div>
+				<div className="w-[50%] ">
+					<label
+						htmlFor="image-animation-prompt"
+						className="flex items-center gap-1"
+					>
+						Sampling Steps
+						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
+					</label>
+					<input
+						id="sampling-steps"
+						type="number"
+						min={2}
+						max={10}
+						className="w-full bg-slate-50 rounded-md p-2"
+						placeholder="2"
+						value={settings?.samplingSteps ?? 1}
+						onChange={(e) => {
+							if (settings)
+								onSettingsChange({
+									...settings,
+									samplingSteps: parseInt(e.target.value),
+								});
+							else
+								onSettingsChange({
+									denoising: 0,
+									prompt: "",
+									samplingSteps: parseInt(e.target.value),
+									style: StoryImageStyles.Realistic,
+									seed: 1,
+								});
+						}}
+					/>
+				</div>
+			</div>
 		</div>
 	);
 }
@@ -361,10 +410,14 @@ export default function EditSegmentModalItem({
 	segment,
 	onSegmentEdit,
 	onSegmentDelete,
+	onRegenerateImage,
+	regeneratingImage,
 }: {
 	segment: Segment;
 	onSegmentEdit: (updatedSegment: Segment) => void;
 	onSegmentDelete: () => void;
+	onRegenerateImage: () => void;
+	regeneratingImage: boolean;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
 
@@ -374,12 +427,14 @@ export default function EditSegmentModalItem({
 			<div className="w-full text-slate-950 space-y-2">
 				<RegenerateSegmentBar
 					textContent={segment.textContent || ""}
-					onTextContentChange={(change) =>
+					onRegenerateImage={onRegenerateImage}
+					regeneratingImage={regeneratingImage}
+					onTextContentChange={(change) => {
 						onSegmentEdit({
 							...segment,
 							textContent: change,
-						})
-					}
+						});
+					}}
 				/>
 				<AdvancedEditingBar
 					onCheckedChange={(checked) => {

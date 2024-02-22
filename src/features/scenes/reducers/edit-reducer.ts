@@ -10,11 +10,12 @@ export enum StoryStatus {
 }
 
 export type Settings = {
-	samplingSteps: number; // 2-10
-	denoising: number; // 0-1,
-	prompt: string;
-	style: StoryImageStyles;
-	voice: string;
+	samplingSteps?: number; // 2-10
+	denoising?: number; // 0-1,
+	seed?: number; // 0-1,
+	prompt?: string;
+	style?: StoryImageStyles;
+	voice?: string;
 };
 
 export type Segment = {
@@ -29,12 +30,12 @@ export type Segment = {
 	audioStatus: StoryStatus;
 };
 export type Scene = {
-	id: number;
+	id: string;
 	status: StoryStatus;
 	settings?: {
-		modifier_prompt: string;
-		style: StoryImageStyles;
-		voice: string;
+		modifier_prompt?: string;
+		style?: StoryImageStyles;
+		voice?: string;
 	};
 	segments: Segment[];
 };
@@ -81,6 +82,10 @@ export type EditStoryAction =
 			type: "delete_segment";
 			sceneIndex: number;
 			segmentIndex: number;
+	  }
+	| {
+			type: "reset";
+			draft: EditStoryDraft;
 	  };
 
 const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {

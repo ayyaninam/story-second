@@ -1,4 +1,4 @@
-import { AspectRatios } from "@/utils/enums";
+import { AspectRatios, SegmentModifications } from "@/utils/enums";
 import { cn } from "@/utils";
 import StoryScreen from "@/features/edit-story/story-screen";
 import {
@@ -37,10 +37,20 @@ import { mainSchema, mlSchema } from "@/api/schema";
 import React, { useEffect, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import AutosizeInput from "react-input-autosize";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import EditSegmentModalItem from "./EditSegmentModalItem";
 import EditSegmentModal from "./EditSegmentModal";
+import { SegmentModificationData } from "@/types";
+import { QueryKeys } from "@/lib/queryKeys";
+import { useRouter } from "next/router";
+
+enum InputStatus {
+	UNEDITED,
+	EDITED,
+	ADDED,
+	DELETED,
+}
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -60,6 +70,8 @@ export default function VideoEditor({
 	isError?: boolean;
 	isLoading?: boolean;
 }) {
+	const router = useRouter();
+	const queryClient = useQueryClient();
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
@@ -71,14 +83,16 @@ export default function VideoEditor({
 		open?: boolean;
 		scene?: Scene;
 		sceneId?: number;
+		dispatch?: React.Dispatch<EditStoryAction>;
+		story?: EditStoryDraft;
 	}>();
 
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
-		WebstoryToStoryDraft(WebstoryData)
+		WebstoryToStoryDraft(WebstoryData!)
 	);
 	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
 		editStoryReducer,
-		WebstoryToStoryDraft(WebstoryData)
+		WebstoryToStoryDraft(WebstoryData!)
 	);
 
 	const diff = GenerateStoryDiff(previousStory, story);
@@ -89,30 +103,72 @@ export default function VideoEditor({
 	});
 	const EditSegment = useMutation({
 		mutationFn: api.video.editSegment,
-		onSuccess(data, variables, context) {
-			console.log(data);
-		},
 	});
-
-	console.log(diff);
-
-	const handleEditSegment = () => {
-		const diff = GenerateStoryDiff(previousStory, story);
-		let edits: { operation: 0 | 1 | 2; details: mlSchema["SegmentEdit"] }[] =
-			diff.edits.map((segment) => ({
-				details: { Ind: segment.id, Text: segment.textContent },
-				operation: 0,
-			}));
-		EditSegment.mutateAsync({
-			story_id: WebstoryData.id as string,
-			story_type: WebstoryData?.storyType,
-			edits: [...diff.edits, ...diff.additions, ...diff.subtractions].map(
-				(el) => ({ details: { Ind } })
-			),
-		});
+	const getSegmentStatus = (sceneIndex: number, segmentIndex: number) => {
+		if (
+			diff.edits.find(
+				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
+			)
+		) {
+			return InputStatus.EDITED;
+		} else if (
+			diff.additions.find(
+				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
+			)
+		) {
+			return InputStatus.ADDED;
+		} else if (
+			diff.subtractions.find(
+				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
+			)
+		) {
+			// Deletions not yet implemented
+			return InputStatus.DELETED;
+		} else return InputStatus.UNEDITED;
 	};
 
-	const refs = useRef<HTMLDivElement[][]>(
+	const handleSubmitEditSegments = async () => {
+		const diff = GenerateStoryDiff(previousStory, story);
+		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
+			details: { Ind: segment.id, Text: segment.textContent },
+			operation: SegmentModifications.Edit,
+		}));
+		const additions: SegmentModificationData[] = diff.additions.map(
+			(segment) => ({
+				details: {
+					Ind: segment.id,
+					segments: [{ text: segment.textContent, sceneId: segment.sceneId }],
+				},
+				operation: SegmentModifications.Add,
+			})
+		);
+		const deletions: SegmentModificationData[] = diff.subtractions.map(
+			(segment) => ({
+				details: {
+					Ind: segment.id,
+				},
+				operation: SegmentModifications.Delete,
+			})
+		);
+
+		const editedResponse = await EditSegment.mutateAsync({
+			story_id: WebstoryData?.id as string,
+			story_type: WebstoryData?.storyType,
+			edits: [...edits, ...additions, ...deletions],
+		});
+		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
+
+		const newStory = await api.video.get(
+			WebstoryData?.topLevelCategory!,
+			WebstoryData?.slug!,
+			WebstoryData?.storyType!
+		);
+
+		setPreviousStory(WebstoryToStoryDraft(newStory));
+		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
+	};
+
+	const refs = useRef<HTMLInputElement[][]>(
 		// Putting an absurdly high number of arrays to make things simpler
 		Array.from({ length: 40 ?? 0 }, () => [])
 	);
@@ -154,8 +210,8 @@ export default function VideoEditor({
 				},
 				segmentIndex: segmentIndex,
 			});
-			refs.current[sceneIndex][segmentIndex]?.blur();
-			refs.current[sceneIndex][segmentIndex + 1]?.focus();
+			refs.current[sceneIndex]?.[segmentIndex]?.blur();
+			refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
 		} else if (
 			segment.textContent.length > 0 &&
 			e.target.value.length === 0 &&
@@ -165,9 +221,9 @@ export default function VideoEditor({
 				type: "delete_scene",
 				index: sceneIndex,
 			});
-			refs.current[sceneIndex][segmentIndex]?.blur();
-			refs.current[sceneIndex - 1][
-				story.scenes[sceneIndex - 1]?.segments.length - 1
+			refs.current[sceneIndex]?.[segmentIndex]?.blur();
+			refs.current[sceneIndex - 1]?.[
+				story?.scenes[sceneIndex - 1]?.segments?.length ?? 0 - 1
 			]?.focus();
 		} else if (segment.textContent.length > 0 && e.target.value.length === 0) {
 			dispatch({
@@ -175,8 +231,8 @@ export default function VideoEditor({
 				sceneIndex: sceneIndex,
 				segmentIndex: segmentIndex,
 			});
-			refs.current[sceneIndex][segmentIndex]?.blur();
-			refs.current[sceneIndex][segmentIndex - 1]?.focus();
+			refs.current[sceneIndex]?.[segmentIndex]?.blur();
+			refs.current[sceneIndex]?.[segmentIndex - 1]?.focus();
 		} else {
 			dispatch({
 				type: "edit_segment",
@@ -206,20 +262,21 @@ export default function VideoEditor({
 							audioKey: "",
 							textContent: " ",
 							audioStatus: StoryStatus.READY,
-							id: scene.segments.slice(-1)[0]?.id,
+							id: scene.segments.slice(-1)[0]?.id!,
 							imageKey: "",
 							imageStatus: StoryStatus.READY,
 							videoKey: "",
 							videoStatus: StoryStatus.READY,
 						},
 					],
+					status: StoryStatus.READY,
 					id: scene.id,
 				},
 
 				index: sceneIndex,
 			});
-			refs.current[sceneIndex][segmentIndex]?.blur();
-			refs.current[sceneIndex + 1][0]?.focus();
+			refs.current[sceneIndex]?.[segmentIndex]?.blur();
+			refs.current[sceneIndex + 1]?.[0]?.focus();
 		}
 		// Else, create a new segment
 		else {
@@ -238,8 +295,8 @@ export default function VideoEditor({
 				},
 				segmentIndex: segmentIndex,
 			});
-			refs.current[sceneIndex][segmentIndex]?.blur();
-			refs.current[sceneIndex][segmentIndex + 1]?.focus();
+			refs.current[sceneIndex]?.[segmentIndex]?.blur();
+			refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
 		}
 	};
 
@@ -256,6 +313,8 @@ export default function VideoEditor({
 						onClose={() => setEditSegmentsModalState({})}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
+						dispatch={dispatch}
+						story={story}
 						onSceneEdit={(scene, index) => {
 							dispatch({
 								type: "edit_scene",
@@ -311,7 +370,7 @@ export default function VideoEditor({
 											<div
 												key={`${segmentIndex}`}
 												style={{ backgroundColor: "transparent" }}
-												className="flex flex-wrap w-full justify-between"
+												className={cn(`flex flex-wrap w-full justify-between`)}
 												onMouseEnter={() => {
 													setShowActionItems({
 														index: segmentIndex,
@@ -331,12 +390,20 @@ export default function VideoEditor({
 														}
 													}}
 													name={segmentIndex.toString()}
-													inputClassName="active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none"
+													inputClassName={cn(
+														"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
+														getSegmentStatus(sceneIndex, segmentIndex) ===
+															InputStatus.EDITED && "text-slate-500",
+														getSegmentStatus(sceneIndex, segmentIndex) ===
+															InputStatus.ADDED && "text-green-500"
+													)}
 													inputStyle={{
 														outline: "none",
 														backgroundColor: "inherit",
 													}}
+													// @ts-ignore
 													ref={(el) =>
+														// @ts-ignore
 														(refs.current[sceneIndex][segmentIndex] = el)
 													}
 													value={segment.textContent}
@@ -369,6 +436,8 @@ export default function VideoEditor({
 																		open: true,
 																		scene: scene,
 																		sceneId: sceneIndex,
+																		dispatch,
+																		story,
 																	})
 																}
 															/>{" "}
@@ -392,9 +461,13 @@ export default function VideoEditor({
 								<p className="ms-1 text-purple-600">See Plans</p>
 							</div>
 							<div className="hidden md:block text-muted-foreground space-x-2 items-center">
-								<Button className="p-2 bg-purple-600" variant="default">
-									<Sparkle className="mr-2 h-4 w-4 text-xs" /> Make {numEdits}{" "}
-									Edits
+								<Button
+									className="p-2 bg-purple-600"
+									variant="default"
+									onClick={handleSubmitEditSegments}
+								>
+									<Sparkle className="mr-2 h-4 w-4 text-xs" />{" "}
+									{EditSegment.isPending ? "Loading" : `Make ${numEdits} Edits`}
 								</Button>
 								<Button className="p-2 text-xs align-top" variant="outline">
 									Or, Save Draft

@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Settings2 } from "lucide-react";
 import EditSegmentModalItem from "./EditSegmentModalItem";
 import { Button } from "@/components/ui/button";
-import { Scene, Segment, StoryStatus } from "../reducers/edit-reducer";
+import {
+	EditStoryAction,
+	EditStoryDraft,
+	Scene,
+	Segment,
+	StoryStatus,
+} from "../reducers/edit-reducer";
+import api from "@/api";
+import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
 
 const EditSegmentModal = ({
 	open,
@@ -11,23 +19,60 @@ const EditSegmentModal = ({
 	scene,
 	sceneId,
 	onSceneEdit,
+	dispatch,
+	story,
 }: {
 	open?: boolean;
 	onClose: () => void;
 	scene?: Scene;
 	sceneId?: number;
 	onSceneEdit: (scene: Scene, index: number) => void;
+	dispatch: React.Dispatch<EditStoryAction>;
+	story: EditStoryDraft;
 }) => {
-	console.log(">>>> isModalOpen", open, scene, sceneId);
-	const [editedScene, setEditedScene] = useState(scene);
-
+	const [webstory] = useWebstoryContext();
+	const [regeratingImages, setRegeneratingImages] = useState(
+		Array(scene?.segments?.length).fill(false)
+	);
+	const handleRegenerateImage = async (segmentIndex: number) => {
+		setRegeneratingImages((prev) => {
+			prev[segmentIndex] = true;
+			return prev;
+		});
+		const segment = story.scenes[sceneId ?? 0]?.segments[segmentIndex]!;
+		const settings = segment?.settings;
+		const _regeneratedImage = await api.video.regenerateImage({
+			// @ts-expect-error not typed properly
+			image_style: settings?.style!,
+			prompt: settings?.prompt!,
+			segment_idx: segmentIndex,
+			story_id: story.id,
+			story_type: webstory.storyType,
+			cfg_scale: settings?.denoising,
+			sampling_steps: settings?.samplingSteps,
+			seed: settings?.seed,
+		});
+		dispatch({
+			type: "edit_segment",
+			sceneIndex: sceneId!,
+			segmentIndex,
+			segment: {
+				...segment,
+				imageStatus: StoryStatus.PENDING,
+			},
+		});
+		setRegeneratingImages((prev) => {
+			prev[segmentIndex] = false;
+			return prev;
+		});
+	};
 	if (scene && sceneId !== undefined) {
 		return (
-			<div className="absolute w-[50%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 bg-red-400">
+			<div className="absolute w-[50%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 bg-red-400 ">
 				<Dialog.Root open={open}>
 					<Dialog.Portal>
 						<Dialog.Overlay className="bg-[#0000000d] fixed inset-0" />
-						<Dialog.Content className="bg-white rounded-sm shadow-sm fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 focus:outline-none">
+						<Dialog.Content className="bg-white rounded-sm shadow-sm fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 focus:outline-none font-mono">
 							<Dialog.Title className="m-0 font-semibold text-[#121113] px-3 text-md">
 								<div className="flex gap-2 items-center">
 									<Settings2 width={16} height={16} />
@@ -40,30 +85,33 @@ const EditSegmentModal = ({
 								ready to see it, click regenerate.
 							</Dialog.Description>
 							<div className="overflow-auto max-h-[70vh] px-3">
-								{editedScene?.segments?.map((segment, index) => (
+								{story.scenes[sceneId]?.segments?.map((segment, index) => (
 									<EditSegmentModalItem
 										key={index}
 										segment={segment}
+										onRegenerateImage={() => handleRegenerateImage(index)}
+										regeneratingImage={regeratingImages[index]}
 										onSegmentEdit={(updatedSegment) => {
-											const updatedScene = { ...editedScene };
-											const updatedSegments = [...updatedScene.segments];
-											updatedSegments[index] = updatedSegment;
-											updatedScene.segments = updatedSegments;
-											setEditedScene(updatedScene);
+											dispatch({
+												type: "edit_segment",
+												sceneIndex: sceneId,
+												segmentIndex: index,
+												segment: updatedSegment,
+											});
+											// setEditedScene(updatedScene);
 										}}
 										onSegmentDelete={() => {
-											const updatedScene = { ...editedScene };
-											const updatedSegments = [...updatedScene.segments];
-											updatedScene.segments = updatedSegments.filter(
-												(_, deleteIndex) => deleteIndex !== index
-											);
-											setEditedScene(updatedScene);
+											dispatch({
+												type: "delete_segment",
+												sceneIndex: sceneId,
+												segmentIndex: index,
+											});
 										}}
 									/>
 								))}
 							</div>
 							<div className="mx-4 justify-center">
-								<Button
+								{/* <Button
 									className="p-2 w-full text-sm"
 									variant="outline"
 									onClick={() => {
@@ -86,7 +134,7 @@ const EditSegmentModal = ({
 									}}
 								>
 									Add New Segment
-								</Button>
+								</Button> */}
 							</div>
 							<div className="flex mt-2 gap-1 mx-4 justify-end text-sm">
 								<Button className="p-2" variant="outline" onClick={onClose}>
@@ -96,9 +144,9 @@ const EditSegmentModal = ({
 									className="p-2 bg-purple-600"
 									variant="default"
 									onClick={() => {
-										if (editedScene) {
-											onSceneEdit(editedScene, sceneId);
-										}
+										// if (editedScene) {
+										// 	onSceneEdit(editedScene, sceneId);
+										// }
 										onClose();
 									}}
 								>
