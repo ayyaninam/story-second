@@ -21,6 +21,7 @@ import { StepperStep } from "@/utils/enums";
 import Navbar from "./components/Navbar";
 import VideoEditor from "./components/VideoEditor";
 import VideoEditorStoryboard from "./components/VideoEditorStoryboard";
+import Footer from "./components/Footer";
 
 export default function StoryScenes() {
 	const router = useRouter();
@@ -63,7 +64,7 @@ export default function StoryScenes() {
 	const ImageRatio = GetImageRatio(Webstory.data.resolution);
 
 	return (
-		<div className="w-full mr-2 flex flex-col rounded-lg overflow-y-scroll bg-background h-full">
+		<div className="relative w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
 			{/* Navbar */}
 			<Navbar
 				ImageRatio={ImageRatio}
@@ -76,7 +77,7 @@ export default function StoryScenes() {
 
 			{/* MainSection */}
 			<div
-				className={`flex bg-background rounded-bl-lg rounded-br-lg p-2 gap-x-1.5 overflow-y-auto h-full`}
+				className={`flex bg-background rounded-bl-lg rounded-br-lg p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}
 			>
 				{/* <VideoEditor
 					ImageRatio={ImageRatio}
@@ -91,6 +92,9 @@ export default function StoryScenes() {
 					isLoading={isLoading}
 				/>
 			</div>
+
+			{/* BottomBar */}
+			<Footer />
 		</div>
 	);
 }
