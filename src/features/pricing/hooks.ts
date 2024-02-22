@@ -5,28 +5,24 @@ import { Stripe, StripeElements } from "@stripe/stripe-js";
 export const useStripeSetup = () => {
 	const [stripe, setStripe] = useState<Stripe>();
 	const [elements, setElements] = useState<StripeElements>();
-	const [clientSecret, setClientSecret] = useState("");
 
-	const setupStripe = (
-		stripe: Stripe,
-		elements: StripeElements,
-		clientSecret: string
-	) => {
+	const setupStripe = (stripe: Stripe, elements: StripeElements) => {
 		setStripe(stripe);
 		setElements(elements);
-		setClientSecret(clientSecret);
 	};
 
-	const confirmPayment = async () => {
-		if (!stripe || !clientSecret) {
+	const confirmPayment = async (paymentIntentClientSecret: string) => {
+		if (!stripe || !paymentIntentClientSecret) {
 			throw new Error("Stripe.js has not loaded yet.");
 		}
 
-		return await stripe.confirmCardPayment(clientSecret);
+		return await stripe.confirmCardPayment(paymentIntentClientSecret);
 	};
 
 	const confirmSetup = async (return_url: string) => {
-		if (!stripe || !elements) return;
+		if (!stripe || !elements) {
+			throw new Error("Stripe.js has not loaded yet.");
+		}
 
 		const { error, setupIntent } = await stripe.confirmSetup({
 			elements,

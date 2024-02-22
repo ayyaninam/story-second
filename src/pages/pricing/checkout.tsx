@@ -94,14 +94,7 @@ export default function PricingPage() {
 		setSubmitting(true);
 
 		try {
-			const { error } = (await confirmSetup(`${base_url}/pricing`)) || {};
-			if (error) {
-				console.error("Confirm Setup failed: ", error);
-				toast.error("Confirm Setup failed");
-				return;
-			}
-
-			const { succeeded } = await api.payment.createSubscription({
+			const { succeeded, data } = await api.payment.createSubscription({
 				subscriptionPlan,
 				subscriptionPeriod,
 			});
@@ -111,14 +104,50 @@ export default function PricingPage() {
 				return;
 			}
 
-			updateUserDataAfter1Second();
-			toast.success("Create subscription successfully");
-
-			const { error: stripeError } = await confirmPayment();
-			if (stripeError) {
-				console.error("Stripe failed confirming payment: ", stripeError);
-				toast.error("Stripe failed confirming payment");
+			if (!data) {
+				toast.error("Purchase failed.");
 				return;
+			}
+
+			if (data.nextAction?.type !== "use_stripe_sdk") {
+				if (data.succeeded && !data.requiresAction) {
+					toast.success("Subscription successful!");
+					updateUserDataAfter1Second();
+				} else {
+					toast.error("Purchase failed.");
+				}
+			} else {
+				toast.loading("Waiting for card authentication...");
+				const { paymentIntent, error } = await confirmPayment(
+					data.clientSecret!
+				);
+				toast.dismiss();
+
+				if (error) {
+					console.error("Stripe Error: ", error);
+					toast.error(`Purchase failed: ${error.message}`);
+					return;
+				}
+
+				if (paymentIntent?.status !== "succeeded") {
+					toast.error("Purchase failed.");
+					return;
+				}
+
+				const { succeeded: confirmSucceeded } =
+					await api.payment.confirmSubscription({
+						paymentIntentId: paymentIntent.id,
+						subscriptionId: data.subscriptionId,
+						subscriptionPlan,
+						subscriptionPeriod,
+					});
+
+				if (confirmSucceeded) {
+					toast.success("Subscription successful!");
+					updateUserDataAfter1Second();
+				} else {
+					toast.error("Internal Server Error: please contact support.");
+				}
 			}
 		} catch (e: any) {
 			console.error("Error Paying Subscription: ", e.message);
@@ -184,6 +213,10 @@ export default function PricingPage() {
 						</div>
 					) : (
 						<div>
+							<div className="hidden">
+								{/* setupStripe must run, this is the reason for this trick */}
+								<StripeForm setupStripe={setupStripe} />
+							</div>
 							<PaymentCard
 								editable
 								onEdit={() => setUserWantsToChangePayment(true)}

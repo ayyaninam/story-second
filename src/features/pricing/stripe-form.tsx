@@ -42,20 +42,18 @@ type SetupStripe = ReturnType<typeof useStripeSetup>["setupStripe"];
 const StripeElement = ({
 	setupStripe,
 	onFormReady,
-	clientSecret,
 }: {
 	setupStripe: SetupStripe;
 	onFormReady: () => void;
-	clientSecret: string;
 }) => {
 	const stripe = useStripe();
 	const elements = useElements();
 
 	useEffect(() => {
-		if (stripe && elements && clientSecret) {
-			setupStripe(stripe, elements, clientSecret);
+		if (stripe && elements) {
+			setupStripe(stripe, elements);
 		}
-	}, [stripe, elements, clientSecret]);
+	}, [stripe, elements]);
 
 	return (
 		<PaymentElement className="w-full" onLoaderStart={() => onFormReady()} />
@@ -95,7 +93,6 @@ export default function StripeForm({
 					<StripeElement
 						setupStripe={setupStripe}
 						onFormReady={() => setStripeFormReady(true)}
-						clientSecret={clientSecret}
 					/>
 				</Elements>
 			) : null}

@@ -29,7 +29,7 @@ const payment = {
 		subscriptionPlan,
 		subscriptionPeriod,
 	}: mainSchema["CreateSubscriptionDTO"]): Promise<
-		mainSchema["StringApiResponse"]
+		mainSchema["InternalTransactionDTOApiResponse"]
 	> =>
 		await authFetcher(getJwt())
 			.post(`api/Payment/CreateSubscription`, {
@@ -41,6 +41,24 @@ const payment = {
 			.json(),
 	cancelSubscription: async (): Promise<mainSchema["StringApiResponse"]> =>
 		await authFetcher(getJwt()).post(`api/Payment/CancelSubscription`).json(),
+	confirmSubscription: async ({
+		paymentIntentId,
+		subscriptionId,
+		subscriptionPlan,
+		subscriptionPeriod,
+	}: mainSchema["ConfirmSubscriptionDTO"]): Promise<
+		mainSchema["StringApiResponse"]
+	> =>
+		await authFetcher(getJwt())
+			.post(`api/Payment/ConfirmSubscription`, {
+				json: {
+					paymentIntentId,
+					subscriptionId,
+					subscriptionPlan,
+					subscriptionPeriod,
+				},
+			})
+			.json(),
 };
 
 export default payment;
