@@ -4,6 +4,7 @@ import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import StoryScenes from "@/features/scenes";
+import ScenesLayout from "@/features/scenes/components/Layout";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";
 import Routes from "@/routes";
@@ -20,12 +21,13 @@ import {
 	GetServerSidePropsContext,
 	InferGetServerSidePropsType,
 } from "next";
+import { ReactElement } from "react";
 
-function ScenesPage({
+const ScenesPage = ({
 	dehydratedState,
 	session,
 	storyData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 	useSaveSessionToken(session);
 
 	return (
@@ -33,7 +35,11 @@ function ScenesPage({
 			<StoryScenes />
 		</WebStoryProvider>
 	);
-}
+};
+
+ScenesPage.getLayout = function getLayout(page: ReactElement) {
+	return <ScenesLayout>{page}</ScenesLayout>;
+};
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	const session = await getSession(ctx.req, ctx.res);
