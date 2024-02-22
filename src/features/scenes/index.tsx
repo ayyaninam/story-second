@@ -77,7 +77,7 @@ export default function StoryScenes() {
 
 			{/* MainSection */}
 			<div
-				className={`flex bg-background rounded-bl-lg rounded-br-lg p-2 gap-x-1.5 h-screen overflow-y-auto pb-[250px]`}
+				className={`flex bg-background rounded-bl-lg rounded-br-lg p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}
 			>
 				{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
 					<div className="p-2 space-y-3 hidden sm:block">
