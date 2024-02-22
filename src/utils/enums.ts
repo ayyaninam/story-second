@@ -107,3 +107,8 @@ export enum SubscriptionPeriod {
 	Monthly,
 	Annual,
 }
+
+export enum StoryboardViewType {
+	Outline,
+	Slides
+}
