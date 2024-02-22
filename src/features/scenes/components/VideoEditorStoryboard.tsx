@@ -342,7 +342,7 @@ export default function VideoEditorStoryboard({
 						}}
 					/>
 				)}
-			<div className="flex justify-center m-10">
+			<div className="flex justify-center mt-auto">
 				<Badge
 					variant="outline"
 					className={`bg-primary-foreground font-normal text-sm`}
@@ -362,7 +362,7 @@ export default function VideoEditorStoryboard({
 				WebstoryData={WebstoryData}
 			/> */}
 			<ScriptEditorView WebstoryData={WebstoryData} />
-			<div className="flex justify-center m-10">
+			<div className="flex justify-center mb-auto">
 				<Badge
 					variant="outline"
 					className={`bg-primary-foreground font-normal text-sm`}
