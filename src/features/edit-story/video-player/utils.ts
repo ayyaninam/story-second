@@ -72,6 +72,9 @@ export const webStoryToRemotionInputProps = async (
 						videoURL: segment.videoKey
 							? Format.GetVideoUrl(segment.videoKey)
 							: null,
+						imageURL: segment.imageKey
+							? Format.GetVideoUrl(segment.imageKey)
+							: null,
 						interpolationURL: segment.frameInterpolationKey
 							? Format.GetVideoUrl(segment.frameInterpolationKey)
 							: null,

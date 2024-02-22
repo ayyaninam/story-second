@@ -6,6 +6,7 @@ import {
   interpolate,
   useCurrentFrame,
   OffthreadVideo,
+  Img,
 } from "remotion";
 import {
   SILENT_DURATION,
@@ -119,7 +120,11 @@ export const SegmentSplitPage = ({
   return (
     <AbsoluteFill style={{ ...container, zIndex, opacity }}>
       <AbsoluteFill>
-        <OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
+        {segment.visual?.format === "video" ? (
+          <OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
+        ) : segment.visual?.format === "image" ? (
+          <Img src={segment.visual.imageURL} />
+        ) : null}
       </AbsoluteFill>
 
       {inputProps.enableSubtitles && (
