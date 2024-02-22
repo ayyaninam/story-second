@@ -13,7 +13,9 @@ const ScenesLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<div
 			className="flex w-screen h-screen bg-primary py-2 overflow-hidden"
-			style={{ background: getBackgroundGradient("scene") }}
+			style={{
+				background: getBackgroundGradient("scene"),
+			}}
 		>
 			<SideNav />
 			{children}
