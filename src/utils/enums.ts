@@ -112,3 +112,15 @@ export enum StoryboardViewType {
 	Outline,
 	Slides
 }
+
+export enum ScriptEditorViewType {
+	Title_Scenes,
+	Just_Text
+}
+
+export enum InputStatus {
+	UNEDITED,
+	EDITED,
+	ADDED,
+	DELETED,
+}
