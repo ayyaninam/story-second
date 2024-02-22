@@ -384,13 +384,13 @@ export default function VideoEditor({
 												key={`${segmentIndex}`}
 												style={{ backgroundColor: "transparent" }}
 												className={cn(`flex flex-wrap w-full justify-between`)}
-												// onClick={() => {
-												// 	setSelectedSegment(
-												// 		WebstoryData?.scenes[sceneIndex]?.videoSegments[
-												// 			segmentIndex
-												// 		]!
-												// 	);
-												// }}
+												onClick={() => {
+													setSelectedSegment(
+														WebstoryData?.scenes[sceneIndex]?.videoSegments[
+															segmentIndex
+														]!
+													);
+												}}
 												onMouseEnter={() => {
 													setShowActionItems({
 														index: segmentIndex,
