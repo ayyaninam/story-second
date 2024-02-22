@@ -10,16 +10,14 @@ import {
 	ChevronDown,
 	Film,
 	HelpCircle,
-	PlayCircle,
-	Plus,
 	Sparkle,
-	Upload,
 	Video,
 	Settings2,
 	MoreHorizontal,
 	LayoutList,
 	SparkleIcon,
 	ChevronRight,
+	ScrollText,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Format from "@/utils/format";
@@ -320,7 +318,8 @@ export default function VideoEditorStoryboard({
 	}, [selectedSegment]);
 
 	return (
-		<div className="relative rounded-lg border-[1px] w-full h-fit justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
+		<div className="relative z-0 rounded-lg border-[1px] w-full items-center justify-center flex flex-col h-full border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
+			<div className="absolute left-[50%] top-0 w-[1px] -z-1 bg-purple-300" />
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<EditSegmentModal
@@ -343,13 +342,13 @@ export default function VideoEditorStoryboard({
 						}}
 					/>
 				)}
-			<div className="flex justify-center m-10">
+			<div className="flex justify-center mt-auto">
 				<Badge
 					variant="outline"
 					className={`bg-primary-foreground font-normal text-sm`}
 				>
-					<Film className="stroke-purple-600 mr-1 h-4 w-4" />
-					Generate & Edit Your Scenes
+					<ScrollText className="stroke-purple-600 mr-1 h-4 w-4" />
+					Edit Your Script
 				</Badge>
 			</div>
 			{/* <StoryboardView
@@ -363,13 +362,13 @@ export default function VideoEditorStoryboard({
 				WebstoryData={WebstoryData}
 			/> */}
 			<ScriptEditorView WebstoryData={WebstoryData} />
-			<div className="flex justify-center m-10">
+			<div className="flex justify-center mb-auto">
 				<Badge
 					variant="outline"
 					className={`bg-primary-foreground font-normal text-sm`}
 				>
-					<Video className="stroke-purple-600 mr-1 h-4 w-4" />
-					View The Final Cut
+					<Film className="stroke-purple-600 mr-1 h-4 w-4" />
+					Next — Select Options & Generate Storyboard
 				</Badge>
 			</div>
 			<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">

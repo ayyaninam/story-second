@@ -60,7 +60,7 @@ export default function SideNav() {
 						<div
 							key={index}
 							aria-selected={index === 0}
-							className="menuItem ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-secondary"
+							className="menuItem ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white"
 						>
 							{menuItem.icon}
 							{menuItem.text}
