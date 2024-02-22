@@ -1,6 +1,6 @@
 import { mainSchema } from "@/api/schema";
 import { ChevronDown, ScrollText, SparkleIcon } from "lucide-react";
-import ScriptEditorViewTypes from "./ScriptEditorViewTypes";
+import ScriptEditorViewTypes from "./ScriptEditorViewTypesComponent";
 import { ScriptEditorViewType } from "@/utils/enums";
 import Format from "@/utils/format";
 import cn from "@/utils/cn";

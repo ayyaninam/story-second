@@ -1,3 +1,4 @@
+// TODO: Remember to remove them later on.
 export const scenes = [
   {
     scene: "Scene 1: Approaching the Dream",

@@ -1,35 +1,7 @@
-import {
-	AspectRatios,
-	InputStatus,
-	SegmentModifications,
-	StoryboardViewType,
-} from "@/utils/enums";
-import { cn } from "@/utils";
-import StoryScreen from "@/features/edit-story/story-screen";
-import {
-	ChevronDown,
-	Film,
-	HelpCircle,
-	PlayCircle,
-	Plus,
-	Sparkle,
-	Upload,
-	Video,
-	Settings2,
-	MoreHorizontal,
-	LayoutList,
-	SparkleIcon,
-	ChevronRight,
-} from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import Format from "@/utils/format";
-import { Button } from "@/components/ui/button";
+import { AspectRatios, InputStatus, SegmentModifications } from "@/utils/enums";
+import { Film, HelpCircle, Video } from "lucide-react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
-import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
-import Img from "../../../../public/images/temp/video-player.png";
-import * as Dialog from "@radix-ui/react-dialog";
 
 import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
@@ -39,29 +11,16 @@ import editStoryReducer, {
 	Segment,
 	StoryStatus,
 } from "../reducers/edit-reducer";
-import { StoryImageStyles } from "@/utils/enums";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
-import { mainSchema, mlSchema } from "@/api/schema";
-import React, {
-	Dispatch,
-	MutableRefObject,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
-import { nanoid } from "nanoid";
-import AutosizeInput from "react-input-autosize";
+import { mainSchema } from "@/api/schema";
+import React, { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
-import EditSegmentModalItem from "./EditSegmentModalItem";
 import EditSegmentModal from "./EditSegmentModal";
 import { SegmentModificationData } from "@/types";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
-import VideoPlayer, {
-	VideoPlayerHandler,
-} from "@/features/edit-story/components/video-player";
-import StoryboardViewTypes from "./StoryboardViewTypes";
+import { VideoPlayerHandler } from "@/features/edit-story/components/video-player";
 import ScriptEditorView from "./ScriptEditorView";
 
 const MAX_SUMMARY_LENGTH = 251;

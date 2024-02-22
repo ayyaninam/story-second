@@ -17,12 +17,12 @@ import {
 	Sparkle,
 	SparkleIcon,
 } from "lucide-react";
-import ScriptEditorViewTypes from "./ScriptEditorViewTypes";
+import ScriptEditorViewTypes from "./ScriptEditorViewTypesComponent";
 import Format from "@/utils/format";
 import cn from "@/utils/cn";
 import Image from "next/image";
 import AutosizeInput from "react-input-autosize";
-import StoryboardViewTypes from "./StoryboardViewTypes";
+import StoryboardViewTypes from "./StoryboardViewTypesComponent";
 
 export default function StoryboardView({
 	WebstoryData,
