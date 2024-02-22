@@ -12,7 +12,7 @@ export default function ScriptEditorView({
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 }) {
 	return (
-		<div className="w-[80%] m-auto">
+		<div className="w-[80%] m-auto h-[70%] overflow-y-scroll">
 			<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 				<div className="flex items-center gap-1">
 					<ScrollText className="stroke-purple-600 mr-1 h-4 w-4" />
