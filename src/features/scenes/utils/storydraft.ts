@@ -20,6 +20,12 @@ export const WebstoryToStoryDraft = (
 				segments:
 					scene.videoSegments?.map((segment) => {
 						return {
+							settings: {
+								prompt: segment.imagePrompt,
+								denoising: segment.imageCFGScale,
+								style: segment.imageStyle,
+								seed: segment.imageSeed,
+							},
 							audioKey: segment.femaleAudioKey!,
 							audioStatus: segment.femaleAudioKey
 								? StoryStatus.COMPLETE

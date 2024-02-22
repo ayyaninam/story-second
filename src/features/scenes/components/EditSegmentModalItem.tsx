@@ -33,8 +33,11 @@ import Image from "next/image";
 import { PropsWithChildren, useEffect, useState } from "react";
 import * as Select from "@radix-ui/react-select";
 import React from "react";
-import { Segment, Settings } from "../reducers/edit-reducer";
+import { Segment, Settings, StoryStatus } from "../reducers/edit-reducer";
 import { StoryImageStyles } from "@/utils/enums";
+import { keys } from "@/utils/enumKeys";
+import Format from "@/utils/format";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type SelectItemProps = {
 	value: string;
@@ -53,29 +56,36 @@ const SelectItem = ({
 };
 
 function RegenerateSegmentBar({
-	textContent,
+	segment,
 	onTextContentChange,
 	onRegenerateImage,
 	regeneratingImage,
 }: {
-	textContent: string;
+	segment: Segment;
 	onTextContentChange: (change: string) => void;
 	onRegenerateImage: () => void;
 	regeneratingImage: boolean;
 }) {
 	return (
 		<div className="flex w-full rounded-sm border-border border-[1px] justify-between">
-			<Image
-				alt="hello"
-				src={"/edit-segment-item-thumb.svg"}
-				width={66}
-				height={42}
-			/>
+			{segment.imageStatus === StoryStatus.COMPLETE ? (
+				<Image
+					alt={segment.imageKey}
+					src={Format.GetImageUrl(segment.imageKey)}
+					width={66}
+					height={42}
+				/>
+			) : (
+				<Skeleton>
+					<div className="bg-slate-500 w-[66px] h-[42px]"></div>
+				</Skeleton>
+			)}
+
 			<input
 				className="bg-slate-50 border-none outline-none px-1 flex-grow text-gray-600"
 				placeholder="Type something here..."
 				disabled
-				value={textContent}
+				value={segment.textContent}
 				onChange={(e) => {
 					onTextContentChange(e.target.value);
 				}}
@@ -234,42 +244,23 @@ function AdvancedEditingOptions({
 							if (settings)
 								onSettingsChange({
 									...settings,
-									style: e.target.value as StoryImageStyles,
+									style: Number(e.target.value) as StoryImageStyles,
 								});
 							else
 								onSettingsChange({
 									denoising: 0,
 									prompt: "",
 									samplingSteps: 1,
-									style: e.target.value as StoryImageStyles,
+									style: Number(e.target.value) as StoryImageStyles,
 									voice: "",
 								});
 						}}
 					>
-						<option value={StoryImageStyles.Realistic}>
-							{StoryImageStyles.Realistic}
-						</option>
-						<option value={StoryImageStyles.Auto}>
-							{StoryImageStyles.Auto}
-						</option>
-						<option value={StoryImageStyles.Cartoon}>
-							{StoryImageStyles.Cartoon}
-						</option>
-						<option value={StoryImageStyles.Sketch}>
-							{StoryImageStyles.Sketch}
-						</option>
-						<option value={StoryImageStyles.WaterColor}>
-							{StoryImageStyles.WaterColor}
-						</option>
-						<option value={StoryImageStyles.SciFi}>
-							{StoryImageStyles.SciFi}
-						</option>
-						<option value={StoryImageStyles.Anime}>
-							{StoryImageStyles.Anime}
-						</option>
-						<option value={StoryImageStyles.Horror}>
-							{StoryImageStyles.Horror}
-						</option>
+						{keys(StoryImageStyles).map((label, index) => (
+							<option key={index} value={index}>
+								{label}
+							</option>
+						))}
 					</select>
 				</div>
 				<div className="w-[50%] ">
@@ -426,7 +417,7 @@ export default function EditSegmentModalItem({
 			<VerticalControlButtons onDelete={onSegmentDelete} />
 			<div className="w-full text-slate-950 space-y-2">
 				<RegenerateSegmentBar
-					textContent={segment.textContent || ""}
+					segment={segment}
 					onRegenerateImage={onRegenerateImage}
 					regeneratingImage={regeneratingImage}
 					onTextContentChange={(change) => {

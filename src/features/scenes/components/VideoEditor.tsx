@@ -367,7 +367,7 @@ export default function VideoEditor({
 								<div key={sceneIndex} className="">
 									<span className="flex flex-wrap text-sm hover:bg-slate-100 rounded-md">
 										{scene.segments.map((segment, segmentIndex) => (
-											<div
+											<span
 												key={`${segmentIndex}`}
 												style={{ backgroundColor: "transparent" }}
 												className={cn(`flex flex-wrap w-full justify-between`)}
@@ -395,7 +395,9 @@ export default function VideoEditor({
 														getSegmentStatus(sceneIndex, segmentIndex) ===
 															InputStatus.EDITED && "text-slate-500",
 														getSegmentStatus(sceneIndex, segmentIndex) ===
-															InputStatus.ADDED && "text-green-500"
+															InputStatus.ADDED && "text-green-500",
+														segment.imageStatus === StoryStatus.PENDING &&
+															"text-purple-800"
 													)}
 													inputStyle={{
 														outline: "none",
@@ -448,7 +450,7 @@ export default function VideoEditor({
 															/>{" "}
 														</div>
 													)}
-											</div>
+											</span>
 										))}
 									</span>
 								</div>

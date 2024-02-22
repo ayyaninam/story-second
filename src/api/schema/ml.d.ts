@@ -170,7 +170,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 56812951
+       * @default 28910829
        */
       seed?: number;
       /**
@@ -213,9 +213,9 @@ export interface components {
     /** SegmentData */
     SegmentData: {
       /** Text */
-      text: string;
+      Text: string;
       /** Sceneid */
-      sceneId: string;
+      SceneId: string;
     };
     /** SegmentDelete */
     SegmentDelete: {

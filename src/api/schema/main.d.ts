@@ -789,6 +789,33 @@ export interface paths {
       };
     };
   };
+  "/api/Admin/AddCredits": {
+    /** Add tokens to a user account. */
+    post: {
+      requestBody?: {
+        content: {
+          "application/json-patch+json": components["schemas"]["AddCreditsDTO"];
+          "application/json": components["schemas"]["AddCreditsDTO"];
+          "text/json": components["schemas"]["AddCreditsDTO"];
+          "application/*+json": components["schemas"]["AddCreditsDTO"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["StringApiResponse"];
+            "application/json": components["schemas"]["StringApiResponse"];
+            "text/json": components["schemas"]["StringApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/Amazon/{id}/Payment": {
     /** Make payment for an amazon request */
     post: {
@@ -3193,6 +3220,20 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    /** @description DTO used to add credits to a user account from admin panel */
+    AddCreditsDTO: {
+      /**
+       * Email
+       * @description The email address of the user.
+       */
+      email: string;
+      /**
+       * Amount
+       * Format: double
+       * @description The amount of credits to add.
+       */
+      amount: number;
+    };
     /** @description DTO used to add a paragraph to a WebStory. */
     AddParagraphDTO: {
       /**
@@ -4524,14 +4565,6 @@ export interface components {
        */
       profileName?: string | null;
     };
-    /** @description Admin panel PluginStory object. */
-    ReturnAdminStoryPromptDataDTO: {
-      /**
-       * Prompt
-       * @description The prompt of the PluginStory.
-       */
-      prompt?: string | null;
-    };
     /** @description Admin panel StorySegment object. */
     ReturnAdminStorySegmentDTO: {
       /**
@@ -4598,6 +4631,8 @@ export interface components {
       phoneNumber?: string | null;
       webStories?: components["schemas"]["ReturnAdminSmallWebStoryDTO"][] | null;
       pdfPurchases?: components["schemas"]["ReturnUserPdfPurchasesDTO"][] | null;
+      /** Format: double */
+      walletBalance?: number;
       /** Format: date-time */
       created?: string;
     };
@@ -4676,6 +4711,11 @@ export interface components {
       coverImage?: string | null;
       user?: components["schemas"]["ReturnAdminUserDTO"];
       /**
+       * StoryPrompt
+       * @description Story input prompt
+       */
+      storyPrompt?: string | null;
+      /**
        * StorySegments
        * @description The segments of the WebStory.
        */
@@ -4691,7 +4731,6 @@ export interface components {
        * @description The BookOrders of the WebStory.
        */
       bookOrders?: components["schemas"]["ReturnAdminBookOrderDTO"][] | null;
-      storyPromptData?: components["schemas"]["ReturnAdminStoryPromptDataDTO"];
     };
     /** @description Represents the standard response format for API requests. */
     ReturnAdminWebStoryDTOApiResponse: {
@@ -5509,7 +5548,7 @@ export interface components {
        * Format: uuid
        * @description The Id of the associated Scene
        */
-      sceneId?: string;
+      sceneId?: string | null;
       /**
        * TextContent
        * @description The text content of the segment.
@@ -5910,7 +5949,30 @@ export interface components {
        */
       frameInterpolationKey?: string | null;
       imageStyle?: components["schemas"]["ImageStyles"];
+      /**
+       * ImagePrompt
+       * @description The prompt of the image.
+       */
+      imagePrompt?: string | null;
+      /**
+       * ImageSeed
+       * Format: int64
+       * @description The seed of the image.
+       */
+      imageSeed?: number | null;
+      /**
+       * ImageCFGScale
+       * Format: double
+       * @description The cfg scale of the image.
+       */
+      imageCFGScale?: number | null;
       imageResolution?: components["schemas"]["ImageResolution"];
+      /**
+       * ImageSamplingSteps
+       * Format: int32
+       * @description The sampling steps of the image.
+       */
+      imageSamplingSteps?: number | null;
       /**
        * ImageAltText
        * @description The alt text of the image.
