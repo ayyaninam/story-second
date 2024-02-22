@@ -96,3 +96,14 @@ export enum SceneEdits {
 	Add,
 	Delete,
 }
+export enum SubscriptionPlan {
+	Free,
+	Basic,
+	Pro,
+	Premium,
+}
+
+export enum SubscriptionPeriod {
+	Monthly,
+	Annual,
+}

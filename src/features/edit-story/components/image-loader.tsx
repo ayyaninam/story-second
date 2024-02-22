@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import CustomImageSuspense from "./custom-image-suspense";
 import { components } from "@/api/schema/main";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
 import useWebstoryContext from "../providers/WebstoryContext";
 
@@ -44,7 +44,28 @@ export default function ImageLoader({
 
 	// Short cuts
 	const currentImage = imageData[index]!;
-	const ImageRatio = GetImageRatio(Webstory.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.resolution);
+
+	const NumSegments = Webstory.storyDone
+		? Webstory.scenes?.flatMap((el) => el.videoSegments).length
+		: null;
+	const ImagesGenerated = Webstory.scenes
+		?.flatMap((el) => el.videoSegments)
+		.filter((el) => (el?.imageKey?.length ?? 0) > 0);
+	const VideosGenerated = Webstory.scenes
+		?.flatMap((el) => el.videoSegments)
+		.filter((el) => el?.videoKey?.length ?? 0 > 0);
+
+	const DisplayLoadingText = () => {
+		if (!NumSegments) return `Generated ${ImagesGenerated?.length ?? 0} scenes`;
+		if ((ImagesGenerated?.length ?? 0) < NumSegments) {
+			return `Generated ${ImagesGenerated?.length}/${NumSegments} scenes`;
+		} else if ((VideosGenerated?.length ?? 0) < NumSegments) {
+			return `Animated ${VideosGenerated?.length}/${NumSegments} scenes`;
+		} else {
+			return "Wrapping up";
+		}
+	};
 
 	return (
 		<CustomImageSuspense
@@ -69,7 +90,7 @@ export default function ImageLoader({
 							}}
 						>
 							<p className="font-medium font-mono text-lg">
-								Working on your story...
+								{DisplayLoadingText()}
 							</p>
 						</div>
 					</div>

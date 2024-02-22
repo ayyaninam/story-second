@@ -1,10 +1,22 @@
 import Format from "@/utils/format";
 import ImageLoader from "./components/image-loader";
-import VideoPlayer from "./components/video-player";
-import { FC, useEffect, useState } from "react";
+import VideoPlayer, { VideoPlayerHandler } from "./components/video-player";
+import { FC, useEffect, useState, useRef } from "react";
 import { prefetch } from "remotion";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { VideoPlayerProps } from "@/types";
+import { mainSchema } from "@/api/schema";
+
+const loadingTexts = [
+	"Starting your story",
+	"Building the characters",
+	"Creating the narration",
+	"Generating the plot",
+	"Adding the climax",
+	"Finalizing the story",
+	"Almost there",
+	"Finishing up",
+];
 
 const StoryScreen: FC<VideoPlayerProps> = ({
 	Webstory,
@@ -18,6 +30,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 }) => {
 	const [fetchedVideos, setFetchedVideos] = useState<string[]>([]);
 	const [fetchedAudios, setFetchedAudios] = useState<string[]>([]);
+	const [loadingTextIndex, setLoadingTextIndex] = useState<number>(0);
 
 	useEffect(() => {
 		for (const seg of Webstory?.scenes?.flatMap((el) => el.videoSegments) ??
@@ -67,6 +80,19 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 		}
 	}, [Webstory]);
 
+	useEffect(() => {
+		const timePerText = 5000;
+		const interval = setInterval(() => {
+			setLoadingTextIndex((prev) => prev + 1);
+		}, timePerText);
+		setTimeout(
+			() => {
+				clearInterval(interval);
+			},
+			timePerText * (loadingTexts.length - 1)
+		);
+	}, []);
+
 	const videoArray = Webstory?.scenes
 		?.flatMap((el) => el.videoSegments)
 		?.filter((seg) => !!seg?.videoKey)
@@ -96,7 +122,15 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 		(hasOriginalTikTokVideoKey &&
 			!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
 
-	const ImageRatio = GetImageRatio(Webstory?.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
+
+	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
+
+	const seekToSegment = (segment: mainSchema["ReturnVideoSegmentDTO"]) => {
+		videoPlayerRef.current?.seekToSegment(segment);
+	};
+
+	console.log(Webstory?.scenes);
 
 	if (isError)
 		return (
@@ -124,7 +158,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 					}}
 				>
 					<p className="font-medium font-mono text-lg">
-						Working on your story...
+						{loadingTexts[loadingTextIndex % loadingTexts.length]}
 					</p>
 				</div>
 			</div>
@@ -134,6 +168,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 	} else {
 		return (
 			<VideoPlayer
+				ref={videoPlayerRef}
 				Webstory={Webstory}
 				onPlay={onPlay}
 				onPause={onPause}

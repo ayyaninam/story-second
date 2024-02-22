@@ -1,5 +1,5 @@
 import video from "@/api/routes/video";
-import TailwindSpinner from "@/features/landing/components/tw-spinner";
+import TailwindSpinner from "@/features/tiktok/components/tw-spinner";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 
@@ -84,8 +84,7 @@ export default function FileUpload({
 		<div
 			style={{
 				display: "flex",
-				backgroundColor:
-					videoFileId || isVideoUploading ? "#FFFFFF" : "#F1F5F9",
+				backgroundColor: "#F1F5F9",
 				// backgroundColor: "#F1F5F9",
 				borderRadius: "8px",
 				padding: "2px",
@@ -104,12 +103,22 @@ export default function FileUpload({
 				htmlFor="upload-video"
 				style={{
 					cursor: "pointer",
-					padding: "4px 8px",
+					padding: "2px 8px",
 					borderRadius: "4px",
 					margin: "auto",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
 				}}
 			>
 				<Icon />
+				<p style={{ fontSize: 14 }}>
+					{isVideoUploading
+						? "Loading"
+						: UploadFile.data?.data
+							? "Uploaded"
+							: ""}
+				</p>
 			</label>
 		</div>
 	);

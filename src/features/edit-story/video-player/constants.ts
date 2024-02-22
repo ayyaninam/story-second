@@ -15,6 +15,7 @@ const PageSegment = z.object({
 	audioURL: z.string().nullish(),
 	durationInFrames: z.number(),
 	contentDuration: z.number(),
+	seekId: z.string(),
 });
 const InterpolationSegment = z.object({
 	type: z.literal("intermediate"),

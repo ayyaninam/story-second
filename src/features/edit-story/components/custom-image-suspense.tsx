@@ -2,7 +2,7 @@ import api from "@/api";
 import { mainSchema } from "@/api/schema";
 import { QueryKeys } from "@/lib/queryKeys";
 import cn from "@/utils/cn";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
@@ -34,7 +34,7 @@ export default function CustomImageSuspense({
 }) {
 	const router = useRouter();
 	const [Webstory] = useWebstoryContext();
-	const ImageRatio = GetImageRatio(Webstory.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.resolution);
 	const startTime = useRef(dayjs());
 	const lastTick = useRef(dayjs());
 	const [grid, setGrid] = useState<number[]>([]);

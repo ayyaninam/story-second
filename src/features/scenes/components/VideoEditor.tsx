@@ -44,6 +44,9 @@ import EditSegmentModal from "./EditSegmentModal";
 import { SegmentModificationData } from "@/types";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
+import VideoPlayer, {
+	VideoPlayerHandler,
+} from "@/features/edit-story/components/video-player";
 
 enum InputStatus {
 	UNEDITED,
@@ -71,6 +74,7 @@ export default function VideoEditor({
 	isLoading?: boolean;
 }) {
 	const router = useRouter();
+	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
 	const queryClient = useQueryClient();
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
@@ -94,6 +98,8 @@ export default function VideoEditor({
 		editStoryReducer,
 		WebstoryToStoryDraft(WebstoryData!)
 	);
+
+	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
 	const diff = GenerateStoryDiff(previousStory, story);
 	const numEdits =
@@ -137,7 +143,7 @@ export default function VideoEditor({
 			(segment) => ({
 				details: {
 					Ind: segment.id,
-					segments: [{ text: segment.textContent, sceneId: segment.sceneId }],
+					segments: [{ Text: segment.textContent, SceneId: segment.sceneId }],
 				},
 				operation: SegmentModifications.Add,
 			})
@@ -300,6 +306,13 @@ export default function VideoEditor({
 		}
 	};
 
+	useEffect(() => {
+		if (selectedSegment) {
+			console.log();
+			videoPlayerRef.current?.seekToSegment(selectedSegment);
+		}
+	}, [selectedSegment]);
+
 	return (
 		<div className="relative rounded-lg border-[1px] w-full justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
 			{editSegmentsModalState?.scene !== undefined &&
@@ -371,6 +384,13 @@ export default function VideoEditor({
 												key={`${segmentIndex}`}
 												style={{ backgroundColor: "transparent" }}
 												className={cn(`flex flex-wrap w-full justify-between`)}
+												// onClick={() => {
+												// 	setSelectedSegment(
+												// 		WebstoryData?.scenes[sceneIndex]?.videoSegments[
+												// 			segmentIndex
+												// 		]!
+												// 	);
+												// }}
 												onMouseEnter={() => {
 													setShowActionItems({
 														index: segmentIndex,
@@ -478,19 +498,21 @@ export default function VideoEditor({
 						</div>
 					</div>
 
+					<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
+
+					{/* <StoryScreen
+						Webstory={WebstoryData}
+						isError={false}
+						isPlaying={isPlaying}
+						seekedFrame={seekedFrame}
+						isMuted={true}
+					/> */}
+					<div
+						className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
+					></div>
 					{/* <div className="relative w-full rounded-tl-lg rounded-bl-lg m-3"> */}
 					{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
-								 <div
-									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
-								>
-									<StoryScreen
-										Webstory={Webstory.data}
-										isError={Webstory.isError}
-										isPlaying={isPlaying}
-										seekedFrame={seekedFrame}
-										isMuted={true}
-									/>
-								</div> */}
+					 */}
 					{/* <div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
 							<Image src={Img} width={500} height={281} />
 						</div>

@@ -30,7 +30,7 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/utils";
 import Routes from "@/routes";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import useWebstoryContext, {
@@ -78,7 +78,7 @@ export default function EditStory() {
 	}, [Webstory.data]);
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
-	const ImageRatio = GetImageRatio(Webstory.data.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.data.resolution);
 
 	return (
 		<div className="max-w-full min-h-screen bg-secondary">
