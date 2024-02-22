@@ -52,9 +52,11 @@ export const SegmentPortraitPage = ({
 
 	const storyTextStyle: CSSProperties = useMemo(
 		() => ({
-			fontSize: 32,
+			fontSize: 40,
 			width: 500,
-			color: "white",
+			color: "#fff",
+			"-webkit-text-stroke": "2px #000",
+			fontWeight: 900,
 		}),
 		[]
 	);
