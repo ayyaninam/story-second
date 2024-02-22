@@ -18,6 +18,7 @@ import {
 	MoreHorizontal,
 	LayoutList,
 	SparkleIcon,
+	ChevronRight,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Format from "@/utils/format";
@@ -321,7 +322,7 @@ export default function VideoEditorStoryboard({
 	}, [selectedSegment]);
 
 	return (
-		<div className="relative rounded-lg border-[1px] w-full justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
+		<div className="relative rounded-lg border-[1px] w-full h-fit justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<EditSegmentModal
@@ -410,15 +411,20 @@ export default function VideoEditorStoryboard({
 							>
 								{story.scenes.map((scene, sceneIndex) => (
 									<div key={sceneIndex} className="flex">
-										<span className="flex w-[50%] flex-wrap text-sm gap-1 hover:bg-slate-100 rounded-md">
+										<span className="flex w-[50%] flex-wrap text-sm gap-1 items-center hover:bg-slate-100 rounded-md">
 											{scene.segments.map((segment, segmentIndex) => (
-												<Image
-													key={segmentIndex}
-													alt="hello"
-													src={Format.GetImageUrl(segment.imageKey)}
-													width={66}
-													height={42}
-												/>
+												<>
+													<Image
+														key={segmentIndex}
+														alt="hello"
+														src={Format.GetImageUrl(segment.imageKey)}
+														width={66}
+														height={42}
+													/>
+													{segmentIndex !== scene.segments.length - 1 && (
+														<ChevronRight width={12} height={12} />
+													)}
+												</>
 											))}
 										</span>
 										<span className="flex w-[50%] flex-wrap text-sm hover:bg-slate-100 rounded-md">
