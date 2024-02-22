@@ -1247,9 +1247,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
+            "text/plain": components["schemas"]["InternalTransactionDTOApiResponse"];
+            "application/json": components["schemas"]["InternalTransactionDTOApiResponse"];
+            "text/json": components["schemas"]["InternalTransactionDTOApiResponse"];
           };
         };
         /** @description Unauthorized */
@@ -1262,6 +1262,33 @@ export interface paths {
   "/api/Payment/CancelSubscription": {
     /** Cancel a subscription for the user. */
     post: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["StringApiResponse"];
+            "application/json": components["schemas"]["StringApiResponse"];
+            "text/json": components["schemas"]["StringApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/Payment/ConfirmSubscription": {
+    /** Confirm a payment for credits purchase. */
+    post: {
+      requestBody?: {
+        content: {
+          "application/json-patch+json": components["schemas"]["ConfirmSubscriptionDTO"];
+          "application/json": components["schemas"]["ConfirmSubscriptionDTO"];
+          "text/json": components["schemas"]["ConfirmSubscriptionDTO"];
+          "application/*+json": components["schemas"]["ConfirmSubscriptionDTO"];
+        };
+      };
       responses: {
         /** @description Success */
         200: {
@@ -3568,6 +3595,15 @@ export interface components {
       amount?: number;
       creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
     };
+    /** @description Request body for confirming a subscription. */
+    ConfirmSubscriptionDTO: {
+      /** @description The payment intent id. */
+      paymentIntentId?: string | null;
+      /** @description The Subscription id. */
+      subscriptionId?: string | null;
+      subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
+      subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
+    };
     /** @description Admin panel DiscountCode object. */
     CreateDiscountCodeDTO: {
       /**
@@ -3906,6 +3942,7 @@ export interface components {
       secondaryCharge?: number;
       clientSecret?: string | null;
       paymentIntentId?: string | null;
+      subscriptionId?: string | null;
       nextAction?: {
         [key: string]: unknown;
       } | null;
@@ -7051,6 +7088,7 @@ export interface components {
       frameInterpolationKey?: string | null;
       lastImageKey?: string | null;
       imageRegenerating?: boolean;
+      videoRegenerating?: boolean;
       maleAudioKey?: string | null;
       maleAudioGenerating?: boolean;
       femaleAudioKey?: string | null;

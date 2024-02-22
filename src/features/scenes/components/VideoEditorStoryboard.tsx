@@ -22,6 +22,8 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
 import { VideoPlayerHandler } from "@/features/edit-story/components/video-player";
 import ScriptEditorView from "./ScriptEditorView";
+// import StoryboardView from "./StoryboardViewTypesComponent";
+import StoryboardView from "./StoryboardView";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -63,6 +65,10 @@ export default function VideoEditorStoryboard({
 		editStoryReducer,
 		WebstoryToStoryDraft(WebstoryData!)
 	);
+
+	useEffect(() => {
+		dispatch({ type: "reset", draft: WebstoryToStoryDraft(WebstoryData!) });
+	}, [WebstoryData]);
 
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
@@ -280,28 +286,27 @@ export default function VideoEditorStoryboard({
 
 	return (
 		<div className="relative rounded-lg border-[1px] w-full h-fit justify-center border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
-			{editSegmentsModalState?.scene !== undefined &&
-				editSegmentsModalState?.sceneId !== undefined && (
-					<EditSegmentModal
-						open={
-							editSegmentsModalState?.open &&
-							editSegmentsModalState.scene !== undefined &&
-							editSegmentsModalState.sceneId !== undefined
-						}
-						onClose={() => setEditSegmentsModalState({})}
-						scene={editSegmentsModalState?.scene!}
-						sceneId={editSegmentsModalState?.sceneId}
-						dispatch={dispatch}
-						story={story}
-						onSceneEdit={(scene, index) => {
-							dispatch({
-								type: "edit_scene",
-								scene: scene,
-								index: index,
-							});
-						}}
-					/>
-				)}
+			{editSegmentsModalState?.scene && editSegmentsModalState?.sceneId && (
+				<EditSegmentModal
+					open={
+						editSegmentsModalState?.open &&
+						editSegmentsModalState.scene !== undefined &&
+						editSegmentsModalState.sceneId !== undefined
+					}
+					onClose={() => setEditSegmentsModalState({})}
+					scene={editSegmentsModalState?.scene!}
+					sceneId={editSegmentsModalState?.sceneId}
+					dispatch={dispatch}
+					story={story}
+					onSceneEdit={(scene, index) => {
+						dispatch({
+							type: "edit_scene",
+							scene: scene,
+							index: index,
+						});
+					}}
+				/>
+			)}
 			<div className="flex justify-center m-10">
 				<Badge
 					variant="outline"
@@ -311,17 +316,28 @@ export default function VideoEditorStoryboard({
 					Generate & Edit Your Scenes
 				</Badge>
 			</div>
-			{/* <StoryboardView
+			<StoryboardView
 				refs={refs}
 				dispatch={dispatch}
 				getSegmentStatus={getSegmentStatus}
 				handleEnter={handleEnter}
 				handleInput={handleInput}
 				setEditSegmentsModalState={setEditSegmentsModalState}
+				setPreviousStory={setPreviousStory}
 				story={story}
 				WebstoryData={WebstoryData}
-			/> */}
-			<ScriptEditorView WebstoryData={WebstoryData} />
+			/>
+			<ScriptEditorView
+				WebstoryData={WebstoryData}
+				refs={refs}
+				dispatch={dispatch}
+				getSegmentStatus={getSegmentStatus}
+				handleEnter={handleEnter}
+				handleInput={handleInput}
+				setEditSegmentsModalState={setEditSegmentsModalState}
+				setPreviousStory={setPreviousStory}
+				story={story}
+			/>
 			<div className="flex justify-center m-10">
 				<Badge
 					variant="outline"

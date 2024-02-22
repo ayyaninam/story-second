@@ -22,8 +22,8 @@ export default function Storyboard() {
 								onClick={() =>
 									dispatch({
 										type: "create_segment",
-										sceneId: scene.id,
-										segmentId: segment.id,
+										sceneIndex: sceneIndex,
+										segmentIndex: segIndex,
 										segment: {
 											audioKey: "",
 											audioStatus: StoryStatus.READY,
