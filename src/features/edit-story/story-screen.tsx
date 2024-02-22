@@ -1,10 +1,11 @@
 import Format from "@/utils/format";
 import ImageLoader from "./components/image-loader";
-import VideoPlayer from "./components/video-player";
-import { FC, useEffect, useState } from "react";
+import VideoPlayer, { VideoPlayerHandler } from "./components/video-player";
+import { FC, useEffect, useState, useRef } from "react";
 import { prefetch } from "remotion";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { VideoPlayerProps } from "@/types";
+import { mainSchema } from "@/api/schema";
 
 const loadingTexts = [
 	"Starting your story",
@@ -123,6 +124,14 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 
 	const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
 
+	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
+
+	const seekToSegment = (segment: mainSchema["ReturnVideoSegmentDTO"]) => {
+		videoPlayerRef.current?.seekToSegment(segment);
+	};
+
+	console.log(Webstory?.scenes);
+
 	if (isError)
 		return (
 			<div
@@ -158,15 +167,61 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 		return <ImageLoader imageData={generatedImages!} />;
 	} else {
 		return (
-			<VideoPlayer
-				Webstory={Webstory}
-				onPlay={onPlay}
-				onPause={onPause}
-				onSeeked={onSeeked}
-				isPlaying={isPlaying}
-				seekedFrame={seekedFrame}
-				isMuted={isMuted}
-			/>
+			<>
+				<VideoPlayer
+					ref={videoPlayerRef}
+					Webstory={Webstory}
+					onPlay={onPlay}
+					onPause={onPause}
+					onSeeked={onSeeked}
+					isPlaying={isPlaying}
+					seekedFrame={seekedFrame}
+					isMuted={isMuted}
+				/>
+				<div>scene-segment</div>
+				<div>
+					<button
+						onClick={() =>
+							seekToSegment(Webstory?.scenes?.[0]?.videoSegments?.[0]!)
+						}
+						className="hover:bg-red-400"
+					>
+						1-1
+					</button>
+					<button
+						onClick={() =>
+							seekToSegment(Webstory?.scenes?.[0]?.videoSegments?.[1]!)
+						}
+						className="ml-2 hover:bg-red-400"
+					>
+						1-2
+					</button>
+					<button
+						onClick={() =>
+							seekToSegment(Webstory?.scenes?.[0]?.videoSegments?.[2]!)
+						}
+						className="ml-2 hover:bg-red-400"
+					>
+						1-3
+					</button>
+					<button
+						onClick={() =>
+							seekToSegment(Webstory?.scenes?.[1]?.videoSegments?.[0]!)
+						}
+						className="ml-2 hover:bg-red-400"
+					>
+						2-1
+					</button>
+					<button
+						onClick={() =>
+							seekToSegment(Webstory?.scenes?.[2]?.videoSegments?.[1]!)
+						}
+						className="ml-2 hover:bg-red-400"
+					>
+						3-2
+					</button>
+				</div>
+			</>
 		);
 	}
 };

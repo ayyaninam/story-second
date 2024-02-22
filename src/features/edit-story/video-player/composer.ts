@@ -55,7 +55,9 @@ type ToRemotionSegmentProps = {
 	storyText: string;
 	videoURL: string | null;
 	interpolationURL: string | null;
+	isFirstSegment: boolean;
 	isLastSegment: boolean;
+	seekId: string;
 };
 
 export const toRemotionSegment = async ({
@@ -63,7 +65,9 @@ export const toRemotionSegment = async ({
 	storyText,
 	videoURL,
 	interpolationURL,
+	isFirstSegment,
 	isLastSegment,
+	seekId,
 }: ToRemotionSegmentProps): Promise<Omit<RemotionSegment, "index">[]> => {
 	const { contentDuration, durationInFrames } = await calculateSegmentDuration({
 		audioURL,
@@ -83,6 +87,7 @@ export const toRemotionSegment = async ({
 			audioURL,
 			durationInFrames,
 			contentDuration,
+			seekId,
 		};
 	}
 
@@ -109,7 +114,7 @@ export const toRemotionSegment = async ({
 
 	// @ts-ignore
 	return [
-		intermediateSegment ?? transitionSegment,
+		isFirstSegment ? undefined : intermediateSegment ?? transitionSegment,
 		pageSegment,
 		isLastSegment ? transitionSegment : undefined,
 	].filter(Boolean);
