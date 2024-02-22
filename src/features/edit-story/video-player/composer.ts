@@ -54,6 +54,7 @@ type ToRemotionSegmentProps = {
 	audioURL: string | null;
 	storyText: string;
 	videoURL: string | null;
+	imageURL: string | null;
 	interpolationURL: string | null;
 	isFirstSegment: boolean;
 	isLastSegment: boolean;
@@ -64,6 +65,7 @@ export const toRemotionSegment = async ({
 	audioURL,
 	storyText,
 	videoURL,
+	imageURL,
 	interpolationURL,
 	isFirstSegment,
 	isLastSegment,
@@ -74,20 +76,32 @@ export const toRemotionSegment = async ({
 		isLastSegment,
 	});
 
-	let pageSegment: Omit<RemotionPageSegment, "index"> | null = null;
+	let pageSegment: Omit<RemotionPageSegment, "index"> | null = {
+		type: "page",
+		id: uuidv4(),
+		storyText,
+		audioURL,
+		durationInFrames,
+		contentDuration,
+		seekId,
+	};
+
 	if (videoURL) {
 		pageSegment = {
-			type: "page",
-			id: uuidv4(),
-			storyText,
+			...pageSegment,
 			visual: {
 				format: "video",
 				videoURL,
 			},
-			audioURL,
-			durationInFrames,
-			contentDuration,
 			seekId,
+		};
+	} else if (imageURL) {
+		pageSegment = {
+			...pageSegment,
+			visual: {
+				format: "image",
+				imageURL,
+			},
 		};
 	}
 

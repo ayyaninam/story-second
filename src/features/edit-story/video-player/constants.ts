@@ -4,14 +4,18 @@ const VideoVisual = z.object({
 	format: z.literal("video"),
 	videoURL: z.string(),
 });
-const Visual = z.discriminatedUnion("format", [VideoVisual]);
+const ImageVisual = z.object({
+	format: z.literal("image"),
+	imageURL: z.string(),
+});
+const PageVisual = z.discriminatedUnion("format", [VideoVisual, ImageVisual]);
 
 const PageSegment = z.object({
 	type: z.literal("page"),
 	id: z.string(),
 	index: z.number(),
 	storyText: z.string(),
-	visual: Visual,
+	visual: PageVisual.nullish(),
 	audioURL: z.string().nullish(),
 	durationInFrames: z.number(),
 	contentDuration: z.number(),
@@ -21,7 +25,7 @@ const InterpolationSegment = z.object({
 	type: z.literal("intermediate"),
 	id: z.string(),
 	index: z.number(),
-	visual: Visual,
+	visual: VideoVisual,
 	durationInFrames: z.number(),
 });
 const TransitionSegment = z.object({
