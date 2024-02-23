@@ -14,12 +14,11 @@ import { cn } from "@/utils";
 import Format from "@/utils/format";
 import StoryboardViewTypes from "./StoryboardViewTypesComponent";
 import AutosizeInput from "react-input-autosize";
-
-export default function VideoEditorStoryboard({
+const SceneEditorView = ({
 	WebstoryData,
 }: {
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
-}) {
+}) => {
 	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
 		editStoryReducer,
 		WebstoryToStoryDraft(WebstoryData!)
@@ -159,4 +158,6 @@ export default function VideoEditorStoryboard({
 			</div>
 		</div>
 	);
-}
+};
+
+export default SceneEditorView;
