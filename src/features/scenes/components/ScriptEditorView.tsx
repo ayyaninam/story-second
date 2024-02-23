@@ -26,35 +26,35 @@ export default function ScriptEditorView({
 }: {
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	story: EditStoryDraft;
-	// setPreviousStory: Dispatch<React.SetStateAction<EditStoryDraft>>;
-	// dispatch: Dispatch<EditStoryAction>;
-	// setEditSegmentsModalState: Dispatch<
-	// 	React.SetStateAction<
-	// 		| {
-	// 				open?: boolean | undefined;
-	// 				scene?: Scene | undefined;
-	// 				sceneId?: number | undefined;
-	// 				dispatch?: React.Dispatch<EditStoryAction> | undefined;
-	// 				story?: EditStoryDraft | undefined;
-	// 		  }
-	// 		| undefined
-	// 	>
-	// >;
-	// getSegmentStatus: (sceneIndex: number, segmentIndex: number) => InputStatus;
-	// handleInput: (
-	// 	e: React.ChangeEvent<HTMLInputElement>,
-	// 	scene: Scene,
-	// 	sceneIndex: number,
-	// 	segment: Segment,
-	// 	segmentIndex: number
-	// ) => void;
-	// handleEnter: (
-	// 	scene: Scene,
-	// 	sceneIndex: number,
-	// 	segment: Segment,
-	// 	segmentIndex: number
-	// ) => void;
-	// refs: MutableRefObject<HTMLInputElement[][]>;
+	setPreviousStory: Dispatch<React.SetStateAction<EditStoryDraft>>;
+	dispatch: Dispatch<EditStoryAction>;
+	setEditSegmentsModalState: Dispatch<
+		React.SetStateAction<
+			| {
+					open?: boolean | undefined;
+					scene?: Scene | undefined;
+					sceneId?: number | undefined;
+					dispatch?: React.Dispatch<EditStoryAction> | undefined;
+					story?: EditStoryDraft | undefined;
+			  }
+			| undefined
+		>
+	>;
+	getSegmentStatus: (sceneIndex: number, segmentIndex: number) => InputStatus;
+	handleInput: (
+		e: React.ChangeEvent<HTMLInputElement>,
+		scene: Scene,
+		sceneIndex: number,
+		segment: Segment,
+		segmentIndex: number
+	) => void;
+	handleEnter: (
+		scene: Scene,
+		sceneIndex: number,
+		segment: Segment,
+		segmentIndex: number
+	) => void;
+	refs: MutableRefObject<HTMLInputElement[][]>;
 }) {
 	return (
 		<div className="w-[80%] m-auto h-[70%] overflow-y-scroll">

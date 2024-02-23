@@ -18,6 +18,7 @@ class Routes {
 		return res;
 	}
 	static CreateStoryFromRoute(params: CreateInitialStoryQueryParams) {
+		// @ts-ignore
 		const urlParams = this.CreateSearchParams(params);
 		return `/create?${urlParams}`;
 	}
@@ -49,7 +50,9 @@ class Routes {
 				return "story";
 		}
 	}
-	private static CreateSearchParams(params: Record<string, string | number>) {
+	private static CreateSearchParams(
+		params: Record<string, string | number | boolean>
+	) {
 		const stringified = Object.fromEntries(
 			Object.entries(params).map(([key, value]) => [key, value.toString()])
 		);

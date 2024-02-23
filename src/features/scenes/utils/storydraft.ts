@@ -19,6 +19,7 @@ export const WebstoryToStoryDraft = (
 ): EditStoryDraft => {
 	return {
 		id: Webstory.id!,
+		// @ts-ignore
 		scenes:
 			Webstory.scenes?.map((scene) => ({
 				id: scene.id!,
