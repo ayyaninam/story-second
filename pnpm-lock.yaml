@@ -40,6 +40,9 @@ dependencies:
   '@radix-ui/react-switch':
     specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+  '@radix-ui/react-tabs':
+    specifier: ^1.0.4
+    version: 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@remotion/gif':
     specifier: 4.0.106
     version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
@@ -62,8 +65,8 @@ dependencies:
     specifier: ^0.8.0
     version: 0.8.0(typescript@5.3.3)(zod@3.22.4)
   '@tanstack/react-query':
-    specifier: ^5.17.19
-    version: 5.17.19(react@18.2.0)
+    specifier: ^5.22.2
+    version: 5.22.2(react@18.2.0)
   '@types/uuid':
     specifier: ^9.0.8
     version: 9.0.8
@@ -90,7 +93,7 @@ dependencies:
     version: 0.316.0(react@18.2.0)
   nanoid:
     specifier: ^5.0.5
-    version: 5.0.5
+    version: 5.0.6
   next:
     specifier: 14.1.0
     version: 14.1.0(react-dom@18.2.0)(react@18.2.0)
@@ -117,7 +120,7 @@ dependencies:
     version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
   stripe:
     specifier: ^14.17.0
-    version: 14.17.0
+    version: 14.18.0
   tailwind-merge:
     specifier: ^2.2.1
     version: 2.2.1
@@ -1251,6 +1254,34 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /@radix-ui/react-tabs@1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-egZfYY/+wRNCflXNHx+dePvnz9FbmssDTJBtgRfDY7e8SE5oIo3Py2eCB1ckAbh1Q7cQ/6yJZThJ++sgbxibog==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.9
+      '@radix-ui/primitive': 1.0.1
+      '@radix-ui/react-context': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-direction': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-id': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@radix-ui/react-presence': 1.0.1(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-roving-focus': 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@types/react': 18.2.48
+      '@types/react-dom': 18.2.18
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@radix-ui/react-use-callback-ref@1.0.1(@types/react@18.2.48)(react@18.2.0):
     resolution: {integrity: sha512-D94LjX4Sp0xJFVaoQOd3OO9k7tpBYNOXdVhkltUbGv2Qb9OXdrg/CpsjlZv7ia14Sylv398LswWBVVu5nqKzAQ==}
     peerDependencies:
@@ -1522,16 +1553,16 @@ packages:
       - typescript
     dev: true
 
-  /@tanstack/query-core@5.17.19:
-    resolution: {integrity: sha512-Lzw8FUtnLCc9Jwz0sw9xOjZB+/mCCmJev38v2wHMUl/ioXNIhnNWeMxu0NKUjIhAd62IRB3eAtvxAGDJ55UkyA==}
+  /@tanstack/query-core@5.22.2:
+    resolution: {integrity: sha512-z3PwKFUFACMUqe1eyesCIKg3Jv1mysSrYfrEW5ww5DCDUD4zlpTKBvUDaEjsfZzL3ULrFLDM9yVUxI/fega1Qg==}
     dev: false
 
-  /@tanstack/react-query@5.17.19(react@18.2.0):
-    resolution: {integrity: sha512-qaQENB6/03Gj3dFZGvdmUoqeUGlGm7P1p0RmaR04Bf1Ib1T9lLGimcC9T3oCFbrx0b2ZF21ngjFZNjj9uPJMcg==}
+  /@tanstack/react-query@5.22.2(react@18.2.0):
+    resolution: {integrity: sha512-TaxJDRzJ8/NWRT4lY2jguKCrNI6MRN+67dELzPjNUlvqzTxGANlMp68l7aC7hG8Bd1uHNxHl7ihv7MT50i/43A==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 5.17.19
+      '@tanstack/query-core': 5.22.2
       react: 18.2.0
     dev: false
 
@@ -3272,8 +3303,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /nanoid@5.0.5:
-    resolution: {integrity: sha512-/Veqm+QKsyMY3kqi4faWplnY1u+VuKO3dD2binyPIybP31DRO29bPF+1mszgLnrR2KqSLceFLBNw0zmvDzN1QQ==}
+  /nanoid@5.0.6:
+    resolution: {integrity: sha512-rRq0eMHoGZxlvaFOUdK1Ev83Bd1IgzzR+WJ3IbDJ7QOSdAxYjlurSPqFs9s4lJg29RT6nPwizFtJhQS6V5xgiA==}
     engines: {node: ^18 || >=20}
     hasBin: true
     dev: false
@@ -4025,8 +4056,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /stripe@14.17.0:
-    resolution: {integrity: sha512-iwV5SKoXuRIQFne4twGwiiczOkVW73eE2CKn6ltUKCacDy4SGHBX6kj1/xCV2bzzzQjcVtsh5F1aAbJTmf3tLw==}
+  /stripe@14.18.0:
+    resolution: {integrity: sha512-yLqKPqYgGJbMxrQiE4+i2i00ZVA2NRIZbZ1rejzj5XR3F3Uc+1iy9QE133knZudhVGMw367b8vTpB8D9pYMETw==}
     engines: {node: '>=12.*'}
     dependencies:
       '@types/node': 20.11.8

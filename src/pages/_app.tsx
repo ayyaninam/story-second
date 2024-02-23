@@ -9,7 +9,7 @@ import type { AppProps } from "next/app";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "react-hot-toast";
-import { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 import { NextPage } from "next/types";
 
 const randFont = localFont({
@@ -144,8 +144,6 @@ const randMonoFont = localFont({
 	],
 });
 
-const queryClient = new QueryClient();
-
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -155,17 +153,33 @@ type AppPropsWithLayout = AppProps & {
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+	const [queryClient] = useState(
+		() =>
+			new QueryClient({
+				defaultOptions: {
+					queries: {
+						staleTime: 1000 * 60 * 5,
+					},
+				},
+			})
+	);
+
 	// Use the layout defined at the page level, if available else use page directly
 	const getLayout = Component.getLayout ?? ((page) => page);
 
 	return (
 		<QueryClientProvider client={queryClient}>
 			<HydrationBoundary state={pageProps.dehydratedState}>
+				<style jsx global>{`
+					html {
+						font-family: ${randFont.style.fontFamily};
+					}
+				`}</style>
 				<main className={randFont.className}>
 					<Toaster />
 					<ThemeProvider
 						attribute="class"
-						defaultTheme="system"
+						defaultTheme="light"
 						enableSystem
 						disableTransitionOnChange
 					>

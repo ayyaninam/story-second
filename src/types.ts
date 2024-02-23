@@ -1,6 +1,11 @@
 import { mlSchema, mainSchema } from "@/api/schema";
-import { SegmentModifications, StoryLengths } from "./utils/enums";
+import {
+	DisplayAspectRatios,
+	StoryOutputTypes,
+	SegmentModifications,
+} from "./utils/enums";
 import { CallbackListener } from "@remotion/player";
+import { VIDEO_ORIENTATIONS } from "./features/library/constants";
 
 export type CreateInitialStoryQueryParams = mlSchema["CreateStoryRequest"];
 
@@ -42,3 +47,44 @@ export type SegmentModificationData =
 			operation: SegmentModifications.Delete;
 			details: mlSchema["SegmentDelete"];
 	  };
+
+const VIDEO_ORIENTATION_IDS = Object.values(VIDEO_ORIENTATIONS).map(
+	(el) => el.id
+);
+
+export type VideoOrientation = (typeof VIDEO_ORIENTATION_IDS)[number];
+
+export type VideoThumbnail = {
+	id?: string;
+	expand?: boolean;
+	title?: string | null;
+	thumbnail?: string | null;
+	description?: string | null;
+	storyType: StoryOutputTypes;
+	topLevelCategory?: string | null;
+	slug?: string | null;
+};
+
+export type GalleryData = {
+	[key in VideoOrientation]: {
+		title: string;
+		orientation: VideoOrientation;
+		icon: React.ReactNode;
+		aspectRatio: string;
+		header: {
+			title: string;
+			subtitle: string;
+			buttonText: string;
+		};
+	};
+};
+
+export type LibraryPageVideoQueryOptions = {
+	CurrentPage?: number;
+	PageSize?: number;
+	storyType?: StoryOutputTypes;
+	searchTerm?: string;
+	resolution?: DisplayAspectRatios;
+	isDescending?: boolean;
+	topLevelCategory: string;
+};

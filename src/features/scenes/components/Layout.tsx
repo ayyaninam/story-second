@@ -1,23 +1,34 @@
 import { ReactNode } from "react";
-import SideNav from "./SideNav";
+import SideNav, { menuItems } from "./SideNav";
 
-const getBackgroundGradient = (page: "scene") => {
+const getBackgroundGradient = (page?: string) => {
 	switch (page) {
-		case "scene":
+		case "explore":
+			return "linear-gradient(270deg, #A734EA 69.69%, #020817 99.69%)";
+		case "library":
+			return "linear-gradient(270deg, #65f376 69.69%, #020817 99.69%)";
 		default:
 			return "linear-gradient(270deg, #A734EA 69.69%, #020817 99.69%)";
 	}
 };
 
-const ScenesLayout = ({ children }: { children: ReactNode }) => {
+const ScenesLayout = ({
+	children,
+	pageIndex = 0,
+}: {
+	children: ReactNode;
+	pageIndex?: number;
+}) => {
 	return (
 		<div
 			className="flex w-screen h-screen bg-primary py-2 overflow-hidden"
 			style={{
-				background: getBackgroundGradient("scene"),
+				background: getBackgroundGradient(
+					menuItems[pageIndex]?.text?.toLowerCase()
+				),
 			}}
 		>
-			<SideNav />
+			<SideNav pageIndex={pageIndex} />
 			{children}
 		</div>
 	);
