@@ -2,7 +2,12 @@ import pLimit from "p-limit";
 import { RemotionPlayerInputProps, RemotionVariant } from "./constants";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
-import {VoiceType, AspectRatios, StoryOutputTypes, DisplayAspectRatios} from "@/utils/enums";
+import {
+	VoiceType,
+	AspectRatios,
+	StoryOutputTypes,
+	DisplayAspectRatios,
+} from "@/utils/enums";
 import {
 	toRemotionInputProps,
 	toRemotionSegment,
@@ -26,6 +31,9 @@ export const getRemotionVariant = (story: WebStory): RemotionVariant => {
 	}
 	return "portrait";
 };
+
+export const createSeekId = (segment: mainSchema["ReturnVideoSegmentDTO"]) =>
+	`${segment.sceneId}-${segment.index}`;
 
 const limit = pLimit(10);
 
@@ -68,7 +76,9 @@ export const webStoryToRemotionInputProps = async (
 							? Format.GetVideoUrl(segment.frameInterpolationKey)
 							: null,
 						storyText: segment.textContent!,
+						isFirstSegment: index === 0,
 						isLastSegment: segments.length - 1 === index,
+						seekId: createSeekId(segment),
 					})
 				);
 			}),

@@ -17,13 +17,17 @@ export interface paths {
     /** Create Story */
     post: operations["create_story_create_post"];
   };
-  "/create-segment": {
+  "/create-serverless-segment": {
     /** Create Segment */
-    post: operations["create_segment_create_segment_post"];
+    post: operations["create_segment_create_serverless_segment_post"];
   };
   "/regenerate-image": {
     /** Regenerate Image */
     post: operations["regenerate_image_regenerate_image_post"];
+  };
+  "/regenerate-video": {
+    /** Regenerate Video */
+    post: operations["regenerate_video_regenerate_video_post"];
   };
   "/edit-segment": {
     /** Edit Segment */
@@ -77,6 +81,11 @@ export interface components {
        * @default
        */
       prompt?: string;
+      /**
+       * Script Only
+       * @default false
+       */
+      script_only?: boolean;
       /** @default 1 */
       length?: components["schemas"]["StoryLengthEnum"];
       /** @default 0 */
@@ -170,7 +179,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 39070576
+       * @default 79731714
        */
       seed?: number;
       /**
@@ -183,6 +192,14 @@ export interface components {
        * @default 2
        */
       cfg_scale?: number;
+    };
+    /** RegenerateVideoRequest */
+    RegenerateVideoRequest: {
+      /** Story Id */
+      story_id: string;
+      /** Segment Idx */
+      segment_idx: number;
+      story_type: components["schemas"]["OutputTypeEnum"];
     };
     /** SceneAdd */
     SceneAdd: {
@@ -213,9 +230,9 @@ export interface components {
     /** SegmentData */
     SegmentData: {
       /** Text */
-      text: string;
+      Text: string;
       /** Sceneid */
-      sceneId: string;
+      SceneId: string;
     };
     /** SegmentDelete */
     SegmentDelete: {
@@ -307,7 +324,7 @@ export interface operations {
     };
   };
   /** Create Segment */
-  create_segment_create_segment_post: {
+  create_segment_create_serverless_segment_post: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateSegmentRequest"];
@@ -333,6 +350,28 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["RegenerateImageRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Regenerate Video */
+  regenerate_video_regenerate_video_post: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegenerateVideoRequest"];
       };
     };
     responses: {

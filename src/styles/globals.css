@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("../features/scenes/scenes.css");
+
 @layer base {
 	:root {
 		--background: 0 0% 100%;
@@ -50,7 +52,6 @@
 
 		--popover: 217.2 32.6% 17.5%; /* 222.2 84% 4.9%; */
 		--popover-foreground: 210 40% 98%;
-		
 
 		--primary: 210 40% 98%;
 		--primary-foreground: 222.2 47.4% 11.2%;
@@ -103,8 +104,8 @@
 .remotion-player-volume-slider::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	appearance: none;
-	background: #BB55F7;
-	border: 1px solid #F0D6FF;
+	background: #bb55f7;
+	border: 1px solid #f0d6ff;
 	border-radius: 50%;
 	cursor: pointer;
 	height: 15px;
@@ -112,8 +113,8 @@
 }
 /* For Mozilla Firefox */
 .remotion-player-volume-slider::-moz-range-thumb {
-	background: #BB55F7;
-	border: 1px solid #F0D6FF;
+	background: #bb55f7;
+	border: 1px solid #f0d6ff;
 	border-radius: 50%;
 	cursor: pointer;
 	height: 15px;
@@ -121,11 +122,14 @@
 }
 /* For Internet Explorer */
 .remotion-player-volume-slider::-ms-thumb {
-	background: #BB55F7;
-	border: 1px solid #F0D6FF;
+	background: #bb55f7;
+	border: 1px solid #f0d6ff;
 	border-radius: 50%;
 	cursor: pointer;
 	height: 15px;
 	width: 15px;
 }
 
+.ProseMirror:focus {
+	outline: none;
+}

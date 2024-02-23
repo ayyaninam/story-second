@@ -87,6 +87,7 @@ export default function PublishedStory({
 	});
 
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
+
 	const RenderVideo = useMutation({
 		mutationFn: api.video.render,
 	});
