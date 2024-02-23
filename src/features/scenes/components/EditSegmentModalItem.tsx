@@ -70,7 +70,7 @@ function RegenerateSegmentBar({
 		<div className="flex w-full rounded-sm border-border border-[1px] justify-between">
 			{segment.imageStatus === StoryStatus.COMPLETE ? (
 				<Image
-					alt={segment.imageKey}
+					alt={segment.textContent}
 					src={Format.GetImageUrl(segment.imageKey)}
 					width={66}
 					height={42}

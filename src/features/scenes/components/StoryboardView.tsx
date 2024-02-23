@@ -7,7 +7,11 @@ import {
 	StoryStatus,
 } from "../reducers/edit-reducer";
 import { Dispatch, MutableRefObject, useState } from "react";
-import { InputStatus, StoryboardViewType } from "@/utils/enums";
+import {
+	InputStatus,
+	SegmentModifications,
+	StoryboardViewType,
+} from "@/utils/enums";
 import {
 	ChevronDown,
 	ChevronRight,
@@ -23,6 +27,9 @@ import cn from "@/utils/cn";
 import Image from "next/image";
 import AutosizeInput from "react-input-autosize";
 import StoryboardViewTypes from "./StoryboardViewTypesComponent";
+import { Skeleton } from "@/components/ui/skeleton";
+import api from "@/api";
+import { WebstoryToStoryDraft } from "../utils/storydraft";
 
 export default function StoryboardView({
 	WebstoryData,
@@ -32,10 +39,12 @@ export default function StoryboardView({
 	getSegmentStatus,
 	handleInput,
 	handleEnter,
+	setPreviousStory,
 	refs,
 }: {
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	story: EditStoryDraft;
+	setPreviousStory: Dispatch<React.SetStateAction<EditStoryDraft>>;
 	dispatch: Dispatch<EditStoryAction>;
 	setEditSegmentsModalState: Dispatch<
 		React.SetStateAction<
@@ -98,7 +107,7 @@ export default function StoryboardView({
 
 				<div className="w-full inline-flex text-slate-400 text-xs py-1">
 					<div className="flex">
-						Storyboard for a <u>60 Second</u>{" "}
+						Storyboard for a <u> 60 Second</u>{" "}
 						<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
 						<ChevronDown className="mr-2 h-4 w-4 text-xs" />
 					</div>
@@ -124,18 +133,75 @@ export default function StoryboardView({
 								setShowActionItems({});
 							}}
 						>
-							{story.scenes.map((scene, sceneIndex) => (
+							{/* {story.scenes.map((scene, sceneIndex) => (
 								<div key={sceneIndex} className="flex">
 									<span className="flex w-[50%] flex-wrap text-sm gap-1 items-center hover:bg-slate-100 rounded-md">
 										{scene.segments.map((segment, segmentIndex) => (
 											<>
-												<Image
-													key={segmentIndex}
-													alt="hello"
-													src={Format.GetImageUrl(segment.imageKey)}
-													width={66}
-													height={42}
-												/>
+												{!segment.imageKey &&
+													segment.imageStatus !== StoryStatus.PENDING && (
+														<div
+															className="w-[66px] h-[42px] bg-slate-400 text-purple-500"
+															onClick={async () => {
+																dispatch({
+																	type: "edit_segment",
+																	sceneIndex: sceneIndex,
+																	segmentIndex,
+																	segment: {
+																		...segment,
+																		imageStatus: StoryStatus.PENDING,
+																	},
+																});
+
+																await api.video.editSegment({
+																	edits: [
+																		{
+																			details: {
+																				Ind: segment.id,
+																				segments: [
+																					{
+																						SceneId: scene.id,
+																						Text: segment.textContent,
+																					},
+																				],
+																			},
+																			operation: SegmentModifications.Add,
+																		},
+																	],
+																	story_id: story.id,
+																	story_type: WebstoryData?.storyType,
+																});
+																const newStory = await api.video.get(
+																	WebstoryData?.topLevelCategory!,
+																	WebstoryData?.slug!,
+																	WebstoryData?.storyType!
+																);
+
+																setPreviousStory(
+																	WebstoryToStoryDraft(newStory)
+																);
+															}}
+														>
+															<div className="flex items-center gap-1">
+																<p className="text-xs">Gen Img</p>
+																<SparkleIcon width={16} height={16} />
+															</div>
+														</div>
+													)}
+												{!segment.imageKey &&
+													segment.imageStatus === StoryStatus.PENDING && (
+														<Skeleton className="w-[66px] h-[42px]"></Skeleton>
+													)}
+												{segment.imageKey && (
+													<Image
+														key={segmentIndex}
+														alt="hello"
+														src={Format.GetImageUrl(segment.imageKey)}
+														width={66}
+														height={42}
+													/>
+												)}
+
 												{segmentIndex !== scene.segments.length - 1 && (
 													<ChevronRight width={12} height={12} />
 												)}
@@ -240,7 +306,7 @@ export default function StoryboardView({
 										))}
 									</span>
 								</div>
-							))}
+							))} */}
 						</div>
 					</div>
 

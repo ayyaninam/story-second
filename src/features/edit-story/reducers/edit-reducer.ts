@@ -8,12 +8,6 @@ export enum StoryStatus {
 	PENDING,
 	COMPLETE,
 }
-export enum TextStatus {
-	UNEDITED,
-	EDITED,
-	ADDED,
-	DELETED,
-}
 
 export type Settings = {
 	samplingSteps?: number; // 2-10
@@ -31,7 +25,6 @@ export type Segment = {
 	imageKey: string;
 	videoKey: string;
 	audioKey: string;
-	textStatus: TextStatus;
 	imageStatus: StoryStatus;
 	videoStatus: StoryStatus;
 	audioStatus: StoryStatus;

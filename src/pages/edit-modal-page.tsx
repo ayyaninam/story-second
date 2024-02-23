@@ -259,7 +259,7 @@ export default function EditModalPage() {
 	const [isChecked, setIsChecked] = useState(false);
 	return (
 		<div className="flex bg-slate-100 rounded-md border-border border-[1px] p-2 m-2 gap-2">
-			<VerticalControlButtons />
+			{/* <VerticalControlButtons /> */}
 			<div className="w-full text-slate-950 space-y-2">
 				<RegenerateSegmentBar />
 				<AdvancedEditingBar
