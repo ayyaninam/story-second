@@ -206,7 +206,9 @@ const SceneEditorView = ({
 																		style={{ backgroundColor: "transparent" }}
 																		className="flex max-w-sm"
 																	>
-																		<AutosizeInput
+																		{segment.textContent}
+																		{/* Commenting because users don't need to edit the text here */}
+																		{/* <AutosizeInput
 																			onKeyDown={(e) => {
 																				if (e.key === "Enter") {
 																					handleEnter(
@@ -244,7 +246,7 @@ const SceneEditorView = ({
 																					segmentIndex
 																				);
 																			}}
-																		/>
+																		/> */}
 																	</span>
 																))}
 															</div>
