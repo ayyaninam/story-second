@@ -96,45 +96,62 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 		await api.user.get(session.accessToken).catch(async (e) => {
 			// TODO: modify to only run when there is a 400 error code
-			await api.user.register(
+			await api.user
+				.register(
+					{
+						email: session.user.email,
+						name: session.user.nickname,
+						verificationRequired: session.user.email_verified,
+						profilePicture: session.user?.picture ?? null,
+					},
+					session.accessToken as string
+				)
+				.catch((e) => {
+					console.log("There was an error creating the user:", e);
+					throw new AuthError(
+						Routes.defaultRedirect,
+						Routes.Landing("There was an error getting the user")
+					);
+				});
+		});
+		console.log("Got user");
+		const story = await api.webstory
+			.create(
 				{
-					email: session.user.email,
-					name: session.user.nickname,
-					verificationRequired: session.user.email_verified,
-					profilePicture: session.user?.picture ?? null,
+					image_style: convertAndValidateStoryQueryParams(
+						"image_style",
+						image_style
+					),
+					language: convertAndValidateStoryQueryParams("language", language),
+					length: convertAndValidateStoryQueryParams("length", length),
+					prompt: convertAndValidateStoryQueryParams("prompt", prompt),
+					input_type: convertAndValidateStoryQueryParams(
+						"input_type",
+						input_type
+					),
+					output_type: convertAndValidateStoryQueryParams(
+						"output_type",
+						output_type
+					),
+					video_key: convertAndValidateStoryQueryParams("video_key", video_key),
+					image_resolution: convertAndValidateStoryQueryParams(
+						"image_resolution",
+						image_resolution
+					),
+					display_resolution: convertAndValidateStoryQueryParams(
+						"display_resolution",
+						display_resolution ?? DisplayAspectRatios["576x1024"] //9x16 by default
+					),
 				},
 				session.accessToken as string
-			);
-		});
-		const story = await api.webstory.create(
-			{
-				image_style: convertAndValidateStoryQueryParams(
-					"image_style",
-					image_style
-				),
-				language: convertAndValidateStoryQueryParams("language", language),
-				length: convertAndValidateStoryQueryParams("length", length),
-				prompt: convertAndValidateStoryQueryParams("prompt", prompt),
-				input_type: convertAndValidateStoryQueryParams(
-					"input_type",
-					input_type
-				),
-				output_type: convertAndValidateStoryQueryParams(
-					"output_type",
-					output_type
-				),
-				video_key: convertAndValidateStoryQueryParams("video_key", video_key),
-				image_resolution: convertAndValidateStoryQueryParams(
-					"image_resolution",
-					image_resolution
-				),
-				display_resolution: convertAndValidateStoryQueryParams(
-					"display_resolution",
-					display_resolution ?? DisplayAspectRatios["576x1024"] //9x16 by default
-				),
-			},
-			session.accessToken as string
-		);
+			)
+			.catch((e) => {
+				console.log("There was an error generating the story: ", e);
+				throw new AuthError(
+					Routes.defaultRedirect,
+					Routes.Landing("There was an error creating the story")
+				);
+			});
 		const { url } = story;
 
 		const [genre, id] = url.split("/");
@@ -148,10 +165,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			? StoryOutputTypes.SplitScreen
 			: StoryOutputTypes.Video;
 
-		console.log("Redirecting to", Routes.EditStory(storyType, genre, id));
+		console.log("Redirecting to", Routes.ViewStory(storyType, genre, id));
 		return {
 			redirect: {
-				destination: Routes.EditStory(storyType, genre, id),
+				destination: Routes.ViewStory(storyType, genre, id),
 				permanent: false,
 			},
 		};

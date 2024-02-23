@@ -46,6 +46,27 @@ export default function ImageLoader({
 	const currentImage = imageData[index]!;
 	const ImageRatio = GetDisplayImageRatio(Webstory.resolution);
 
+	const NumSegments = Webstory.storyDone
+		? Webstory.scenes?.flatMap((el) => el.videoSegments).length
+		: null;
+	const ImagesGenerated = Webstory.scenes
+		?.flatMap((el) => el.videoSegments)
+		.filter((el) => (el?.imageKey?.length ?? 0) > 0);
+	const VideosGenerated = Webstory.scenes
+		?.flatMap((el) => el.videoSegments)
+		.filter((el) => el?.videoKey?.length ?? 0 > 0);
+
+	const DisplayLoadingText = () => {
+		if (!NumSegments) return `Generated ${ImagesGenerated?.length ?? 0} scenes`;
+		if ((ImagesGenerated?.length ?? 0) < NumSegments) {
+			return `Generated ${ImagesGenerated?.length}/${NumSegments} scenes`;
+		} else if ((VideosGenerated?.length ?? 0) < NumSegments) {
+			return `Animated ${VideosGenerated?.length}/${NumSegments} scenes`;
+		} else {
+			return "Wrapping up";
+		}
+	};
+
 	return (
 		<CustomImageSuspense
 			imageSrc={currentImage.src}
@@ -69,7 +90,7 @@ export default function ImageLoader({
 							}}
 						>
 							<p className="font-medium font-mono text-lg">
-								Working on your story...
+								{DisplayLoadingText()}
 							</p>
 						</div>
 					</div>

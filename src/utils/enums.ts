@@ -78,3 +78,49 @@ export enum DisplayAspectRatios {
 	"1024x576",
 	"576x1024",
 }
+
+export enum StepperStep {
+	Script,
+	Storyboard,
+	Scenes,
+	Share,
+}
+
+export enum SegmentModifications {
+	Edit,
+	Add,
+	Delete,
+}
+export enum SceneEdits {
+	Edit,
+	Add,
+	Delete,
+}
+export enum SubscriptionPlan {
+	Free,
+	Basic,
+	Pro,
+	Premium,
+}
+
+export enum SubscriptionPeriod {
+	Monthly,
+	Annual,
+}
+
+export enum StoryboardViewType {
+	Outline,
+	Slides
+}
+
+export enum ScriptEditorViewType {
+	Title_Scenes,
+	Just_Text
+}
+
+export enum InputStatus {
+	UNEDITED,
+	EDITED,
+	ADDED,
+	DELETED,
+}
