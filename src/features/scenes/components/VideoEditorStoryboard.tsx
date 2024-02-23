@@ -183,7 +183,16 @@ export default function VideoEditorStoryboard({
 					Edit Your Script
 				</Badge>
 			</div>
-			<div className="w-[80%] m-auto">
+			<div
+				className="w-[80%] m-auto"
+				style={{
+					borderRadius: "8px",
+					background: "#FEFEFF",
+					boxShadow:
+						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
+					backdropFilter: "blur(5px)",
+				}}
+			>
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -320,7 +329,7 @@ export default function VideoEditorStoryboard({
 				story={story}
 				WebstoryData={WebstoryData}
 			/> */}
-			<ScriptEditorView WebstoryData={WebstoryData} />
+			{/* <ScriptEditorView WebstoryData={WebstoryData} /> */}
 			<div className="flex justify-center mb-auto">
 				<Badge
 					variant="outline"
