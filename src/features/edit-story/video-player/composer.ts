@@ -157,7 +157,7 @@ export const toRemotionInputProps = async ({
 					segment.type === "transition" ? 0 : segment.durationInFrames
 			);
 
-			const theEndPageFrames = 5 * VIDEO_FPS;
+			const theEndPageFrames = 3 * VIDEO_FPS;
 
 			return {
 				showLoadingVideo: false,
