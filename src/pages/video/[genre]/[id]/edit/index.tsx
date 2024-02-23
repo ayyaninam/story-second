@@ -3,6 +3,7 @@ import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
+import ScenesLayout from "@/features/scenes/components/Layout";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import Routes from "@/routes";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
@@ -13,6 +14,7 @@ import {
 	GetServerSidePropsContext,
 	InferGetServerSidePropsType,
 } from "next";
+import { ReactElement } from "react";
 
 function StoryPage({
 	session,
@@ -26,7 +28,9 @@ function StoryPage({
 		</WebStoryProvider>
 	);
 }
-
+StoryPage.getLayout = function getLayout(page: ReactElement) {
+	return <ScenesLayout>{page}</ScenesLayout>;
+};
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	try {
 		// @ts-expect-error Not typing correctly
