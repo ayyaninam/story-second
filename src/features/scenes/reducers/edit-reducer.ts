@@ -131,6 +131,10 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			draft.scenes.splice(index, 1);
 			break;
 		}
+		case "reset": {
+			draft = action.draft;
+			return draft;
+		}
 	}
 };
 
