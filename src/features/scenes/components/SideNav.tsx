@@ -13,7 +13,7 @@ import ChallengesIcon from "./icons/ChallengesIcon";
 import { Command } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
-const menuItems = [
+export const menuItems = [
 	{
 		icon: <ExploreIcon />,
 		text: "Explore",
@@ -40,7 +40,8 @@ const menuItems = [
 		shortcut: "F",
 	},
 ];
-export default function SideNav() {
+
+export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	return (
 		<div className="w-[18rem] flex flex-col justify-between">
 			<div>
@@ -59,8 +60,8 @@ export default function SideNav() {
 					{menuItems.map((menuItem, index) => (
 						<div
 							key={index}
-							aria-selected={index === 0}
-							className="menuItem ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white"
+							aria-selected={index === pageIndex}
+							className="ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem"
 						>
 							{menuItem.icon}
 							{menuItem.text}

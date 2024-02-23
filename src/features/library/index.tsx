@@ -22,7 +22,7 @@ function LibraryPage() {
 	};
 
 	return (
-		<div className="min-h-[100vh] bg-background">
+		<div className="h-full overflow-scroll bg-background rounded-lg mr-2 flex-grow">
 			<LibraryHeader
 				selectedOrientationTab={selectedOrientationTab}
 				setSelectedOrientationTab={setSelectedOrientationTab}

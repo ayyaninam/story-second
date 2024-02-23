@@ -1,5 +1,5 @@
 import LibraryPage from "@/features/library";
-import React from "react";
+import React, { ReactElement } from "react";
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -10,16 +10,34 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/library/constants";
+import ScenesLayout from "@/features/scenes/components/Layout";
 
 function Library({
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<HydrationBoundary state={dehydratedState}>
+			{/* declare css variables */}
+			<style jsx global>{`
+				:root {
+					--menu-item-border-color: rgba(122, 255, 180, 0.2);
+					--menu-item-selected-background-color: radial-gradient(
+						50.88% 100% at 0% 50%,
+						rgba(18, 239, 88, 0.502) 37.5%,
+						rgba(102, 129, 255, 0) 100%
+					);
+					--menu-item-selected-border-color: rgba(122, 255, 180, 0.1);
+					--stepper-box-shadow: 0px 4px 4px 0px rgba(122, 255, 133, 0.4);
+				}
+			`}</style>
 			<LibraryPage />
 		</HydrationBoundary>
 	);
 }
+
+Library.getLayout = function getLayout(page: ReactElement) {
+	return <ScenesLayout pageIndex={2}>{page}</ScenesLayout>;
+};
 
 export default Library;
 
