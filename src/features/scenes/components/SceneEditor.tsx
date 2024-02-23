@@ -3,11 +3,13 @@ import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
+	Segment,
+	StoryStatus,
 	TextStatus,
 } from "../reducers/edit-reducer";
 import { WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
@@ -25,6 +27,7 @@ import VideoPlayer, {
 	VideoPlayerHandler,
 } from "@/features/edit-story/components/video-player";
 import { AspectRatios } from "@/utils/enums";
+import api from "@/api";
 
 const Dropdown = ({
 	items,
@@ -112,6 +115,41 @@ const SceneEditorView = ({
 		editStoryReducer,
 		WebstoryToStoryDraft(WebstoryData!)
 	);
+
+	useEffect(() => {
+		if (WebstoryData) {
+			console.log(
+				"Resetting webstory with new data:",
+				WebstoryToStoryDraft(WebstoryData)
+			);
+			dispatch({ type: "reset", draft: WebstoryToStoryDraft(WebstoryData) });
+		}
+	}, [WebstoryData, dispatch]);
+
+	const statuses = story.scenes.flatMap((el) =>
+		el.segments.map((el) => el.videoStatus)
+	);
+	useEffect(() => {
+		console.log("Statuses changed:", statuses);
+	}, [statuses]);
+
+	const handleRegenerateVideo = async (
+		segment: Segment,
+		sceneIndex: number,
+		segmentIndex: number
+	) => {
+		dispatch({
+			type: "edit_segment",
+			sceneIndex,
+			segmentIndex: segmentIndex,
+			segment: { ...segment, videoStatus: StoryStatus.PENDING },
+		});
+		await api.video.regenerateVideo({
+			story_id: WebstoryData?.id!,
+			segment_idx: segment.id,
+			story_type: WebstoryData?.storyType,
+		});
+	};
 
 	return (
 		<div
@@ -204,7 +242,23 @@ const SceneEditorView = ({
 																	<span
 																		key={segmentIndex}
 																		style={{ backgroundColor: "transparent" }}
-																		className="flex max-w-sm"
+																		className={cn(
+																			"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
+																			segment.videoStatus ===
+																				StoryStatus.PENDING && "text-purple-800"
+																		)}
+																		onClick={() => {
+																			videoPlayerRef.current?.seekToSegment({
+																				...segment,
+																				sceneId: scene.id,
+																				index: segment.id,
+																			});
+																			handleRegenerateVideo(
+																				segment,
+																				sceneIndex,
+																				segmentIndex
+																			);
+																		}}
 																	>
 																		{segment.textContent}
 																		{/* Commenting because users don't need to edit the text here */}
