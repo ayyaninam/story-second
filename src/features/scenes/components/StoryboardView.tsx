@@ -133,7 +133,7 @@ export default function StoryboardView({
 								setShowActionItems({});
 							}}
 						>
-							{story.scenes.map((scene, sceneIndex) => (
+							{/* {story.scenes.map((scene, sceneIndex) => (
 								<div key={sceneIndex} className="flex">
 									<span className="flex w-[50%] flex-wrap text-sm gap-1 items-center hover:bg-slate-100 rounded-md">
 										{scene.segments.map((segment, segmentIndex) => (
@@ -306,7 +306,7 @@ export default function StoryboardView({
 										))}
 									</span>
 								</div>
-							))}
+							))} */}
 						</div>
 					</div>
 

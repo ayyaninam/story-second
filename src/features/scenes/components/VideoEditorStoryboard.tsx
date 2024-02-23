@@ -1,5 +1,17 @@
-import { AspectRatios, InputStatus, SegmentModifications } from "@/utils/enums";
-import { Film, HelpCircle, Video } from "lucide-react";
+import {
+	AspectRatios,
+	InputStatus,
+	SegmentModifications,
+	StoryboardViewType,
+} from "@/utils/enums";
+import {
+	ChevronDown,
+	Film,
+	HelpCircle,
+	LayoutList,
+	SparkleIcon,
+	Video,
+} from "lucide-react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
 import { Badge } from "@/components/ui/badge";
 
@@ -10,6 +22,7 @@ import editStoryReducer, {
 	Scene,
 	Segment,
 	StoryStatus,
+	TextStatus,
 } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
@@ -24,6 +37,11 @@ import { VideoPlayerHandler } from "@/features/edit-story/components/video-playe
 import ScriptEditorView from "./ScriptEditorView";
 // import StoryboardView from "./StoryboardViewTypesComponent";
 import StoryboardView from "./StoryboardView";
+import Editor from "./Editor";
+import { cn } from "@/utils";
+import Format from "@/utils/format";
+import StoryboardViewTypes from "./StoryboardViewTypesComponent";
+import AutosizeInput from "react-input-autosize";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -73,36 +91,10 @@ export default function VideoEditorStoryboard({
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
 	const diff = GenerateStoryDiff(previousStory, story);
-	const numEdits =
-		diff.additions.length + diff.subtractions.length + diff.edits.length;
-	const EditScene = useMutation({
-		mutationFn: api.video.editScene,
-	});
+
 	const EditSegment = useMutation({
 		mutationFn: api.video.editSegment,
 	});
-	const getSegmentStatus = (sceneIndex: number, segmentIndex: number) => {
-		if (
-			diff.edits.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
-		) {
-			return InputStatus.EDITED;
-		} else if (
-			diff.additions.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
-		) {
-			return InputStatus.ADDED;
-		} else if (
-			diff.subtractions.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
-		) {
-			// Deletions not yet implemented
-			return InputStatus.DELETED;
-		} else return InputStatus.UNEDITED;
-	};
 
 	const handleSubmitEditSegments = async () => {
 		const diff = GenerateStoryDiff(previousStory, story);
@@ -145,138 +137,6 @@ export default function VideoEditorStoryboard({
 		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
 	};
 
-	const refs = useRef<HTMLInputElement[][]>(
-		// Putting an absurdly high number of arrays to make things simpler
-		Array.from({ length: 40 ?? 0 }, () => [])
-	);
-
-	const handleInput = (
-		e: React.ChangeEvent<HTMLInputElement>,
-		scene: Scene,
-		sceneIndex: number,
-		segment: Segment,
-		segmentIndex: number
-	) => {
-		const content = e.target.value ?? "";
-		if (
-			// (No break) space or punctuation
-			([" ", "\u00A0"].includes(content.slice(-1)) && content.length > 40) ||
-			content.length > 50
-		) {
-			dispatch({
-				type: "edit_segment",
-				sceneIndex: sceneIndex,
-				segmentIndex: segmentIndex,
-				segment: {
-					...segment,
-					textContent: e.target.value.slice(0, -1),
-				},
-			});
-			dispatch({
-				type: "create_segment",
-				sceneIndex: sceneIndex,
-				segment: {
-					audioKey: "",
-					textContent: content.slice(-1),
-					audioStatus: StoryStatus.READY,
-					id: segment.id,
-					imageKey: "",
-					imageStatus: StoryStatus.READY,
-					videoKey: "",
-					videoStatus: StoryStatus.READY,
-				},
-				segmentIndex: segmentIndex,
-			});
-			refs.current[sceneIndex]?.[segmentIndex]?.blur();
-			refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
-		} else if (
-			segment.textContent.length > 0 &&
-			e.target.value.length === 0 &&
-			scene.segments.length === 1
-		) {
-			dispatch({
-				type: "delete_scene",
-				index: sceneIndex,
-			});
-			refs.current[sceneIndex]?.[segmentIndex]?.blur();
-			refs.current[sceneIndex - 1]?.[
-				story?.scenes[sceneIndex - 1]?.segments?.length ?? 0 - 1
-			]?.focus();
-		} else if (segment.textContent.length > 0 && e.target.value.length === 0) {
-			dispatch({
-				type: "delete_segment",
-				sceneIndex: sceneIndex,
-				segmentIndex: segmentIndex,
-			});
-			refs.current[sceneIndex]?.[segmentIndex]?.blur();
-			refs.current[sceneIndex]?.[segmentIndex - 1]?.focus();
-		} else {
-			dispatch({
-				type: "edit_segment",
-				sceneIndex: sceneIndex,
-				segmentIndex: segmentIndex,
-				segment: {
-					...segment,
-					textContent: e.target.value ?? "",
-				},
-			});
-		}
-	};
-
-	const handleEnter = (
-		scene: Scene,
-		sceneIndex: number,
-		segment: Segment,
-		segmentIndex: number
-	) => {
-		// If the segment is the last segment in the scene, create a new scene
-		if (segmentIndex === scene.segments.length - 1) {
-			dispatch({
-				type: "create_scene",
-				scene: {
-					segments: [
-						{
-							audioKey: "",
-							textContent: " ",
-							audioStatus: StoryStatus.READY,
-							id: scene.segments.slice(-1)[0]?.id!,
-							imageKey: "",
-							imageStatus: StoryStatus.READY,
-							videoKey: "",
-							videoStatus: StoryStatus.READY,
-						},
-					],
-					status: StoryStatus.READY,
-					id: scene.id,
-				},
-
-				index: sceneIndex,
-			});
-			refs.current[sceneIndex]?.[segmentIndex]?.blur();
-			refs.current[sceneIndex + 1]?.[0]?.focus();
-		}
-		// Else, create a new segment
-		else {
-			dispatch({
-				type: "create_segment",
-				sceneIndex: sceneIndex,
-				segment: {
-					audioKey: "",
-					textContent: " ",
-					audioStatus: StoryStatus.READY,
-					id: segment.id,
-					imageKey: "",
-					imageStatus: StoryStatus.READY,
-					videoKey: "",
-					videoStatus: StoryStatus.READY,
-				},
-				segmentIndex: segmentIndex,
-			});
-			refs.current[sceneIndex]?.[segmentIndex]?.blur();
-			refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
-		}
-	};
-
 	useEffect(() => {
 		if (selectedSegment) {
 			console.log();
@@ -316,7 +176,133 @@ export default function VideoEditorStoryboard({
 					Generate & Edit Your Scenes
 				</Badge>
 			</div>
-			<StoryboardView
+			<div className="w-[80%] m-auto">
+				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
+					<div className="flex items-center gap-1">
+						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
+						<p>Storyboard View</p>
+						<StoryboardViewTypes type={StoryboardViewType.Outline} />
+					</div>
+					<div className="flex gap-1 items-center">
+						<p className="px-1 text-purple-900">
+							Pro Tip — You can individually regenerate images in this
+							Storyboard.{" "}
+							<a href="#">
+								<u>Learn how</u>
+							</a>
+						</p>
+						<div className="flex gap-1 items-center text-purple-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
+							<SparkleIcon width={"18px"} height={"18px"} />
+							<p className="text-xs">Regenerate</p>
+							<ChevronDown width={"18px"} height={"18px"} />
+						</div>
+					</div>
+				</div>
+				<div className="relative px-6 pt-6 pb-2 bg-[#FEFEFF]">
+					<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
+						{Format.Title(WebstoryData?.storyTitle)}
+					</p>
+
+					<div className="w-full inline-flex text-slate-400 text-xs py-1">
+						<div className="flex">
+							Storyboard for a <u> 60 Second</u>{" "}
+							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
+							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
+						</div>
+						<div className="flex">
+							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
+						</div>
+						<p className="ms-1">by Anthony Deloso</p>
+					</div>
+				</div>
+				<div className="flex flex-col md:flex-row items-center justify-center w-full">
+					<div
+						className={cn(
+							`w-full pb-6 bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
+						)}
+						// border-[1px]
+					>
+						<div
+							className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
+						>
+							<div
+								className="space-y-2"
+								// onMouseLeave={(e) => {
+								// 	setShowActionItems({});
+								// }}
+							>
+								<Editor
+									Webstory={WebstoryData!}
+									dispatch={dispatch}
+									story={story}
+								>
+									{({ handleEnter, handleInput, refs }) => {
+										return (
+											<div className={cn("w-full")}>
+												{story.scenes.map((scene, sceneIndex) => (
+													<div
+														key={sceneIndex}
+														className="flex flex-wrap flex-row hover:bg-slate-50"
+													>
+														{scene.segments.map((segment, segmentIndex) => (
+															<span
+																key={segmentIndex}
+																style={{ backgroundColor: "transparent" }}
+																className={cn(`flex flex-wrap w-full`)}
+															>
+																<AutosizeInput
+																	onKeyDown={(e) => {
+																		if (e.key === "Enter") {
+																			handleEnter(
+																				scene,
+																				sceneIndex,
+																				segment,
+																				segmentIndex
+																			);
+																		}
+																	}}
+																	name={segmentIndex.toString()}
+																	inputClassName={cn(
+																		"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
+																		segment.textStatus === TextStatus.EDITED &&
+																			"text-slate-500"
+																	)}
+																	inputStyle={{
+																		outline: "none",
+																		backgroundColor: "inherit",
+																	}}
+																	// @ts-ignore
+																	ref={(el) =>
+																		// @ts-ignore
+																		(refs.current[sceneIndex][segmentIndex] =
+																			el)
+																	}
+																	value={segment.textContent}
+																	onChange={(e) => {
+																		handleInput(
+																			e,
+																			scene,
+																			sceneIndex,
+																			segment,
+																			segmentIndex
+																		);
+																	}}
+																/>
+															</span>
+														))}
+													</div>
+												))}
+											</div>
+										);
+									}}
+								</Editor>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* <StoryboardView
 				refs={refs}
 				dispatch={dispatch}
 				getSegmentStatus={getSegmentStatus}
@@ -326,8 +312,8 @@ export default function VideoEditorStoryboard({
 				setPreviousStory={setPreviousStory}
 				story={story}
 				WebstoryData={WebstoryData}
-			/>
-			<ScriptEditorView
+			/> */}
+			{/* <ScriptEditorView
 				WebstoryData={WebstoryData}
 				refs={refs}
 				dispatch={dispatch}
@@ -337,7 +323,7 @@ export default function VideoEditorStoryboard({
 				setEditSegmentsModalState={setEditSegmentsModalState}
 				setPreviousStory={setPreviousStory}
 				story={story}
-			/>
+			/> */}
 			<div className="flex justify-center m-10">
 				<Badge
 					variant="outline"
