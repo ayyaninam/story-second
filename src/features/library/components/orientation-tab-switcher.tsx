@@ -11,7 +11,7 @@ export const HeaderTabSwitcher = ({
 	setSelectedTab,
 }: {
 	selectedTab: string;
-	setSelectedTab: Dispatch<SetStateAction<string>>;
+	setSelectedTab: (orientation: string) => void;
 }) => {
 	return (
 		<div

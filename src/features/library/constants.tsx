@@ -25,6 +25,11 @@ export const VIDEO_ORIENTATIONS = {
 		id: "book",
 		icon: <BookOrientationIcon />,
 	},
+	TIK_TOK: {
+		value: "TikTok",
+		id: "tik-tok",
+		icon: <VerticalOrientationIcon />,
+	},
 };
 
 export const GENRES = {
@@ -51,7 +56,7 @@ export const GENRES = {
 };
 
 export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
-	wide: {
+	[VIDEO_ORIENTATIONS.WIDE.id]: {
 		title: "Wide",
 		orientation: "wide",
 		header: {
@@ -62,7 +67,7 @@ export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
 		icon: <WideOrientationIcon />,
 		aspectRatio: "16:9",
 	},
-	vertical: {
+	[VIDEO_ORIENTATIONS.VERTICAL.id]: {
 		title: "Vertical",
 		orientation: "vertical",
 		icon: <VerticalOrientationIcon />,
@@ -73,9 +78,20 @@ export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
 			buttonText: "See all your portrait videos",
 		},
 	},
-	book: {
+	[VIDEO_ORIENTATIONS.BOOK.id]: {
 		title: "Book",
 		orientation: "book",
+		icon: <BookOrientationIcon />,
+		aspectRatio: "1:1",
+		header: {
+			title: "Your Most Recent Story Books",
+			subtitle: "Upload yourself & generate",
+			buttonText: "See all your Story Books",
+		},
+	},
+	[VIDEO_ORIENTATIONS.TIK_TOK.id]: {
+		title: "TikTok",
+		orientation: "tik-tok",
 		icon: <BookOrientationIcon />,
 		aspectRatio: "9:16",
 		header: {
@@ -83,5 +99,16 @@ export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
 			subtitle: "Upload yourself & generate",
 			buttonText: "See all your TikTok videos",
 		},
+	},
+};
+
+export const SORTING_OPTIONS = {
+	DESCENDING: {
+		value: "desc",
+		label: "Descending",
+	},
+	ASCENDING: {
+		value: "asc",
+		label: "Ascending",
 	},
 };

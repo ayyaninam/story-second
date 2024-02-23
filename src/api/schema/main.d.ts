@@ -7151,6 +7151,8 @@ export interface operations {
         PageSize?: number;
         storyType?: components["schemas"]["StoryType"];
         searchTerm?: string;
+        resolution?: components["schemas"]["DisplayResolution"];
+        isDescending?: boolean;
       };
       path: {
         topLevelCategory: string;

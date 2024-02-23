@@ -9,6 +9,7 @@ import type { AppProps } from "next/app";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "react-hot-toast";
+import { useState } from "react";
 
 const randFont = localFont({
 	variable: "--font-rand",
@@ -142,9 +143,17 @@ const randMonoFont = localFont({
 	],
 });
 
-const queryClient = new QueryClient();
-
 export default function App({ Component, pageProps }: AppProps) {
+	const [queryClient] = useState(
+		() =>
+			new QueryClient({
+				defaultOptions: {
+					queries: {
+						staleTime: 1000 * 60 * 5,
+					},
+				},
+			})
+	);
 	return (
 		<QueryClientProvider client={queryClient}>
 			<HydrationBoundary state={pageProps.dehydratedState}>

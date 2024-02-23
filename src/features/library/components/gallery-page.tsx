@@ -1,87 +1,100 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import LibraryGalleryComponent from "./gallery-component";
-import { VideoOrientation, VideoThumbnail } from "@/types";
+import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { LIBRARY_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
-import { DisplayAspectRatios } from "@/utils/enums";
-import { useQuery } from "@tanstack/react-query";
+import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { mainSchema } from "@/api/schema";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
-import Format from "@/utils/format";
+import { useDebounce } from "usehooks-ts";
+import { getGalleryThumbnails } from "../utils";
 
 function LibraryGalleryPage({
 	orientation = "wide",
+	searchTerm,
 }: {
 	orientation: VideoOrientation;
+	searchTerm: string;
 }) {
 	const router = useRouter();
-	const galleryDetails = LIBRARY_HOME_GALLERY_DATA[orientation] || {};
-	const StoriesList = useQuery<mainSchema["ReturnWebStoryDTOPagedList"]>({
-		queryFn: () =>
-			api.library.getStories({
+	const galleryDetails = LIBRARY_HOME_GALLERY_DATA[orientation];
+	const queryClient = useQueryClient();
+
+	const filterOptions = useDebounce(
+		useMemo<LibraryPageVideoQueryOptions>(() => {
+			const page = (router.query.page as string) || "1";
+			return {
+				CurrentPage: parseInt(page),
+				topLevelCategory: router.query.genre as string,
+				searchTerm,
+			};
+		}, [router.query.page, router.query.genre, searchTerm]),
+		500
+	);
+	const StoriesList = useQuery<
+		| mainSchema["ReturnWebStoryDTOPagedList"]
+		| mainSchema["ReturnVideoStoryDTOPagedList"]
+	>({
+		queryFn: () => {
+			if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
+				return api.library.getStoryBooks({
+					params: {
+						PageSize: 50,
+						...filterOptions,
+					},
+				});
+			}
+			if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
+				return api.library.getVideos({
+					params: {
+						PageSize: 50,
+						storyType: StoryOutputTypes.SplitScreen,
+						...filterOptions,
+					},
+				});
+			}
+			return api.library.getVideos({
 				params: {
-					currentPage: 1,
-					pageSize: 50,
-					liked: false,
-					sortType: "latest",
+					PageSize: 50,
+					storyType: StoryOutputTypes.Video,
+					resolution:
+						orientation === VIDEO_ORIENTATIONS.WIDE.id
+							? DisplayAspectRatios["1024x576"]
+							: DisplayAspectRatios["576x1024"],
+					...filterOptions,
 				},
-			}),
+			});
+		},
 		staleTime: 3000,
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.LIBRARY_STORIES, router.asPath],
+		queryKey: [QueryKeys.GALLERY, filterOptions, orientation],
+		initialData: queryClient.getQueryData([
+			QueryKeys.GALLERY,
+			filterOptions,
+			orientation,
+		]),
 	});
-	const [segregatedStories, setSegregatedStories] = React.useState<{
-		[key: string]: VideoThumbnail[];
-	}>({});
-	useEffect(() => {
-		if (StoriesList.data) {
-			const segregatedStories = StoriesList.data.items.reduce(
-				(acc, story, index) => {
-					const isWideOrientation =
-						story.resolution === DisplayAspectRatios["1024x576"];
-					const thumbnailInfo = {
-						id: story.id,
-						title: story.storyTitle,
-						thumbnail: story.coverImage
-							? Format.GetImageUrl(story.coverImage)
-							: null,
-						description: story.summary,
-						topLevelCategory: story.topLevelCategory,
-						slug: story.slug,
-						storyType: story.storyType,
-					};
-					if (isWideOrientation) {
-						acc[VIDEO_ORIENTATIONS.WIDE.id] = [
-							...(acc[VIDEO_ORIENTATIONS.WIDE.id] || []),
-							{
-								...thumbnailInfo,
-								expand: Math.random() > 0.95,
-							},
-						];
-					} else {
-						acc[VIDEO_ORIENTATIONS.VERTICAL.id] = [
-							...(acc[VIDEO_ORIENTATIONS.VERTICAL.id] || []),
-							thumbnailInfo,
-						];
-						acc[VIDEO_ORIENTATIONS.BOOK.id] = [
-							...(acc[VIDEO_ORIENTATIONS.BOOK.id] || []),
-							thumbnailInfo,
-						];
-					}
-					return acc;
-				},
-				{} as { [key: string]: VideoThumbnail[] }
-			);
-			setSegregatedStories(segregatedStories);
-		}
-	}, [StoriesList.data]);
+
+	const galleryThumbnails = useMemo(
+		() =>
+			getGalleryThumbnails(
+				StoriesList.data?.items || [],
+				orientation === VIDEO_ORIENTATIONS.WIDE.id
+			),
+		[StoriesList.data?.items, orientation]
+	);
+
+	if (!galleryDetails) {
+		return null;
+	}
+
 	return (
 		<div className="flex flex-col gap-4 max-w-[1440px] mx-auto px-6 pt-10">
 			<LibraryGalleryComponent
 				galleryDetails={galleryDetails}
 				isIndependentGalleryPage
-				thumbnails={segregatedStories[orientation] || []}
+				thumbnails={galleryThumbnails}
 			/>
 		</div>
 	);

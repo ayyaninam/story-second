@@ -1,6 +1,7 @@
 import { authFetcher, publicFetcher } from "@/lib/fetcher";
 import { getJwt } from "@/utils/jwt";
 import { mainSchema } from "../schema";
+import { LibraryPageVideoQueryOptions } from "@/types";
 
 const library = {
 	get: async (
@@ -21,18 +22,59 @@ const library = {
 
 		return data.data;
 	},
-	getStories: async ({
-		params
+	getVideos: async ({
+		params,
 	}: {
-		params: {currentPage: number;
-		pageSize: number;
-		liked?: boolean;
-		sortType?: string;}
+		params: LibraryPageVideoQueryOptions;
+	}): Promise<mainSchema["ReturnVideoStoryDTOPagedList"]> => {
+		const {topLevelCategory} = params;
+		const searchParams = {
+			...params,
+			topLevelCategory: "",
+		};
+		const data: mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] =
+			await publicFetcher.get(`api/Video/${topLevelCategory}`, {
+				searchParams,
+			}).json();
+		if (!data.succeeded) {
+			// TODO:figure out error boundaries
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
+	getCategories: async (): Promise<string[]> => {
+		const data: mainSchema["StringICollectionApiResponse"] =
+			await publicFetcher.get("api/StoryBook/Categories").json();
+
+		if (!data.succeeded) {
+			// TODO:figure out error boundaries
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
+	getStoryBooks: async ({
+		params,
+	}: {
+		params: LibraryPageVideoQueryOptions
 	}): Promise<mainSchema["ReturnWebStoryDTOPagedList"]> => {
+		const {topLevelCategory} = params;
+		const searchParams = {
+			...params,
+			topLevelCategory: "",
+		};
 		const data: mainSchema["ReturnWebStoryDTOPagedListApiResponse"] =
-			await authFetcher(getJwt()).get("api/Library", {
+			await publicFetcher.get(`api/StoryBook/${topLevelCategory}`, {
 				searchParams: params,
 			}).json();
+
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}

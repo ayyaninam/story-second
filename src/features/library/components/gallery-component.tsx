@@ -17,7 +17,7 @@ function LibraryGalleryComponent({
 }: {
 	galleryDetails: GalleryData[VideoOrientation];
 	isIndependentGalleryPage?: boolean;
-	setSelectedOrientationTab?: React.Dispatch<React.SetStateAction<string>>;
+	setSelectedOrientationTab?: (orientation: string) => void;
 	thumbnails: VideoThumbnail[];
 }) {
 	return (
@@ -63,14 +63,14 @@ function LibraryGalleryComponent({
 							<path
 								d="M8 3.33337V12.6667"
 								stroke="currentColor"
-								stroke-linecap="round"
-								stroke-linejoin="round"
+								strokeLinecap="round"
+								strokeLinejoin="round"
 							/>
 							<path
 								d="M3.33301 8H12.6663"
 								stroke="currentColor"
-								stroke-linecap="round"
-								stroke-linejoin="round"
+								strokeLinecap="round"
+								strokeLinejoin="round"
 							/>
 						</svg>
 					) : null}

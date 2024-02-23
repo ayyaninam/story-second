@@ -1,6 +1,7 @@
 import { mlSchema, mainSchema } from "@/api/schema";
-import { StoryLengths, StoryOutputTypes } from "./utils/enums";
+import { DisplayAspectRatios, StoryLengths, StoryOutputTypes } from "./utils/enums";
 import { CallbackListener } from "@remotion/player";
+import { VIDEO_ORIENTATIONS } from "./features/library/constants";
 
 export type CreateInitialStoryQueryParams = mlSchema["CreateStoryRequest"];
 
@@ -29,7 +30,10 @@ export type StoryScreenBgBlurProps = {
   blur: string;
 };
 
-export type VideoOrientation = "wide" | "vertical" | "book";
+const VIDEO_ORIENTATION_IDS = Object.values(VIDEO_ORIENTATIONS).map((el) => el.id);
+
+export type VideoOrientation = typeof VIDEO_ORIENTATION_IDS[number];
+
 
 export type VideoThumbnail = {
   id?: string;
@@ -55,3 +59,13 @@ export type GalleryData = {
     };
   };
 };
+
+export type LibraryPageVideoQueryOptions = {
+  CurrentPage?: number;
+  PageSize?: number;
+  storyType?: StoryOutputTypes;
+  searchTerm?: string;
+  resolution?: DisplayAspectRatios;
+  isDescending?: boolean;
+  topLevelCategory: string;
+}

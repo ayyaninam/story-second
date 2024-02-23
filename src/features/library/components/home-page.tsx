@@ -1,105 +1,149 @@
-import React, { useEffect } from "react";
+import React, { useMemo } from "react";
 import LibraryHeroSection from "./hero-section";
 import LibraryGalleryComponent from "./gallery-component";
-import { VideoOrientation, VideoThumbnail } from "@/types";
+import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { LIBRARY_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { mainSchema } from "@/api/schema";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
-import { DisplayAspectRatios } from "@/utils/enums";
-import Format from "@/utils/format";
+import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
+import { useDebounce } from "usehooks-ts";
+import { getGalleryThumbnails } from "../utils";
 
 function LibraryHomePage({
 	setSelectedOrientationTab,
+	searchTerm,
 }: {
-	setSelectedOrientationTab: React.Dispatch<React.SetStateAction<string>>;
+	setSelectedOrientationTab: (orientation: string) => void;
+	searchTerm: string;
 }) {
 	const router = useRouter();
-	const StoriesList = useQuery<mainSchema["ReturnWebStoryDTOPagedList"]>({
+	const queryClient = useQueryClient();
+
+	const filterOptions = useDebounce(
+		useMemo<LibraryPageVideoQueryOptions>(() => {
+			const page = (router.query.page as string) || "1";
+			return {
+				CurrentPage: parseInt(page),
+				topLevelCategory: router.query.genre as string,
+				searchTerm,
+			};
+		}, [router.query.page, router.query.genre, searchTerm]),
+		500
+	);
+
+	const wideVideoList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>({
 		queryFn: () =>
-			api.library.getStories({
+			api.library.getVideos({
 				params: {
-					currentPage: 1,
-					pageSize: 50,
-					liked: false,
-					sortType: "latest",
+					PageSize: 7,
+					storyType: StoryOutputTypes.Video,
+					resolution: DisplayAspectRatios["1024x576"],
+					CurrentPage: 1,
+					topLevelCategory: filterOptions.topLevelCategory,
 				},
 			}),
 		staleTime: 3000,
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.LIBRARY_STORIES, router.asPath],
+		queryKey: [QueryKeys.WIDE_VIDEOS, filterOptions.topLevelCategory],
+		initialData: queryClient.getQueryData([
+			QueryKeys.WIDE_VIDEOS,
+			filterOptions.topLevelCategory,
+		]),
 	});
-	const [segregatedStories, setSegregatedStories] = React.useState<{
-		[key: string]: VideoThumbnail[];
-	}>({});
-	useEffect(() => {
-		if (StoriesList.data) {
-			const segregatedStories = StoriesList.data.items.reduce(
-				(acc, story, index) => {
-					const isWideOrientation =
-						story.resolution === DisplayAspectRatios["1024x576"];
-					const thumbnailInfo = {
-						id: story.id,
-						title: story.storyTitle,
-						thumbnail: story.coverImage
-							? Format.GetImageUrl(story.coverImage)
-							: null,
-						description: story.summary,
-						topLevelCategory: story.topLevelCategory,
-						slug: story.slug,
-						storyType: story.storyType,
-					};
-					if (isWideOrientation) {
-						acc[VIDEO_ORIENTATIONS.WIDE.id] = [
-							...(acc[VIDEO_ORIENTATIONS.WIDE.id] || []),
-							{
-								...thumbnailInfo,
-								expand:
-									!acc[VIDEO_ORIENTATIONS.WIDE.id]?.length ||
-									acc[VIDEO_ORIENTATIONS.WIDE.id]?.length === 0,
-							},
-						];
-					} else {
-						acc[VIDEO_ORIENTATIONS.VERTICAL.id] = [
-							...(acc[VIDEO_ORIENTATIONS.VERTICAL.id] || []),
-							thumbnailInfo,
-						];
-						acc[VIDEO_ORIENTATIONS.BOOK.id] = [
-							...(acc[VIDEO_ORIENTATIONS.BOOK.id] || []),
-							thumbnailInfo,
-						];
-					}
-					return acc;
-				},
-				{} as { [key: string]: VideoThumbnail[] }
-			);
-			segregatedStories[VIDEO_ORIENTATIONS.WIDE.id] =
-				segregatedStories[VIDEO_ORIENTATIONS.WIDE.id]?.slice(0, 7) || [];
-			segregatedStories[VIDEO_ORIENTATIONS.VERTICAL.id] =
-				segregatedStories[VIDEO_ORIENTATIONS.VERTICAL.id]?.slice(0, 5) || [];
-			segregatedStories[VIDEO_ORIENTATIONS.BOOK.id] =
-				segregatedStories[VIDEO_ORIENTATIONS.BOOK.id]?.slice(0, 5) || [];
 
-			setSegregatedStories(segregatedStories);
+	const verticalVideoList = useQuery<
+		mainSchema["ReturnVideoStoryDTOPagedList"]
+	>({
+		queryFn: () =>
+			api.library.getVideos({
+				params: {
+					PageSize: 5,
+					storyType: StoryOutputTypes.Video,
+					resolution: DisplayAspectRatios["576x1024"],
+					CurrentPage: 1,
+					topLevelCategory: filterOptions.topLevelCategory,
+				},
+			}),
+		staleTime: 3000,
+		queryKey: [QueryKeys.VERTICAL_VIDEOS, filterOptions.topLevelCategory],
+		initialData: queryClient.getQueryData([
+			QueryKeys.VERTICAL_VIDEOS,
+			filterOptions.topLevelCategory,
+		]),
+	});
+
+	const storyBooksList = useQuery<mainSchema["ReturnWebStoryDTOPagedList"]>({
+		queryFn: () =>
+			api.library.getStoryBooks({
+				params: {
+					PageSize: 5,
+					CurrentPage: 1,
+					topLevelCategory: filterOptions.topLevelCategory,
+				},
+			}),
+		staleTime: 3000,
+		queryKey: [QueryKeys.STORY_BOOKS, filterOptions.topLevelCategory],
+		initialData: queryClient.getQueryData([
+			QueryKeys.STORY_BOOKS,
+			filterOptions.topLevelCategory,
+		]),
+	});
+
+	const tikTokVideosList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>(
+		{
+			queryFn: () =>
+				api.library.getVideos({
+					params: {
+						PageSize: 5,
+						storyType: StoryOutputTypes.SplitScreen,
+						CurrentPage: 1,
+						topLevelCategory: filterOptions.topLevelCategory,
+					},
+				}),
+			staleTime: 3000,
+			queryKey: [QueryKeys.TIK_TOK, filterOptions.topLevelCategory],
+			initialData: queryClient.getQueryData([
+				QueryKeys.TIK_TOK,
+				filterOptions.topLevelCategory,
+			]),
 		}
-	}, [StoriesList.data]);
+	);
+
+	const segregatedStories = useMemo(() => {
+		const segregatedStories = {
+			[VIDEO_ORIENTATIONS.WIDE.id]: getGalleryThumbnails(
+				wideVideoList.data?.items || [],
+				true
+			),
+			[VIDEO_ORIENTATIONS.VERTICAL.id]: getGalleryThumbnails(
+				verticalVideoList.data?.items || []
+			),
+			[VIDEO_ORIENTATIONS.BOOK.id]: getGalleryThumbnails(
+				storyBooksList.data?.items || []
+			),
+			[VIDEO_ORIENTATIONS.TIK_TOK.id]: getGalleryThumbnails(
+				tikTokVideosList.data?.items || []
+			),
+		};
+		return segregatedStories;
+	}, [wideVideoList.data, verticalVideoList.data, storyBooksList.data]);
+
 	return (
 		<div className="flex p-4 flex-col gap-2 grow items-center justify-center">
 			<LibraryHeroSection />
 			<div className="flex max-w-[1440px] w-full flex-col gap-4">
 				{Object.values(VIDEO_ORIENTATIONS).map((orientation) =>
-					orientation.id === VIDEO_ORIENTATIONS.ALL.id ? null : (
+					orientation.id !== VIDEO_ORIENTATIONS.ALL.id &&
+					LIBRARY_HOME_GALLERY_DATA[orientation.id] ? (
 						<LibraryGalleryComponent
 							setSelectedOrientationTab={setSelectedOrientationTab}
 							key={orientation.id}
-							galleryDetails={
-								LIBRARY_HOME_GALLERY_DATA[orientation.id as VideoOrientation]
-							}
+							galleryDetails={LIBRARY_HOME_GALLERY_DATA[orientation.id]!}
 							thumbnails={segregatedStories[orientation.id] || []}
 						/>
-					)
+					) : null
 				)}
 			</div>
 		</div>
