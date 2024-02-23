@@ -33,7 +33,7 @@ const getGenreOptions = (categories: string[]) => {
 
 export const GenreTabSwitcher = () => {
 	const router = useRouter();
-	const CategoriesList = useQuery<string[]>({
+	const categoriesList = useQuery<string[]>({
 		queryFn: () => api.library.getCategories(),
 		queryKey: [QueryKeys.CATEGORIES],
 	});
@@ -43,7 +43,7 @@ export const GenreTabSwitcher = () => {
 			router.push(
 				{
 					pathname: "/library",
-					query: { ...router.query, genre },
+					query: { ...router.query, genre, page: 1 },
 				},
 				undefined,
 				{ shallow: true }
@@ -53,11 +53,11 @@ export const GenreTabSwitcher = () => {
 	);
 
 	const genreOptions = useMemo(() => {
-		if (CategoriesList.data) {
-			return getGenreOptions(CategoriesList.data);
+		if (categoriesList.data) {
+			return getGenreOptions(categoriesList.data);
 		}
 		return [];
-	}, [CategoriesList.data]);
+	}, [categoriesList.data]);
 
 	const showExtraSelectedTab = useMemo(
 		() =>
@@ -68,17 +68,21 @@ export const GenreTabSwitcher = () => {
 	);
 
 	useEffect(() => {
-		if (!CategoriesList.isLoading) {
-			if (!CategoriesList.data?.includes(selectedGenre)) {
+		if (!categoriesList.isLoading) {
+			if (!categoriesList.data?.includes(selectedGenre)) {
 				setSelectedGenre("all");
 			}
 		}
 	}, [
-		CategoriesList.data,
-		CategoriesList.isLoading,
+		categoriesList.data,
+		categoriesList.isLoading,
 		selectedGenre,
 		setSelectedGenre,
 	]);
+
+	if (categoriesList.isLoading) {
+		return null;
+	}
 
 	return (
 		<div className="flex gap-1.5 items-center bg-none overflow-x-scroll absolute right-1/2 translate-x-1/2">

@@ -31,7 +31,7 @@
 		"@remotion/player": "4.0.106",
 		"@remotion/transitions": "4.0.106",
 		"@t3-oss/env-nextjs": "^0.8.0",
-		"@tanstack/react-query": "^5.17.19",
+		"@tanstack/react-query": "^5.22.2",
 		"@types/uuid": "^9.0.8",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.0",

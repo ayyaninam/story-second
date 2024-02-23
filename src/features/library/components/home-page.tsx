@@ -142,6 +142,12 @@ function LibraryHomePage({
 							key={orientation.id}
 							galleryDetails={LIBRARY_HOME_GALLERY_DATA[orientation.id]!}
 							thumbnails={segregatedStories[orientation.id] || []}
+							areThumbnailsLoading={[
+								wideVideoList,
+								verticalVideoList,
+								storyBooksList,
+								tikTokVideosList,
+							].some((query) => query.isLoading)}
 						/>
 					) : null
 				)}

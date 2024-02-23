@@ -14,7 +14,7 @@ function LibraryPage() {
 	const setSelectedOrientationTab = (orientation: string) => {
 		router.push(
 			{
-				query: { ...router.query, orientation },
+				query: { ...router.query, orientation, page: 1 },
 			},
 			undefined,
 			{ shallow: true }

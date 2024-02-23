@@ -181,6 +181,7 @@ export const LibraryHeader = ({
 									query: {
 										...router.query,
 										sort: value,
+										page: "1",
 									},
 								},
 								undefined,

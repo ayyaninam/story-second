@@ -2,6 +2,7 @@ import React from "react";
 import { GalleryData, VideoOrientation, VideoThumbnail } from "@/types";
 import { Button } from "@/components/ui/button";
 import GalleryImage from "./gallery-image";
+import GalleryComponentLoader from "./gallery-component-loader";
 
 const navigationButtonStyles = {
 	border: "0.5px solid var(--border)",
@@ -14,11 +15,13 @@ function LibraryGalleryComponent({
 	isIndependentGalleryPage = false,
 	setSelectedOrientationTab,
 	thumbnails,
+	areThumbnailsLoading,
 }: {
 	galleryDetails: GalleryData[VideoOrientation];
 	isIndependentGalleryPage?: boolean;
 	setSelectedOrientationTab?: (orientation: string) => void;
 	thumbnails: VideoThumbnail[];
+	areThumbnailsLoading: boolean;
 }) {
 	return (
 		<>
@@ -84,13 +87,26 @@ function LibraryGalleryComponent({
 					"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 grid-flow-row"
 				}
 			>
-				{thumbnails.map((story) => (
-					<GalleryImage
-						key={story.id}
-						story={story}
-						galleryDetails={galleryDetails}
-					/>
-				))}
+				{areThumbnailsLoading ? (
+					Array.from({ length: isIndependentGalleryPage ? 20 : 5 }).map(
+						(_, idx) => (
+							<GalleryComponentLoader
+								key={idx}
+								galleryDetails={galleryDetails}
+							/>
+						)
+					)
+				) : (
+					<>
+						{thumbnails.map((story) => (
+							<GalleryImage
+								key={story.id}
+								story={story}
+								galleryDetails={galleryDetails}
+							/>
+						))}
+					</>
+				)}
 			</div>
 		</>
 	);
