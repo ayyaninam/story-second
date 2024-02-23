@@ -51,6 +51,7 @@ const calculateSegmentDuration = async ({
 };
 
 type ToRemotionSegmentProps = {
+	variant: RemotionVariant;
 	audioURL: string | null;
 	storyText: string;
 	videoURL: string | null;
@@ -62,6 +63,7 @@ type ToRemotionSegmentProps = {
 };
 
 export const toRemotionSegment = async ({
+	variant,
 	audioURL,
 	storyText,
 	videoURL,
@@ -93,7 +95,6 @@ export const toRemotionSegment = async ({
 				format: "video",
 				videoURL,
 			},
-			seekId,
 		};
 	} else if (imageURL) {
 		pageSegment = {
@@ -130,18 +131,11 @@ export const toRemotionSegment = async ({
 	return [
 		isFirstSegment ? undefined : intermediateSegment ?? transitionSegment,
 		pageSegment,
-		isLastSegment ? transitionSegment : undefined,
+		isLastSegment && (variant === "landscape" || variant === "portrait")
+			? transitionSegment
+			: undefined,
 	].filter(Boolean);
 };
-
-const TO_END_OF_VIDEO = 9999999;
-
-const extendLastSegmentOfTopVideo = (segments: RemotionSegment[]) =>
-	segments.map((segment, index) =>
-		index === segments.length - 1
-			? { ...segment, durationInFrames: TO_END_OF_VIDEO }
-			: segment
-	);
 
 interface ProcessSegmentPromisesParams {
 	segmentsPromises: Promise<Omit<RemotionSegment, "index">[]>[];
@@ -198,19 +192,24 @@ export const toRemotionInputProps = async ({
 					segment.type === "transition" ? 0 : segment.durationInFrames
 			);
 
-			const durationInFrames = Math.max(
+			const pagesDurationInFrames = Math.max(
 				bottomVideoDurationInFrames,
 				topVideoDurationInFrames
 			);
 
+			const theEndPageFramesInSplitFormat = 3 * VIDEO_FPS;
+
 			return {
 				showLoadingVideo: false,
-				durationInFrames,
+				durationInFrames: pagesDurationInFrames + theEndPageFramesInSplitFormat,
 				enableAudio: false,
 				enableSubtitles: false,
+				topEndDurationInFrames:
+					pagesDurationInFrames - topVideoDurationInFrames,
+				pagesDurationInFrames,
 				variant,
 				bottomVideoURL: bottomVideoURL as string,
-				segments: extendLastSegmentOfTopVideo(segments),
+				segments,
 			};
 	}
 };

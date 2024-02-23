@@ -63,6 +63,8 @@ export const CompositionPropsSplit = z.object({
 	enableAudio: z.boolean(),
 	enableSubtitles: z.boolean(),
 	durationInFrames: z.number(),
+	topEndDurationInFrames: z.number(),
+	pagesDurationInFrames: z.number(),
 	bottomVideoURL: z.string(),
 	segments: z.array(Segment),
 });

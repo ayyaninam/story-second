@@ -5,15 +5,17 @@ import { SegmentSplitPage } from "./page";
 import {
 	PREMOUNT_FRAMES,
 	RemotionPlayerSplitInputProps,
+	TO_THE_END_OF_VIDEO,
 } from "../../constants";
 import { Premount } from "../../../components/premount";
 import { SegmentSplitIntermediate } from "./intermediate";
 import { SegmentSplitSplitBottomVideo } from "./bottom-video";
 import { SegmentSplitTopTheEnd } from "./top-the-end";
+import TheEndSegment from "./the-end";
 
 const Main: React.FC<RemotionPlayerSplitInputProps> = (inputProps) => {
-	const { segments, durationInFrames } = inputProps;
-
+	const { segments, topEndDurationInFrames, pagesDurationInFrames } =
+		inputProps;
 	return (
 		<>
 			<TransitionSeries>
@@ -64,13 +66,21 @@ const Main: React.FC<RemotionPlayerSplitInputProps> = (inputProps) => {
 					}
 				})}
 
-				<TransitionSeries.Sequence durationInFrames={durationInFrames}>
-					<SegmentSplitTopTheEnd />
+				{!!topEndDurationInFrames && (
+					<TransitionSeries.Sequence durationInFrames={topEndDurationInFrames}>
+						<SegmentSplitTopTheEnd />
+					</TransitionSeries.Sequence>
+				)}
+				<TransitionSeries.Sequence
+					durationInFrames={TO_THE_END_OF_VIDEO}
+					offset={-PREMOUNT_FRAMES}
+				>
+					<TheEndSegment />
 				</TransitionSeries.Sequence>
 			</TransitionSeries>
 
 			<Series>
-				<Series.Sequence durationInFrames={durationInFrames}>
+				<Series.Sequence durationInFrames={pagesDurationInFrames}>
 					<SegmentSplitSplitBottomVideo inputProps={inputProps} />
 				</Series.Sequence>
 			</Series>

@@ -68,6 +68,7 @@ export const webStoryToRemotionInputProps = async (
 
 				return limit(() =>
 					toRemotionSegment({
+						variant,
 						audioURL,
 						videoURL: segment.videoKey
 							? Format.GetVideoUrl(segment.videoKey)
