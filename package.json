@@ -12,9 +12,7 @@
 		"build:tiktok": "nodemon --exec 'node tiktok-builder.js' --watch './src/features/tiktok/*' -e tsx",
 		"api:generate-types": "npx openapi-typescript https://api.staging.storybird.ai/swagger/v1/swagger.json -o ./src/api/schema/main.d.ts && npx openapi-typescript https://ml.staging.authorly.ai/openapi.json -o ./src/api/schema/ml.d.ts",
 		"format": "prettier . --write",
-		"prepare": "husky && husky install",
-		"dev-env": "op run --env-file='./gen.env' next dev",
-		"build-env": "op run --env-file='./gen.env' next build"
+		"prepare": "husky && husky install"
 	},
 	"dependencies": {
 		"@auth0/nextjs-auth0": "^3.5.0",
