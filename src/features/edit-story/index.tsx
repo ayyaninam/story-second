@@ -81,7 +81,7 @@ export default function EditStory() {
 	const ImageRatio = GetDisplayImageRatio(Webstory.data.resolution);
 
 	return (
-		<div className="max-w-full min-h-screen bg-secondary">
+		<div className=" w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
 			{/* Navbar */}
 			<div className="flex justify-between bg-primary-foreground border-b-[0.5px] border-border p-4">
 				<div className="flex gap-x-2.5 items-center">

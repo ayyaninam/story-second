@@ -1,15 +1,60 @@
 import { mainSchema } from "@/api/schema";
 import { ChevronDown, ScrollText, SparkleIcon } from "lucide-react";
-import ScriptEditorViewTypes from "./ScriptEditorViewTypes";
-import { ScriptEditorViewType } from "@/utils/enums";
+import ScriptEditorViewTypes from "./ScriptEditorViewTypesComponent";
+import { InputStatus, ScriptEditorViewType } from "@/utils/enums";
 import Format from "@/utils/format";
 import cn from "@/utils/cn";
 import { scenes } from "./script-editor-dummy-data";
+import {
+	EditStoryAction,
+	EditStoryDraft,
+	Scene,
+	Segment,
+} from "../reducers/edit-reducer";
+import { Dispatch, MutableRefObject } from "react";
 
 export default function ScriptEditorView({
 	WebstoryData,
+	story,
+	dispatch,
+	setEditSegmentsModalState,
+	getSegmentStatus,
+	handleInput,
+	handleEnter,
+	setPreviousStory,
+	refs,
 }: {
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
+	story: EditStoryDraft;
+	setPreviousStory: Dispatch<React.SetStateAction<EditStoryDraft>>;
+	dispatch: Dispatch<EditStoryAction>;
+	setEditSegmentsModalState: Dispatch<
+		React.SetStateAction<
+			| {
+					open?: boolean | undefined;
+					scene?: Scene | undefined;
+					sceneId?: number | undefined;
+					dispatch?: React.Dispatch<EditStoryAction> | undefined;
+					story?: EditStoryDraft | undefined;
+			  }
+			| undefined
+		>
+	>;
+	getSegmentStatus: (sceneIndex: number, segmentIndex: number) => InputStatus;
+	handleInput: (
+		e: React.ChangeEvent<HTMLInputElement>,
+		scene: Scene,
+		sceneIndex: number,
+		segment: Segment,
+		segmentIndex: number
+	) => void;
+	handleEnter: (
+		scene: Scene,
+		sceneIndex: number,
+		segment: Segment,
+		segmentIndex: number
+	) => void;
+	refs: MutableRefObject<HTMLInputElement[][]>;
 }) {
 	return (
 		<div className="w-[80%] m-auto h-[70%] overflow-y-scroll">
@@ -41,7 +86,7 @@ export default function ScriptEditorView({
 
 				<div className="w-full inline-flex text-slate-400 text-xs py-1">
 					<div className="flex">
-						Storyboard for a <u>60 Second</u>{" "}
+						Storyboard for a <u> 60 Second</u>{" "}
 						<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
 						<ChevronDown className="mr-2 h-4 w-4 text-xs" />
 					</div>

@@ -45,7 +45,7 @@ const EditSegmentModal = ({
 			// @ts-expect-error not typed properly
 			image_style: settings?.style!,
 			prompt: settings?.prompt!,
-			segment_idx: segmentIndex,
+			segment_idx: segment.id,
 			story_id: story.id,
 			story_type: webstory.storyType,
 			cfg_scale: settings?.denoising,
