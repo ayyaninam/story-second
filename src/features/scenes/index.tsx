@@ -76,9 +76,7 @@ export default function StoryScenes() {
 			<Stepper step={StepperStep.Scenes} />
 
 			{/* MainSection */}
-			<div
-				className={`flex bg-background rounded-bl-lg rounded-br-lg p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}
-			>
+			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>
 				{/* <VideoEditor
 					ImageRatio={ImageRatio}
 					WebstoryData={Webstory.data}

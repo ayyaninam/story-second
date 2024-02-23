@@ -150,8 +150,7 @@ export default function VideoEditorStoryboard({
 	}, [selectedSegment]);
 
 	return (
-		<div className="relative z-0 rounded-lg border-[1px] w-full items-center justify-center flex flex-col h-full border-border bg-border bg-blend-luminosity px-2 lg:px-5 py-2">
-			<div className="absolute left-[50%] top-0 w-[1px] -z-1 bg-purple-300" />
+		<div className="relative z-0 w-full items-center justify-center flex flex-col h-full px-2 lg:px-5 py-2">
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<EditSegmentModal
@@ -354,7 +353,7 @@ export default function VideoEditorStoryboard({
 					<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
 				</span>
 			</div>
-			<div className="absolute w-[1px] h-full bg-purple-600 bottom-[1px] left-1/2 transform -translate-x-1/2 flex flex-row z-[-1]" />
+			<div className="absolute w-[1px] h-screen bg-purple-300 z-[-1] mix-blend-multiply" />
 		</div>
 	);
 }
