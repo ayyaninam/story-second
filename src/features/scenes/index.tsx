@@ -13,6 +13,7 @@ import Navbar from "./components/Navbar";
 import VideoEditorStoryboard from "./components/VideoEditorStoryboard";
 import Footer from "./components/Footer";
 import EditorContainer from "./components/EditorContainer";
+import SceneEditorView from "./components/SceneEditor";
 
 export default function StoryScenes() {
 	const router = useRouter();
@@ -67,12 +68,16 @@ export default function StoryScenes() {
 
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>
-				<EditorContainer view="story">
-					<VideoEditorStoryboard
+				<EditorContainer view="scene">
+					{/* <VideoEditorStoryboard
 						ImageRatio={ImageRatio}
 						WebstoryData={Webstory.data}
 						isError={Webstory.isError}
 						isLoading={isLoading}
+					/> */}
+					<SceneEditorView
+						WebstoryData={Webstory.data}
+						ImageRatio={ImageRatio}
 					/>
 				</EditorContainer>
 			</div>
