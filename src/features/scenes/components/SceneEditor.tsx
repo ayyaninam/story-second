@@ -61,7 +61,7 @@ const Loader = ({
 }) => {
 	const withOffset = `${60 + percentage}deg`;
 	return (
-		<span className="absolute -left-0 -top-2">
+		<span className={`absolute -left-[1.5rem] -top-[${index + 1 / 4}]`}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="19"
@@ -104,6 +104,33 @@ const images = [
 	"https://s3-alpha-sig.figma.com/img/a4f0/438b/9fd5442c1e9eb8d094a4188d4adc9fea?Expires=1709510400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=jsvJq0~YWdDwXOImQPvDFl~rPY3nmOF1ToG8re6IhR7IXk9j9BjeYIayiicYEdyz41K~tP2PJYpA0hv~fTnODHWtvC1XoWCP6CC-3eJyQbtDmVXlqrBRgHXAP1QesdP02ng2k-5Zru7fEXUsEcLwgRCPmUVsTA1RAGxJ~QKqaJHRXQiouxitBl2RS8PCcHsluIwxppCJz40x4q8pWIHMX4Z925meQhEfsamVR4ldA6bDMxAVZlz0gV06Fm5y60zeCoeEdvHqvQpwWHUQf4HipSm9BWJE6hKRIH4NmxsZ~6qEScz-iLtyAP05Kbl7ep78Bqi8vy8tFA0ema5sRsq90w__",
 ];
 
+type HoveredThumbs = {
+	thumbs: string[];
+	index: number;
+};
+const ExpandedThumbnails = ({ data }: { data?: HoveredThumbs }) => {
+	if (data === undefined) return;
+
+	// We try sticky to row but it will be mess for different sized screens
+	// const topOffset = `${228 + (data.index - 1) * 80}px`;
+	return (
+		<div className="hover:hidden absolute -left-0 flex gap-x-1">
+			{data.thumbs.slice(0, 4).map((thumb, index) => (
+				<div
+					key={index}
+					className="w-10 h-6 rounded-[1px]"
+					style={{
+						border: "0.2px solid rgba(0, 0, 0, 0.40)",
+						background: `url(${thumb})`,
+						backgroundSize: "cover",
+						backgroundRepeat: "no-repeat",
+					}}
+				/>
+			))}
+		</div>
+	);
+};
+
 const SceneEditorView = ({
 	WebstoryData,
 	ImageRatio,
@@ -121,6 +148,7 @@ const SceneEditorView = ({
 		editStoryReducer,
 		WebstoryToStoryDraft(WebstoryData!)
 	);
+	const [hoveredThumbnails, setHoveredThumbnails] = useState<HoveredThumbs>();
 	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
 		open?: boolean;
 		scene?: Scene;
@@ -167,7 +195,7 @@ const SceneEditorView = ({
 	return (
 		<>
 			<div
-				className="w-4/5 h-4/5 m-auto overflow-hidden"
+				className="relative w-4/5 h-4/5 m-auto overflow-hidden"
 				style={{
 					borderRadius: "8px",
 					background: "#FEFEFF",
@@ -190,41 +218,43 @@ const SceneEditorView = ({
 						</a>
 					</p>
 				</div>
-				<div className="relative h-full border-slate-200 flex flex-row m-6 gap-x-4 items-start">
-					<div className="h-full w-px bg-slate-200" />
-					<div className="relative h-full items-start flex flex-col max-w-md">
-						<div className="border-b pb-4 w-full bg-[#FEFEFF]">
-							<p className="text-2xl font-bold -tracking-[-0.6px]">
-								{Format.Title(WebstoryData?.storyTitle)}
-							</p>
 
-							<div className="flex gap-1 text-slate-600 text-sm py-1">
-								<Dropdown
-									items={[
-										{ label: "60 Second", value: "60" },
-										{ label: "90 Second", value: "90" },
-									]}
-								/>
-								<Dropdown
-									items={[
-										{ label: "Adventure", value: "adventure" },
-										{ label: "Suspense", value: "suspense" },
-										{ label: "Thriller", value: "thriller" },
-									]}
-								/>
-								<Dropdown
-									items={[
-										{ label: "Video", value: "video" },
-										{ label: "Audio", value: "audio" },
-										{ label: "None", value: "none" },
-									]}
-								/>
-								<p>by Anthony Deloso</p>
-							</div>
+				<div className="w-fit h-full flex flex-col">
+					<div className="border-b mb-4 w-full mt-6 mx-9 bg-[#FEFEFF]">
+						<p className="text-2xl font-bold -tracking-[-0.6px]">
+							{Format.Title(WebstoryData?.storyTitle)}
+						</p>
+
+						<div className="flex gap-1 text-slate-600 text-sm py-1">
+							<Dropdown
+								items={[
+									{ label: "60 Second", value: "60" },
+									{ label: "90 Second", value: "90" },
+								]}
+							/>
+							<Dropdown
+								items={[
+									{ label: "Adventure", value: "adventure" },
+									{ label: "Suspense", value: "suspense" },
+									{ label: "Thriller", value: "thriller" },
+								]}
+							/>
+							<Dropdown
+								items={[
+									{ label: "Video", value: "video" },
+									{ label: "Audio", value: "audio" },
+									{ label: "None", value: "none" },
+								]}
+							/>
+							<p>by Anthony Deloso</p>
 						</div>
-						<div className="flex flex-col h-screen justify-between overflow-y-scroll">
+					</div>
+					<div className="absolute h-[85%] w-px bg-slate-200 mt-6 ml-5" />
+
+					<div className="h-screen flex justify-between overflow-y-hidden">
+						<div className="h-full ml-2 max-w-md flex flex-col justify-between overflow-y-scroll">
 							<div className="flex flex-col my-3 md:flex-row items-center w-full">
-								<div className="w-full h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
+								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
 									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
 										<Editor
 											Webstory={WebstoryData!}
@@ -235,12 +265,28 @@ const SceneEditorView = ({
 												return (
 													<>
 														{story.scenes.map((scene, sceneIndex) => (
-															<div key={sceneIndex} className="relative">
-																{scene.status === StoryStatus.PENDING && (
-																	<Loader percentage={20} index={sceneIndex} />
-																)}
-																<div className="flex group hover:border rounded-sm items-center justify-between">
-																	<div className="flex flex-shrink-0 flex-col -space-y-3 overflow-hidden mx-1 my-[18px] items-center justify-center">
+															<>
+																<div
+																	key={sceneIndex}
+																	className="relative flex group hover:border rounded-sm items-center justify-between"
+																	onMouseEnter={() =>
+																		setHoveredThumbnails(() => ({
+																			index: sceneIndex,
+																			thumbs: [...images],
+																		}))
+																	}
+																	onMouseLeave={() =>
+																		setHoveredThumbnails(undefined)
+																	}
+																>
+																	{scene.status === StoryStatus.PENDING && (
+																		<Loader
+																			percentage={20}
+																			index={sceneIndex}
+																		/>
+																	)}
+
+																	<div className="group-hover:hidden flex flex-shrink-0 flex-col -space-y-4 overflow-hidden mx-1 my-[18px] items-center justify-center">
 																		{images.slice(0, 4).map((image, index) => (
 																			<div
 																				key={index}
@@ -310,7 +356,7 @@ const SceneEditorView = ({
 																		</span>
 																	</div>
 																</div>
-															</div>
+															</>
 														))}
 													</>
 												);
@@ -320,35 +366,40 @@ const SceneEditorView = ({
 								</div>
 							</div>
 						</div>
-						<div className="w-full mt-auto mb-[5.25rem] flex flex-col justify-end border-t">
-							<span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
-								Use 25 credits to regenerate ·{" "}
-								<Link className="text-purple-600" href="#">
-									See plans
-								</Link>
-							</span>
-							<div className="flex gap-2">
-								<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
-									<Sparkle fill="white" className="w-4 h-4" />
-									Regenerate 2 Edited Scenes
-								</Button>
-								<Button variant="outline" className="w-full text-xs px-3 py-2">
-									Or, Save Without Regenerating
-								</Button>
-							</div>
+
+						<div
+							className={cn(
+								"absolute rounded-none",
+								ImageRatio.width === 16
+									? "w-[440px] right-4 bottom-24"
+									: "w-[220px] bottom-4 right-24"
+							)}
+						>
+							<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
 						</div>
 					</div>
-
-					<div
-						className={cn(
-							"absolute right-0 rounded-none",
-							ImageRatio.width === 16 ? "w-[440px] mt-20" : "w-[220px] mr-20"
-						)}
-					>
-						<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
+					<div className="w-fit ml-9 mb-[3rem] mt-auto flex flex-col border-t">
+						<span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
+							Use 25 credits to regenerate ·{" "}
+							<Link className="text-purple-600" href="#">
+								See plans
+							</Link>
+						</span>
+						<div className="flex gap-2">
+							<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+								<Sparkle fill="white" className="w-4 h-4" />
+								Regenerate 2 Edited Scenes
+							</Button>
+							<Button variant="outline" className="w-full text-xs px-3 py-2">
+								Or, Save Without Regenerating
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>
+
+			<ExpandedThumbnails data={hoveredThumbnails} />
+
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<SceneEditSegmentModal
