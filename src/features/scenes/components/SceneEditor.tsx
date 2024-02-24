@@ -3,17 +3,16 @@ import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
+	Scene,
 	Segment,
 	StoryStatus,
-	TextStatus,
 } from "../reducers/edit-reducer";
 import { WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
-import AutosizeInput from "react-input-autosize";
 import {
 	Select,
 	SelectContent,
@@ -28,6 +27,7 @@ import VideoPlayer, {
 } from "@/features/edit-story/components/video-player";
 import { AspectRatios } from "@/utils/enums";
 import api from "@/api";
+import SceneEditSegmentModal from "./SceneEditSegmentModal";
 
 const Dropdown = ({
 	items,
@@ -121,6 +121,13 @@ const SceneEditorView = ({
 		editStoryReducer,
 		WebstoryToStoryDraft(WebstoryData!)
 	);
+	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
+		open?: boolean;
+		scene?: Scene;
+		sceneId?: number;
+		dispatch?: React.Dispatch<EditStoryAction>;
+		story?: EditStoryDraft;
+	}>();
 
 	useEffect(() => {
 		if (WebstoryData) {
@@ -158,168 +165,206 @@ const SceneEditorView = ({
 	};
 
 	return (
-		<div
-			className="w-4/5 h-4/5 m-auto overflow-hidden"
-			style={{
-				borderRadius: "8px",
-				background: "#FEFEFF",
-				boxShadow:
-					"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-				backdropFilter: "blur(5px)",
-			}}
-		>
-			<div className="w-full flex justify-between py-1.5 px-3.5 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-200 bg-purple-100 text-purple-600">
-				<div className="flex items-center gap-1">
-					<p className="font-medium text-sm">Scene Editor • Playing Scene 3</p>
-					<ChevronDown className="w-4 h-4 opacity-50" />
-				</div>
-				<p className="font-medium text-sm">
-					Pro Tip — You can individually regenerate images in this Storyboard.{" "}
-					<a className="underline" href="#">
-						Learn how
-					</a>
-				</p>
-			</div>
-			<div className="relative h-full border-l border-slate-200 pl-4 flex flex-row m-6 gap-x-24 items-start">
-				<div className="relative h-full items-start flex flex-col max-w-md">
-					<div className="border-b pb-4 w-full bg-[#FEFEFF]">
-						<p className="text-2xl font-bold -tracking-[-0.6px]">
-							{Format.Title(WebstoryData?.storyTitle)}
+		<>
+			<div
+				className="w-4/5 h-4/5 m-auto overflow-hidden"
+				style={{
+					borderRadius: "8px",
+					background: "#FEFEFF",
+					boxShadow:
+						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
+					backdropFilter: "blur(5px)",
+				}}
+			>
+				<div className="w-full flex justify-between py-1.5 px-3.5 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-200 bg-purple-100 text-purple-600">
+					<div className="flex items-center gap-1">
+						<p className="font-medium text-sm">
+							Scene Editor • Playing Scene 3
 						</p>
-
-						<div className="flex gap-1 text-slate-600 text-sm py-1">
-							<Dropdown
-								items={[
-									{ label: "60 Second", value: "60" },
-									{ label: "90 Second", value: "90" },
-								]}
-							/>
-							<Dropdown
-								items={[
-									{ label: "Adventure", value: "adventure" },
-									{ label: "Suspense", value: "suspense" },
-									{ label: "Thriller", value: "thriller" },
-								]}
-							/>
-							<Dropdown
-								items={[
-									{ label: "Video", value: "video" },
-									{ label: "Audio", value: "audio" },
-									{ label: "None", value: "none" },
-								]}
-							/>
-							<p>by Anthony Deloso</p>
-						</div>
+						<ChevronDown className="w-4 h-4 opacity-50" />
 					</div>
-					<div className="flex flex-col h-screen justify-between overflow-y-scroll">
-						<div className="flex flex-col my-3 md:flex-row items-center w-full">
-							<div className="w-full h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
-								<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
-									<Editor
-										Webstory={WebstoryData!}
-										dispatch={dispatch}
-										story={story}
-									>
-										{({ handleEnter, handleInput, refs }) => {
-											return (
-												<>
-													{story.scenes.map((scene, sceneIndex) => (
-														<div
-															key={sceneIndex}
-															className="flex group hover:border rounded-sm items-center justify-between"
-														>
-															{scene.status === StoryStatus.PENDING && (
-																<Loader percentage={20} index={sceneIndex} />
-															)}
-															<div className="flex flex-shrink-0 flex-col -space-y-3 overflow-hidden mx-1 my-[18px] items-center justify-center">
-																{images.slice(0, 4).map((image, index) => (
-																	<div
-																		key={index}
-																		className="w-8 h-5 rounded-[1px]"
-																		style={{
-																			border: "0.2px solid rgba(0, 0, 0, 0.40)",
-																			background: `url(${image})`,
-																			backgroundSize: "cover",
-																			backgroundRepeat: "no-repeat",
-																		}}
-																	/>
-																))}
-															</div>
+					<p className="font-medium text-sm">
+						Pro Tip — You can individually regenerate images in this Storyboard.{" "}
+						<a className="underline" href="#">
+							Learn how
+						</a>
+					</p>
+				</div>
+				<div className="relative h-full border-l border-slate-200 pl-4 flex flex-row m-6 gap-x-24 items-start">
+					<div className="relative h-full items-start flex flex-col max-w-md">
+						<div className="border-b pb-4 w-full bg-[#FEFEFF]">
+							<p className="text-2xl font-bold -tracking-[-0.6px]">
+								{Format.Title(WebstoryData?.storyTitle)}
+							</p>
 
-															<div className="flex flex-wrap">
-																{scene.segments.map((segment, segmentIndex) => (
-																	<span
-																		key={segmentIndex}
-																		style={{ backgroundColor: "transparent" }}
-																		className={cn(
-																			"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
-																			segment.videoStatus ===
-																				StoryStatus.PENDING && "text-purple-800"
-																		)}
-																		onClick={() => {
-																			videoPlayerRef.current?.seekToSegment({
-																				...segment,
-																				sceneId: scene.id,
-																				index: segment.id,
-																			});
-																			handleRegenerateVideo(
-																				segment,
-																				sceneIndex,
-																				segmentIndex
-																			);
-																		}}
-																	>
-																		{segment.textContent}
+							<div className="flex gap-1 text-slate-600 text-sm py-1">
+								<Dropdown
+									items={[
+										{ label: "60 Second", value: "60" },
+										{ label: "90 Second", value: "90" },
+									]}
+								/>
+								<Dropdown
+									items={[
+										{ label: "Adventure", value: "adventure" },
+										{ label: "Suspense", value: "suspense" },
+										{ label: "Thriller", value: "thriller" },
+									]}
+								/>
+								<Dropdown
+									items={[
+										{ label: "Video", value: "video" },
+										{ label: "Audio", value: "audio" },
+										{ label: "None", value: "none" },
+									]}
+								/>
+								<p>by Anthony Deloso</p>
+							</div>
+						</div>
+						<div className="flex flex-col h-screen justify-between overflow-y-scroll">
+							<div className="flex flex-col my-3 md:flex-row items-center w-full">
+								<div className="w-full h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
+									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
+										<Editor
+											Webstory={WebstoryData!}
+											dispatch={dispatch}
+											story={story}
+										>
+											{({ handleEnter, handleInput, refs }) => {
+												return (
+													<>
+														{story.scenes.map((scene, sceneIndex) => (
+															<div
+																key={sceneIndex}
+																className="flex group hover:border rounded-sm items-center justify-between"
+															>
+																{scene.status === StoryStatus.PENDING && (
+																	<Loader percentage={20} index={sceneIndex} />
+																)}
+																<div className="flex flex-shrink-0 flex-col -space-y-3 overflow-hidden mx-1 my-[18px] items-center justify-center">
+																	{images.slice(0, 4).map((image, index) => (
+																		<div
+																			key={index}
+																			className="w-8 h-5 rounded-[1px]"
+																			style={{
+																				border:
+																					"0.2px solid rgba(0, 0, 0, 0.40)",
+																				background: `url(${image})`,
+																				backgroundSize: "cover",
+																				backgroundRepeat: "no-repeat",
+																			}}
+																		/>
+																	))}
+																</div>
+
+																<div className="flex flex-wrap">
+																	{scene.segments.map(
+																		(segment, segmentIndex) => (
+																			<span
+																				key={segmentIndex}
+																				style={{
+																					backgroundColor: "transparent",
+																				}}
+																				className={cn(
+																					"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
+																					segment.videoStatus ===
+																						StoryStatus.PENDING &&
+																						"text-purple-800"
+																				)}
+																				onClick={() => {
+																					videoPlayerRef.current?.seekToSegment(
+																						{
+																							...segment,
+																							sceneId: scene.id,
+																							index: segment.id,
+																						}
+																					);
+																					handleRegenerateVideo(
+																						segment,
+																						sceneIndex,
+																						segmentIndex
+																					);
+																				}}
+																			>
+																				{segment.textContent}
+																			</span>
+																		)
+																	)}
+																</div>
+																<div className="hidden group-hover:flex gap-x-1 p-2">
+																	<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
+																		<Settings2
+																			className="w-4 h-4 stroke-slate-500"
+																			onClick={() =>
+																				setEditSegmentsModalState({
+																					open: true,
+																					scene: scene,
+																					sceneId: sceneIndex,
+																					dispatch,
+																					story,
+																				})
+																			}
+																		/>
 																	</span>
-																))}
+																	<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
+																		<MoreHorizontal className="w-4 h-4 stroke-slate-500" />
+																	</span>
+																</div>
 															</div>
-															<div className="hidden group-hover:flex gap-x-1 p-2">
-																<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
-																	<Settings2 className="w-4 h-4 stroke-slate-500" />
-																</span>
-																<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
-																	<MoreHorizontal className="w-4 h-4 stroke-slate-500" />
-																</span>
-															</div>
-														</div>
-													))}
-												</>
-											);
-										}}
-									</Editor>
+														))}
+													</>
+												);
+											}}
+										</Editor>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div className="w-full mt-auto mb-[5.25rem] flex flex-col justify-end border-t">
-						<span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
-							Use 25 credits to regenerate ·{" "}
-							<Link className="text-purple-600" href="#">
-								See plans
-							</Link>
-						</span>
-						<div className="flex gap-2">
-							<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
-								<Sparkle fill="white" className="w-4 h-4" />
-								Regenerate 2 Edited Scenes
-							</Button>
-							<Button variant="outline" className="w-full text-xs px-3 py-2">
-								Or, Save Without Regenerating
-							</Button>
+						<div className="w-full mt-auto mb-[5.25rem] flex flex-col justify-end border-t">
+							<span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
+								Use 25 credits to regenerate ·{" "}
+								<Link className="text-purple-600" href="#">
+									See plans
+								</Link>
+							</span>
+							<div className="flex gap-2">
+								<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+									<Sparkle fill="white" className="w-4 h-4" />
+									Regenerate 2 Edited Scenes
+								</Button>
+								<Button variant="outline" className="w-full text-xs px-3 py-2">
+									Or, Save Without Regenerating
+								</Button>
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<div
-					className={cn(
-						"absolute right-0 rounded-none",
-						ImageRatio.width === 16 ? "w-[440px] mt-20" : "w-[220px] mr-20"
-					)}
-				>
-					<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
+					<div
+						className={cn(
+							"absolute right-0 rounded-none",
+							ImageRatio.width === 16 ? "w-[440px] mt-20" : "w-[220px] mr-20"
+						)}
+					>
+						<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
+					</div>
 				</div>
 			</div>
-		</div>
+			{editSegmentsModalState?.scene !== undefined &&
+				editSegmentsModalState?.sceneId !== undefined && (
+					<SceneEditSegmentModal
+						open={
+							editSegmentsModalState?.open &&
+							editSegmentsModalState.scene !== undefined &&
+							editSegmentsModalState.sceneId !== undefined
+						}
+						story={story}
+						scene={editSegmentsModalState.scene}
+						sceneId={editSegmentsModalState.sceneId}
+						onClose={() => setEditSegmentsModalState({})}
+						dispatch={dispatch}
+					/>
+				)}
+		</>
 	);
 };
 

@@ -403,18 +403,22 @@ export default function EditSegmentModalItem({
 	onSegmentDelete,
 	onRegenerateImage,
 	regeneratingImage,
+	showAdvancedSettings = true,
 }: {
 	segment: Segment;
 	onSegmentEdit: (updatedSegment: Segment) => void;
-	onSegmentDelete: () => void;
+	onSegmentDelete?: () => void;
 	onRegenerateImage: () => void;
 	regeneratingImage: boolean;
+	showAdvancedSettings?: boolean;
 }) {
-	const [isChecked, setIsChecked] = useState(false);
+	const [isChecked, setIsChecked] = useState(showAdvancedSettings);
 
 	return (
 		<div className="flex bg-slate-100 rounded-md border-border border-[1px] p-2 m-2 gap-2">
-			<VerticalControlButtons onDelete={onSegmentDelete} />
+			{showAdvancedSettings && (
+				<VerticalControlButtons onDelete={() => onSegmentDelete?.()} />
+			)}
 			<div className="w-full text-slate-950 space-y-2">
 				<RegenerateSegmentBar
 					segment={segment}
@@ -427,21 +431,25 @@ export default function EditSegmentModalItem({
 						});
 					}}
 				/>
-				<AdvancedEditingBar
-					onCheckedChange={(checked) => {
-						setIsChecked(checked);
-					}}
-				/>
-				{isChecked && (
-					<AdvancedEditingOptions
-						settings={segment.settings}
-						onSettingsChange={(settings) => {
-							onSegmentEdit({
-								...segment,
-								settings: settings,
-							});
-						}}
-					/>
+				{showAdvancedSettings && (
+					<>
+						<AdvancedEditingBar
+							onCheckedChange={(checked) => {
+								setIsChecked(checked);
+							}}
+						/>
+						{isChecked && (
+							<AdvancedEditingOptions
+								settings={segment.settings}
+								onSettingsChange={(settings) => {
+									onSegmentEdit({
+										...segment,
+										settings: settings,
+									});
+								}}
+							/>
+						)}
+					</>
 				)}
 			</div>
 		</div>
