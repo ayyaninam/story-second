@@ -168,7 +168,17 @@ export default function VideoEditorStoryboard({
 			sampling_steps: segment.settings?.samplingSteps,
 			seed: segment.settings?.seed,
 		});
+		dispatch({
+			type: "edit_segment",
+			sceneIndex,
+			segmentIndex: segmentIndex,
+			segment: { ...segment, imageStatus: StoryStatus.COMPLETE },
+		});
 	};
+
+	useEffect(() => {
+		console.log(">>>> WebstoryData", WebstoryData);
+	}, [WebstoryData]);
 
 	return (
 		<>
@@ -249,7 +259,7 @@ export default function VideoEditorStoryboard({
 														key={sceneIndex}
 														className="flex flex-row justify-between w-full"
 													>
-														<div className="flex items-center w-[45%]">
+														<div className="flex items-center w-[45%] space-y-1">
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
 																	<React.Fragment key={segmentIndex}>
@@ -326,6 +336,7 @@ export default function VideoEditorStoryboard({
 																			}
 																			value={segment.textContent}
 																			onChange={(e) => {
+																				console.log(">>>> e", e);
 																				handleInput(
 																					e,
 																					scene,

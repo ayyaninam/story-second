@@ -336,7 +336,7 @@ export default function VideoEditor({
 												className={cn(`flex flex-wrap w-full justify-between`)}
 												onClick={() => {
 													setSelectedSegment(
-														WebstoryData?.scenes[sceneIndex]?.videoSegments[
+														WebstoryData?.scenes?.[sceneIndex]?.videoSegments[
 															segmentIndex
 														]!
 													);

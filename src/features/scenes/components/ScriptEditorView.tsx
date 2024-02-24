@@ -15,14 +15,14 @@ import { Dispatch, MutableRefObject } from "react";
 
 export default function ScriptEditorView({
 	WebstoryData,
-	story,
-	dispatch,
-	setEditSegmentsModalState,
-	getSegmentStatus,
-	handleInput,
-	handleEnter,
-	setPreviousStory,
-	refs,
+	// story,
+	// dispatch,
+	// setEditSegmentsModalState,
+	// getSegmentStatus,
+	// handleInput,
+	// handleEnter,
+	// setPreviousStory,
+	// refs,
 }: {
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	story: EditStoryDraft;

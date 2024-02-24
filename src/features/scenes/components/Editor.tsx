@@ -125,6 +125,7 @@ const Editor = ({
 	) => {
 		const content = e.target.value ?? "";
 		onInputChange?.(e, segmentIndex, sceneIndex);
+
 		if (
 			// (No break) space or punctuation
 			([" ", "\u00A0"].includes(content.slice(-1)) && content.length > 40) ||
