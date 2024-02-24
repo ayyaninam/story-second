@@ -190,7 +190,8 @@ const SceneEditorView = ({
 						</a>
 					</p>
 				</div>
-				<div className="relative h-full border-l border-slate-200 pl-4 flex flex-row m-6 gap-x-24 items-start">
+				<div className="relative h-full border-slate-200 flex flex-row m-6 gap-x-4 items-start">
+					<div className="h-full w-px bg-slate-200" />
 					<div className="relative h-full items-start flex flex-col max-w-md">
 						<div className="border-b pb-4 w-full bg-[#FEFEFF]">
 							<p className="text-2xl font-bold -tracking-[-0.6px]">
