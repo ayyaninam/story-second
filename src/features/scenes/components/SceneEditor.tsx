@@ -52,10 +52,16 @@ const Dropdown = ({
 	);
 };
 
-const Loader = ({ percentage }: { percentage: number }) => {
+const Loader = ({
+	percentage,
+	index,
+}: {
+	percentage: number;
+	index: number;
+}) => {
 	const withOffset = `${60 + percentage}deg`;
 	return (
-		<span className="absolute -left-2.5 top-1/4">
+		<span className={`absolute -left-[25px] top-${index + 1 / 4}`}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="19"
@@ -175,14 +181,13 @@ const SceneEditorView = ({
 				</p>
 			</div>
 			<div className="relative h-full border-l border-slate-200 pl-4 flex flex-row m-6 gap-x-24 items-start">
-				<Loader percentage={20} />
-				<div className="relative h-full items-start flex flex-col max-w-sm">
-					<div className="border-b pb-4 bg-[#FEFEFF]">
-						<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
+				<div className="relative h-full items-start flex flex-col max-w-md">
+					<div className="border-b pb-4 w-full bg-[#FEFEFF]">
+						<p className="text-2xl font-bold -tracking-[-0.6px]">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
 
-						<div className="w-full flex gap-1 text-slate-600 text-sm py-1">
+						<div className="flex gap-1 text-slate-600 text-sm py-1">
 							<Dropdown
 								items={[
 									{ label: "60 Second", value: "60" },
@@ -223,6 +228,9 @@ const SceneEditorView = ({
 															key={sceneIndex}
 															className="flex group hover:border rounded-sm items-center justify-between"
 														>
+															{scene.status === StoryStatus.PENDING && (
+																<Loader percentage={20} index={sceneIndex} />
+															)}
 															<div className="flex flex-shrink-0 flex-col -space-y-3 overflow-hidden mx-1 my-[18px] items-center justify-center">
 																{images.slice(0, 4).map((image, index) => (
 																	<div
@@ -237,6 +245,7 @@ const SceneEditorView = ({
 																	/>
 																))}
 															</div>
+
 															<div className="flex flex-wrap">
 																{scene.segments.map((segment, segmentIndex) => (
 																	<span
@@ -261,46 +270,6 @@ const SceneEditorView = ({
 																		}}
 																	>
 																		{segment.textContent}
-																		{/* Commenting because users don't need to edit the text here */}
-																		{/* <AutosizeInput
-																			onKeyDown={(e) => {
-																				if (e.key === "Enter") {
-																					handleEnter(
-																						scene,
-																						sceneIndex,
-																						segment,
-																						segmentIndex
-																					);
-																				}
-																			}}
-																			name={segmentIndex.toString()}
-																			inputClassName={cn(
-																				"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
-																				segment.textStatus ===
-																					TextStatus.EDITED && "text-slate-500"
-																			)}
-																			inputStyle={{
-																				outline: "none",
-																				backgroundColor: "inherit",
-																			}}
-																			// @ts-ignore
-																			ref={(el) =>
-																				// @ts-ignore
-																				(refs.current[sceneIndex][
-																					segmentIndex
-																				] = el)
-																			}
-																			value={segment.textContent}
-																			onChange={(e) => {
-																				handleInput(
-																					e,
-																					scene,
-																					sceneIndex,
-																					segment,
-																					segmentIndex
-																				);
-																			}}
-																		/> */}
 																	</span>
 																))}
 															</div>
@@ -321,31 +290,30 @@ const SceneEditorView = ({
 								</div>
 							</div>
 						</div>
-
-						<div className="mb-[5.25rem] flex flex-col justify-end border-t">
-							<span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
-								Use 25 credits to regenerate ·{" "}
-								<Link className="text-purple-600" href="#">
-									See plans
-								</Link>
-							</span>
-							<div className="flex gap-2">
-								<Button className="flex gap-2 text-white bg-[#8F22CE] px-4 py-2">
-									<Sparkle fill="white" className="w-4 h-4" />
-									Regenerate 2 Edited Scenes
-								</Button>
-								<Button variant="outline" className="px-4 py-2">
-									Or, Save Without Regenerating
-								</Button>
-							</div>
+					</div>
+					<div className="w-full mt-auto mb-[5.25rem] flex flex-col justify-end border-t">
+						<span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
+							Use 25 credits to regenerate ·{" "}
+							<Link className="text-purple-600" href="#">
+								See plans
+							</Link>
+						</span>
+						<div className="flex gap-2">
+							<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+								<Sparkle fill="white" className="w-4 h-4" />
+								Regenerate 2 Edited Scenes
+							</Button>
+							<Button variant="outline" className="w-full text-xs px-3 py-2">
+								Or, Save Without Regenerating
+							</Button>
 						</div>
 					</div>
 				</div>
 
 				<div
 					className={cn(
-						"absolute right-0 mr-20 rounded-none",
-						ImageRatio.width === 16 ? "w-[420px]" : "w-[220px]"
+						"absolute right-0 rounded-none",
+						ImageRatio.width === 16 ? "w-[440px] mt-20" : "w-[220px] mr-20"
 					)}
 				>
 					<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
