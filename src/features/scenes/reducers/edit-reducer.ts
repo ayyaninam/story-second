@@ -93,6 +93,10 @@ export type EditStoryAction =
 	| {
 			type: "reset";
 			draft: EditStoryDraft;
+	  }
+	| {
+			type: "update_settings";
+			draft: Settings;
 	  };
 
 const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {

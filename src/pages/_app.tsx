@@ -161,6 +161,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<HydrationBoundary state={pageProps.dehydratedState}>
+				<style jsx global>{`
+					html {
+						font-family: ${randFont.style.fontFamily};
+					}
+				`}</style>
 				<main className={randFont.className}>
 					<Toaster />
 					<ThemeProvider

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Settings2 } from "lucide-react";
-import EditSegmentModalItem from "./EditSegmentModalItem";
+import EditVideoSegmentModalitem from "./EditVideoSegmentModalItem";
 import { Button } from "@/components/ui/button";
 import {
 	EditStoryAction,
@@ -31,36 +31,21 @@ const SceneEditSegmentModal = ({
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
-	const handleRegenerateImage = async (segmentIndex: number) => {
-		setRegeneratingImages((prev) => {
-			prev[segmentIndex] = true;
-			return prev;
-		});
+	const handleRegenerateVideo = async (segmentIndex: number) => {
 		const segment = story.scenes[sceneId ?? 0]?.segments[segmentIndex]!;
-		const settings = segment?.settings;
-		const _regeneratedImage = await api.video.regenerateImage({
-			// @ts-expect-error not typed properly
-			image_style: settings?.style!,
-			prompt: settings?.prompt!,
-			segment_idx: segment.id,
-			story_id: story.id,
-			story_type: webstory.storyType,
-			cfg_scale: settings?.denoising,
-			sampling_steps: settings?.samplingSteps,
-			seed: settings?.seed,
-		});
 		dispatch({
 			type: "edit_segment",
 			sceneIndex: sceneId!,
 			segmentIndex,
 			segment: {
 				...segment,
-				imageStatus: StoryStatus.PENDING,
+				videoStatus: StoryStatus.PENDING,
 			},
 		});
-		setRegeneratingImages((prev) => {
-			prev[segmentIndex] = false;
-			return prev;
+		await api.video.regenerateVideo({
+			segment_idx: segment.id,
+			story_id: story.id,
+			story_type: webstory.storyType,
 		});
 	};
 	if (scene && sceneId !== undefined) {
@@ -83,10 +68,10 @@ const SceneEditSegmentModal = ({
 							</Dialog.Description>
 							<div className="overflow-auto max-h-[70vh] px-3">
 								{story.scenes[sceneId]?.segments?.map((segment, index) => (
-									<EditSegmentModalItem
+									<EditVideoSegmentModalitem
 										key={index}
 										segment={segment}
-										onRegenerateImage={() => handleRegenerateImage(index)}
+										onRegenerateImage={() => handleRegenerateVideo(index)}
 										regeneratingImage={regeratingImages[index]}
 										onSegmentEdit={(updatedSegment) => {
 											dispatch({

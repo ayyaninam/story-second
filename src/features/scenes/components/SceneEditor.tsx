@@ -269,15 +269,15 @@ const SceneEditorView = ({
 																<div
 																	key={sceneIndex}
 																	className="relative flex group hover:border rounded-sm items-center justify-between"
-																	onMouseEnter={() =>
-																		setHoveredThumbnails(() => ({
-																			index: sceneIndex,
-																			thumbs: [...images],
-																		}))
-																	}
-																	onMouseLeave={() =>
-																		setHoveredThumbnails(undefined)
-																	}
+																	// onMouseEnter={() =>
+																	// 	setHoveredThumbnails(() => ({
+																	// 		index: sceneIndex,
+																	// 		thumbs: [...images],
+																	// 	}))
+																	// }
+																	// onMouseLeave={() =>
+																	// 	setHoveredThumbnails(undefined)
+																	// }
 																>
 																	{scene.status === StoryStatus.PENDING && (
 																		<Loader
@@ -286,7 +286,7 @@ const SceneEditorView = ({
 																		/>
 																	)}
 
-																	<div className="group-hover:hidden flex flex-shrink-0 flex-col -space-y-4 overflow-hidden mx-1 my-[18px] items-center justify-center">
+																	{/* <div className="group-hover:hidden flex flex-shrink-0 flex-col -space-y-4 overflow-hidden mx-1 my-[18px] items-center justify-center">
 																		{images.slice(0, 4).map((image, index) => (
 																			<div
 																				key={index}
@@ -300,9 +300,9 @@ const SceneEditorView = ({
 																				}}
 																			/>
 																		))}
-																	</div>
+																	</div> */}
 
-																	<div className="flex flex-wrap">
+																	<span className="flex flex-wrap text-sm">
 																		{scene.segments.map(
 																			(segment, segmentIndex) => (
 																				<span
@@ -324,18 +324,13 @@ const SceneEditorView = ({
 																								index: segment.id,
 																							}
 																						);
-																						handleRegenerateVideo(
-																							segment,
-																							sceneIndex,
-																							segmentIndex
-																						);
 																					}}
 																				>
 																					{segment.textContent}
 																				</span>
 																			)
 																		)}
-																	</div>
+																	</span>
 																	<div className="hidden group-hover:flex gap-x-1 p-2">
 																		<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
 																			<Settings2
@@ -378,8 +373,16 @@ const SceneEditorView = ({
 							<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
 						</div>
 					</div>
-					<div className="w-fit ml-9 mb-[3rem] mt-auto flex flex-col border-t">
-						<span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
+					<div className="w-fit ml-9 mb-[3rem] mt-auto flex border-t ">
+						<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+							<Sparkle fill="white" className="w-4 h-4" />
+							Regenerate 2 Edited Scenes
+						</Button>
+						<Button className=" invisible w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+							<Sparkle fill="white" className="w-4 h-4" />
+							Regenerate 2 Edited Scenes
+						</Button>
+						{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
 							Use 25 credits to regenerate ·{" "}
 							<Link className="text-purple-600" href="#">
 								See plans
@@ -393,7 +396,7 @@ const SceneEditorView = ({
 							<Button variant="outline" className="w-full text-xs px-3 py-2">
 								Or, Save Without Regenerating
 							</Button>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>
