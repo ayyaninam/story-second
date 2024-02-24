@@ -63,6 +63,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
+
 		const originalTikTokVideoKey = Webstory?.originalMediaKey;
 		if (
 			originalTikTokVideoKey &&
@@ -71,7 +72,6 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 			const url = Format.GetVideoUrl(originalTikTokVideoKey);
 			prefetch(url, {
 				method: "blob-url",
-				contentType: "video/webm",
 			})
 				.waitUntilDone()
 				.then(() => {
