@@ -45,13 +45,14 @@ export type Scene = {
 		voice?: string;
 	};
 	segments: Segment[];
+	description: string;
 };
 
 export type EditStoryDraft = {
 	id: string;
 	title: string;
 	settings?: {
-		style: StoryImageStyles;
+		style: StoryImageStyles | null;
 		voice: string;
 	};
 	status: StoryStatus;
@@ -93,6 +94,14 @@ export type EditStoryAction =
 	| {
 			type: "reset";
 			draft: EditStoryDraft;
+	  }
+	| {
+			type: "update_image_style";
+			style: StoryImageStyles;
+	  }
+	| {
+			type: "update_narrator";
+			voiceType: string;
 	  };
 
 const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
@@ -130,6 +139,23 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			const { index } = action;
 			draft.scenes.splice(index, 1);
 			break;
+		}
+		case "update_image_style": {
+			const { style } = action;
+			if (!draft.settings) {
+				draft.settings = { style, voice: "" };
+			} else {
+				draft.settings.style = style;
+			}
+			break;
+		}
+		case "update_narrator": {
+			const { voiceType } = action;
+			if (!draft.settings) {
+				draft.settings = { style: null, voice: voiceType };
+			} else {
+				draft.settings.voice = voiceType;
+			}
 		}
 	}
 };

@@ -14,7 +14,7 @@ import editStoryReducer, {
 } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import EditSegmentModal from "./EditSegmentModal";
@@ -132,6 +132,10 @@ export default function VideoEditorStoryboard({
 		}
 	}, [selectedSegment]);
 
+	const userName = useMemo(() => {
+		return WebstoryData?.user?.name
+	},[WebstoryData?.user?.name])
+
 	return (
 		<>
 			<div
@@ -172,14 +176,14 @@ export default function VideoEditorStoryboard({
 
 					<div className="w-full inline-flex text-slate-400 text-xs py-1">
 						<div className="flex">
-							Storyboard for a <u> 60 Second</u>{" "}
+							Storyboard for a  <u>60 Second</u>{" "}
 							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
 							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div>
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div>
-						<p className="ms-1">by Anthony Deloso</p>
+						<p className="ms-1">by {userName}</p>
 					</div>
 				</div>
 				<div className="flex flex-col md:flex-row items-center justify-center w-full">
@@ -209,8 +213,9 @@ export default function VideoEditorStoryboard({
 												{story.scenes.map((scene, sceneIndex) => (
 													<div
 														key={sceneIndex}
-														className="flex flex-wrap flex-row hover:bg-slate-50"
+														className="flex flex-wrap flex-row "
 													>
+														<div className="bg-slate-50 font-normal text-slate-600 text-sm my-2 px-1">{`Scene ${sceneIndex + 1}: `}{scene.description}</div>
 														{scene.segments.map((segment, segmentIndex) => (
 															<span
 																key={segmentIndex}

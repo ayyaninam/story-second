@@ -52,6 +52,7 @@ export const WebstoryToStoryDraft = (
 				status: scene.videoSegments?.every((el) => el.videoKey && el.imageKey)
 					? StoryStatus.COMPLETE
 					: StoryStatus.PENDING,
+				description: scene.sceneDescription,
 			})) ?? [],
 		status: StoryStatus.COMPLETE,
 		title: Webstory.storyTitle!,

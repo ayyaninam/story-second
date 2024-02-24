@@ -78,7 +78,7 @@ export default function StoryScenes() {
 			</div>
 
 			{/* BottomBar */}
-			<Footer />
+			<Footer  WebstoryData={Webstory.data}/>
 		</div>
 	);
 }

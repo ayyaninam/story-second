@@ -216,6 +216,7 @@ const Editor = ({
 							textStatus: TextStatus.ADDED,
 						},
 					],
+					description:"",
 					status: StoryStatus.READY,
 					id: scene.id,
 				},
