@@ -3,7 +3,12 @@ import {
 	SegmentModifications,
 	StoryboardViewType,
 } from "@/utils/enums";
-import { ChevronDown, LayoutList, SparkleIcon } from "lucide-react";
+import {
+	ChevronDown,
+	ChevronRight,
+	LayoutList,
+	SparkleIcon,
+} from "lucide-react";
 import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
@@ -244,21 +249,31 @@ export default function VideoEditorStoryboard({
 														key={sceneIndex}
 														className="flex flex-row justify-between w-full"
 													>
-														<div className="flex space-x-4 w-full">
+														<div className="flex items-center w-[45%]">
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
 																	<React.Fragment key={segmentIndex}>
 																		{segment.imageStatus ===
 																		StoryStatus.COMPLETE ? (
-																			<img
-																				src={Format.GetImageUrl(
-																					segment.imageKey
+																			<>
+																				<Image
+																					src={Format.GetImageUrl(
+																						segment.imageKey
+																					)}
+																					key={segment.imageKey}
+																					width={44}
+																					height={68}
+																					alt={segment.imageKey}
+																					className="z-10"
+																				/>
+																				{segmentIndex !==
+																					scene.segments.length - 1 && (
+																					<ChevronRight
+																						width={16}
+																						height={16}
+																					/>
 																				)}
-																				key={segment.imageKey}
-																				width={44}
-																				height={68}
-																				alt="none"
-																			/>
+																			</>
 																		) : (
 																			<Skeleton className="w-[44px] h-[68px]" />
 																		)}
@@ -266,7 +281,7 @@ export default function VideoEditorStoryboard({
 																);
 															})}
 														</div>
-														<div className="w-[50%] flex justify-between hover:bg-slate-50 group">
+														<div className="w-[55%] flex justify-between  hover:bg-slate-50 group">
 															<div className="flex flex-wrap flex-row ">
 																{scene.segments.map((segment, segmentIndex) => (
 																	<span
@@ -324,7 +339,17 @@ export default function VideoEditorStoryboard({
 																))}
 															</div>
 															<div className="hidden group-hover:block ">
-																<OptionsButton />
+																<OptionsButton
+																	onSettingsClick={() =>
+																		setEditSegmentsModalState({
+																			open: true,
+																			dispatch: dispatch,
+																			scene: scene,
+																			sceneId: sceneIndex,
+																			story: story,
+																		})
+																	}
+																/>
 															</div>
 														</div>
 													</div>
@@ -408,7 +433,7 @@ const OptionsButton = (props: {
 				<div className="px-0.5 flex-col justify-start items-start inline-flex">
 					<div className="self-stretch justify-between items-center inline-flex">
 						<div
-							className="flex-col justify-start items-center inline-flex"
+							className="flex-col justify-start items-center inline-flex hover:cursor-pointer"
 							onClick={props.onSettingsClick}
 						>
 							<svg

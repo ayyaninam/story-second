@@ -1,36 +1,19 @@
-import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
-	Settings2,
 	GripVertical,
-	RefreshCw,
 	Trash2,
-	SparkleIcon,
 	ChevronDown,
 	Plus,
 	ImagePlus,
 	Palette,
 	Volume2,
 	Info,
-	CheckIcon,
-	ChevronDownIcon,
-	ChevronUpIcon,
 	ScrollText,
-	Undo2,
-	Zap,
-	EyeOff,
+	Unlock,
 } from "lucide-react";
 import Image from "next/image";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import * as Select from "@radix-ui/react-select";
 import React from "react";
 import { Segment, Settings, StoryStatus } from "../reducers/edit-reducer";
@@ -38,6 +21,7 @@ import { StoryImageStyles } from "@/utils/enums";
 import { keys } from "@/utils/enumKeys";
 import Format from "@/utils/format";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Slider } from "@/components/ui/slider";
 
 type SelectItemProps = {
 	value: string;
@@ -67,7 +51,7 @@ function RegenerateSegmentBar({
 	regeneratingImage: boolean;
 }) {
 	return (
-		<div className="flex w-full rounded-sm border-border border-[1px] justify-between">
+		<div className="flex items-center gap-1 w-full rounded-sm border-border border-[1px] justify-between">
 			{segment.imageStatus === StoryStatus.COMPLETE ? (
 				<Image
 					alt={segment.textContent}
@@ -81,6 +65,8 @@ function RegenerateSegmentBar({
 				</Skeleton>
 			)}
 
+			<ScrollText className="stroke-slate-500" />
+
 			<input
 				className="bg-slate-50 border-none outline-none px-1 flex-grow text-gray-600"
 				placeholder="Type something here..."
@@ -90,9 +76,7 @@ function RegenerateSegmentBar({
 					onTextContentChange(e.target.value);
 				}}
 			/>
-			<Button className="bg-purple-600" onClick={() => onRegenerateImage()}>
-				{regeneratingImage ? "Loading" : "Regenerate Image"}
-			</Button>
+			<Unlock className="stroke-slate-500" />
 			{/* <Select.Root>
 				<Select.Trigger
 					className="inline-flex items-center justify-center rounded-md p-1 m-1 text-sm bg-purple-700 gap-1 text-white shadow-md"
@@ -157,31 +141,39 @@ function RegenerateSegmentBar({
 }
 
 function AdvancedEditingBar({
+	checked,
 	onCheckedChange,
 }: {
+	checked?: boolean;
 	onCheckedChange: (checked: boolean) => void;
 }) {
 	return (
 		<div className="flex justify-between">
 			<div className="flex items-center space-x-2">
-				<Switch id="advanced-editing" onCheckedChange={onCheckedChange} />
+				<Switch
+					id="advanced-editing"
+					style={{
+						background: checked ? "#A734EA" : undefined,
+					}}
+					onCheckedChange={onCheckedChange}
+				/>
 				<Label htmlFor="advanced-editing">Advanced Editing</Label>
 			</div>
 			<div className="flex items-center space-x-1 ">
-				<div className="flex p-1 m-1 gap-1 bg-slate-50 border-border border-[1px] rounded-md items-center">
-					<ImagePlus width={"18px"} height={"18px"} color="#020817" />
+				<div className="flex p-1 m-1 gap-1 bg-slate-50 text-slate-500 border-border border-[1px] rounded-md items-center">
+					<ImagePlus width={"18px"} height={"18px"} />
 					<p className="text-sm ">Image</p>
-					<Plus width={"18px"} height={"18px"} color="#020817" />
+					<Plus width={"18px"} height={"18px"} />
 				</div>
-				<div className="flex p-1 m-1 gap-1 bg-slate-50 border-border border-[1px] rounded-md items-center">
-					<Palette width={"18px"} height={"18px"} color="#020817" />
+				<div className="flex p-1 m-1 gap-1 bg-slate-50 text-slate-500 border-border border-[1px] rounded-md items-center">
+					<Palette width={"18px"} height={"18px"} />
 					<p className="text-sm ">Style</p>
-					<ChevronDown width={"18px"} height={"18px"} color="#020817" />
+					<ChevronDown width={"18px"} height={"18px"} />
 				</div>
-				<div className="flex p-1 m-1 gap-1 bg-slate-50 border-border border-[1px] rounded-md items-center">
-					<Volume2 width={"18px"} height={"18px"} color="#020817" />
+				<div className="flex p-1 m-1 gap-1 bg-slate-50 text-slate-500 border-border border-[1px] rounded-md items-center">
+					<Volume2 width={"18px"} height={"18px"} />
 					<p className="text-sm ">Voice</p>
-					<ChevronDown width={"18px"} height={"18px"} color="#020817" />
+					<ChevronDown width={"18px"} height={"18px"} />
 				</div>
 			</div>
 		</div>
@@ -196,7 +188,14 @@ function AdvancedEditingOptions({
 	onSettingsChange: (settings: Settings) => void;
 }) {
 	return (
-		<div className="bg-indigo-100 border-[1px] border-indigo-100 rounded-sm p-5">
+		<div
+			className="border-[1px] rounded-md p-5 text-sm"
+			style={{
+				background: "linear-gradient(180deg, #FFF 0%, #F8FAFC 100%)",
+				boxShadow: "0px 0px 6px 0px #D7CBE1",
+				border: "0.5px solid #BB55F7",
+			}}
+		>
 			<label
 				htmlFor="image-animation-prompt"
 				className="flex items-center gap-1"
@@ -207,7 +206,7 @@ function AdvancedEditingOptions({
 			<textarea
 				id="image-animation-prompt"
 				rows={2}
-				className="w-full bg-slate-50 m-1 rounded-md p-2"
+				className="w-full border-[1px] bg-slate-50 m-1 rounded-md p-2"
 				placeholder="Write your image animation prompt here"
 				value={settings?.prompt ?? ""}
 				onChange={(e) => {
@@ -233,12 +232,12 @@ function AdvancedEditingOptions({
 						htmlFor="image-animation-style"
 						className="flex items-center gap-1"
 					>
-						Image Style
+						Style
 						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 					</label>
 					<select
 						id="image-animation-style"
-						className="w-full bg-slate-50 m-1 rounded-md p-2"
+						className="w-full border-[1px] bg-slate-50 m-1 rounded-md p-2"
 						value={settings?.style ?? StoryImageStyles.Realistic}
 						onChange={(e) => {
 							if (settings)
@@ -264,40 +263,6 @@ function AdvancedEditingOptions({
 					</select>
 				</div>
 				<div className="w-[50%] ">
-					<label htmlFor="denoising-factor" className="flex items-center gap-1">
-						Denoising Factor
-						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
-					</label>
-					<input
-						id="denoising-factor"
-						className="w-full bg-slate-50 m-1 rounded-md p-2"
-						type="number"
-						min={0}
-						max={5}
-						step={0.25}
-						placeholder="2"
-						value={settings?.denoising ?? 2}
-						onChange={(e) => {
-							if (settings)
-								onSettingsChange({
-									...settings,
-									denoising: parseInt(e.target.value),
-								});
-							else
-								onSettingsChange({
-									denoising: parseInt(e.target.value),
-									prompt: "",
-									samplingSteps: 1,
-									style: StoryImageStyles.Realistic,
-									seed: 1,
-									voice: "",
-								});
-						}}
-					/>
-				</div>
-			</div>
-			<div className="flex gap-6">
-				<div className="w-[50%] ">
 					<label
 						htmlFor="image-animation-prompt"
 						className="flex items-center gap-1"
@@ -308,9 +273,9 @@ function AdvancedEditingOptions({
 					<input
 						id="seed"
 						type="number"
-						min={0}
-						max={2e16 - 1}
-						className="w-full bg-slate-50 rounded-md p-2"
+						// min={0}
+						// max={2e16 - 1}
+						className="w-full border-[1px] bg-slate-50 rounded-md m-1 p-2"
 						placeholder="2"
 						value={settings?.seed ?? 1}
 						onChange={(e) => {
@@ -330,38 +295,129 @@ function AdvancedEditingOptions({
 						}}
 					/>
 				</div>
+			</div>
+			<div className="flex gap-6">
+				<div className="w-[50%] ">
+					<label htmlFor="denoising-factor" className="flex items-center gap-1">
+						Prompt Guidance
+						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
+					</label>
+					<div
+						className="flex w-full gap-1 px-1 rounded-sm"
+						style={{
+							background:
+								"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
+						}}
+					>
+						<input
+							id="denoising-factor"
+							className="border-[1px] bg-slate-50 rounded-md p-2"
+							type="number"
+							min={0}
+							max={100}
+							step={1}
+							placeholder="2"
+							value={settings?.denoising ?? 2}
+							onChange={(e) => {
+								if (settings)
+									onSettingsChange({
+										...settings,
+										denoising: parseInt(e.target.value),
+									});
+								else
+									onSettingsChange({
+										denoising: parseInt(e.target.value),
+										prompt: "",
+										samplingSteps: 1,
+										style: StoryImageStyles.Realistic,
+										seed: 1,
+										voice: "",
+									});
+							}}
+						/>
+						<Slider
+							value={[settings?.denoising ?? 2]}
+							max={100}
+							step={1}
+							onValueChange={(value) => {
+								if (settings)
+									onSettingsChange({
+										...settings,
+										denoising: value[0],
+									});
+								else
+									onSettingsChange({
+										denoising: value[0],
+										prompt: "",
+										samplingSteps: 1,
+										style: StoryImageStyles.Realistic,
+										seed: 1,
+										voice: "",
+									});
+							}}
+						/>
+					</div>
+				</div>
 				<div className="w-[50%] ">
 					<label
 						htmlFor="image-animation-prompt"
 						className="flex items-center gap-1"
 					>
-						Sampling Steps
+						Quality & Details
 						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 					</label>
-					<input
-						id="sampling-steps"
-						type="number"
-						min={2}
-						max={10}
-						className="w-full bg-slate-50 rounded-md p-2"
-						placeholder="2"
-						value={settings?.samplingSteps ?? 1}
-						onChange={(e) => {
-							if (settings)
-								onSettingsChange({
-									...settings,
-									samplingSteps: parseInt(e.target.value),
-								});
-							else
-								onSettingsChange({
-									denoising: 0,
-									prompt: "",
-									samplingSteps: parseInt(e.target.value),
-									style: StoryImageStyles.Realistic,
-									seed: 1,
-								});
+					<div
+						className="flex w-full gap-1 px-1 rounded-sm"
+						style={{
+							background:
+								"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
 						}}
-					/>
+					>
+						<input
+							id="sampling-steps"
+							type="number"
+							min={1}
+							max={15}
+							className="border-[1px] bg-slate-50 rounded-md p-2"
+							placeholder="2"
+							value={settings?.samplingSteps ?? 1}
+							onChange={(e) => {
+								if (settings)
+									onSettingsChange({
+										...settings,
+										samplingSteps: parseInt(e.target.value),
+									});
+								else
+									onSettingsChange({
+										denoising: 0,
+										prompt: "",
+										samplingSteps: parseInt(e.target.value),
+										style: StoryImageStyles.Realistic,
+										seed: 1,
+									});
+							}}
+						/>
+						<Slider
+							value={[settings?.samplingSteps ?? 2]}
+							max={15}
+							step={1}
+							onValueChange={(value) => {
+								if (settings)
+									onSettingsChange({
+										...settings,
+										samplingSteps: value[0],
+									});
+								else
+									onSettingsChange({
+										denoising: 0,
+										prompt: "",
+										samplingSteps: value[0],
+										style: StoryImageStyles.Realistic,
+										seed: 1,
+									});
+							}}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -370,28 +426,19 @@ function AdvancedEditingOptions({
 
 function VerticalControlButtons({ onDelete }: { onDelete: () => void }) {
 	return (
-		<div className="space-y-2">
+		<div className="space-y-2 stroke-slate-500">
 			<GripVertical
 				className="hover:cursor-pointer"
-				width={"22px"}
-				height={"22px"}
-				color="#020817"
+				width={18}
+				height={18}
 				strokeWidth={1}
 			/>
 			<Trash2
 				className="hover:cursor-pointer"
-				width={"22px"}
-				height={"22px"}
-				color="#020817"
+				width={18}
+				height={18}
 				strokeWidth={1}
 				onClick={onDelete}
-			/>
-			<RefreshCw
-				className="hover:cursor-pointer"
-				width={"22px"}
-				height={"22px"}
-				color="#020817"
-				strokeWidth={1}
 			/>
 		</div>
 	);
@@ -413,7 +460,7 @@ export default function EditSegmentModalItem({
 	const [isChecked, setIsChecked] = useState(false);
 
 	return (
-		<div className="flex bg-slate-100 rounded-md border-border border-[1px] p-2 m-2 gap-2">
+		<div className="flex bg-slate-50 rounded-md border-border border-[1px] p-2 m-2 gap-2">
 			<VerticalControlButtons onDelete={onSegmentDelete} />
 			<div className="w-full text-slate-950 space-y-2">
 				<RegenerateSegmentBar
@@ -428,6 +475,7 @@ export default function EditSegmentModalItem({
 					}}
 				/>
 				<AdvancedEditingBar
+					checked={isChecked}
 					onCheckedChange={(checked) => {
 						setIsChecked(checked);
 					}}
