@@ -192,3 +192,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 		</QueryClientProvider>
 	);
 }
+
+
+// Disable console logs in production
+if (process.env.VERCEL_ENV === "production") {
+	console.log = function () {};
+}
