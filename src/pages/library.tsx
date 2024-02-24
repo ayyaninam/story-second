@@ -81,7 +81,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.WIDE_VIDEOS, genre],
+					queryKey: [QueryKeys.WIDE_VIDEOS, genre, isDescending],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -96,7 +96,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.VERTICAL_VIDEOS, genre],
+					queryKey: [QueryKeys.VERTICAL_VIDEOS, genre, isDescending],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -109,7 +109,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.STORY_BOOKS, genre],
+					queryKey: [QueryKeys.STORY_BOOKS, genre, isDescending],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -123,7 +123,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.TIK_TOK, genre],
+					queryKey: [QueryKeys.TIK_TOK, genre, isDescending],
 					staleTime: 3000,
 				}),
 			]);
