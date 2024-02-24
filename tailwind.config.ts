@@ -7,6 +7,7 @@ const config = {
 	prefix: "",
 	theme: {
 		colors: {
+			black: "#000",
 			white: "#FFF",
 			slate: {
 				50: "#F8FAFC",
@@ -355,7 +356,7 @@ const config = {
 				button: {
 					start: "hsl(var(--button-start))",
 					end: "hsl(var(--button-end))",
-				}
+				},
 			},
 			borderRadius: {
 				lg: "var(--radius)",
@@ -379,7 +380,7 @@ const config = {
 			fontFamily: {
 				sans: ["var(--font-rand)", ...defaultTheme.fontFamily.sans],
 				mono: ["var(--font-rand-mono)", ...defaultTheme.fontFamily.sans],
-			}
+			},
 		},
 	},
 	plugins: [require("tailwindcss-animate")],

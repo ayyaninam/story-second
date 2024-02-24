@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
 
 export interface PricingTierFrequency {
 	id: string;
@@ -307,31 +308,12 @@ export default function PricingPage() {
 									) : null}
 								</p>
 
-								<Link
-									href={
-										tier.subscriptionPlan
-											? {
-													pathname: "/pricing/checkout",
-													query: {
-														plan: tier.subscriptionPlan,
-														period: frequency.subscriptionPeriod,
-													},
-												}
-											: {
-													pathname: tier.href,
-												}
-									}
-									aria-describedby={tier.id}
-									className={cn(
-										"flex mt-6 shadow-sm",
-										tier.soldOut ? "pointer-events-none" : ""
-									)}
-								>
+								<CheckoutDialog>
 									<Button
 										size="lg"
 										disabled={tier.soldOut}
 										className={cn(
-											"w-full text-black dark:text-white",
+											"mt-6 shadow-sm w-full text-black dark:text-white",
 											!tier.highlighted && !tier.featured
 												? "bg-gray-100 dark:bg-gray-600"
 												: "bg-purple-300 hover:bg-purple-400 dark:bg-purple-600 dark:hover:bg-purple-700",
@@ -343,7 +325,7 @@ export default function PricingPage() {
 									>
 										{tier.soldOut ? "Sold out" : tier.cta}
 									</Button>
-								</Link>
+								</CheckoutDialog>
 
 								<ul
 									className={cn(
