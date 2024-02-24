@@ -61,7 +61,7 @@ const Loader = ({
 }) => {
 	const withOffset = `${60 + percentage}deg`;
 	return (
-		<span className={`absolute -left-[25px] top-${index + 1 / 4}`}>
+		<span className="absolute -left-0 -top-2">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="19"
@@ -234,81 +234,80 @@ const SceneEditorView = ({
 												return (
 													<>
 														{story.scenes.map((scene, sceneIndex) => (
-															<div
-																key={sceneIndex}
-																className="flex group hover:border rounded-sm items-center justify-between"
-															>
+															<div key={sceneIndex} className="relative">
 																{scene.status === StoryStatus.PENDING && (
 																	<Loader percentage={20} index={sceneIndex} />
 																)}
-																<div className="flex flex-shrink-0 flex-col -space-y-3 overflow-hidden mx-1 my-[18px] items-center justify-center">
-																	{images.slice(0, 4).map((image, index) => (
-																		<div
-																			key={index}
-																			className="w-8 h-5 rounded-[1px]"
-																			style={{
-																				border:
-																					"0.2px solid rgba(0, 0, 0, 0.40)",
-																				background: `url(${image})`,
-																				backgroundSize: "cover",
-																				backgroundRepeat: "no-repeat",
-																			}}
-																		/>
-																	))}
-																</div>
-
-																<div className="flex flex-wrap">
-																	{scene.segments.map(
-																		(segment, segmentIndex) => (
-																			<span
-																				key={segmentIndex}
+																<div className="flex group hover:border rounded-sm items-center justify-between">
+																	<div className="flex flex-shrink-0 flex-col -space-y-3 overflow-hidden mx-1 my-[18px] items-center justify-center">
+																		{images.slice(0, 4).map((image, index) => (
+																			<div
+																				key={index}
+																				className="w-8 h-5 rounded-[1px]"
 																				style={{
-																					backgroundColor: "transparent",
+																					border:
+																						"0.2px solid rgba(0, 0, 0, 0.40)",
+																					background: `url(${image})`,
+																					backgroundSize: "cover",
+																					backgroundRepeat: "no-repeat",
 																				}}
-																				className={cn(
-																					"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
-																					segment.videoStatus ===
-																						StoryStatus.PENDING &&
-																						"text-purple-800"
-																				)}
-																				onClick={() => {
-																					videoPlayerRef.current?.seekToSegment(
-																						{
-																							...segment,
-																							sceneId: scene.id,
-																							index: segment.id,
-																						}
-																					);
-																					handleRegenerateVideo(
-																						segment,
-																						sceneIndex,
-																						segmentIndex
-																					);
-																				}}
-																			>
-																				{segment.textContent}
-																			</span>
-																		)
-																	)}
-																</div>
-																<div className="hidden group-hover:flex gap-x-1 p-2">
-																	<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
-																		<Settings2
-																			className="w-4 h-4 stroke-slate-500"
-																			onClick={() =>
-																				setEditSegmentsModalState({
-																					open: true,
-																					scene: scene,
-																					sceneId: sceneIndex,
-																					dispatch,
-																					story,
-																				})
-																			}
-																		/>
-																	</span>
-																	<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
-																		<MoreHorizontal className="w-4 h-4 stroke-slate-500" />
-																	</span>
+																			/>
+																		))}
+																	</div>
+
+																	<div className="flex flex-wrap">
+																		{scene.segments.map(
+																			(segment, segmentIndex) => (
+																				<span
+																					key={segmentIndex}
+																					style={{
+																						backgroundColor: "transparent",
+																					}}
+																					className={cn(
+																						"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
+																						segment.videoStatus ===
+																							StoryStatus.PENDING &&
+																							"text-purple-800"
+																					)}
+																					onClick={() => {
+																						videoPlayerRef.current?.seekToSegment(
+																							{
+																								...segment,
+																								sceneId: scene.id,
+																								index: segment.id,
+																							}
+																						);
+																						handleRegenerateVideo(
+																							segment,
+																							sceneIndex,
+																							segmentIndex
+																						);
+																					}}
+																				>
+																					{segment.textContent}
+																				</span>
+																			)
+																		)}
+																	</div>
+																	<div className="hidden group-hover:flex gap-x-1 p-2">
+																		<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
+																			<Settings2
+																				className="w-4 h-4 stroke-slate-500"
+																				onClick={() =>
+																					setEditSegmentsModalState({
+																						open: true,
+																						scene: scene,
+																						sceneId: sceneIndex,
+																						dispatch,
+																						story,
+																					})
+																				}
+																			/>
+																		</span>
+																		<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
+																			<MoreHorizontal className="w-4 h-4 stroke-slate-500" />
+																		</span>
+																	</div>
 																</div>
 															</div>
 														))}
