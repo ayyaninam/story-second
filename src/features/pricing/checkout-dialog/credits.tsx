@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import {
 	Select,
@@ -47,7 +48,15 @@ const CreditsCheckoutDialog = ({ children }: CreditsCheckoutDialogProps) => {
 					<span>Video Credits</span>
 				</>
 			}
-			sideHeader="Order #40950"
+			sideLabel="Order #40950"
+			items={[
+				{
+					id: uuidv4(),
+					description: `${videoCredit} video credits`,
+					price: `$${videoCredit}`,
+				},
+			]}
+			total={`$${videoCredit}`}
 			setupStripe={setupStripe}
 			submitButtonText="Submit Payment"
 		>

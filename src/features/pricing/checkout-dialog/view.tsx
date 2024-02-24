@@ -9,10 +9,18 @@ import {
 } from "@/components/ui/dialog";
 import StripeForm, { SetupStripe } from "@/features/pricing/stripe-form";
 
+interface Item {
+	id: string;
+	description: string;
+	price: string;
+}
+
 interface CheckoutDialogProps {
 	children: React.ReactNode;
 	title: React.ReactNode;
-	sideHeader: React.ReactNode;
+	sideLabel: React.ReactNode;
+	items: Item[];
+	total: string;
 	submitButtonText: React.ReactNode;
 	setupStripe: SetupStripe;
 }
@@ -20,7 +28,9 @@ interface CheckoutDialogProps {
 const CheckoutDialogView = ({
 	children,
 	title,
-	sideHeader,
+	sideLabel,
+	items,
+	total,
 	setupStripe,
 	submitButtonText,
 }: CheckoutDialogProps) => {
@@ -40,7 +50,7 @@ const CheckoutDialogView = ({
 							<div className="flex flex-row items-baseline gap-2 leading-8">
 								{title}
 								<span className="ml-1 text-[13px] leading-5 text-slate-400 font-normal">
-									{sideHeader}
+									{sideLabel}
 								</span>
 							</div>
 						</DialogTitle>
@@ -53,18 +63,20 @@ const CheckoutDialogView = ({
 					<div className="mt-6">
 						<div className="border-t border-solid border-slate-300" />
 
-						<div className="my-4">
-							<div className="flex justify-between">
-								<span className="text-slate-400">5 Video Credits</span>
-								<span className="text-slate-950 font-medium">$5.00</span>
-							</div>
+						<div className="my-4 flex flex-col gap-2">
+							{items.map(({ id, description, price }) => (
+								<div className="flex justify-between" key={id}>
+									<span className="text-slate-400">{description}</span>
+									<span className="text-slate-950 font-medium">{price}</span>
+								</div>
+							))}
 						</div>
 
 						<div className="border-t border-dashed border-slate-300" />
 
 						<div className="flex justify-between mt-4">
 							<span className="text-slate-400">Total</span>
-							<span className="text-[#00BA34] font-medium">$5.00</span>
+							<span className="text-[#00BA34] font-medium">{total}</span>
 						</div>
 					</div>
 				</div>
