@@ -226,7 +226,7 @@ const SceneEditorView = ({
 						</p>
 
 						<div className="flex gap-1 text-slate-600 text-sm py-1">
-							<Dropdown
+							{/* <Dropdown
 								items={[
 									{ label: "60 Second", value: "60" },
 									{ label: "90 Second", value: "90" },
@@ -245,8 +245,8 @@ const SceneEditorView = ({
 									{ label: "Audio", value: "audio" },
 									{ label: "None", value: "none" },
 								]}
-							/>
-							<p>by Anthony Deloso</p>
+							/> */}
+							<p>by {WebstoryData?.user?.name}</p>
 						</div>
 					</div>
 					<div className="absolute h-[85%] w-px bg-slate-200 mt-6 ml-5" />
@@ -268,7 +268,7 @@ const SceneEditorView = ({
 															<>
 																<div
 																	key={sceneIndex}
-																	className="relative flex group hover:border rounded-sm items-center justify-between"
+																	className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
 																	// onMouseEnter={() =>
 																	// 	setHoveredThumbnails(() => ({
 																	// 		index: sceneIndex,
@@ -346,9 +346,9 @@ const SceneEditorView = ({
 																				}
 																			/>
 																		</span>
-																		<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
+																		{/* <span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
 																			<MoreHorizontal className="w-4 h-4 stroke-slate-500" />
-																		</span>
+																		</span> */}
 																	</div>
 																</div>
 															</>
@@ -373,14 +373,14 @@ const SceneEditorView = ({
 							<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
 						</div>
 					</div>
-					<div className="w-fit ml-9 mb-[3rem] mt-auto flex border-t ">
+					<div className="w-fit ml-9 mb-[3rem] mt-auto flex border-t pt-2">
 						<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
 							<Sparkle fill="white" className="w-4 h-4" />
-							Regenerate 2 Edited Scenes
+							Regenerate All Scenes
 						</Button>
 						<Button className=" invisible w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
 							<Sparkle fill="white" className="w-4 h-4" />
-							Regenerate 2 Edited Scenes
+							Regenerate 2 Edited
 						</Button>
 						{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
 							Use 25 credits to regenerate ·{" "}

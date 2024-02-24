@@ -50,7 +50,7 @@ const SceneEditSegmentModal = ({
 	};
 	if (scene && sceneId !== undefined) {
 		return (
-			<div className="absolute w-[50%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 bg-red-400 ">
+			<div className="absolute w-[50%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 ">
 				<Dialog.Root open={open}>
 					<Dialog.Portal>
 						<Dialog.Overlay className="bg-[#0000000d] fixed inset-0" />
@@ -86,17 +86,11 @@ const SceneEditSegmentModal = ({
 								))}
 							</div>
 							<div className="flex mt-2 gap-1 mx-4 justify-end text-sm">
+								{/* <Button className="p-2" variant="outline" onClick={onClose}>
+									Close
+								</Button> */}
 								<Button className="p-2" variant="outline" onClick={onClose}>
-									Cancel
-								</Button>
-								<Button
-									className="p-2 bg-purple-600"
-									variant="default"
-									onClick={() => {
-										onClose();
-									}}
-								>
-									Save Changes
+									Close
 								</Button>
 							</div>
 						</Dialog.Content>

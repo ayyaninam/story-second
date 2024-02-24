@@ -67,7 +67,7 @@ function RegenerateSegmentBar({
 	regeneratingImage: boolean;
 }) {
 	return (
-		<div className="flex w-full items-center rounded-sm border-border border-[1px] justify-between">
+		<div className="flex w-full items-center rounded-sm  justify-between">
 			{segment.imageStatus === StoryStatus.COMPLETE ? (
 				<Image
 					alt={segment.textContent}
