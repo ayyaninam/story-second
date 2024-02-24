@@ -13,7 +13,7 @@ class Format {
 	}
 
 	public static GetVideoUrl(key: string) {
-		return `https://ik.imagekit.io/storybird/staging/${key}?tr=f-webm`;
+		return `https://ik.imagekit.io/storybird/staging/${key}`;
 	}
 
 	public static GetPublicBucketObjectUrl(object: string) {
