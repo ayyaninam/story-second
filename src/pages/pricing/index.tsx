@@ -309,8 +309,9 @@ export default function PricingPage() {
 								</p>
 
 								<CheckoutDialog
-									// to test quickly
-									variant={index % 2 === 0 ? "subscription" : "credits"}
+									variant="subscription"
+									plan={SubscriptionPlan.Premium}
+									period={SubscriptionPeriod.Monthly}
 								>
 									<Button
 										size="lg"

@@ -65,7 +65,8 @@ export default function StripeForm({
 	setupStripe: SetupStripe;
 }) {
 	const [clientSecret, setClientSecret] = useState("");
-	const [stripeFormReady, setStripeFormReady] = useState(false);
+	const [ready, setReady] = useState(false);
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
 		if (clientSecret) return;
@@ -74,8 +75,8 @@ export default function StripeForm({
 			try {
 				setClientSecret((await api.payment.addCard()).data!);
 			} catch (e: any) {
-				// TODO: Handle no client secret error.
 				console.error(e);
+				setError(true);
 			}
 		})();
 	}, [clientSecret]);
@@ -86,15 +87,16 @@ export default function StripeForm({
 				<Elements stripe={stripePromise} options={{ appearance, clientSecret }}>
 					<StripeElement
 						setupStripe={setupStripe}
-						onFormReady={() => setStripeFormReady(true)}
+						onFormReady={() => setReady(true)}
 					/>
 				</Elements>
 			) : null}
-			{stripeFormReady ? null : (
+			{!ready && (
 				<div className="absolute flex z-[1] inset-0">
 					<LoadingIndicator />
 				</div>
 			)}
+			{error && <div>Error Loading Stripe</div>}
 		</div>
 	);
 }
