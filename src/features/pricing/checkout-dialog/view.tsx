@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -7,27 +7,23 @@ import {
 	DialogDescription,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import StripeForm from "@/features/pricing/stripe-form";
-import { useStripeSetup } from "@/features/pricing/hooks";
-
-const videoCreditValues = [5, 10, 20, 50] as const;
-type VideoCreditValue = (typeof videoCreditValues)[number];
+import StripeForm, { SetupStripe } from "@/features/pricing/stripe-form";
 
 interface CheckoutDialogProps {
 	children: React.ReactNode;
+	title: React.ReactNode;
+	sideHeader: React.ReactNode;
+	submitButtonText: React.ReactNode;
+	setupStripe: SetupStripe;
 }
 
-const CheckoutDialog: React.FC<CheckoutDialogProps> = ({ children }) => {
-	const { setupStripe, confirmSetup, confirmPayment } = useStripeSetup();
-	const [videoCredit, setVideoCredit] = useState<VideoCreditValue>(10);
-
+const CheckoutDialogView = ({
+	children,
+	title,
+	sideHeader,
+	setupStripe,
+	submitButtonText,
+}: CheckoutDialogProps) => {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -42,32 +38,9 @@ const CheckoutDialog: React.FC<CheckoutDialogProps> = ({ children }) => {
 					<DialogHeader className="text-lg">
 						<DialogTitle className="font-bold">
 							<div className="flex flex-row items-baseline gap-2 leading-8">
-								<span>Buy</span>
-
-								<Select
-									value={String(videoCredit)}
-									onValueChange={(newValue) =>
-										setVideoCredit(Number(newValue) as VideoCreditValue)
-									}
-								>
-									<SelectTrigger className="w-[60px] font-normal">
-										<SelectValue aria-label={String(videoCredit)}>
-											{videoCredit}
-										</SelectValue>
-									</SelectTrigger>
-									<SelectContent>
-										{videoCreditValues.map((value) => (
-											<SelectItem key={value} value={String(value)}>
-												{value}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-
-								<span>Video Credits</span>
-
+								{title}
 								<span className="ml-1 text-[13px] leading-5 text-slate-400 font-normal">
-									Order #40950
+									{sideHeader}
 								</span>
 							</div>
 						</DialogTitle>
@@ -121,7 +94,7 @@ const CheckoutDialog: React.FC<CheckoutDialogProps> = ({ children }) => {
 								"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #8F22CE, #8F22CE)";
 						}}
 					>
-						Submit Payment
+						{submitButtonText}
 					</button>
 				</div>
 			</DialogContent>
@@ -129,4 +102,4 @@ const CheckoutDialog: React.FC<CheckoutDialogProps> = ({ children }) => {
 	);
 };
 
-export default CheckoutDialog;
+export default CheckoutDialogView;

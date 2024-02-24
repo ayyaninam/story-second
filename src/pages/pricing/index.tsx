@@ -231,7 +231,7 @@ export default function PricingPage() {
 							tiers.length === 4 ? "lg:grid-cols-4" : ""
 						)}
 					>
-						{tiers.map((tier) => (
+						{tiers.map((tier, index) => (
 							<div
 								key={tier.id}
 								className={cn(
@@ -308,7 +308,10 @@ export default function PricingPage() {
 									) : null}
 								</p>
 
-								<CheckoutDialog>
+								<CheckoutDialog
+									// to test quickly
+									variant={index % 2 === 0 ? "subscription" : "credits"}
+								>
 									<Button
 										size="lg"
 										disabled={tier.soldOut}

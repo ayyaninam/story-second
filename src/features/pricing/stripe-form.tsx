@@ -33,7 +33,7 @@ const appearance: Appearance = {
 	},
 };
 
-type SetupStripe = ReturnType<typeof useStripeSetup>["setupStripe"];
+export type SetupStripe = ReturnType<typeof useStripeSetup>["setupStripe"];
 
 const StripeElement = ({
 	setupStripe,
@@ -49,6 +49,7 @@ const StripeElement = ({
 		if (stripe && elements) {
 			setupStripe(stripe, elements);
 		}
+		// eslint-disable-next-line
 	}, [stripe, elements]);
 
 	return (
