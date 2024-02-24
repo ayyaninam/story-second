@@ -12,27 +12,23 @@ import { useStripeSetup } from "@/features/pricing/hooks";
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
-const StripeAppearance: Appearance = {
-	theme: "stripe",
-	labels: "above",
+const appearance: Appearance = {
+	theme: "flat",
 	variables: {
-		fontFamily: "system-ui",
-		colorBackground: "#F2E6D4",
-		colorTextPlaceholder: "#A1B8B3",
-		borderRadius: "12px",
+		colorPrimary: "#6681FF",
+		colorBackground: "white", // todo: implement dark mode
+		colorTextPlaceholder: "#485E6A",
+		borderRadius: "8px",
 	},
 	rules: {
 		".Input": {
-			border: "2px solid #002E23",
-		},
-		".Input:focus": {
-			border: "2px solid #D57D5A",
-			outline: "2px solid white",
+			border: "1px solid #CBD9E1",
 		},
 		".Label": {
-			fontWeight: "600",
-			marginLeft: "1rem",
-			fontSize: "14px",
+			fontWeight: "500",
+			fontFamily: "var(--font-rand)",
+			fontSize: "1rem",
+			color: "#021017",
 		},
 	},
 };
@@ -60,7 +56,7 @@ const StripeElement = ({
 	);
 };
 
-const LoadingIndicator = () => <div>Loading...</div>;
+const LoadingIndicator = () => <div></div>;
 
 export default function StripeForm({
 	setupStripe,
@@ -86,10 +82,7 @@ export default function StripeForm({
 	return (
 		<div className="flex w-full flex-col relative min-h-[280px]">
 			{clientSecret ? (
-				<Elements
-					stripe={stripePromise}
-					options={{ appearance: StripeAppearance, clientSecret }}
-				>
+				<Elements stripe={stripePromise} options={{ appearance, clientSecret }}>
 					<StripeElement
 						setupStripe={setupStripe}
 						onFormReady={() => setStripeFormReady(true)}

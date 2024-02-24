@@ -14,6 +14,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import StripeForm from "@/features/pricing/stripe-form";
+import { useStripeSetup } from "@/features/pricing/hooks";
 
 const videoCreditValues = [5, 10, 20, 50] as const;
 type VideoCreditValue = (typeof videoCreditValues)[number];
@@ -23,15 +25,17 @@ interface CheckoutDialogProps {
 }
 
 const CheckoutDialog: React.FC<CheckoutDialogProps> = ({ children }) => {
+	const { setupStripe, confirmSetup, confirmPayment } = useStripeSetup();
 	const [videoCredit, setVideoCredit] = useState<VideoCreditValue>(10);
 
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="rounded-lg p-0 bg-white shadow-xl border-0 gap-0">
+			<DialogContent className="rounded-md p-0 shadow-xl gap-0 overflow-hidden">
 				<div
 					className="p-6"
 					style={{
+						// todo: implement dark mode
 						background: "linear-gradient(180deg, white 0%, #F8FAFC 100%)",
 					}}
 				>
@@ -67,7 +71,7 @@ const CheckoutDialog: React.FC<CheckoutDialogProps> = ({ children }) => {
 								</span>
 							</div>
 						</DialogTitle>
-						<DialogDescription className="text-slate-600">
+						<DialogDescription className="text-slate-600 text-base">
 							Description of what I am buying here would be quite important,
 							that way we tell people what this checkout is for.
 						</DialogDescription>
@@ -92,10 +96,12 @@ const CheckoutDialog: React.FC<CheckoutDialogProps> = ({ children }) => {
 					</div>
 				</div>
 
-				<div className="bg-white p-6">
+				<div className="bg-background p-6">
 					<div className="font-medium text-slate-400">Billing Info</div>
 
-					<div className="h-48" />
+					<div className="min-h-[375px]">
+						<StripeForm setupStripe={setupStripe} />
+					</div>
 
 					<button
 						style={{
@@ -104,7 +110,7 @@ const CheckoutDialog: React.FC<CheckoutDialogProps> = ({ children }) => {
 							boxShadow:
 								"0px -1px 12px 0px #FFFFFF1F inset, 0px 0px 0px 1px #8F22CE",
 						}}
-						className="w-full h-9 px-2.5 py-1.5 rounded-md text-white font-medium"
+						className="w-full h-9 px-2.5 py-1.5 mt-6 rounded-md text-white font-medium"
 						// Oscar: I asked chatgpt to build this hover effect, and it did it. lgtm imo. even though it's not on the design so feel free to modify it
 						onMouseEnter={(e) => {
 							e.currentTarget.style.background =
