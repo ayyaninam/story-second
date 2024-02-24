@@ -40,12 +40,14 @@ function LibraryGalleryPage({
 	const filterOptions = useDebounce(
 		useMemo<LibraryPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
+			const sort = router.query.sort as string || "desc"
 			return {
 				CurrentPage: parseInt(page),
 				topLevelCategory: router.query.genre as string,
 				searchTerm,
+				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm]),
+		}, [router.query.page, router.query.genre, searchTerm, router.query.sort]),
 		500
 	);
 	const storiesList = useQuery<

@@ -25,12 +25,14 @@ function LibraryHomePage({
 	const filterOptions = useDebounce(
 		useMemo<LibraryPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
+			const sort = router.query.sort as string || "desc";
 			return {
 				CurrentPage: parseInt(page),
 				topLevelCategory: router.query.genre as string,
 				searchTerm,
+				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm]),
+		}, [router.query.page, router.query.genre, searchTerm, router.query.sort]),
 		500
 	);
 
@@ -43,13 +45,15 @@ function LibraryHomePage({
 					resolution: DisplayAspectRatios["1024x576"],
 					CurrentPage: 1,
 					topLevelCategory: filterOptions.topLevelCategory,
+					isDescending: filterOptions.isDescending,
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.WIDE_VIDEOS, filterOptions.topLevelCategory],
+		queryKey: [QueryKeys.WIDE_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending],
 		initialData: queryClient.getQueryData([
 			QueryKeys.WIDE_VIDEOS,
 			filterOptions.topLevelCategory,
+			filterOptions.isDescending,
 		]),
 	});
 
@@ -64,13 +68,15 @@ function LibraryHomePage({
 					resolution: DisplayAspectRatios["576x1024"],
 					CurrentPage: 1,
 					topLevelCategory: filterOptions.topLevelCategory,
+					isDescending: filterOptions.isDescending,
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.VERTICAL_VIDEOS, filterOptions.topLevelCategory],
+		queryKey: [QueryKeys.VERTICAL_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending],
 		initialData: queryClient.getQueryData([
 			QueryKeys.VERTICAL_VIDEOS,
 			filterOptions.topLevelCategory,
+			filterOptions.isDescending,
 		]),
 	});
 
@@ -81,13 +87,15 @@ function LibraryHomePage({
 					PageSize: 5,
 					CurrentPage: 1,
 					topLevelCategory: filterOptions.topLevelCategory,
+					isDescending: filterOptions.isDescending,
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.STORY_BOOKS, filterOptions.topLevelCategory],
+		queryKey: [QueryKeys.STORY_BOOKS, filterOptions.topLevelCategory, filterOptions.isDescending],
 		initialData: queryClient.getQueryData([
 			QueryKeys.STORY_BOOKS,
 			filterOptions.topLevelCategory,
+			filterOptions.isDescending,
 		]),
 	});
 
@@ -100,13 +108,15 @@ function LibraryHomePage({
 						storyType: StoryOutputTypes.SplitScreen,
 						CurrentPage: 1,
 						topLevelCategory: filterOptions.topLevelCategory,
+						isDescending: filterOptions.isDescending,
 					},
 				}),
 			staleTime: 3000,
-			queryKey: [QueryKeys.TIK_TOK, filterOptions.topLevelCategory],
+			queryKey: [QueryKeys.TIK_TOK, filterOptions.topLevelCategory, filterOptions.isDescending],
 			initialData: queryClient.getQueryData([
 				QueryKeys.TIK_TOK,
 				filterOptions.topLevelCategory,
+				filterOptions.isDescending,
 			]),
 		}
 	);
