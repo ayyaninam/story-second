@@ -23,6 +23,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
+import GenericPagination from "@/components/ui/generic-pagination";
 
 function LibraryGalleryPage({
 	orientation = "wide",
@@ -116,121 +117,7 @@ function LibraryGalleryPage({
 				thumbnails={galleryThumbnails}
 				areThumbnailsLoading={storiesList.isPending || storiesList.isFetching}
 			/>
-			<Pagination>
-				<PaginationContent>
-					{currentPage > 1 && (
-						<PaginationItem>
-							<PaginationPrevious
-								onClick={() => {
-									router.push({
-										query: {
-											...router.query,
-											page: currentPage - 1,
-										},
-									});
-								}}
-							/>
-						</PaginationItem>
-					)}
-					{/* useEllipses when too many pages between */}
-					{currentPage > 2 ? (
-						<>
-							<PaginationItem>
-								<PaginationLink
-									onClick={() => {
-										router.push({
-											query: {
-												...router.query,
-												page: 1,
-											},
-										});
-									}}
-								>
-									1
-								</PaginationLink>
-							</PaginationItem>
-							{currentPage !== 3 && (
-								<PaginationItem>
-									<PaginationEllipsis />
-								</PaginationItem>
-							)}
-						</>
-					) : null}
-					{Array.from({ length: 3 }, (_, i) => {
-						const pageNumber = currentPage - 1 + i;
-						if (
-							pageNumber >= 1 &&
-							pageNumber <= (storiesList.data?.totalPages || 0)
-						) {
-							return (
-								<PaginationItem key={pageNumber}>
-									<PaginationLink
-										onClick={() => {
-											router.push(
-												{
-													query: {
-														...router.query,
-														page: pageNumber,
-													},
-												},
-												undefined,
-												{ shallow: true }
-											);
-										}}
-									>
-										{pageNumber}
-									</PaginationLink>
-								</PaginationItem>
-							);
-						}
-					})}
-					{currentPage < (storiesList.data?.totalPages || 0) - 1 ? (
-						<>
-							{currentPage !== (storiesList.data?.totalPages || 0) - 2 && (
-								<PaginationItem>
-									<PaginationEllipsis />
-								</PaginationItem>
-							)}
-							<PaginationItem>
-								<PaginationLink
-									onClick={() => {
-										router.push(
-											{
-												query: {
-													...router.query,
-													page: storiesList.data?.totalPages,
-												},
-											},
-											undefined,
-											{ shallow: true }
-										);
-									}}
-								>
-									{storiesList.data?.totalPages}
-								</PaginationLink>
-							</PaginationItem>
-						</>
-					) : null}
-					{currentPage < (storiesList.data?.totalPages || 0) && (
-						<PaginationItem>
-							<PaginationNext
-								onClick={() => {
-									router.push(
-										{
-											query: {
-												...router.query,
-												page: currentPage + 1,
-											},
-										},
-										undefined,
-										{ shallow: true }
-									);
-								}}
-							/>
-						</PaginationItem>
-					)}
-				</PaginationContent>
-			</Pagination>
+			<GenericPagination currentPage={currentPage} totalPages={storiesList.data?.totalPages || 0} />
 		</div>
 	);
 }

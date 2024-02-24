@@ -105,10 +105,10 @@ export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
 export const SORTING_OPTIONS = {
 	DESCENDING: {
 		value: "desc",
-		label: "Descending",
+		label: "Newest First",
 	},
 	ASCENDING: {
 		value: "asc",
-		label: "Ascending",
+		label: "Oldest First",
 	},
 };

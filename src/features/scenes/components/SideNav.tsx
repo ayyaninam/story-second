@@ -12,6 +12,8 @@ import FreeCreditsIcon from "./icons/FreeCreditsIcon";
 import ChallengesIcon from "./icons/ChallengesIcon";
 import { Command } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import {router} from "next/client";
+import Link from "next/link";
 
 export const menuItems = [
 	{
@@ -42,6 +44,11 @@ export const menuItems = [
 ];
 
 export default function SideNav({ pageIndex }: { pageIndex: number }) {
+	const selectedStyle = {
+		background: "var(--menu-item-selected-background-color)",
+		borderColor: "var(--menu-item-selected-border-color)",
+		border: "1px solid rgba(255, 255, 255, 0.12)",
+	};
 	return (
 		<div className="w-[18rem] flex flex-col justify-between">
 			<div>
@@ -157,13 +164,15 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 					</div>
 				</div>
 
-				<Button
-					variant="outline"
-					className="min-w-full rounded-lg bg-transparent py-1.5 font-normal shadow-[inset_0px_0px_12px_0px_rgba(255, 255, 255, 0.08)]"
-					style={{ border: "1px solid rgba(255, 255, 255, 0.12)" }}
-				>
-					Upgrade Authorly
-				</Button>
+				<Link href="/pricing">
+					<Button
+						variant="outline"
+						className="min-w-full rounded-lg bg-transparent py-1.5 font-normal shadow-[inset_0px_0px_12px_0px_rgba(255, 255, 255, 0.08)]"
+						style={selectedStyle}
+					>
+						Upgrade Authorly
+					</Button>
+				</Link>
 			</div>
 		</div>
 	);

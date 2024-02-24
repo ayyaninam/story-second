@@ -25,15 +25,17 @@ function LibraryGalleryComponent({
 }) {
 	return (
 		<>
-			<div className="flex justify-between self-stretch min-w-100">
+			<div className="flex justify-between self-stretch min-w-100 items-center">
 				<div className="flex gap-2 h-[44px] items-center">
 					<div
-						className="w-[40px] h-[40px] bg-white rounded-lg"
+						className="w-[40px] h-[40px] bg-white rounded-lg flex items-center justify-center"
 						style={{
 							boxShadow:
 								"0px 1px 2px 0px rgba(9, 25, 72, 0.13), 0px 3px 8px 0px rgba(9, 25, 72, 0.05)",
 						}}
-					></div>
+					>
+						{galleryDetails.icon}
+					</div>
 					<div>
 						<div className="font-bold text-base text-slate-950">
 							{galleryDetails.header.title}
@@ -43,44 +45,23 @@ function LibraryGalleryComponent({
 						</div>
 					</div>
 				</div>
-				<Button
-					type="button"
-					className={
-						"flex py-2 px-4 gap-1 justify-center gap-1 rounded-[52px] text-primary h-fit"
-					}
-					style={navigationButtonStyles}
-					onClick={() => {
-						if (!isIndependentGalleryPage && setSelectedOrientationTab) {
-							setSelectedOrientationTab(galleryDetails.orientation);
+				{!isIndependentGalleryPage && (
+					<Button
+						type="button"
+						className={
+							"flex py-2 px-4 gap-1 justify-center rounded-[52px] text-primary h-fit"
 						}
-					}}
-				>
-					{isIndependentGalleryPage ? (
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							viewBox="0 0 16 16"
-							fill="none"
-						>
-							<path
-								d="M8 3.33337V12.6667"
-								stroke="currentColor"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M3.33301 8H12.6663"
-								stroke="currentColor"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-						</svg>
-					) : null}
-					{isIndependentGalleryPage
-						? "Create a new collection"
-						: galleryDetails.header.buttonText}
-				</Button>
+						style={navigationButtonStyles}
+						onClick={() => {
+							if (!isIndependentGalleryPage && setSelectedOrientationTab) {
+								setSelectedOrientationTab(galleryDetails.orientation);
+							}
+						}}
+					>
+						{galleryDetails.header.buttonText}
+					</Button>
+				)}
+
 			</div>
 			<div
 				className={

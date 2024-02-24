@@ -4,9 +4,11 @@ import SideNav, { menuItems } from "./SideNav";
 const getBackgroundGradient = (page?: string) => {
 	switch (page) {
 		case "explore":
-			return "linear-gradient(270deg, #A734EA 69.69%, #020817 99.69%)";
+			return "linear-gradient(270deg, #3A54CB 69.69%, #020817 99.69%)";
+		case "generate":
+			return "linear-gradient(270deg, #BB55F7 69.69%, #020817 99.69%)";
 		case "library":
-			return "linear-gradient(270deg, #65f376 69.69%, #020817 99.69%)";
+			return "linear-gradient(270deg, #157A6E 69.69%, #020817 99.69%)";
 		default:
 			return "linear-gradient(270deg, #A734EA 69.69%, #020817 99.69%)";
 	}

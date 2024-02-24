@@ -22,11 +22,11 @@ function Library({
 				:root {
 					--menu-item-border-color: rgba(122, 255, 180, 0.2);
 					--menu-item-selected-background-color: radial-gradient(
-						50.88% 100% at 0% 50%,
-						rgba(18, 239, 88, 0.502) 37.5%,
-						rgba(102, 129, 255, 0) 100%
+						88.31% 100% at 0% 50%,
+						rgba(48, 149, 136, 0.50) 25.5%, 
+						rgba(48, 149, 136, 0.00) 100%
 					);
-					--menu-item-selected-border-color: rgba(122, 255, 180, 0.1);
+					--menu-item-selected-border-color: rgba(56, 142, 131, 0.20);
 					--stepper-box-shadow: 0px 4px 4px 0px rgba(122, 255, 133, 0.4);
 				}
 			`}</style>
@@ -47,6 +47,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		genre: queryGenre,
 		page = "1",
 		orientation = VIDEO_ORIENTATIONS.ALL.id,
+		sort = "desc",
 	} = context.query;
 
 	try {
@@ -56,12 +57,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 			staleTime: 3000,
 		});
 	} catch (error) {
-		console.error("Error fetching data123", error);
+		console.error("Error fetching data", error);
 	}
 
 	const categories = queryClient.getQueryData<string[]>([QueryKeys.CATEGORIES]);
 
-	const genre = categories?.includes(queryGenre as string) ? queryGenre : "all";
+	const genre = categories?.includes(queryGenre as string) ? queryGenre as string: "all";
+
+	const isDescending = sort === "desc";
 
 	try {
 		if (orientation === VIDEO_ORIENTATIONS.ALL.id) {
@@ -75,9 +78,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								CurrentPage: 1,
 								topLevelCategory: genre as string,
 								storyType: StoryOutputTypes.Video,
+								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.WIDE_VIDEOS, genre],
+					queryKey: [QueryKeys.WIDE_VIDEOS, genre, isDescending],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -89,9 +93,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								CurrentPage: 1,
 								topLevelCategory: genre as string,
 								storyType: StoryOutputTypes.Video,
+								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.VERTICAL_VIDEOS, genre],
+					queryKey: [QueryKeys.VERTICAL_VIDEOS, genre, isDescending],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -101,9 +106,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								PageSize: 5,
 								CurrentPage: 1,
 								topLevelCategory: genre as string,
+								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.STORY_BOOKS, genre],
+					queryKey: [QueryKeys.STORY_BOOKS, genre, isDescending],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -114,9 +120,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								storyType: StoryOutputTypes.SplitScreen,
 								CurrentPage: 1,
 								topLevelCategory: genre as string,
+								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.TIK_TOK, genre],
+					queryKey: [QueryKeys.TIK_TOK, genre, isDescending],
 					staleTime: 3000,
 				}),
 			]);

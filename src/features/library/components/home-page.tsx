@@ -132,7 +132,10 @@ function LibraryHomePage({
 
 	return (
 		<div className="flex p-4 flex-col gap-2 grow items-center justify-center">
-			<LibraryHeroSection />
+			{/* # TODO: select at random from the format based on responsiveness */}
+			<LibraryHeroSection
+				randomThumbnail={segregatedStories[VIDEO_ORIENTATIONS.WIDE.id]?.[0]?.thumbnail}
+			/>
 			<div className="flex max-w-[1440px] w-full flex-col gap-4">
 				{Object.values(VIDEO_ORIENTATIONS).map((orientation) =>
 					orientation.id !== VIDEO_ORIENTATIONS.ALL.id &&
