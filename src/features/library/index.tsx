@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState } from "react";
+import React, { useState } from "react";
 import { LibraryHeader } from "./components/header";
 import { VIDEO_ORIENTATIONS } from "./constants";
 import LibraryHomePage from "./components/home-page";
@@ -22,7 +22,7 @@ function LibraryPage() {
 	};
 
 	return (
-		<div className="h-full overflow-scroll bg-background rounded-lg mr-2 flex-grow">
+		<div className="h-full overflow-y-scroll bg-background rounded-lg mr-2 flex-grow">
 			<LibraryHeader
 				selectedOrientationTab={selectedOrientationTab}
 				setSelectedOrientationTab={setSelectedOrientationTab}
