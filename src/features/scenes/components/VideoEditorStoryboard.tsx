@@ -31,11 +31,9 @@ import { useRouter } from "next/router";
 import { VideoPlayerHandler } from "@/features/edit-story/components/video-player";
 // import ScriptEditorView from "./ScriptEditorView";
 // import StoryboardView from "./StoryboardViewTypesComponent";
-import StoryboardView from "./StoryboardView";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
-import StoryboardViewTypes from "./StoryboardViewTypesComponent";
 import AutosizeInput from "react-input-autosize";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -365,7 +363,9 @@ export default function VideoEditorStoryboard({
 														<div className="w-[55%] flex justify-between items-center p-2 ">
 															<div className="flex flex-wrap flex-row ">
 																{scene.segments.map((segment, segmentIndex) => (
-																	<span>{segment.textContent}</span>
+																	<span key={segmentIndex}>
+																		{segment.textContent}
+																	</span>
 																))}
 															</div>
 															<div className="hidden group-hover:block ">

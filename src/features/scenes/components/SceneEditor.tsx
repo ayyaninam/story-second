@@ -237,26 +237,6 @@ const SceneEditorView = ({
 						</p>
 
 						<div className="flex gap-1 text-slate-600 text-sm py-1">
-							{/* <Dropdown
-								items={[
-									{ label: "60 Second", value: "60" },
-									{ label: "90 Second", value: "90" },
-								]}
-							/>
-							<Dropdown
-								items={[
-									{ label: "Adventure", value: "adventure" },
-									{ label: "Suspense", value: "suspense" },
-									{ label: "Thriller", value: "thriller" },
-								]}
-							/>
-							<Dropdown
-								items={[
-									{ label: "Video", value: "video" },
-									{ label: "Audio", value: "audio" },
-									{ label: "None", value: "none" },
-								]}
-							/> */}
 							<p>by {WebstoryData?.user?.name}</p>
 						</div>
 					</div>

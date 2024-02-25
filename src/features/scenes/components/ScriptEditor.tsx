@@ -17,18 +17,14 @@ import { mainSchema } from "@/api/schema";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
-import EditSegmentModal from "./EditSegmentModal";
 import { SegmentModificationData } from "@/types";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
 import { VideoPlayerHandler } from "@/features/edit-story/components/video-player";
-// import ScriptEditorView from "./ScriptEditorView";
-// import StoryboardView from "./StoryboardViewTypesComponent";
-import StoryboardView from "./StoryboardView";
+
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
-import StoryboardViewTypes from "./StoryboardViewTypesComponent";
 import AutosizeInput from "react-input-autosize";
 
 const MAX_SUMMARY_LENGTH = 251;
@@ -276,42 +272,6 @@ export default function ScriptEditor({
 					</div>
 				</div>
 			</div>
-
-			{/* <StoryboardView
-				refs={refs}
-				dispatch={dispatch}
-				getSegmentStatus={getSegmentStatus}
-				handleEnter={handleEnter}
-				handleInput={handleInput}
-				setEditSegmentsModalState={setEditSegmentsModalState}
-				setPreviousStory={setPreviousStory}
-				story={story}
-				WebstoryData={WebstoryData}
-			/> */}
-			{/* <ScriptEditorView WebstoryData={WebstoryData} /> */}
-
-			{editSegmentsModalState?.scene !== undefined &&
-				editSegmentsModalState?.sceneId !== undefined && (
-					<EditSegmentModal
-						open={
-							editSegmentsModalState?.open &&
-							editSegmentsModalState.scene !== undefined &&
-							editSegmentsModalState.sceneId !== undefined
-						}
-						onClose={() => setEditSegmentsModalState({})}
-						scene={editSegmentsModalState?.scene!}
-						sceneId={editSegmentsModalState?.sceneId}
-						dispatch={dispatch}
-						story={story}
-						onSceneEdit={(scene, index) => {
-							dispatch({
-								type: "edit_scene",
-								scene: scene,
-								index: index,
-							});
-						}}
-					/>
-				)}
 		</>
 	);
 }

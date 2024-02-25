@@ -10,7 +10,6 @@ import useWebstoryContext from "../edit-story/providers/WebstoryContext";
 import Stepper from "./components/Stepper";
 import { StepperStep } from "@/utils/enums";
 import Navbar from "./components/Navbar";
-import VideoEditorStoryboard from "./components/VideoEditorStoryboard";
 import Footer from "./components/Footer";
 import EditorContainer from "./components/EditorContainer";
 import ScriptEditor from "./components/ScriptEditor";

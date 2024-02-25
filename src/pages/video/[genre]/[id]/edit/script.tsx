@@ -3,7 +3,7 @@ import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
-import StoryScenes from "@/features/scenes";
+import StoryScenes from "@/features/scenes/ScenesLayout";
 import EditScript from "@/features/scenes/EditScript";
 import ScriptLayout from "@/features/scenes/ScriptLayout";
 import ScenesLayout from "@/features/scenes/components/Layout";

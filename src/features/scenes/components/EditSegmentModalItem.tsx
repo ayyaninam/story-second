@@ -43,22 +43,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-// type SelectItemProps = {
-// 	value: string;
-// 	disabled?: boolean;
-// };
-
-// const SelectItem = ({
-// 	children,
-// 	...props
-// }: PropsWithChildren<SelectItemProps>) => {
-// 	return (
-// 		<Select.Item {...props}>
-// 			<Select.ItemText>{children}</Select.ItemText>
-// 		</Select.Item>
-// 	);
-// };
-
 export default function EditSegmentModalItem({
 	segment,
 	story,
