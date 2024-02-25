@@ -95,6 +95,7 @@ export const toRemotionSegment = async ({
 				format: "video",
 				videoURL,
 			},
+			seekId,
 		};
 	} else if (imageURL) {
 		pageSegment = {

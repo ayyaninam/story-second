@@ -88,3 +88,13 @@ export type LibraryPageVideoQueryOptions = {
 	isDescending?: boolean;
 	topLevelCategory: string;
 };
+export type RegenerateVideoSegments = {
+	image_key: string;
+	image_prompt: string;
+	image_cfg_scale: number;
+	image_resolution: number;
+	image_sampling_steps: number;
+	image_seed: number;
+	image_alt_text: string;
+	target_paths: string[];
+};

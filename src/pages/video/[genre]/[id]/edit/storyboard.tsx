@@ -4,7 +4,7 @@ import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import StoryScenes from "@/features/scenes";
-import EditScript from "@/features/scenes/EditScript";
+import EditScript from "@/features/scenes/Storyboard";
 import ScenesLayout from "@/features/scenes/components/Layout";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";

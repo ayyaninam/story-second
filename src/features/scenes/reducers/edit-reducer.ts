@@ -1,5 +1,9 @@
 import { mainSchema } from "@/api/schema";
-import { StoryImageStyles } from "@/utils/enums";
+import {
+	AspectRatios,
+	DisplayAspectRatios,
+	StoryImageStyles,
+} from "@/utils/enums";
 import { nanoid } from "nanoid";
 
 export enum StoryStatus {
@@ -27,6 +31,7 @@ export type Settings = {
 export type Segment = {
 	id: number;
 	settings?: Settings;
+
 	textContent: string;
 	imageKey: string;
 	videoKey: string;
@@ -51,6 +56,8 @@ export type Scene = {
 export type EditStoryDraft = {
 	id: string;
 	title: string;
+	displayResolution: DisplayAspectRatios;
+	resolution: AspectRatios;
 	settings?: {
 		style: StoryImageStyles | null;
 		voice: string;
@@ -156,6 +163,11 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			} else {
 				draft.settings.voice = voiceType;
 			}
+			break;
+		}
+		case "reset": {
+			draft = action.draft;
+			return draft;
 		}
 	}
 };

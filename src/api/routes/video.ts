@@ -2,6 +2,7 @@ import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
 import { mainSchema, mlSchema } from "../schema";
 import { getJwt } from "@/utils/jwt";
 import { StoryOutputTypes } from "@/utils/enums";
+import { RegenerateVideoSegments } from "@/types";
 
 const video = {
 	getUploadUrl: async (
@@ -52,7 +53,7 @@ const video = {
 		accessToken?: string
 	) => {
 		const data: string = await mlFetcher(accessToken ?? getJwt())
-			.put(`edit-segment`, {
+			.put(`edit-segments`, {
 				body: JSON.stringify(params),
 			})
 			.json();
@@ -62,9 +63,21 @@ const video = {
 	regenerateImage: async (
 		params: mlSchema["RegenerateImageRequest"],
 		accessToken?: string
-	): Promise<unknown> => {
+	): Promise<RegenerateVideoSegments> => {
 		const data = await mlFetcher(accessToken ?? getJwt())
 			.post(`regenerate-image`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		return data as RegenerateVideoSegments;
+	},
+	regenerateVideo: async (
+		params: mlSchema["RegenerateVideoRequest"],
+		accessToken?: string
+	): Promise<unknown> => {
+		const data = await mlFetcher(accessToken ?? getJwt())
+			.post(`regenerate-video`, {
 				body: JSON.stringify(params),
 			})
 			.json();

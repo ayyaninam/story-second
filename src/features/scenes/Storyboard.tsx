@@ -1,22 +1,31 @@
 "use client";
+import {
+	Compass,
+	CrossIcon,
+	FlipVertical,
+	Menu,
+	Settings2,
+} from "lucide-react";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 import { GetImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
+import { env } from "@/env.mjs";
 import useWebstoryContext from "../edit-story/providers/WebstoryContext";
 import Stepper from "./components/Stepper";
 import { StepperStep } from "@/utils/enums";
 import Navbar from "./components/Navbar";
 import VideoEditorStoryboard from "./components/VideoEditorStoryboard";
-import Footer from "./components/Footer";
 import EditorContainer from "./components/EditorContainer";
-import SceneEditorView from "./components/SceneEditor";
+import Footer from "./components/Footer";
 
-export default function StoryScenes() {
+export default function EditScript() {
 	const router = useRouter();
+	const isDesktop = useMediaQuery("(min-width: 1280px)");
 
 	const [enableQuery, setEnableQuery] = useState(true);
 	const [story, setStory] = useWebstoryContext();
@@ -68,16 +77,12 @@ export default function StoryScenes() {
 
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>
-				<EditorContainer view="scene">
-					{/* <VideoEditorStoryboard
+				<EditorContainer view="story">
+					<VideoEditorStoryboard
 						ImageRatio={ImageRatio}
 						WebstoryData={Webstory.data}
 						isError={Webstory.isError}
 						isLoading={isLoading}
-					/> */}
-					<SceneEditorView
-						WebstoryData={Webstory.data}
-						ImageRatio={ImageRatio}
 					/>
 				</EditorContainer>
 			</div>

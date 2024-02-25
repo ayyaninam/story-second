@@ -5,7 +5,6 @@ import { mainSchema } from "@/api/schema";
 import { PlayCircle, Plus } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import EditSegmentModal from "./EditSegmentModal";
 
 import GenerateIcon from "@/components/icons/dashboard/generate-icon";
 
