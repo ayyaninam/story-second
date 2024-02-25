@@ -104,7 +104,6 @@ export default function StoryboardView({
 				<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
 					{Format.Title(WebstoryData?.storyTitle)}
 				</p>
-
 				<div className="w-full inline-flex text-slate-400 text-xs py-1">
 					<div className="flex">
 						Storyboard for a <u> 60 Second</u>{" "}

@@ -2051,6 +2051,20 @@ export interface paths {
       };
     };
   };
+  "/api/User/StoryBooks/{topLevelCategory}": {
+    /**
+     * Get user stories under the specified category
+     * @description Get user's stories under the specified category based on pagination parameters
+     */
+    get: operations["GetUserStoriesByTopLevelCategory"];
+  };
+  "/api/User/Videos/{topLevelCategory}": {
+    /**
+     * Get user videos under the specified category
+     * @description Get user's videos under the specified category based on pagination parameters
+     */
+    get: operations["GetUserVideosByTopLevelCategory"];
+  };
   "/api/Video/PreSignedUrl": {
     get: {
       parameters: {
@@ -4066,6 +4080,11 @@ export interface components {
     };
     /** @description DTO used to register a new user. */
     RegisterUserDTO: {
+      /**
+       * AuthId
+       * @description The user's unique identifier from Social Sign-On.
+       */
+      authId: string;
       /**
        * Name
        * @description The user's name.
@@ -6105,10 +6124,10 @@ export interface components {
        */
       storyDone?: boolean;
       /**
-       * VideoDone
+       * VideosDone
        * @description Whether the story video generation is done or not.
        */
-      videoDone?: boolean;
+      videosDone?: boolean;
       /**
        * ImagesDone
        * @description Whether the story image generation is done or not.
@@ -7029,9 +7048,7 @@ export interface components {
       /** Format: date-time */
       endDate?: string | null;
       /** Format: date-time */
-      nextBillingDate?: string | null;
-      /** Format: date-time */
-      lastRenewalDate?: string | null;
+      nextRefreshDate?: string | null;
       /** Format: date-time */
       canceledDate?: string | null;
       /** Format: uuid */
@@ -7067,6 +7084,11 @@ export interface components {
        * @description The date and time the user's subscription will expire.
        */
       endDate?: string | null;
+      /**
+       * Format: date-time
+       * @description The date and time the user's subscription will refresh.
+       */
+      nextRefreshDate?: string | null;
     };
     /** @description DTO used to verify a user's email address. */
     VerifyEmailDTO: {
@@ -7130,7 +7152,7 @@ export interface components {
       /** Format: date-time */
       created?: string;
       storyDone?: boolean;
-      videoDone?: boolean;
+      videosDone?: boolean;
       imagesDone?: boolean;
       isPublic?: boolean;
       pluginGenerated?: boolean | null;
@@ -7582,6 +7604,70 @@ export interface operations {
       /** @description Success */
       200: {
         content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Get user stories under the specified category
+   * @description Get user's stories under the specified category based on pagination parameters
+   */
+  GetUserStoriesByTopLevelCategory: {
+    parameters: {
+      query?: {
+        CurrentPage?: number;
+        PageSize?: number;
+        searchTerm?: string;
+        isDescending?: boolean;
+      };
+      path: {
+        topLevelCategory: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+          "application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+          "text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Get user videos under the specified category
+   * @description Get user's videos under the specified category based on pagination parameters
+   */
+  GetUserVideosByTopLevelCategory: {
+    parameters: {
+      query?: {
+        CurrentPage?: number;
+        PageSize?: number;
+        storyType?: components["schemas"]["StoryType"];
+        searchTerm?: string;
+        resolution?: components["schemas"]["DisplayResolution"];
+        isDescending?: boolean;
+      };
+      path: {
+        topLevelCategory: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "text/plain": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+          "application/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+          "text/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+        };
       };
       /** @description Unauthorized */
       401: {

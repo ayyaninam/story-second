@@ -7,6 +7,7 @@ import {
 } from "../reducers/edit-reducer";
 import React from "react";
 import { nanoid } from "nanoid";
+import { AspectRatios } from "@/utils/enums";
 
 // samplingSteps?: number; // 2-10
 // 	denoising?: number; // 0-1,
@@ -19,6 +20,10 @@ export const WebstoryToStoryDraft = (
 ): EditStoryDraft => {
 	return {
 		id: Webstory.id!,
+		displayResolution: Webstory.resolution,
+		resolution:
+			Webstory.scenes?.[0]?.videoSegments?.[0]?.imageResolution ??
+			AspectRatios["576x1024"],
 		scenes:
 			Webstory.scenes?.map((scene) => ({
 				id: scene.id!,

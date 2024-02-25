@@ -7,6 +7,7 @@ import {
 	ChevronDown,
 	ChevronRight,
 	LayoutList,
+	Plus,
 	SparkleIcon,
 } from "lucide-react";
 import { useImmerReducer } from "use-immer";
@@ -38,6 +39,7 @@ import StoryboardViewTypes from "./StoryboardViewTypesComponent";
 import AutosizeInput from "react-input-autosize";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
+import { GetImageRatio } from "@/utils/image-ratio";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -106,7 +108,8 @@ export default function VideoEditorStoryboard({
 	});
 
 	const handleSubmitEditSegments = async () => {
-		const diff = GenerateStoryDiff(previousStory, story);
+		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
+		console.log(diff);
 		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
 			details: { Ind: segment.id, Text: segment.textContent },
 			operation: SegmentModifications.Edit,
@@ -128,6 +131,10 @@ export default function VideoEditorStoryboard({
 				operation: SegmentModifications.Delete,
 			})
 		);
+		if (!additions.length && !edits.length && !deletions.length) {
+			console.log("No edits found");
+			return;
+		}
 
 		const editedResponse = await EditSegment.mutateAsync({
 			story_id: WebstoryData?.id as string,
@@ -149,7 +156,8 @@ export default function VideoEditorStoryboard({
 	const handleRegenerateImage = async (
 		segment: Segment,
 		sceneIndex: number,
-		segmentIndex: number
+		segmentIndex: number,
+		saveBeforeRegenerating: boolean = false
 	) => {
 		dispatch({
 			type: "edit_segment",
@@ -157,10 +165,13 @@ export default function VideoEditorStoryboard({
 			segmentIndex: segmentIndex,
 			segment: { ...segment, imageStatus: StoryStatus.PENDING },
 		});
+		if (saveBeforeRegenerating) {
+			await handleSubmitEditSegments();
+		}
 		await api.video.regenerateImage({
 			// @ts-ignore
 			image_style: segment.settings?.style!,
-			prompt: segment.settings?.prompt!,
+			prompt: segment.settings?.prompt ?? segment.textContent,
 			segment_idx: segment.id,
 			story_id: story.id,
 			story_type: WebstoryData?.storyType!,
@@ -257,41 +268,83 @@ export default function VideoEditorStoryboard({
 												{story.scenes.map((scene, sceneIndex) => (
 													<div
 														key={sceneIndex}
-														className="flex flex-row justify-between w-full"
+														className="flex flex-row justify-between w-full items-center"
 													>
 														<div className="flex items-center w-[45%] space-y-1">
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
 																	<React.Fragment key={segmentIndex}>
 																		{segment.imageStatus ===
-																		StoryStatus.COMPLETE ? (
+																			StoryStatus.COMPLETE && (
 																			<>
-																				<Image
-																					src={Format.GetImageUrl(
-																						segment.imageKey
-																					)}
-																					key={segment.imageKey}
-																					width={44}
-																					height={68}
-																					alt={segment.imageKey}
-																					className="z-10"
-																				/>
-																				{segmentIndex !==
-																					scene.segments.length - 1 && (
-																					<ChevronRight
-																						width={16}
-																						height={16}
+																				<div
+																					className="relative h-20"
+																					style={{
+																						aspectRatio: GetImageRatio(
+																							story.resolution
+																						).ratio,
+																					}}
+																				>
+																					<Image
+																						alt={segment.textContent}
+																						src={Format.GetImageUrl(
+																							segment.imageKey
+																						)}
+																						className="rounded-sm"
+																						layout="fill"
+																						objectFit="cover" // Or use 'cover' depending on the desired effect
+																						style={{ objectFit: "contain" }}
 																					/>
-																				)}
+																				</div>
 																			</>
-																		) : (
-																			<Skeleton className="w-[44px] h-[68px]" />
+																		)}
+																		{segment.imageStatus ===
+																			StoryStatus.PENDING && (
+																			<div
+																				className="relative h-20"
+																				style={{
+																					aspectRatio: GetImageRatio(
+																						story.resolution
+																					).ratio,
+																				}}
+																			>
+																				<Skeleton className="w-full h-full" />
+																			</div>
+																		)}
+																		{segment.imageStatus ===
+																			StoryStatus.READY && (
+																			<div
+																				className="relative h-20"
+																				style={{
+																					aspectRatio: GetImageRatio(
+																						story.resolution
+																					).ratio,
+																				}}
+																			>
+																				<div className="w-full h-full bg-slate-100 rounded-sm border border-slate-300 flex items-center justify-center border-dashed">
+																					<div className="rounded-full w-6 h-6 bg-slate-200 flex items-center justify-center">
+																						<Plus
+																							className="text-slate-500 stroke-2"
+																							width={12}
+																							height={12}
+																						/>
+																					</div>
+																				</div>
+																			</div>
+																		)}
+																		{segmentIndex !==
+																			scene.segments.length - 1 && (
+																			<ChevronRight
+																				width={16}
+																				height={16}
+																				className="text-slate-500 stroke-1"
+																			/>
 																		)}
 																	</React.Fragment>
 																);
 															})}
 														</div>
-														<div className="w-[55%] flex justify-between  hover:bg-slate-50 group">
+														<div className="w-[55%] flex justify-between items-center p-2 rounded-md hover:bg-slate-50 group">
 															<div className="flex flex-wrap flex-row ">
 																{scene.segments.map((segment, segmentIndex) => (
 																	<span
@@ -299,11 +352,11 @@ export default function VideoEditorStoryboard({
 																		style={{ backgroundColor: "transparent" }}
 																		className={cn(`flex flex-wrap w-full`)}
 																		onClick={() => {
-																			handleRegenerateImage(
-																				segment,
-																				sceneIndex,
-																				segmentIndex
-																			);
+																			// handleRegenerateImage(
+																			// 	segment,
+																			// 	sceneIndex,
+																			// 	segmentIndex
+																			// );
 																		}}
 																	>
 																		<AutosizeInput
@@ -336,7 +389,6 @@ export default function VideoEditorStoryboard({
 																			}
 																			value={segment.textContent}
 																			onChange={(e) => {
-																				console.log(">>>> e", e);
 																				handleInput(
 																					e,
 																					scene,
@@ -351,7 +403,7 @@ export default function VideoEditorStoryboard({
 															</div>
 															<div className="hidden group-hover:block ">
 																<OptionsButton
-																	onSettingsClick={() =>
+																	onClick={() =>
 																		setEditSegmentsModalState({
 																			open: true,
 																			dispatch: dispatch,
@@ -375,19 +427,6 @@ export default function VideoEditorStoryboard({
 				</div>
 			</div>
 
-			{/* <StoryboardView
-				refs={refs}
-				dispatch={dispatch}
-				getSegmentStatus={getSegmentStatus}
-				handleEnter={handleEnter}
-				handleInput={handleInput}
-				setEditSegmentsModalState={setEditSegmentsModalState}
-				setPreviousStory={setPreviousStory}
-				story={story}
-				WebstoryData={WebstoryData}
-			/> */}
-			{/* <ScriptEditorView WebstoryData={WebstoryData} /> */}
-
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<EditSegmentModal
@@ -397,6 +436,7 @@ export default function VideoEditorStoryboard({
 							editSegmentsModalState.sceneId !== undefined
 						}
 						onClose={() => setEditSegmentsModalState({})}
+						handleRegenerateImage={handleRegenerateImage}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
 						dispatch={dispatch}
@@ -415,13 +455,15 @@ export default function VideoEditorStoryboard({
 }
 
 const OptionsButton = (props: {
-	onSettingsClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-	onExpandClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+	onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }) => (
-	<div className="w-[87px] h-[72px] px-[9px] py-5 justify-center items-center inline-flex">
-		<div className="bg-gradient-to-b from-white to-slate-50 rounded shadow border border-slate-200 flex-col justify-start items-center gap-2.5 inline-flex">
-			<div className="self-stretch h-8 pl-[5px] pr-1 opacity-50 rounded-[3px] shadow shadow-inner justify-end items-center inline-flex">
-				<div className="px-0.5 flex-col justify-start items-start inline-flex">
+	<div>
+		<div
+			onClick={props.onClick}
+			className="bg-gradient-to-b from-white to-slate-50 rounded hover:shadow border border-slate-200 flex-col justify-start  hover:cursor-pointer items-center gap-2.5 inline-flex"
+		>
+			<div className="self-stretch h-8 pl-[5px] pr-1 opacity-50 rounded-[3px] hover:shadow justify-end items-center inline-flex">
+				{/* <div className="px-0.5 flex-col justify-start items-start inline-flex">
 					<div className="self-stretch justify-between items-center inline-flex">
 						<div className="flex-col justify-start items-center inline-flex">
 							<svg
@@ -440,13 +482,10 @@ const OptionsButton = (props: {
 							</svg>
 						</div>
 					</div>
-				</div>
-				<div className="px-0.5 flex-col justify-start items-start inline-flex">
+				</div> */}
+				<div className="px-0.5 flex-col justify-start items-start inline-flex ">
 					<div className="self-stretch justify-between items-center inline-flex">
-						<div
-							className="flex-col justify-start items-center inline-flex hover:cursor-pointer"
-							onClick={props.onSettingsClick}
-						>
+						<div className="flex-col justify-start items-center inline-flex ">
 							<svg
 								width={16}
 								height={16}
@@ -464,7 +503,7 @@ const OptionsButton = (props: {
 						</div>
 					</div>
 				</div>
-				<div className="px-0.5 flex-col justify-start items-start inline-flex">
+				{/* <div className="px-0.5 flex-col justify-start items-start inline-flex">
 					<div className="self-stretch justify-between items-center inline-flex">
 						<div
 							className="flex-col justify-start items-center inline-flex"
@@ -485,7 +524,7 @@ const OptionsButton = (props: {
 							</svg>
 						</div>
 					</div>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	</div>

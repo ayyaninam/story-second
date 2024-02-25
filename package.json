@@ -10,7 +10,7 @@
 		"lint": "next lint",
 		"build:webflow": "nodemon --exec 'node homepage-builder.js' --watch './src/features/landing/*' -e tsx",
 		"build:tiktok": "nodemon --exec 'node tiktok-builder.js' --watch './src/features/tiktok/*' -e tsx",
-		"api:generate-types": "npx openapi-typescript https://api.staging.storybird.ai/swagger/v1/swagger.json -o ./src/api/schema/main.d.ts && npx openapi-typescript https://ml.staging.authorly.ai/openapi.json -o ./src/api/schema/ml.d.ts",
+		"api:generate-types": "npx openapi-typescript https://api.staging.story.com/swagger/v1/swagger.json -o ./src/api/schema/main.d.ts && npx openapi-typescript https://ml.staging.story.com/openapi.json -o ./src/api/schema/ml.d.ts",
 		"format": "prettier . --write",
 		"prepare": "husky && husky install"
 	},
