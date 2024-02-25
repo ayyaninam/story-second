@@ -142,7 +142,7 @@
           </div>
         </nav>
         <div data-w-id="835e7a36-0bd9-c0ee-0eee-ba31bc15d20b" class="nav-button-wrapper">
-          <a href="/api/auth/login?returnTo=%2F%3Fsuccess%3DSigned%20in%2C%20please%20create%20your%20video%20in%20the%20prompt%20box%20below!" id="login-button" class="primary-button-black w-button">Log In</a>
+          <a href="/redirect-to-app" id="login-button" class="primary-button-black w-button">Visit App</a>
         </div>
         <div class="menu-button w-nav-button"><img src="landing/images/menu-btn.svg" loading="lazy" alt="icon" height="16" class="image-burger"></div>
       </div>
@@ -1460,64 +1460,5 @@
   <script src="landing/js/authorlyai-boilerplate.js" type="text/javascript"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
-
-  <script>
-    const client = new auth0.Auth0Client({ domain: 'https://auth.authorly.ai',
-      clientId: 'WpHVGdmaV50dY7LM94O9bfXzEhcEDvcr' });
-    const loginButton = document.getElementById("login-button")
-
-      const token = client.getTokenSilently({audience: 'https://api.authorly.ai/'}).then((token, error) => {
-      }).catch((error) => {
-        // TODO: This is a terrible, hacky solution as I couldn't get the actual getToken to work. Whoever is working on this please fix it :)
-        if (error.message === "Login required") {
-          console.log("User not logged in")
-        } else {
-          loginButton.innerHTML = "Dashboard"
-          loginButton.href = "/?success=Please enter your prompt in the prompt box below to get started"
-        }
-      })
-
-
-
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("error")) {
-      const error = params.get("error")
-      
-      Toastify({
-        text: error,
-        duration: 5000,
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "center", // `left`, `center` or `right`
-        backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)",
-        onClick: function(){} // Callback after click
-      }).showToast();
-      
-      params.delete("error");
-      window.history.replaceState({}, '', `${location.pathname}${params.toString().length ? `?${params}` : ""}`);
-    }
-    else if (params.get("success")) {
-      const success = params.get("success")
-      
-      Toastify({
-        text: success,
-        duration: 5000,
-        gravity: "top", // `top` or `bottom`
-        position: "center", // `left`, `center` or `right`
-        style: {
-          background: "white",
-          color: "#334155",
-          "stroke": "black"
-        },
-        onClick: function(){} // Callback after click
-      }).showToast();
-      
-      params.delete("success");
-      window.history.replaceState({}, '', `${location.pathname}${params.toString().length ? `?${params}` : ""}`);
-    }
-
-    
-  </script>
-
 </body>
 </html>

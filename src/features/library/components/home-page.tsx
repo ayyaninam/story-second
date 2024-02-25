@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import LibraryHeroSection from "./hero-section";
 import LibraryGalleryComponent from "./gallery-component";
 import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { useDebounce } from "usehooks-ts";
 import { getGalleryThumbnails } from "../utils";
+import {getJwt} from "@/utils/jwt";
 
 function LibraryHomePage({
 	setSelectedOrientationTab,
@@ -21,6 +22,12 @@ function LibraryHomePage({
 }) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
+
+	const [accessToken, setAccessToken] = useState("");
+	useEffect(() => {
+		setAccessToken(getJwt());
+		console.log("accessToken", accessToken)
+	}, []);
 
 	const filterOptions = useDebounce(
 		useMemo<LibraryPageVideoQueryOptions>(() => {
@@ -39,6 +46,7 @@ function LibraryHomePage({
 	const wideVideoList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>({
 		queryFn: () =>
 			api.library.getVideos({
+				accessToken,
 				params: {
 					PageSize: 7,
 					storyType: StoryOutputTypes.Video,
@@ -62,6 +70,7 @@ function LibraryHomePage({
 	>({
 		queryFn: () =>
 			api.library.getVideos({
+				accessToken,
 				params: {
 					PageSize: 5,
 					storyType: StoryOutputTypes.Video,
@@ -83,6 +92,7 @@ function LibraryHomePage({
 	const storyBooksList = useQuery<mainSchema["ReturnWebStoryDTOPagedList"]>({
 		queryFn: () =>
 			api.library.getStoryBooks({
+				accessToken,
 				params: {
 					PageSize: 5,
 					CurrentPage: 1,
@@ -103,6 +113,7 @@ function LibraryHomePage({
 		{
 			queryFn: () =>
 				api.library.getVideos({
+					accessToken,
 					params: {
 						PageSize: 5,
 						storyType: StoryOutputTypes.SplitScreen,

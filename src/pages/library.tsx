@@ -5,16 +5,20 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import api from "@/api"; // Ensure this points to your API setup
+import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/library/constants";
 import ScenesLayout from "@/features/scenes/components/Layout";
+import {getSession} from "@auth0/nextjs-auth0";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
 function Library({
+  session,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+	useSaveSessionToken(session);
 	return (
 		<HydrationBoundary state={dehydratedState}>
 			{/* declare css variables */}
@@ -42,6 +46,24 @@ Library.getLayout = function getLayout(page: ReactElement) {
 export default Library;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+	const session = await getSession(context.req, context.res);
+	if (!session) {
+		return {
+			redirect: {
+				destination: '/auth/login?returnTo=' + context.req.url,
+				permanent: false,
+			},
+		};
+	}
+	const accessToken = session.accessToken || "";
+	if (!accessToken) {
+		return {
+			redirect: {
+				destination: '/auth/login?returnTo=' + context.req.url,
+				permanent: false,
+			},
+		};
+	}
 	const queryClient = new QueryClient();
 	const {
 		genre: queryGenre,
@@ -72,6 +94,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 				queryClient.fetchQuery({
 					queryFn: () =>
 						api.library.getVideos({
+							accessToken: accessToken,
 							params: {
 								PageSize: 7,
 								resolution: DisplayAspectRatios["1024x576"],
@@ -87,6 +110,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 				queryClient.fetchQuery({
 					queryFn: () =>
 						api.library.getVideos({
+							accessToken: accessToken,
 							params: {
 								PageSize: 5,
 								resolution: DisplayAspectRatios["576x1024"],
@@ -102,6 +126,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 				queryClient.fetchQuery({
 					queryFn: () =>
 						api.library.getStoryBooks({
+							accessToken: accessToken,
 							params: {
 								PageSize: 5,
 								CurrentPage: 1,
@@ -115,6 +140,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 				queryClient.fetchQuery({
 					queryFn: () =>
 						api.library.getVideos({
+							accessToken: accessToken,
 							params: {
 								PageSize: 5,
 								storyType: StoryOutputTypes.SplitScreen,
@@ -137,6 +163,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 				queryFn: () => {
 					if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
 						return api.library.getStoryBooks({
+							accessToken: accessToken,
 							params: {
 								PageSize: 50,
 								...filterOptions,
@@ -145,6 +172,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 					}
 					if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
 						return api.library.getVideos({
+							accessToken: accessToken,
 							params: {
 								PageSize: 50,
 								storyType: StoryOutputTypes.SplitScreen,
@@ -153,6 +181,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 						});
 					}
 					return api.library.getVideos({
+						accessToken: accessToken,
 						params: {
 							PageSize: 50,
 							storyType: StoryOutputTypes.Video,
@@ -175,6 +204,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 	return {
 		props: {
 			dehydratedState: dehydrate(queryClient),
+			session: {...session},
 		},
 	};
 }

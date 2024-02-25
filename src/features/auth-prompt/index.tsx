@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { AuthPromptProps } from "@/types";
-import { useRouter } from "next/router";
 import AuthorlyLogo from "../../../public/auth-prompt/authorly-logo";
 
 export default function AuthPrompt({ onLogIn, onSignUp }: AuthPromptProps) {
@@ -26,7 +25,7 @@ export default function AuthPrompt({ onLogIn, onSignUp }: AuthPromptProps) {
 				</div>
 			</div>
 			{/* Div 2 */}
-			<div className="w-full lg:max-w-[32%] md:max-w-[50%] p-12 bg-purple-600">
+			<div className="w-full lg:max-w-[40%] md:max-w-[50%] p-12 bg-purple-600">
 				<div className="flex flex-col items-center justify-center space-y-2 bg-white w-[100%] h-[100%] text-slate-900 shadow-2xl">
 					<div className="pb-2 text-lg font-semibold">Get Started</div>
 					<Button

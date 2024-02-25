@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import LibraryGalleryComponent from "./gallery-component";
 import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { LIBRARY_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
@@ -24,6 +24,7 @@ import {
 	PaginationPrevious,
 } from "@/components/ui/pagination";
 import GenericPagination from "@/components/ui/generic-pagination";
+import {getJwt} from "@/utils/jwt";
 
 function LibraryGalleryPage({
 	orientation = "wide",
@@ -36,6 +37,11 @@ function LibraryGalleryPage({
 	const galleryDetails = LIBRARY_HOME_GALLERY_DATA[orientation];
 	const queryClient = useQueryClient();
 	const currentPage = parseInt((router.query.page as string) || "1");
+
+	const [accessToken, setAccessToken] = useState("");
+	useEffect(() => {
+		setAccessToken(getJwt());
+	}, []);
 
 	const filterOptions = useDebounce(
 		useMemo<LibraryPageVideoQueryOptions>(() => {
@@ -57,6 +63,7 @@ function LibraryGalleryPage({
 		queryFn: () => {
 			if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
 				return api.library.getStoryBooks({
+					accessToken,
 					params: {
 						PageSize: 50,
 						...filterOptions,
@@ -65,6 +72,7 @@ function LibraryGalleryPage({
 			}
 			if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
 				return api.library.getVideos({
+					accessToken,
 					params: {
 						PageSize: 50,
 						storyType: StoryOutputTypes.SplitScreen,
@@ -73,6 +81,7 @@ function LibraryGalleryPage({
 				});
 			}
 			return api.library.getVideos({
+				accessToken,
 				params: {
 					PageSize: 50,
 					storyType: StoryOutputTypes.Video,
