@@ -70,15 +70,15 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 				</div>
 				<div className="space-y-1">
 					{menuItems.map((menuItem, index) => (
-						<div
+						<Link
+							href={menuItem.redirectUrl}
 							key={index}
 							aria-selected={index === pageIndex}
 							className="ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem"
 						>
 							{menuItem.icon}
 							{menuItem.text}
-							<Link
-								href={menuItem.redirectUrl}
+							<div
 								className="flex gap-2 flex-grow justify-end items-center opacity-65">
 								<Command
 									className="h-5 w-5 p-0.5"
@@ -98,8 +98,8 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 								>
 									{menuItem.shortcut}
 								</span>
-							</Link>
-						</div>
+							</div>
+						</Link>
 					))}
 				</div>
 			</div>
