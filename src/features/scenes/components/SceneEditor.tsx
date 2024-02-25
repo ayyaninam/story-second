@@ -3,17 +3,17 @@ import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
+	Scene,
 	Segment,
-	StoryStatus,
 	TextStatus,
+	StoryStatus,
 } from "../reducers/edit-reducer";
 import { WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
-import AutosizeInput from "react-input-autosize";
 import {
 	Select,
 	SelectContent,
@@ -28,6 +28,7 @@ import VideoPlayer, {
 } from "@/features/edit-story/components/video-player";
 import { AspectRatios } from "@/utils/enums";
 import api from "@/api";
+import SceneEditSegmentModal from "./SceneEditSegmentModal";
 
 const Dropdown = ({
 	items,
@@ -52,10 +53,16 @@ const Dropdown = ({
 	);
 };
 
-const Loader = ({ percentage }: { percentage: number }) => {
+const Loader = ({
+	percentage,
+	index,
+}: {
+	percentage: number;
+	index: number;
+}) => {
 	const withOffset = `${60 + percentage}deg`;
 	return (
-		<span className="absolute -left-2.5 top-1/4">
+		<span className={`absolute -left-[1.5rem] -top-[${index + 1 / 4}]`}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="19"
@@ -98,6 +105,33 @@ const images = [
 	"https://s3-alpha-sig.figma.com/img/a4f0/438b/9fd5442c1e9eb8d094a4188d4adc9fea?Expires=1709510400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=jsvJq0~YWdDwXOImQPvDFl~rPY3nmOF1ToG8re6IhR7IXk9j9BjeYIayiicYEdyz41K~tP2PJYpA0hv~fTnODHWtvC1XoWCP6CC-3eJyQbtDmVXlqrBRgHXAP1QesdP02ng2k-5Zru7fEXUsEcLwgRCPmUVsTA1RAGxJ~QKqaJHRXQiouxitBl2RS8PCcHsluIwxppCJz40x4q8pWIHMX4Z925meQhEfsamVR4ldA6bDMxAVZlz0gV06Fm5y60zeCoeEdvHqvQpwWHUQf4HipSm9BWJE6hKRIH4NmxsZ~6qEScz-iLtyAP05Kbl7ep78Bqi8vy8tFA0ema5sRsq90w__",
 ];
 
+type HoveredThumbs = {
+	thumbs: string[];
+	index: number;
+};
+const ExpandedThumbnails = ({ data }: { data?: HoveredThumbs }) => {
+	if (data === undefined) return;
+
+	// We try sticky to row but it will be mess for different sized screens
+	// const topOffset = `${228 + (data.index - 1) * 80}px`;
+	return (
+		<div className="hover:hidden absolute -left-0 flex gap-x-1">
+			{data.thumbs.slice(0, 4).map((thumb, index) => (
+				<div
+					key={index}
+					className="w-10 h-6 rounded-[1px]"
+					style={{
+						border: "0.2px solid rgba(0, 0, 0, 0.40)",
+						background: `url(${thumb})`,
+						backgroundSize: "cover",
+						backgroundRepeat: "no-repeat",
+					}}
+				/>
+			))}
+		</div>
+	);
+};
+
 const SceneEditorView = ({
 	WebstoryData,
 	ImageRatio,
@@ -115,6 +149,14 @@ const SceneEditorView = ({
 		editStoryReducer,
 		WebstoryToStoryDraft(WebstoryData!)
 	);
+	const [hoveredThumbnails, setHoveredThumbnails] = useState<HoveredThumbs>();
+	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
+		open?: boolean;
+		scene?: Scene;
+		sceneId?: number;
+		dispatch?: React.Dispatch<EditStoryAction>;
+		story?: EditStoryDraft;
+	}>();
 
 	useEffect(() => {
 		if (WebstoryData) {
@@ -132,6 +174,16 @@ const SceneEditorView = ({
 	useEffect(() => {
 		console.log("Statuses changed:", statuses);
 	}, [statuses]);
+
+	useEffect(() => {
+		if (WebstoryData) {
+			console.log(
+				"Resetting webstory with new data:",
+				WebstoryToStoryDraft(WebstoryData)
+			);
+			dispatch({ type: "reset", draft: WebstoryToStoryDraft(WebstoryData) });
+		}
+	}, [WebstoryData, dispatch]);
 
 	const handleRegenerateVideo = async (
 		segment: Segment,
@@ -152,38 +204,40 @@ const SceneEditorView = ({
 	};
 
 	return (
-		<div
-			className="w-4/5 h-4/5 m-auto overflow-hidden"
-			style={{
-				borderRadius: "8px",
-				background: "#FEFEFF",
-				boxShadow:
-					"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-				backdropFilter: "blur(5px)",
-			}}
-		>
-			<div className="w-full flex justify-between py-1.5 px-3.5 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-200 bg-purple-100 text-purple-600">
-				<div className="flex items-center gap-1">
-					<p className="font-medium text-sm">Scene Editor • Playing Scene 3</p>
-					<ChevronDown className="w-4 h-4 opacity-50" />
+		<>
+			<div
+				className="relative w-4/5 h-4/5 m-auto overflow-hidden"
+				style={{
+					borderRadius: "8px",
+					background: "#FEFEFF",
+					boxShadow:
+						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
+					backdropFilter: "blur(5px)",
+				}}
+			>
+				<div className="w-full flex justify-between py-1.5 px-3.5 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-200 bg-purple-100 text-purple-600">
+					<div className="flex items-center gap-1">
+						<p className="font-medium text-sm">
+							Scene Editor • Playing Scene 3
+						</p>
+						<ChevronDown className="w-4 h-4 opacity-50" />
+					</div>
+					<p className="font-medium text-sm">
+						Pro Tip — You can individually regenerate images in this Storyboard.{" "}
+						<a className="underline" href="#">
+							Learn how
+						</a>
+					</p>
 				</div>
-				<p className="font-medium text-sm">
-					Pro Tip — You can individually regenerate images in this Storyboard.{" "}
-					<a className="underline" href="#">
-						Learn how
-					</a>
-				</p>
-			</div>
-			<div className="relative h-full border-l border-slate-200 pl-4 flex flex-row m-6 gap-x-24 items-start">
-				<Loader percentage={20} />
-				<div className="relative h-full items-start flex flex-col max-w-sm">
-					<div className="border-b pb-4 bg-[#FEFEFF]">
-						<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
+
+				<div className="w-fit h-full flex flex-col">
+					<div className="border-b mb-4 w-full mt-6 mx-9 bg-[#FEFEFF]">
+						<p className="text-2xl font-bold -tracking-[-0.6px]">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
 
-						<div className="w-full flex gap-1 text-slate-600 text-sm py-1">
-							<Dropdown
+						<div className="flex gap-1 text-slate-600 text-sm py-1">
+							{/* <Dropdown
 								items={[
 									{ label: "60 Second", value: "60" },
 									{ label: "90 Second", value: "90" },
@@ -202,156 +256,180 @@ const SceneEditorView = ({
 									{ label: "Audio", value: "audio" },
 									{ label: "None", value: "none" },
 								]}
-							/>
-							<p>by Anthony Deloso</p>
+							/> */}
+							<p>by {WebstoryData?.user?.name}</p>
 						</div>
 					</div>
-					<div className="flex flex-col h-screen justify-between overflow-y-scroll">
-						<div className="flex flex-col my-3 md:flex-row items-center w-full">
-							<div className="w-full h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
-								<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
-									<Editor
-										Webstory={WebstoryData!}
-										dispatch={dispatch}
-										story={story}
-									>
-										{({ handleEnter, handleInput, refs }) => {
-											return (
-												<>
-													{story.scenes.map((scene, sceneIndex) => (
-														<div
-															key={sceneIndex}
-															className="flex group hover:border rounded-sm items-center justify-between"
-														>
-															<div className="flex flex-shrink-0 flex-col -space-y-3 overflow-hidden mx-1 my-[18px] items-center justify-center">
-																{images.slice(0, 4).map((image, index) => (
-																	<div
-																		key={index}
-																		className="w-8 h-5 rounded-[1px]"
-																		style={{
-																			border: "0.2px solid rgba(0, 0, 0, 0.40)",
-																			background: `url(${image})`,
-																			backgroundSize: "cover",
-																			backgroundRepeat: "no-repeat",
-																		}}
-																	/>
-																))}
-															</div>
-															<div className="flex flex-wrap">
-																{scene.segments.map((segment, segmentIndex) => (
-																	<span
-																		key={segmentIndex}
-																		style={{ backgroundColor: "transparent" }}
-																		className={cn(
-																			"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
-																			segment.videoStatus ===
-																				StoryStatus.PENDING && "text-purple-800"
+					<div className="absolute h-[85%] w-px bg-slate-200 mt-6 ml-5" />
+
+					<div className="h-screen flex justify-between overflow-y-hidden">
+						<div className="h-full ml-2 max-w-md flex flex-col justify-between overflow-y-scroll">
+							<div className="flex flex-col my-3 md:flex-row items-center w-full">
+								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
+									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
+										<Editor
+											Webstory={WebstoryData!}
+											dispatch={dispatch}
+											story={story}
+										>
+											{({ handleEnter, handleInput, refs }) => {
+												return (
+													<>
+														{story.scenes.map((scene, sceneIndex) => (
+															<>
+																<div
+																	key={sceneIndex}
+																	className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
+																	// onMouseEnter={() =>
+																	// 	setHoveredThumbnails(() => ({
+																	// 		index: sceneIndex,
+																	// 		thumbs: [...images],
+																	// 	}))
+																	// }
+																	// onMouseLeave={() =>
+																	// 	setHoveredThumbnails(undefined)
+																	// }
+																>
+																	{scene.status === StoryStatus.PENDING && (
+																		<Loader
+																			percentage={20}
+																			index={sceneIndex}
+																		/>
+																	)}
+
+																	{/* <div className="group-hover:hidden flex flex-shrink-0 flex-col -space-y-4 overflow-hidden mx-1 my-[18px] items-center justify-center">
+																		{images.slice(0, 4).map((image, index) => (
+																			<div
+																				key={index}
+																				className="w-8 h-5 rounded-[1px]"
+																				style={{
+																					border:
+																						"0.2px solid rgba(0, 0, 0, 0.40)",
+																					background: `url(${image})`,
+																					backgroundSize: "cover",
+																					backgroundRepeat: "no-repeat",
+																				}}
+																			/>
+																		))}
+																	</div> */}
+
+																	<span className="flex flex-wrap text-sm">
+																		{scene.segments.map(
+																			(segment, segmentIndex) => (
+																				<span
+																					key={segmentIndex}
+																					style={{
+																						backgroundColor: "transparent",
+																					}}
+																					className={cn(
+																						"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
+																						segment.videoStatus ===
+																							StoryStatus.PENDING &&
+																							"text-purple-800"
+																					)}
+																					onClick={() => {
+																						videoPlayerRef.current?.seekToSegment(
+																							{
+																								...segment,
+																								sceneId: scene.id,
+																								index: segment.id,
+																							}
+																						);
+																					}}
+																				>
+																					{segment.textContent}
+																				</span>
+																			)
 																		)}
-																		onClick={() => {
-																			videoPlayerRef.current?.seekToSegment({
-																				...segment,
-																				sceneId: scene.id,
-																				index: segment.id,
-																			});
-																			handleRegenerateVideo(
-																				segment,
-																				sceneIndex,
-																				segmentIndex
-																			);
-																		}}
-																	>
-																		{segment.textContent}
-																		{/* Commenting because users don't need to edit the text here */}
-																		{/* <AutosizeInput
-																			onKeyDown={(e) => {
-																				if (e.key === "Enter") {
-																					handleEnter(
-																						scene,
-																						sceneIndex,
-																						segment,
-																						segmentIndex
-																					);
-																				}
-																			}}
-																			name={segmentIndex.toString()}
-																			inputClassName={cn(
-																				"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
-																				segment.textStatus ===
-																					TextStatus.EDITED && "text-slate-500"
-																			)}
-																			inputStyle={{
-																				outline: "none",
-																				backgroundColor: "inherit",
-																			}}
-																			// @ts-ignore
-																			ref={(el) =>
-																				// @ts-ignore
-																				(refs.current[sceneIndex][
-																					segmentIndex
-																				] = el)
-																			}
-																			value={segment.textContent}
-																			onChange={(e) => {
-																				handleInput(
-																					e,
-																					scene,
-																					sceneIndex,
-																					segment,
-																					segmentIndex
-																				);
-																			}}
-																		/> */}
 																	</span>
-																))}
-															</div>
-															<div className="hidden group-hover:flex gap-x-1 p-2">
-																<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
-																	<Settings2 className="w-4 h-4 stroke-slate-500" />
-																</span>
-																<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
-																	<MoreHorizontal className="w-4 h-4 stroke-slate-500" />
-																</span>
-															</div>
-														</div>
-													))}
-												</>
-											);
-										}}
-									</Editor>
+																	<div className="hidden group-hover:flex gap-x-1 p-2">
+																		<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
+																			<Settings2
+																				className="w-4 h-4 stroke-slate-500"
+																				onClick={() =>
+																					setEditSegmentsModalState({
+																						open: true,
+																						scene: scene,
+																						sceneId: sceneIndex,
+																						dispatch,
+																						story,
+																					})
+																				}
+																			/>
+																		</span>
+																		{/* <span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
+																			<MoreHorizontal className="w-4 h-4 stroke-slate-500" />
+																		</span> */}
+																	</div>
+																</div>
+															</>
+														))}
+													</>
+												);
+											}}
+										</Editor>
+									</div>
 								</div>
 							</div>
 						</div>
 
-						<div className="mb-[5.25rem] flex flex-col justify-end border-t">
-							<span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
-								Use 25 credits to regenerate ·{" "}
-								<Link className="text-purple-600" href="#">
-									See plans
-								</Link>
-							</span>
-							<div className="flex gap-2">
-								<Button className="flex gap-2 text-white bg-[#8F22CE] px-4 py-2">
-									<Sparkle fill="white" className="w-4 h-4" />
-									Regenerate 2 Edited Scenes
-								</Button>
-								<Button variant="outline" className="px-4 py-2">
-									Or, Save Without Regenerating
-								</Button>
-							</div>
+						<div
+							className={cn(
+								"absolute rounded-none",
+								ImageRatio.width === 16
+									? "w-[440px] right-4 bottom-24"
+									: "w-[220px] bottom-4 right-24"
+							)}
+						>
+							<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
 						</div>
 					</div>
-				</div>
-
-				<div
-					className={cn(
-						"absolute right-0 mr-20 rounded-none",
-						ImageRatio.width === 16 ? "w-[420px]" : "w-[220px]"
-					)}
-				>
-					<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
+					<div className="w-fit ml-9 mb-[3rem] mt-auto flex border-t pt-2">
+						<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+							<Sparkle fill="white" className="w-4 h-4" />
+							Regenerate All Scenes
+						</Button>
+						<Button className=" invisible w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+							<Sparkle fill="white" className="w-4 h-4" />
+							Regenerate 2 Edited
+						</Button>
+						{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
+							Use 25 credits to regenerate ·{" "}
+							<Link className="text-purple-600" href="#">
+								See plans
+							</Link>
+						</span>
+						<div className="flex gap-2">
+							<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+								<Sparkle fill="white" className="w-4 h-4" />
+								Regenerate 2 Edited Scenes
+							</Button>
+							<Button variant="outline" className="w-full text-xs px-3 py-2">
+								Or, Save Without Regenerating
+							</Button>
+						</div> */}
+					</div>
 				</div>
 			</div>
-		</div>
+
+			<ExpandedThumbnails data={hoveredThumbnails} />
+
+			{editSegmentsModalState?.scene !== undefined &&
+				editSegmentsModalState?.sceneId !== undefined && (
+					<SceneEditSegmentModal
+						open={
+							editSegmentsModalState?.open &&
+							editSegmentsModalState.scene !== undefined &&
+							editSegmentsModalState.sceneId !== undefined
+						}
+						story={story}
+						scene={editSegmentsModalState.scene}
+						sceneId={editSegmentsModalState.sceneId}
+						onClose={() => setEditSegmentsModalState({})}
+						dispatch={dispatch}
+					/>
+				)}
+		</>
 	);
 };
 

@@ -34,22 +34,7 @@ export default function StoryScenes() {
 		initialData: story,
 		refetchInterval: 1000,
 		// Disable once all the videoKeys are obtained
-		enabled: enableQuery,
 	});
-
-	useEffect(() => {
-		if (Webstory.data) {
-			setEnableQuery(
-				!(
-					Webstory.data.scenes
-						?.flatMap((el) => el.videoSegments)
-						.every((segment) => !!segment?.videoKey) &&
-					Webstory.data.scenes?.flatMap((el) => el.videoSegments).length > 0
-				)
-			);
-		}
-		setStory(Webstory.data);
-	}, [Webstory.data]);
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
 	const ImageRatio = GetImageRatio(Webstory.data.resolution);

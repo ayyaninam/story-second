@@ -109,6 +109,10 @@ export type EditStoryAction =
 	| {
 			type: "update_narrator";
 			voiceType: string;
+	  }
+	| {
+			type: "update_settings";
+			draft: Settings;
 	  };
 
 const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
