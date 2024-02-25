@@ -21,7 +21,7 @@ const mainHeaderContainer: {
 } = {
 	light: {
 		background:
-			"radial-gradient(10.83% 5455.25% at 0% 50%, rgba(159, 234, 225, 0.5) 0%, rgba(159, 234, 225, 0) 100%),linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+			"radial-gradient(10.83% 5455.25% at 0% 50%, rgba(200, 211, 254, 0.5) 0%, rgba(200, 211, 254, 0) 100%),linear-gradient(0deg, #FFFFFF, #FFFFFF)",
 		boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
 	},
 	dark: {
@@ -33,7 +33,7 @@ const mainHeaderContainer: {
 
 const createNewButton: CSSProperties = {
 	background:
-		"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-Teal-700, #157A6E)",
+		"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-Indigo-700, #157A6E)",
 	boxShadow:
 		" 0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #157A6E",
 	borderRadius: "6px",
@@ -49,7 +49,7 @@ const subHeaderContainer: CSSProperties = {
 	background: "var(--base-white, #FFF)",
 };
 
-export const LibraryHeader = ({
+export const ExploreHeader = ({
 	selectedOrientationTab,
 	setSelectedOrientationTab,
 	searchTerm,
@@ -76,14 +76,14 @@ export const LibraryHeader = ({
 			>
 				<div className="flex items-start w-[250px]">
 					<Image
-						src="/images/nav-icons/library-icon.png"
-						alt="Library"
+						src="/images/nav-icons/explore-icon.png"
+						alt="Explore"
 						width={40}
 						height={40}
 					/>
 					<div className="pl-[12px] flex flex-col items-start">
-						<span className="text-slate-950 text-base font-bold">Library</span>
-						<span className="text-teal-700 text-sm font-normal">17 Videos</span>
+						<span className="text-slate-950 text-base font-bold">Explore</span>
+						<span className="text-indigo-700 text-sm font-normal">17 Videos</span>
 					</div>
 				</div>
 				<HeaderTabSwitcher
@@ -109,13 +109,13 @@ export const LibraryHeader = ({
 						>
 							<path
 								d="M8.69889 14.6666C12.3808 14.6666 15.3656 11.6819 15.3656 7.99998C15.3656 4.31808 12.3808 1.33331 8.69889 1.33331C5.01699 1.33331 2.03223 4.31808 2.03223 7.99998C2.03223 11.6819 5.01699 14.6666 8.69889 14.6666Z"
-								stroke="#157A6E"
+								stroke="#3A54CB"
 								strokeLinecap="round"
 								strokeLinejoin="round"
 							/>
 							<path
 								d="M7.36556 5.33331L11.3656 7.99998L7.36556 10.6666V5.33331Z"
-								stroke="#157A6E"
+								stroke="#3A54CB"
 								strokeLinecap="round"
 								strokeLinejoin="round"
 							/>
@@ -123,7 +123,7 @@ export const LibraryHeader = ({
 						Tutorial
 					</Button>
 					<Button
-						className={`px-4 py-1.5 bg-teal-600 hover:bg-teal-700 border border-teal-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
+						className={`px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 border border-indigo-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 						variant="default"
 						onClick={() => {
 							// TODO: Implement
