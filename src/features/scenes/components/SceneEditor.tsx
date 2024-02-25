@@ -29,6 +29,7 @@ import VideoPlayer, {
 import { AspectRatios } from "@/utils/enums";
 import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
+import { Separator } from "@/components/ui/separator";
 
 const Dropdown = ({
 	items,
@@ -223,15 +224,15 @@ const SceneEditorView = ({
 						<ChevronDown className="w-4 h-4 opacity-50" />
 					</div>
 					<p className="font-medium text-sm">
-						Pro Tip — You can individually regenerate images in this Storyboard.{" "}
+						Pro Tip — You can individually regenerate video subsegments.{" "}
 						<a className="underline" href="#">
 							Learn how
 						</a>
 					</p>
 				</div>
 
-				<div className="w-fit h-full flex flex-col">
-					<div className="border-b mb-4 w-full mt-6 mx-9 bg-[#FEFEFF]">
+				<div className="w-full h-full flex flex-col">
+					<div className=" mb-4 w-full mt-6 mx-9 bg-[#FEFEFF]">
 						<p className="text-2xl font-bold -tracking-[-0.6px]">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
@@ -239,11 +240,12 @@ const SceneEditorView = ({
 						<div className="flex gap-1 text-slate-600 text-sm py-1">
 							<p>by {WebstoryData?.user?.name}</p>
 						</div>
+						<Separator className="w-[35%]" />
 					</div>
 					<div className="absolute h-[85%] w-px bg-slate-200 mt-6 ml-5" />
 
-					<div className="h-screen flex justify-between overflow-y-hidden">
-						<div className="h-full ml-2 max-w-md flex flex-col justify-between overflow-y-scroll">
+					<div className="h-screen flex justify-between overflow-y-hidden w-full">
+						<div className="h-full ml-2 max-w-md flex flex-col justify-between overflow-y-auto">
 							<div className="flex flex-col my-3 md:flex-row items-center w-full">
 								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
 									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
@@ -322,7 +324,7 @@ const SceneEditorView = ({
 																			)
 																		)}
 																	</span>
-																	<div className="hidden group-hover:flex gap-x-1 p-2">
+																	<div className="invisible flex group-hover:visible gap-x-1 p-2">
 																		<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
 																			<Settings2
 																				className="w-4 h-4 stroke-slate-500"
@@ -353,18 +355,31 @@ const SceneEditorView = ({
 							</div>
 						</div>
 
-						<div
+						{/* <div
 							className={cn(
 								"absolute rounded-none",
 								ImageRatio.width === 16
 									? "w-[440px] right-4 bottom-24"
 									: "w-[220px] bottom-4 right-24"
 							)}
-						>
-							<VideoPlayer ref={videoPlayerRef} Webstory={WebstoryData} />
+						> */}
+
+						<div className="h-full w-full flex items-center justify-center">
+							<div
+								className="h-full "
+								style={{ aspectRatio: ImageRatio.ratio }}
+							>
+								<VideoPlayer
+									playerClassName="rounded-lg"
+									ref={videoPlayerRef}
+									Webstory={WebstoryData}
+								/>
+							</div>
 						</div>
 					</div>
-					<div className="w-fit ml-9 mb-[3rem] mt-auto flex border-t pt-2">
+
+					<Separator className="w-[35%] ml-9" />
+					<div className="w-fit ml-9 mb-[3rem] mt-auto flex pt-2">
 						<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
 							<Sparkle fill="white" className="w-4 h-4" />
 							Regenerate All Scenes

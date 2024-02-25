@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useEffect, useState } from "react";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio, GetImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
 import useWebstoryContext from "../edit-story/providers/WebstoryContext";
 import Stepper from "./components/Stepper";
@@ -48,7 +48,7 @@ export default function StoryScenes({
 	});
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
-	const ImageRatio = GetImageRatio(Webstory.data.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.data.resolution);
 
 	return (
 		<div className="relative w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">

@@ -17,6 +17,7 @@ export interface AuthPromptProps {
 export type VideoPlayerProps = {
 	Webstory?: mainSchema["ReturnVideoStoryDTO"];
 	isError?: boolean;
+	playerClassName?: string;
 	onPlay?: CallbackListener<"play">;
 	onEnded?: CallbackListener<"ended">;
 	onPause?: CallbackListener<"pause">;

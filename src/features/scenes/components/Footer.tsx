@@ -220,12 +220,7 @@ const Footer = ({
 			</div>
 		),
 		scene: () => (
-			<div className="flex gap-2 mt-6">
-				<div>
-					<Button variant="outline" className="invisible">
-						Generate Images & Continue
-					</Button>
-				</div>
+			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div className="flex flex-col">
 					<Button onClick={onGenerate} className="bg-purple-700 space-x-1.5">
 						<BrandShortLogo />
@@ -302,8 +297,8 @@ const Footer = ({
 										key={index}
 										width={64}
 										height={48}
-										className={clsx("w-16 h-12 rounded-xl", {
-											["border-purple-600 border-[1px]"]:
+										className={clsx("w-16 h-12 rounded-lg", {
+											["ring-purple-600 ring-[1.5px] ring-offset-1"]:
 												generationStyle === Number(key),
 										})}
 										role="button"
@@ -312,7 +307,7 @@ const Footer = ({
 												Number(key) as unknown as StoryImageStyles
 											)
 										}
-										style={{}}
+										style={{ objectFit: "cover" }}
 									/>
 								</>
 							))}
