@@ -53,7 +53,7 @@ const video = {
 		accessToken?: string
 	) => {
 		const data: string = await mlFetcher(accessToken ?? getJwt())
-			.put(`edit-segment`, {
+			.put(`edit-segments`, {
 				body: JSON.stringify(params),
 			})
 			.json();

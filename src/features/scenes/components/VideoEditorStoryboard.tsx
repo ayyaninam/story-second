@@ -40,6 +40,7 @@ import AutosizeInput from "react-input-autosize";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { Button } from "@/components/ui/button";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -168,7 +169,7 @@ export default function VideoEditorStoryboard({
 		if (saveBeforeRegenerating) {
 			await handleSubmitEditSegments();
 		}
-		await api.video.regenerateImage({
+		const regeneratedImages = await api.video.regenerateImage({
 			// @ts-ignore
 			image_style: segment.settings?.style!,
 			prompt: segment.settings?.prompt ?? segment.textContent,
@@ -179,12 +180,19 @@ export default function VideoEditorStoryboard({
 			sampling_steps: segment.settings?.samplingSteps,
 			seed: segment.settings?.seed,
 		});
-		dispatch({
-			type: "edit_segment",
-			sceneIndex,
-			segmentIndex: segmentIndex,
-			segment: { ...segment, imageStatus: StoryStatus.COMPLETE },
-		});
+
+		if (regeneratedImages.target_paths.length === 1) {
+			dispatch({
+				type: "edit_segment",
+				sceneIndex,
+				segmentIndex: segmentIndex,
+				segment: {
+					...segment,
+					imageStatus: StoryStatus.COMPLETE,
+					imageKey: regeneratedImages.image_key,
+				},
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -194,7 +202,7 @@ export default function VideoEditorStoryboard({
 	return (
 		<>
 			<div
-				className="w-[80%] m-auto"
+				className=" m-auto max-h-[500px] max-w-[900px] overflow-hidden"
 				style={{
 					borderRadius: "8px",
 					background: "#FEFEFF",
@@ -207,21 +215,23 @@ export default function VideoEditorStoryboard({
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
 						<p>Storyboard View</p>
-						<StoryboardViewTypes type={StoryboardViewType.Outline} />
 					</div>
 					<div className="flex gap-1 items-center">
 						<p className="px-1 text-purple-900">
 							Pro Tip — You can individually regenerate images in this
 							Storyboard.{" "}
-							<a href="#">
+							{/* <a href="#">
 								<u>Learn how</u>
-							</a>
+							</a> */}
 						</p>
-						<div className="flex gap-1 items-center text-purple-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
+						{/* <Button
+							variant="outline"
+							className="flex gap-1 items-center h-fit py-0 text-purple-600 bg-white rounded-sm p-[1px] hover:text-purple-700 hover:cursor-pointer hover:bg-slate-50"
+						>
 							<SparkleIcon width={"18px"} height={"18px"} />
 							<p className="text-xs">Regenerate</p>
 							<ChevronDown width={"18px"} height={"18px"} />
-						</div>
+						</Button> */}
 					</div>
 				</div>
 				<div className="relative px-6 pt-6 pb-2 bg-[#FEFEFF]">
@@ -264,13 +274,17 @@ export default function VideoEditorStoryboard({
 								>
 									{({ handleEnter, handleInput, refs }) => {
 										return (
-											<div className={cn("w-full")}>
+											<div
+												className={cn(
+													"w-full h-[300px] overflow-y-scroll divide-y divide-dashed space-y-2"
+												)}
+											>
 												{story.scenes.map((scene, sceneIndex) => (
 													<div
 														key={sceneIndex}
-														className="flex flex-row justify-between w-full items-center"
+														className="flex flex-row justify-between w-full rounded-md hover:bg-slate-50 group items-center"
 													>
-														<div className="flex items-center w-[45%] space-y-1">
+														<div className="flex items-center space-y-1 flex-wrap">
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
 																	<React.Fragment key={segmentIndex}>
@@ -344,7 +358,7 @@ export default function VideoEditorStoryboard({
 																);
 															})}
 														</div>
-														<div className="w-[55%] flex justify-between items-center p-2 rounded-md hover:bg-slate-50 group">
+														<div className="w-[55%] flex justify-between items-center p-2 ">
 															<div className="flex flex-wrap flex-row ">
 																{scene.segments.map((segment, segmentIndex) => (
 																	<span

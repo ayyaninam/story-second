@@ -1305,6 +1305,33 @@ export interface paths {
       };
     };
   };
+  "/api/Payment/RefillAllowance": {
+    /** Buy video credits. */
+    post: {
+      requestBody?: {
+        content: {
+          "application/json-patch+json": components["schemas"]["AdditionalCreditsDTO"];
+          "application/json": components["schemas"]["AdditionalCreditsDTO"];
+          "text/json": components["schemas"]["AdditionalCreditsDTO"];
+          "application/*+json": components["schemas"]["AdditionalCreditsDTO"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["StringApiResponse"];
+            "application/json": components["schemas"]["StringApiResponse"];
+            "text/json": components["schemas"]["StringApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/generate_story": {
     /**
      * Generate a story from plugin
@@ -3295,6 +3322,21 @@ export interface components {
       generateParagraph?: boolean;
       imageStyle?: components["schemas"]["ImageStyles"];
     };
+    /** @description Request body for buying additional credits. */
+    AdditionalCreditsDTO: {
+      allowanceType?: components["schemas"]["AllowanceType"];
+      /**
+       * Format: int32
+       * @description The amount of credits to buy.
+       */
+      quantity?: number;
+    };
+    /**
+     * Format: int32
+     * @description The type of allowance.
+     * @enum {integer}
+     */
+    AllowanceType: StoryBooks | Videos | Credits;
     AmazonBook: {
       coverPDFUrl?: string | null;
       gutsPDFUrl?: string | null;
@@ -3607,7 +3649,9 @@ export interface components {
       paymentIntentId?: string | null;
       /** Format: float */
       amount?: number;
-      creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
+      allowanceType?: components["schemas"]["AllowanceType"];
+      /** Format: int32 */
+      quantity?: number;
     };
     /** @description Request body for confirming a subscription. */
     ConfirmSubscriptionDTO: {
@@ -6670,7 +6714,10 @@ export interface components {
       /** Format: double */
       amountPaid?: number;
       /** Format: double */
-      amountCredited?: number;
+      amountCredited?: number | null;
+      allowanceType?: components["schemas"]["AllowanceType"];
+      /** Format: int32 */
+      quantity?: number;
       /** Format: uuid */
       userId?: string;
       user?: components["schemas"]["UserAccount"];
@@ -6686,7 +6733,7 @@ export interface components {
      * @description The type of Subscription Plan.
      * @enum {integer}
      */
-    SubscriptionPlan: Free | Basic | Pro | Premium;
+    SubscriptionPlan: Free | Starter | Creator | Enterprise;
     /** @description DTO used to return User's Token Transaction list. */
     TokenTransactionDTO: {
       /** Format: uuid */
