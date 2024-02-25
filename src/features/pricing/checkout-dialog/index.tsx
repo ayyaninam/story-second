@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import CreditsCheckoutDialog, { CreditsCheckoutDialogProps } from "./credits";
 import SubscriptionCheckoutDialog, {
 	SubscriptionCheckoutDialogProps,
@@ -13,17 +13,23 @@ type CheckoutDialogProps =
 	| ({
 			variant: "subscription";
 			children?: ReactNode;
-	  } & SubscriptionCheckoutDialogProps);
+	  } & Omit<SubscriptionCheckoutDialogProps, "onClose">);
 
 const CheckoutDialog = (props: CheckoutDialogProps) => {
+	const [open, setOpen] = useState(false);
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{props.children}</DialogTrigger>
 			<DialogContent className="rounded-md p-0 shadow-xl gap-0 overflow-hidden">
 				{props.variant === "credits" ? (
 					<CreditsCheckoutDialog />
 				) : props.variant === "subscription" ? (
-					<SubscriptionCheckoutDialog plan={props.plan} period={props.period} />
+					<SubscriptionCheckoutDialog
+						plan={props.plan}
+						period={props.period}
+						onClose={() => setOpen(false)}
+					/>
 				) : null}
 			</DialogContent>
 		</Dialog>

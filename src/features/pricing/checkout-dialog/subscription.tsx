@@ -2,10 +2,13 @@ import toast from "react-hot-toast";
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import api from "@/api";
+import { Button } from "@/components/ui/button";
 import StripeForm from "@/features/pricing/stripe-form";
+import PaymentCard, { getUserHasCard } from "@/features/pricing/payment-card";
 import { SubscriptionPlan, SubscriptionPeriod } from "@/utils/enums";
-import { useStripeSetup } from "../hooks";
+import { useStripeSetup, useUser } from "../hooks";
 import CheckoutDialogContent from "./view";
+import { useTimeout } from "usehooks-ts";
 
 const base_url = "http://localhost:3000/";
 
@@ -46,64 +49,47 @@ const pricingStructure = {
 			},
 		},
 	},
-	[SubscriptionPlan.Premium]: {
-		[SubscriptionPeriod.Monthly]: {
-			title: "Premium Subscription",
-			label: "$30 / Month",
-			item: {
-				description: "Premium Monthly",
-				price: 30,
-			},
-		},
-		[SubscriptionPeriod.Annual]: {
-			title: "Premium Subscription",
-			label: "$300 / Year",
-			item: {
-				description: "Premium Annual",
-				price: 300,
-			},
-		},
-	},
 };
 
 export interface SubscriptionCheckoutDialogProps {
 	plan: Exclude<SubscriptionPlan, SubscriptionPlan.Free>;
 	period: SubscriptionPeriod;
+	onClose: () => void;
 }
 
 const SubscriptionCheckoutDialog = ({
 	plan,
 	period,
+	onClose,
 }: SubscriptionCheckoutDialogProps) => {
-	const { setupStripe, confirmSetup, confirmPayment } = useStripeSetup();
+	const { user, updateUserDataAfter1Second } = useUser();
+	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
+
 	const [stripeLoaded, setStripeLoaded] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
+	const [userWantsToChangePayment, setUserWantsToChangePayment] =
+		useState(false);
+
+	const userHasCard = user ? getUserHasCard(user) : false;
+	const userHasPaidSubscription =
+		user?.subscription?.subscriptionPlan !== SubscriptionPlan.Free;
 
 	const { title, label, item } = pricingStructure[plan][period];
-
-	const onAddCard = async () => {
-		try {
-			const { error } = (await confirmSetup(`${base_url}/pricing`)) || {};
-			if (error) {
-				console.error("Confirm Setup failed: ", error);
-				toast.error("Confirm Setup failed");
-				return;
-			}
-
-			toast.success("Added card successfully");
-		} catch (e: any) {
-			console.error("Error Adding Card: ", e.message);
-			toast.error("Error Adding Card");
-		}
-	};
 
 	const onCreateSubscription = async () => {
 		if (submitting) return;
 
 		setSubmitting(true);
 
+		const handleSubscriptionSuccessful = () => {
+			toast.success("Subscription successful!");
+			onClose();
+		};
+
 		try {
-			await onAddCard();
+			if (!userHasCard || userWantsToChangePayment) {
+				await onAddCard();
+			}
 
 			const { succeeded, data, status } = await api.payment.createSubscription({
 				subscriptionPlan: plan,
@@ -116,13 +102,15 @@ const SubscriptionCheckoutDialog = ({
 			}
 
 			if (!data) {
-				toast.error("Purchase failed.");
+				handleSubscriptionSuccessful();
 				return;
 			}
 
+			// using 3d secure authentication
+			// https://docs.stripe.com/testing#regulatory-cards
 			if (data.nextAction?.type !== "use_stripe_sdk") {
 				if (data.succeeded && !data.requiresAction) {
-					toast.success("Subscription successful!");
+					handleSubscriptionSuccessful();
 				} else {
 					toast.error("Purchase failed.");
 				}
@@ -153,7 +141,7 @@ const SubscriptionCheckoutDialog = ({
 					});
 
 				if (confirmSucceeded) {
-					toast.success("Subscription successful!");
+					handleSubscriptionSuccessful();
 				} else {
 					toast.error("Internal Server Error: please contact support.");
 				}
@@ -165,6 +153,27 @@ const SubscriptionCheckoutDialog = ({
 			setSubmitting(false);
 		}
 	};
+
+	const cancelSubscription = () => {
+		try {
+			api.payment.cancelSubscription().then();
+
+			updateUserDataAfter1Second();
+		} catch (e: any) {
+			console.error("Error Canceling Subscription: ", e.message);
+			toast.error("Error Canceling Subscription");
+		}
+	};
+
+	// testing code
+	const [hideOnlyForTestingPart, setHideOnlyForTestingPart] = useState(true);
+	useEffect(() => {
+		setTimeout(() => {
+			setHideOnlyForTestingPart(false);
+		}, 2000);
+	}, []);
+
+	const showPaymentCard = userHasCard && !userWantsToChangePayment;
 
 	return (
 		<CheckoutDialogContent
@@ -179,15 +188,63 @@ const SubscriptionCheckoutDialog = ({
 			]}
 			total={`$${item.price}`}
 			stripeForm={
-				<StripeForm
-					setupStripe={setupStripe}
-					onLoadStripe={() => setStripeLoaded(true)}
-				/>
+				<>
+					{showPaymentCard && (
+						<div className="mt-2">
+							<PaymentCard
+								editable
+								onEdit={() => setUserWantsToChangePayment(true)}
+								onRemove={() => updateUserDataAfter1Second()}
+							/>
+						</div>
+					)}
+					<div hidden={showPaymentCard}>
+						<StripeForm
+							setupStripe={setupStripe}
+							onLoadStripe={() => setStripeLoaded(true)}
+						/>
+					</div>
+
+					{!userWantsToChangePayment && !hideOnlyForTestingPart && (
+						<div className="mt-20">
+							<div className="mb-2">
+								<div>
+									<strong>Only for testing</strong>
+									<br />
+									<button onClick={() => setHideOnlyForTestingPart(true)}>
+										Click to hide
+									</button>
+								</div>
+								User plan:{" "}
+								{user?.subscription?.subscriptionPlan === SubscriptionPlan.Free
+									? "Free"
+									: user
+										? pricingStructure[
+												user.subscription?.subscriptionPlan as Exclude<
+													SubscriptionPlan,
+													SubscriptionPlan.Free
+												>
+											][
+												user.subscription
+													?.subscriptionPeriod as SubscriptionPeriod
+											].title
+										: null}
+							</div>
+
+							{user?.subscription?.subscriptionPlan !==
+								SubscriptionPlan.Free && (
+								<Button onClick={() => cancelSubscription()}>
+									Cancel Subscription
+								</Button>
+							)}
+						</div>
+					)}
+				</>
 			}
 			submitButtonText="Subscribe"
 			buttonProps={{
-				disabled: !stripeLoaded || submitting,
 				onClick: () => onCreateSubscription(),
+				disabled: !stripeLoaded || userHasPaidSubscription,
 			}}
 		/>
 	);

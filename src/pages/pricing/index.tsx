@@ -310,7 +310,7 @@ export default function PricingPage() {
 
 								<CheckoutDialog
 									variant="subscription"
-									plan={SubscriptionPlan.Premium}
+									plan={SubscriptionPlan.Pro}
 									period={SubscriptionPeriod.Monthly}
 								>
 									<Button

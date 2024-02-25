@@ -100,7 +100,7 @@ export enum SubscriptionPlan {
 	Free,
 	Basic,
 	Pro,
-	Premium,
+	// Premium, on the future we will have this
 }
 
 export enum SubscriptionPeriod {
