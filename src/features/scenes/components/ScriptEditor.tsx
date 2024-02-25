@@ -33,7 +33,7 @@ import AutosizeInput from "react-input-autosize";
 
 const MAX_SUMMARY_LENGTH = 251;
 
-export default function VideoEditorStoryboard({
+export default function ScriptEditor({
 	WebstoryData,
 	ImageRatio,
 	isError,

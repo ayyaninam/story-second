@@ -21,7 +21,6 @@ import {
 	Sparkle,
 	SparkleIcon,
 } from "lucide-react";
-import ScriptEditorViewTypes from "./ScriptEditorViewTypesComponent";
 import Format from "@/utils/format";
 import cn from "@/utils/cn";
 import Image from "next/image";
