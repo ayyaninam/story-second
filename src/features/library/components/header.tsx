@@ -90,7 +90,7 @@ export const LibraryHeader = ({
 					selectedTab={selectedOrientationTab}
 					setSelectedTab={setSelectedOrientationTab}
 				/>
-				<div className="flex items-center gap-4">
+				<div className="hidden lg:flex items-center gap-4">
 					<Button
 						className={`px-4 py-1.5 text-sm font-medium flex gap-2 items-center h-fit`}
 						variant="ghost"

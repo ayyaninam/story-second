@@ -10,7 +10,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/library/constants";
-import ScenesLayout from "@/features/scenes/components/Layout";
+import PageLayout from "@/components/layouts/PageLayout";
 import {getSession} from "@auth0/nextjs-auth0";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
@@ -40,7 +40,7 @@ function Library({
 }
 
 Library.getLayout = function getLayout(page: ReactElement) {
-	return <ScenesLayout pageIndex={2}>{page}</ScenesLayout>;
+	return <PageLayout pageIndex={2}>{page}</PageLayout>;
 };
 
 export default Library;

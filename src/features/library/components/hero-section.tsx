@@ -64,7 +64,7 @@ function LibraryHeroSection( { randomThumbnail = "" } : { randomThumbnail?: stri
 						</Button>
 					</div>
 				</div>
-				<div className="w-full min-h-full bg-teal-700 self-stretch">
+				<div className="hidden lg:block w-full min-h-full bg-teal-700 self-stretch">
 					{/* # TODO: make this responsive*/}
 					{randomThumbnail && (
 						<div

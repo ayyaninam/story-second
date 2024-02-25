@@ -22,7 +22,7 @@ function ExplorePage() {
 	};
 
 	return (
-		<div className="h-full overflow-y-scroll bg-background rounded-lg mr-2 flex-grow">
+		<div className="h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
 			<ExploreHeader
 				selectedOrientationTab={selectedOrientationTab}
 				setSelectedOrientationTab={setSelectedOrientationTab}

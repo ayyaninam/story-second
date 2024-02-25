@@ -5,12 +5,12 @@ import {
 	HydrationBoundary,
 	QueryClient,
 } from "@tanstack/react-query";
-import api from "@/api"; // Ensure this points to your API setup
+import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/explore/constants";
-import ScenesLayout from "@/features/scenes/components/Layout";
+import PageLayout from "@/components/layouts/PageLayout";
 
 function Explore({
 	dehydratedState,
@@ -36,7 +36,7 @@ function Explore({
 }
 
 Explore.getLayout = function getLayout(page: ReactElement) {
-	return <ScenesLayout pageIndex={0}>{page}</ScenesLayout>;
+	return <PageLayout pageIndex={0}>{page}</PageLayout>;
 };
 
 export default Explore;

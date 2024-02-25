@@ -54,7 +54,7 @@ export default function StoryScenes() {
 	const ImageRatio = GetImageRatio(Webstory.data.resolution);
 
 	return (
-		<div className="relative w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
+		<div className="relative w-full rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
 			{/* Navbar */}
 			<Navbar
 				ImageRatio={ImageRatio}

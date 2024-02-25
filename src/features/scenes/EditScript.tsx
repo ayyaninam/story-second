@@ -63,7 +63,7 @@ export default function EditScript() {
 	const ImageRatio = GetImageRatio(Webstory.data.resolution);
 
 	return (
-		<div className="w-full mr-2 rounded-lg overflow-y-scroll">
+		<div className="w-full rounded-lg overflow-y-scroll">
 			{/* Navbar */}
 			<Navbar
 				ImageRatio={ImageRatio}

@@ -4,7 +4,7 @@ import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import StoryScenes from "@/features/scenes";
-import ScenesLayout from "@/features/scenes/components/Layout";
+import PageLayout from "@/components/layouts/PageLayout";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";
 import Routes from "@/routes";
@@ -38,7 +38,7 @@ const ScenesPage = ({
 };
 
 ScenesPage.getLayout = function getLayout(page: ReactElement) {
-	return <ScenesLayout>{page}</ScenesLayout>;
+	return <PageLayout>{page}</PageLayout>;
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

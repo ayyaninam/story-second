@@ -1,19 +1,15 @@
 import { Button } from "@/components/ui/button";
-import AuthorlyLogo from "../../../../public/auth-prompt/authorly-logo";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import { mainSchema } from "@/api/schema";
-import Format from "@/utils/format";
-import ExploreIcon from "./icons/ExploreIcon";
-import GenerateIcon from "./icons/GenerateIcon";
-import LibraryIcon from "./icons/LibraryIcon";
-import FreeCreditsIcon from "./icons/FreeCreditsIcon";
-import ChallengesIcon from "./icons/ChallengesIcon";
+import ExploreIcon from "@/components/icons/side-nav/ExploreIcon";
+import GenerateIcon from "@/components/icons/side-nav/GenerateIcon";
+import LibraryIcon from "@/components/icons/side-nav/LibraryIcon";
+import FreeCreditsIcon from "@/components/icons/side-nav/FreeCreditsIcon";
+import ChallengesIcon from "@/components/icons/side-nav/ChallengesIcon";
 import { Command } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import {router} from "next/client";
 import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export const menuItems = [
 	{
@@ -21,30 +17,35 @@ export const menuItems = [
 		text: "Explore",
 		shortcut: "E",
 		redirectUrl: "/explore",
+		background: "linear-gradient(270deg, #002FFF 69.69%, #020817 99.69%)",
 	},
 	{
 		icon: <GenerateIcon />,
 		text: "Generate",
 		shortcut: "G",
 		redirectUrl: "/",
+		background: "linear-gradient(270deg, #BB55F7 69.69%, #020817 99.69%)",
 	},
 	{
 		icon: <LibraryIcon />,
 		text: "Library",
 		shortcut: "L",
 		redirectUrl: "/library",
+		background: "linear-gradient(270deg, #157A6E 69.69%, #020817 99.69%)",
 	},
 	{
 		icon: <ChallengesIcon />,
 		text: "Challenges",
 		shortcut: "C",
 		redirectUrl: "/challenges",
+		background: "linear-gradient(270deg, #A734EA 69.69%, #020817 99.69%)",
 	},
 	{
 		icon: <FreeCreditsIcon />,
 		text: "Free Credits",
 		shortcut: "F",
 		redirectUrl: "/credits",
+		background: "linear-gradient(270deg, #FF3370 69.69%, #020817 99.69%)",
 	},
 ];
 
@@ -54,19 +55,22 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 		borderColor: "var(--menu-item-selected-border-color)",
 		border: "1px solid rgba(255, 255, 255, 0.12)",
 	};
+	const { user } = useUser();
+
 	return (
-		<div className="w-[18rem] flex flex-col justify-between">
+		<div className="hidden w-[18rem] lg:flex lg:flex-col lg:justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-4 items-center justify-between mr-4">
 					<StoryLogo />
 
-					<Avatar className="h-8 w-8 border-[1px] border-gray-200">
-						<AvatarImage src="https://github.com/shadcn.png" />
-						<AvatarFallback>
-							CN
-							{/* {Format.AvatarName(WebstoryData?.user?.name)} */}
-						</AvatarFallback>
-					</Avatar>
+					<Link href={``}>
+						<Avatar className="h-8 w-8 border-[1px] border-gray-200">
+							<AvatarImage src={user?.picture || ""} />
+							<AvatarFallback>
+								CN
+							</AvatarFallback>
+						</Avatar>
+					</Link>
 				</div>
 				<div className="space-y-1">
 					{menuItems.map((menuItem, index) => (
@@ -74,7 +78,10 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 							href={menuItem.redirectUrl}
 							key={index}
 							aria-selected={index === pageIndex}
-							className="ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem"
+							className={`ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem`}
+							// style={{
+							// 	background: menuItem.background,
+							// 	}}
 						>
 							{menuItem.icon}
 							{menuItem.text}
@@ -177,7 +184,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						className="min-w-full rounded-lg bg-transparent py-1.5 font-normal shadow-[inset_0px_0px_12px_0px_rgba(255, 255, 255, 0.08)]"
 						style={selectedStyle}
 					>
-						Upgrade Authorly
+						Unlock Imagination
 					</Button>
 				</Link>
 			</div>

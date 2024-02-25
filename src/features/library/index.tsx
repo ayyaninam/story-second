@@ -22,7 +22,7 @@ function LibraryPage({ accessToken }: { accessToken: string }) {
 	};
 
 	return (
-		<div className="h-full overflow-y-scroll bg-background rounded-lg mr-2 flex-grow">
+		<div className="h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
 			<LibraryHeader
 				selectedOrientationTab={selectedOrientationTab}
 				setSelectedOrientationTab={setSelectedOrientationTab}
