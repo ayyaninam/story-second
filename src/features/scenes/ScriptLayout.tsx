@@ -58,7 +58,7 @@ export default function ScriptLayout({
 			/>
 
 			{/* Stepper */}
-			<Stepper step={StepperStep.Scenes} />
+			<Stepper step={StepperStep.Script} />
 
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>

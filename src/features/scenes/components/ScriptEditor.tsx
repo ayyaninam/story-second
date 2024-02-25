@@ -193,7 +193,7 @@ export default function ScriptEditor({
 							className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
 						>
 							<div
-								className="space-y-2 max-h-[40vh] overflow-scroll"
+								className="space-y-2 max-h-[40vh] overflow-scroll overflow-x-hidden"
 								// onMouseLeave={(e) => {
 								// 	setShowActionItems({});
 								// }}
@@ -209,58 +209,60 @@ export default function ScriptEditor({
 												{story.scenes.map((scene, sceneIndex) => (
 													<div
 														key={sceneIndex}
-														className="flex flex-wrap flex-row "
+														className="flex flex-wrap flex-col  w-full"
 													>
-														<div className="bg-slate-50 font-normal text-slate-600 text-sm my-2 px-1">
+														<div className="bg-slate-50 font-normal text-slate-600 text-sm w-fit my-2 px-1">
 															{`Scene ${sceneIndex + 1}: `}
 															{scene.description}
 														</div>
-														{scene.segments.map((segment, segmentIndex) => (
-															<span
-																key={segmentIndex}
-																style={{ backgroundColor: "transparent" }}
-																className={cn(`flex flex-wrap w-full`)}
-															>
-																<AutosizeInput
-																	onKeyDown={(e) => {
-																		if (e.key === "Enter") {
-																			handleEnter(
+														<div className="flex flex-wrap flex-row">
+															{scene.segments.map((segment, segmentIndex) => (
+																<span
+																	key={segmentIndex}
+																	style={{ backgroundColor: "transparent" }}
+																	className={cn(`flex flex-wrap `)}
+																>
+																	<AutosizeInput
+																		onKeyDown={(e) => {
+																			if (e.key === "Enter") {
+																				handleEnter(
+																					scene,
+																					sceneIndex,
+																					segment,
+																					segmentIndex
+																				);
+																			}
+																		}}
+																		name={segmentIndex.toString()}
+																		inputClassName={cn(
+																			"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
+																			segment.textStatus ===
+																				TextStatus.EDITED && "text-purple-500"
+																		)}
+																		inputStyle={{
+																			outline: "none",
+																			backgroundColor: "inherit",
+																		}}
+																		// @ts-ignore
+																		ref={(el) =>
+																			// @ts-ignore
+																			(refs.current[sceneIndex][segmentIndex] =
+																				el)
+																		}
+																		value={segment.textContent}
+																		onChange={(e) => {
+																			handleInput(
+																				e,
 																				scene,
 																				sceneIndex,
 																				segment,
 																				segmentIndex
 																			);
-																		}
-																	}}
-																	name={segmentIndex.toString()}
-																	inputClassName={cn(
-																		"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
-																		segment.textStatus === TextStatus.EDITED &&
-																			"text-purple-500"
-																	)}
-																	inputStyle={{
-																		outline: "none",
-																		backgroundColor: "inherit",
-																	}}
-																	// @ts-ignore
-																	ref={(el) =>
-																		// @ts-ignore
-																		(refs.current[sceneIndex][segmentIndex] =
-																			el)
-																	}
-																	value={segment.textContent}
-																	onChange={(e) => {
-																		handleInput(
-																			e,
-																			scene,
-																			sceneIndex,
-																			segment,
-																			segmentIndex
-																		);
-																	}}
-																/>
-															</span>
-														))}
+																		}}
+																	/>
+																</span>
+															))}
+														</div>
 													</div>
 												))}
 											</div>
