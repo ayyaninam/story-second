@@ -21,7 +21,7 @@ import editStoryReducer, {
 } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import EditSegmentModal from "./EditSegmentModal";
@@ -57,6 +57,8 @@ export default function VideoEditorStoryboard({
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	isError?: boolean;
 	isLoading?: boolean;
+	story: EditStoryDraft;
+	dispatch: React.Dispatch<EditStoryAction>;
 }) {
 	const router = useRouter();
 	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
@@ -197,10 +199,6 @@ export default function VideoEditorStoryboard({
 		console.log(">>>> WebstoryData", WebstoryData);
 	}, [WebstoryData]);
 
-	const userName = useMemo(() => {
-		return WebstoryData?.user?.name;
-	}, [WebstoryData?.user?.name]);
-
 	return (
 		<>
 			<div
@@ -243,14 +241,14 @@ export default function VideoEditorStoryboard({
 
 					<div className="w-full inline-flex text-slate-400 text-xs py-1">
 						<div className="flex">
-							Storyboard for a <u>60 Second</u>{" "}
+							Storyboard for a <u> 60 Second</u>{" "}
 							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
 							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div>
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div>
-						<p className="ms-1">by {userName}</p>
+						<p className="ms-1">by Anthony Deloso</p>
 					</div>
 				</div>
 				<div className="flex flex-col md:flex-row items-center justify-center w-full">
@@ -264,7 +262,7 @@ export default function VideoEditorStoryboard({
 							className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
 						>
 							<div
-								className="space-y-2 max-h-[40vh] overflow-scroll"
+								className="space-y-2"
 								// onMouseLeave={(e) => {
 								// 	setShowActionItems({});
 								// }}
@@ -363,8 +361,57 @@ export default function VideoEditorStoryboard({
 														<div className="w-[55%] flex justify-between items-center p-2 ">
 															<div className="flex flex-wrap flex-row ">
 																{scene.segments.map((segment, segmentIndex) => (
-																	<span key={segmentIndex}>
-																		{segment.textContent}
+																	<span
+																		key={segmentIndex}
+																		style={{ backgroundColor: "transparent" }}
+																		className={cn(`flex flex-wrap w-full`)}
+																		onClick={() => {
+																			// handleRegenerateImage(
+																			// 	segment,
+																			// 	sceneIndex,
+																			// 	segmentIndex
+																			// );
+																		}}
+																	>
+																		<AutosizeInput
+																			onKeyDown={(e) => {
+																				if (e.key === "Enter") {
+																					handleEnter(
+																						scene,
+																						sceneIndex,
+																						segment,
+																						segmentIndex
+																					);
+																				}
+																			}}
+																			name={segmentIndex.toString()}
+																			inputClassName={cn(
+																				"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
+																				segment.textStatus ===
+																					TextStatus.EDITED && "text-slate-500"
+																			)}
+																			inputStyle={{
+																				outline: "none",
+																				backgroundColor: "inherit",
+																			}}
+																			// @ts-ignore
+																			ref={(el) =>
+																				// @ts-ignore
+																				(refs.current[sceneIndex][
+																					segmentIndex
+																				] = el)
+																			}
+																			value={segment.textContent}
+																			onChange={(e) => {
+																				handleInput(
+																					e,
+																					scene,
+																					sceneIndex,
+																					segment,
+																					segmentIndex
+																				);
+																			}}
+																		/>
 																	</span>
 																))}
 															</div>

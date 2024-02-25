@@ -135,6 +135,8 @@ const ExpandedThumbnails = ({ data }: { data?: HoveredThumbs }) => {
 const SceneEditorView = ({
 	WebstoryData,
 	ImageRatio,
+	story,
+	dispatch,
 }: {
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	ImageRatio: {
@@ -143,12 +145,10 @@ const SceneEditorView = ({
 		ratio: number;
 		enumValue: AspectRatios;
 	};
+	story: EditStoryDraft;
+	dispatch: React.Dispatch<EditStoryAction>;
 }) => {
 	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
-	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
-		editStoryReducer,
-		WebstoryToStoryDraft(WebstoryData!)
-	);
 	const [hoveredThumbnails, setHoveredThumbnails] = useState<HoveredThumbs>();
 	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
 		open?: boolean;

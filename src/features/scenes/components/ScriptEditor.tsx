@@ -34,6 +34,8 @@ export default function ScriptEditor({
 	ImageRatio,
 	isError,
 	isLoading,
+	dispatch,
+	story,
 }: {
 	ImageRatio: {
 		width: number;
@@ -44,6 +46,8 @@ export default function ScriptEditor({
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	isError?: boolean;
 	isLoading?: boolean;
+	story: EditStoryDraft;
+	dispatch: React.Dispatch<EditStoryAction>;
 }) {
 	const router = useRouter();
 	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
@@ -61,10 +65,6 @@ export default function ScriptEditor({
 	}>();
 
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
-		WebstoryToStoryDraft(WebstoryData!)
-	);
-	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
-		editStoryReducer,
 		WebstoryToStoryDraft(WebstoryData!)
 	);
 
@@ -152,17 +152,17 @@ export default function ScriptEditor({
 					</div>
 					<div className="flex gap-1 items-center">
 						<p className="px-1 text-purple-900">
-							Pro Tip — You can individually regenerate images in this
-							Storyboard.{" "}
-							<a href="#">
+							Pro Tip — A script is the foundation of a video. Write
+							expressively.
+							{/* <a href="#">
 								<u>Learn how</u>
-							</a>
+							</a> */}
 						</p>
-						<div className="flex gap-1 items-center text-purple-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
+						{/* <div className="flex gap-1 items-center text-purple-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
 							<SparkleIcon width={"18px"} height={"18px"} />
 							<p className="text-xs">Regenerate</p>
 							<ChevronDown width={"18px"} height={"18px"} />
-						</div>
+						</div> */}
 					</div>
 				</div>
 				<div className="relative px-6 pt-6 pb-2 bg-[#FEFEFF]">
@@ -171,14 +171,14 @@ export default function ScriptEditor({
 					</p>
 
 					<div className="w-full inline-flex text-slate-400 text-xs py-1">
-						<div className="flex">
+						{/* <div className="flex">
 							Storyboard for a <u>60 Second</u>{" "}
 							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
 							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div>
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div>
+						</div> */}
 						<p className="ms-1">by {userName}</p>
 					</div>
 				</div>

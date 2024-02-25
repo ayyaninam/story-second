@@ -84,12 +84,12 @@ const video = {
 
 		return data;
 	},
-	regenerateVideo: async (
-		params: mlSchema["RegenerateVideoRequest"],
+	regenerateAllImages: async (
+		params: mlSchema["RegenerateAllImagesRequest"],
 		accessToken?: string
 	): Promise<unknown> => {
 		const data = await mlFetcher(accessToken ?? getJwt())
-			.post(`regenerate-video`, {
+			.post(`regenerate-all-images`, {
 				body: JSON.stringify(params),
 			})
 			.json();

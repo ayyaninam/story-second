@@ -13,12 +13,24 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import EditorContainer from "./components/EditorContainer";
 import ScriptEditor from "./components/ScriptEditor";
+import { useImmerReducer } from "use-immer";
+import editStoryReducer, {
+	EditStoryAction,
+	EditStoryDraft,
+} from "./reducers/edit-reducer";
+import { WebstoryToStoryDraft } from "./utils/storydraft";
 
-export default function ScriptLayout() {
+export default function ScriptLayout({
+	story,
+	dispatch,
+}: {
+	story: EditStoryDraft;
+	dispatch: React.Dispatch<EditStoryAction>;
+}) {
 	const router = useRouter();
 
 	const [enableQuery, setEnableQuery] = useState(true);
-	const [story, setStory] = useWebstoryContext();
+	const [WebstoryData, setStory] = useWebstoryContext();
 
 	// Queries
 	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
@@ -26,29 +38,12 @@ export default function ScriptLayout() {
 			api.video.get(
 				router.query.genre!.toString(),
 				router.query.id!.toString(),
-				story.storyType
+				WebstoryData.storyType
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],
-		initialData: story,
-		refetchInterval: 1000,
-		// Disable once all the videoKeys are obtained
-		enabled: enableQuery,
+		initialData: WebstoryData,
 	});
-
-	useEffect(() => {
-		if (Webstory.data) {
-			setEnableQuery(
-				!(
-					Webstory.data.scenes
-						?.flatMap((el) => el.videoSegments)
-						.every((segment) => !!segment?.videoKey) &&
-					Webstory.data.scenes?.flatMap((el) => el.videoSegments).length > 0
-				)
-			);
-		}
-		setStory(Webstory.data);
-	}, [Webstory.data]);
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
 	const ImageRatio = GetImageRatio(Webstory.data.resolution);
@@ -73,12 +68,19 @@ export default function ScriptLayout() {
 						WebstoryData={Webstory.data}
 						isError={Webstory.isError}
 						isLoading={isLoading}
+						story={story}
+						dispatch={dispatch}
 					/>
 				</EditorContainer>
 			</div>
 
 			{/* BottomBar */}
-			<Footer WebstoryData={Webstory.data} />
+			<Footer
+				WebstoryData={Webstory.data}
+				dispatch={dispatch}
+				story={story}
+				view="script"
+			/>
 		</div>
 	);
 }

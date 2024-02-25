@@ -18,16 +18,23 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
 } from "../reducers/edit-reducer";
-import { WebstoryToStoryDraft } from "../utils/storydraft";
+import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import { StoryImageStyles, VoiceType } from "@/utils/enums";
+import {
+	SegmentModifications,
+	StoryImageStyles,
+	VoiceType,
+} from "@/utils/enums";
 import clsx from "clsx";
+import api from "@/api";
+import { SegmentModificationData } from "@/types";
+import { useMutation } from "@tanstack/react-query";
 
 const images = {
 	Realistic:
@@ -62,9 +69,21 @@ const voiceTypes = {
 
 const Footer = ({
 	WebstoryData,
+	dispatch,
+	story,
+	view,
 }: {
 	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
+	dispatch: React.Dispatch<EditStoryAction>;
+	story: EditStoryDraft;
+	view: "script" | "storyboard" | "scene";
 }) => {
+	useEffect(() => {
+		dispatch({
+			type: "reset",
+			draft: WebstoryToStoryDraft(WebstoryData),
+		});
+	}, [WebstoryData]);
 	const router = useRouter();
 
 	const { genre } = router.query;
@@ -77,11 +96,6 @@ const Footer = ({
 	const scrollRight = useCallback(() => {
 		scrollRef.current?.scroll({ left: 50, behavior: "smooth" });
 	}, []);
-
-	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
-		editStoryReducer,
-		WebstoryToStoryDraft(WebstoryData!)
-	);
 
 	const generationStyle = useMemo(
 		() =>
@@ -107,14 +121,120 @@ const Footer = ({
 		console.log(story, "story..");
 	}, [story]);
 
+	const EditSegment = useMutation({
+		mutationFn: api.video.editSegment,
+	});
+
+	const View = {
+		script: () => (
+			<div className="flex gap-2 mt-6">
+				<div>
+					<Button variant="outline" className="stroke-slate-600 text-slate-600">
+						<LayoutGrid strokeWidth={1} className="mr-2" />
+						Generate Images & Continue
+					</Button>
+				</div>
+				<div className="flex flex-col">
+					<Button
+						onClick={async () => {
+							const diff = GenerateStoryDiff(
+								WebstoryToStoryDraft(WebstoryData!),
+								story
+							);
+							console.log(diff);
+							// console.log(WebstoryToStoryDraft(WebstoryData!), story);
+							const edits: SegmentModificationData[] = diff.edits.map(
+								(segment) => ({
+									details: { Ind: segment.id, Text: segment.textContent },
+									operation: SegmentModifications.Edit,
+								})
+							);
+							const additions: SegmentModificationData[] = diff.additions.map(
+								(segment) => ({
+									details: {
+										Ind: segment.id,
+										segments: [
+											{ Text: segment.textContent, SceneId: segment.sceneId },
+										],
+									},
+									operation: SegmentModifications.Add,
+								})
+							);
+							const deletions: SegmentModificationData[] =
+								diff.subtractions.map((segment) => ({
+									details: {
+										Ind: segment.id,
+									},
+									operation: SegmentModifications.Delete,
+								}));
+							if (!additions.length && !edits.length && !deletions.length) {
+								console.log("No edits found");
+								return;
+							}
+
+							const editedResponse = await EditSegment.mutateAsync({
+								story_id: WebstoryData?.id as string,
+								story_type: WebstoryData?.storyType,
+								edits: [...edits, ...additions, ...deletions],
+							});
+
+							// await api.video.regenerateAllImages({
+							//   image_style: story.settings?.style,
+							//   story_id: story.storyId,story_type:
+							// })
+						}}
+						className="bg-purple-700 space-x-1.5"
+					>
+						<BrandShortLogo />
+						<p className="font-bold text-slate-50">Generate Storyboard</p>
+						<ArrowRight className="w-4 h-4 opacity-50" />
+					</Button>
+				</div>
+			</div>
+		),
+		storyboard: () => (
+			<div className="flex gap-2 mt-6">
+				<div>
+					<Button variant="outline" className="invisible">
+						Generate Images & Continue
+					</Button>
+				</div>
+				<div className="flex flex-col">
+					<Button onClick={onGenerate} className="bg-purple-700 space-x-1.5">
+						<BrandShortLogo />
+						<p className="font-bold text-slate-50">Generate Video Scenes</p>
+						<ArrowRight className="w-4 h-4 opacity-50" />
+					</Button>
+				</div>
+			</div>
+		),
+		scene: () => (
+			<div className="flex gap-2 mt-6">
+				<div>
+					<Button variant="outline" className="invisible">
+						Generate Images & Continue
+					</Button>
+				</div>
+				<div className="flex flex-col">
+					<Button onClick={onGenerate} className="bg-purple-700 space-x-1.5">
+						<BrandShortLogo />
+						<p className="font-bold text-slate-50">Share & Export Video</p>
+						<ArrowRight className="w-4 h-4 opacity-50" />
+					</Button>
+				</div>
+			</div>
+		),
+	};
+
+	const FooterRightButtons = View[view];
 	return (
 		<div className="flex sticky bottom-0 bg-background border-border border-t-[1px] p-3 pt-1.5 justify-between items-center overflow-hidden">
-			<div className="flex gap-1">
+			<div className="flex gap-1 ">
 				<div>
 					<label className="text-sm text-slate-600 font-normal">Narrator</label>
 					<Select onValueChange={onUpdateNarrator}>
 						<SelectTrigger className="max-w-fit py-1.5 px-3">
-							<Radio className="stroke-1 opacity-50" />
+							<Radio className="stroke-1 opacity-50 pr-1" />
 							<SelectValue placeholder="Generic Male" />
 						</SelectTrigger>
 						<SelectContent>
@@ -129,7 +249,7 @@ const Footer = ({
 					</Select>
 				</div>
 
-				<div>
+				{/* <div>
 					<Select>
 						<label className="text-sm text-slate-600 font-normal">Music</label>
 						<SelectTrigger className="max-w-fit py-1.5 px-3 space-x-1.5">
@@ -140,7 +260,7 @@ const Footer = ({
 							<SelectItem value="none">None</SelectItem>
 						</SelectContent>
 					</Select>
-				</div>
+				</div> */}
 			</div>
 
 			<div className="text-center max-w-md">
@@ -178,8 +298,9 @@ const Footer = ({
 					<ChevronRight onClick={scrollRight} className="w-8 h-8 opacity-50" />
 				</div>
 			</div>
+			<FooterRightButtons />
 
-			<div className="flex gap-2">
+			{/* <div className="flex gap-2">
 				<div>
 					<Select>
 						<label className="text-sm text-slate-600 font-normal">
@@ -204,7 +325,7 @@ const Footer = ({
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 };
