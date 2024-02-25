@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import LibraryHeroSection from "./hero-section";
 import LibraryGalleryComponent from "./gallery-component";
 import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
@@ -11,17 +11,19 @@ import { useRouter } from "next/router";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { useDebounce } from "usehooks-ts";
 import { getGalleryThumbnails } from "../utils";
+import {getJwt} from "@/utils/jwt";
 
 function LibraryHomePage({
 	setSelectedOrientationTab,
 	searchTerm,
+	accessToken,
 }: {
 	setSelectedOrientationTab: (orientation: string) => void;
 	searchTerm: string;
+	accessToken: string;
 }) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-
 	const filterOptions = useDebounce(
 		useMemo<LibraryPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
@@ -32,13 +34,14 @@ function LibraryHomePage({
 				searchTerm,
 				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm, router.query.sort]),
+		}, [router.query.page, router.query.genre, searchTerm, router.query.sort, accessToken]),
 		500
 	);
 
 	const wideVideoList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>({
 		queryFn: () =>
 			api.library.getVideos({
+				accessToken,
 				params: {
 					PageSize: 7,
 					storyType: StoryOutputTypes.Video,
@@ -49,7 +52,7 @@ function LibraryHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.WIDE_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [QueryKeys.WIDE_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.WIDE_VIDEOS,
 			filterOptions.topLevelCategory,
@@ -62,6 +65,7 @@ function LibraryHomePage({
 	>({
 		queryFn: () =>
 			api.library.getVideos({
+				accessToken,
 				params: {
 					PageSize: 5,
 					storyType: StoryOutputTypes.Video,
@@ -72,7 +76,7 @@ function LibraryHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.VERTICAL_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [QueryKeys.VERTICAL_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.VERTICAL_VIDEOS,
 			filterOptions.topLevelCategory,
@@ -83,6 +87,7 @@ function LibraryHomePage({
 	const storyBooksList = useQuery<mainSchema["ReturnWebStoryDTOPagedList"]>({
 		queryFn: () =>
 			api.library.getStoryBooks({
+				accessToken,
 				params: {
 					PageSize: 5,
 					CurrentPage: 1,
@@ -91,7 +96,7 @@ function LibraryHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.STORY_BOOKS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [QueryKeys.STORY_BOOKS, filterOptions.topLevelCategory, filterOptions.isDescending, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.STORY_BOOKS,
 			filterOptions.topLevelCategory,
@@ -103,6 +108,7 @@ function LibraryHomePage({
 		{
 			queryFn: () =>
 				api.library.getVideos({
+					accessToken,
 					params: {
 						PageSize: 5,
 						storyType: StoryOutputTypes.SplitScreen,
@@ -112,7 +118,7 @@ function LibraryHomePage({
 					},
 				}),
 			staleTime: 3000,
-			queryKey: [QueryKeys.TIK_TOK, filterOptions.topLevelCategory, filterOptions.isDescending],
+			queryKey: [QueryKeys.TIK_TOK, filterOptions.topLevelCategory, filterOptions.isDescending, accessToken],
 			initialData: queryClient.getQueryData([
 				QueryKeys.TIK_TOK,
 				filterOptions.topLevelCategory,

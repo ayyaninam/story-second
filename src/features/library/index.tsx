@@ -6,7 +6,7 @@ import LibraryGalleryPage from "./components/gallery-page";
 import { VideoOrientation } from "@/types";
 import { useRouter } from "next/router";
 
-function LibraryPage() {
+function LibraryPage({ accessToken }: { accessToken: string }) {
 	const router = useRouter();
 	const selectedOrientationTab =
 		(router.query.orientation as string) || VIDEO_ORIENTATIONS.ALL.id;
@@ -33,12 +33,14 @@ function LibraryPage() {
 				<LibraryHomePage
 					setSelectedOrientationTab={setSelectedOrientationTab}
 					searchTerm={searchTerm}
+					accessToken={accessToken}
 				/>
 			) : (
 				<LibraryGalleryPage
 					key={selectedOrientationTab}
 					orientation={selectedOrientationTab as VideoOrientation}
 					searchTerm={searchTerm}
+					accessToken={accessToken}
 				/>
 			)}
 		</div>

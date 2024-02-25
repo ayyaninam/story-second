@@ -17,6 +17,12 @@ class Routes {
 		}
 		return res;
 	}
+	static Library() {
+		return "/library";
+	}
+	static Explore() {
+		return "/explore";
+	}
 	static CreateStoryFromRoute(params: CreateInitialStoryQueryParams) {
 		// @ts-ignore
 		const urlParams = this.CreateSearchParams(params);

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import LibraryGalleryComponent from "./gallery-component";
 import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { LIBRARY_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
@@ -14,23 +14,17 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
 import { useDebounce } from "usehooks-ts";
 import { getGalleryThumbnails } from "../utils";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
 import GenericPagination from "@/components/ui/generic-pagination";
+import {getJwt} from "@/utils/jwt";
 
 function LibraryGalleryPage({
 	orientation = "wide",
 	searchTerm,
+	accessToken,
 }: {
 	orientation: VideoOrientation;
 	searchTerm: string;
+	accessToken: string;
 }) {
 	const router = useRouter();
 	const galleryDetails = LIBRARY_HOME_GALLERY_DATA[orientation];
@@ -57,6 +51,7 @@ function LibraryGalleryPage({
 		queryFn: () => {
 			if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
 				return api.library.getStoryBooks({
+					accessToken,
 					params: {
 						PageSize: 50,
 						...filterOptions,
@@ -65,6 +60,7 @@ function LibraryGalleryPage({
 			}
 			if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
 				return api.library.getVideos({
+					accessToken,
 					params: {
 						PageSize: 50,
 						storyType: StoryOutputTypes.SplitScreen,
@@ -73,6 +69,7 @@ function LibraryGalleryPage({
 				});
 			}
 			return api.library.getVideos({
+				accessToken,
 				params: {
 					PageSize: 50,
 					storyType: StoryOutputTypes.Video,
@@ -85,7 +82,7 @@ function LibraryGalleryPage({
 			});
 		},
 		staleTime: 3000,
-		queryKey: [QueryKeys.GALLERY, filterOptions, orientation],
+		queryKey: [QueryKeys.GALLERY, filterOptions, orientation, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.GALLERY,
 			filterOptions,
