@@ -88,3 +88,13 @@ export type LibraryPageVideoQueryOptions = {
 	isDescending?: boolean;
 	topLevelCategory: string;
 };
+
+export type ExplorePageVideoQueryOptions = {
+	CurrentPage?: number;
+	PageSize?: number;
+	storyType?: StoryOutputTypes;
+	searchTerm?: string;
+	resolution?: DisplayAspectRatios;
+	isDescending?: boolean;
+	topLevelCategory: string;
+};

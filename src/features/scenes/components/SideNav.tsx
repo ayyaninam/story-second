@@ -20,26 +20,31 @@ export const menuItems = [
 		icon: <ExploreIcon />,
 		text: "Explore",
 		shortcut: "E",
+		redirectUrl: "/explore",
 	},
 	{
 		icon: <GenerateIcon />,
 		text: "Generate",
 		shortcut: "G",
+		redirectUrl: "/",
 	},
 	{
 		icon: <LibraryIcon />,
 		text: "Library",
 		shortcut: "L",
+		redirectUrl: "/library",
 	},
 	{
 		icon: <ChallengesIcon />,
 		text: "Challenges",
 		shortcut: "C",
+		redirectUrl: "/challenges",
 	},
 	{
 		icon: <FreeCreditsIcon />,
 		text: "Free Credits",
 		shortcut: "F",
+		redirectUrl: "/credits",
 	},
 ];
 
@@ -65,14 +70,16 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 				</div>
 				<div className="space-y-1">
 					{menuItems.map((menuItem, index) => (
-						<div
+						<Link
+							href={menuItem.redirectUrl}
 							key={index}
 							aria-selected={index === pageIndex}
 							className="ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem"
 						>
 							{menuItem.icon}
 							{menuItem.text}
-							<div className="flex gap-2 flex-grow justify-end items-center opacity-65">
+							<div
+								className="flex gap-2 flex-grow justify-end items-center opacity-65">
 								<Command
 									className="h-5 w-5 p-0.5"
 									style={{
@@ -92,7 +99,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 									{menuItem.shortcut}
 								</span>
 							</div>
-						</div>
+						</Link>
 					))}
 				</div>
 			</div>
