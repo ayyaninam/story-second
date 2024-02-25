@@ -20,26 +20,31 @@ export const menuItems = [
 		icon: <ExploreIcon />,
 		text: "Explore",
 		shortcut: "E",
+		redirectUrl: "/explore",
 	},
 	{
 		icon: <GenerateIcon />,
 		text: "Generate",
 		shortcut: "G",
+		redirectUrl: "/",
 	},
 	{
 		icon: <LibraryIcon />,
 		text: "Library",
 		shortcut: "L",
+		redirectUrl: "/library",
 	},
 	{
 		icon: <ChallengesIcon />,
 		text: "Challenges",
 		shortcut: "C",
+		redirectUrl: "/challenges",
 	},
 	{
 		icon: <FreeCreditsIcon />,
 		text: "Free Credits",
 		shortcut: "F",
+		redirectUrl: "/credits",
 	},
 ];
 
@@ -72,7 +77,9 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						>
 							{menuItem.icon}
 							{menuItem.text}
-							<div className="flex gap-2 flex-grow justify-end items-center opacity-65">
+							<Link
+								href={menuItem.redirectUrl}
+								className="flex gap-2 flex-grow justify-end items-center opacity-65">
 								<Command
 									className="h-5 w-5 p-0.5"
 									style={{
@@ -91,7 +98,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 								>
 									{menuItem.shortcut}
 								</span>
-							</div>
+							</Link>
 						</div>
 					))}
 				</div>
