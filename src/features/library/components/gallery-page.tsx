@@ -14,15 +14,6 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
 import { useDebounce } from "usehooks-ts";
 import { getGalleryThumbnails } from "../utils";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
 import GenericPagination from "@/components/ui/generic-pagination";
 import {getJwt} from "@/utils/jwt";
 
@@ -41,6 +32,7 @@ function LibraryGalleryPage({
 	const [accessToken, setAccessToken] = useState("");
 	useEffect(() => {
 		setAccessToken(getJwt());
+		console.log("accessToken2", accessToken)
 	}, []);
 
 	const filterOptions = useDebounce(
