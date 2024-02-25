@@ -1,10 +1,11 @@
 import toast from "react-hot-toast";
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useStripeSetup } from "../hooks";
-import CheckoutDialogView from "./view";
-import { SubscriptionPlan, SubscriptionPeriod } from "@/utils/enums";
 import api from "@/api";
+import StripeForm from "@/features/pricing/stripe-form";
+import { SubscriptionPlan, SubscriptionPeriod } from "@/utils/enums";
+import { useStripeSetup } from "../hooks";
+import CheckoutDialogContent from "./view";
 
 const base_url = "http://localhost:3000/";
 
@@ -66,13 +67,11 @@ const pricingStructure = {
 };
 
 export interface SubscriptionCheckoutDialogProps {
-	children: React.ReactNode;
 	plan: Exclude<SubscriptionPlan, SubscriptionPlan.Free>;
 	period: SubscriptionPeriod;
 }
 
 const SubscriptionCheckoutDialog = ({
-	children,
 	plan,
 	period,
 }: SubscriptionCheckoutDialogProps) => {
@@ -168,7 +167,7 @@ const SubscriptionCheckoutDialog = ({
 	};
 
 	return (
-		<CheckoutDialogView
+		<CheckoutDialogContent
 			title={title}
 			sideLabel={label}
 			items={[
@@ -179,18 +178,18 @@ const SubscriptionCheckoutDialog = ({
 				},
 			]}
 			total={`$${item.price}`}
-			setupStripe={setupStripe}
-			onLoadStripe={() => {
-				setStripeLoaded(true);
-			}}
+			stripeForm={
+				<StripeForm
+					setupStripe={setupStripe}
+					onLoadStripe={() => setStripeLoaded(true)}
+				/>
+			}
 			submitButtonText="Subscribe"
 			buttonProps={{
 				disabled: !stripeLoaded || submitting,
 				onClick: () => onCreateSubscription(),
 			}}
-		>
-			{children}
-		</CheckoutDialogView>
+		/>
 	);
 };
 

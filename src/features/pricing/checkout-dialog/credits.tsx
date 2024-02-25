@@ -7,23 +7,22 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import StripeForm from "@/features/pricing/stripe-form";
 import { useStripeSetup } from "../hooks";
-import CheckoutDialogView from "./view";
+import CheckoutDialogContent from "./view";
 
 const videoCreditValues = [5, 10, 20, 50] as const;
 type VideoCreditValue = (typeof videoCreditValues)[number];
 
-export interface CreditsCheckoutDialogProps {
-	children: React.ReactNode;
-}
+export interface CreditsCheckoutDialogProps {}
 
-const CreditsCheckoutDialog = ({ children }: CreditsCheckoutDialogProps) => {
+const CreditsCheckoutDialog = ({}: CreditsCheckoutDialogProps) => {
 	const { setupStripe, confirmSetup, confirmPayment } = useStripeSetup();
 	const [stripeLoaded, setStripeLoaded] = useState(false);
 	const [videoCredit, setVideoCredit] = useState<VideoCreditValue>(10);
 
 	return (
-		<CheckoutDialogView
+		<CheckoutDialogContent
 			title={
 				<>
 					<span>Buy</span>
@@ -57,19 +56,19 @@ const CreditsCheckoutDialog = ({ children }: CreditsCheckoutDialogProps) => {
 					price: `$${videoCredit}`,
 				},
 			]}
+			stripeForm={
+				<StripeForm
+					setupStripe={setupStripe}
+					onLoadStripe={() => setStripeLoaded(true)}
+				/>
+			}
 			total={`$${videoCredit}`}
-			setupStripe={setupStripe}
-			onLoadStripe={() => {
-				setStripeLoaded(true);
-			}}
 			submitButtonText="Submit Payment"
 			buttonProps={{
 				disabled: !stripeLoaded,
 				// onClick: () => onCreateCredits(),
 			}}
-		>
-			{children}
-		</CheckoutDialogView>
+		/>
 	);
 };
 
