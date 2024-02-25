@@ -16,19 +16,14 @@ import {getJwt} from "@/utils/jwt";
 function LibraryHomePage({
 	setSelectedOrientationTab,
 	searchTerm,
+	accessToken,
 }: {
 	setSelectedOrientationTab: (orientation: string) => void;
 	searchTerm: string;
+	accessToken: string;
 }) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-
-	const [accessToken, setAccessToken] = useState("");
-	useEffect(() => {
-		setAccessToken(getJwt());
-		console.log("accessToken", accessToken)
-	}, []);
-
 	const filterOptions = useDebounce(
 		useMemo<LibraryPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
@@ -39,7 +34,7 @@ function LibraryHomePage({
 				searchTerm,
 				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm, router.query.sort]),
+		}, [router.query.page, router.query.genre, searchTerm, router.query.sort, accessToken]),
 		500
 	);
 
@@ -57,7 +52,7 @@ function LibraryHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.WIDE_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [QueryKeys.WIDE_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.WIDE_VIDEOS,
 			filterOptions.topLevelCategory,
@@ -81,7 +76,7 @@ function LibraryHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.VERTICAL_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [QueryKeys.VERTICAL_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.VERTICAL_VIDEOS,
 			filterOptions.topLevelCategory,
@@ -101,7 +96,7 @@ function LibraryHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.STORY_BOOKS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [QueryKeys.STORY_BOOKS, filterOptions.topLevelCategory, filterOptions.isDescending, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.STORY_BOOKS,
 			filterOptions.topLevelCategory,
@@ -123,7 +118,7 @@ function LibraryHomePage({
 					},
 				}),
 			staleTime: 3000,
-			queryKey: [QueryKeys.TIK_TOK, filterOptions.topLevelCategory, filterOptions.isDescending],
+			queryKey: [QueryKeys.TIK_TOK, filterOptions.topLevelCategory, filterOptions.isDescending, accessToken],
 			initialData: queryClient.getQueryData([
 				QueryKeys.TIK_TOK,
 				filterOptions.topLevelCategory,

@@ -20,20 +20,16 @@ import {getJwt} from "@/utils/jwt";
 function LibraryGalleryPage({
 	orientation = "wide",
 	searchTerm,
+	accessToken,
 }: {
 	orientation: VideoOrientation;
 	searchTerm: string;
+	accessToken: string;
 }) {
 	const router = useRouter();
 	const galleryDetails = LIBRARY_HOME_GALLERY_DATA[orientation];
 	const queryClient = useQueryClient();
 	const currentPage = parseInt((router.query.page as string) || "1");
-
-	const [accessToken, setAccessToken] = useState("");
-	useEffect(() => {
-		setAccessToken(getJwt());
-		console.log("accessToken2", accessToken)
-	}, []);
 
 	const filterOptions = useDebounce(
 		useMemo<LibraryPageVideoQueryOptions>(() => {
@@ -86,7 +82,7 @@ function LibraryGalleryPage({
 			});
 		},
 		staleTime: 3000,
-		queryKey: [QueryKeys.GALLERY, filterOptions, orientation],
+		queryKey: [QueryKeys.GALLERY, filterOptions, orientation, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.GALLERY,
 			filterOptions,

@@ -18,7 +18,7 @@ function Library({
   session,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	useSaveSessionToken(session);
+	const accessToken = session.accessToken as string || "";
 	return (
 		<HydrationBoundary state={dehydratedState}>
 			{/* declare css variables */}
@@ -34,7 +34,7 @@ function Library({
 					--stepper-box-shadow: 0px 4px 4px 0px rgba(122, 255, 133, 0.4);
 				}
 			`}</style>
-			<LibraryPage />
+			<LibraryPage accessToken={accessToken} />
 		</HydrationBoundary>
 	);
 }
@@ -104,7 +104,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.WIDE_VIDEOS, genre, isDescending],
+					queryKey: [QueryKeys.WIDE_VIDEOS, genre, isDescending, accessToken],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -120,7 +120,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.VERTICAL_VIDEOS, genre, isDescending],
+					queryKey: [QueryKeys.VERTICAL_VIDEOS, genre, isDescending, accessToken],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -134,7 +134,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.STORY_BOOKS, genre, isDescending],
+					queryKey: [QueryKeys.STORY_BOOKS, genre, isDescending, accessToken],
 					staleTime: 3000,
 				}),
 				queryClient.fetchQuery({
@@ -149,7 +149,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								isDescending: isDescending,
 							},
 						}),
-					queryKey: [QueryKeys.TIK_TOK, genre, isDescending],
+					queryKey: [QueryKeys.TIK_TOK, genre, isDescending, accessToken],
 					staleTime: 3000,
 				}),
 			]);
@@ -193,7 +193,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 						},
 					});
 				},
-				queryKey: [QueryKeys.GALLERY, filterOptions, orientation],
+				queryKey: [QueryKeys.GALLERY, filterOptions, orientation, accessToken],
 				staleTime: 3000,
 			});
 		}
