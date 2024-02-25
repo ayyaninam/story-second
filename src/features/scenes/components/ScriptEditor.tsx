@@ -135,7 +135,7 @@ export default function ScriptEditor({
 	return (
 		<>
 			<div
-				className="w-[80%] m-auto"
+				className="w-[60%] m-auto"
 				style={{
 					borderRadius: "8px",
 					background: "#FEFEFF",
@@ -236,7 +236,7 @@ export default function ScriptEditor({
 																	inputClassName={cn(
 																		"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
 																		segment.textStatus === TextStatus.EDITED &&
-																			"text-slate-500"
+																			"text-purple-500"
 																	)}
 																	inputStyle={{
 																		outline: "none",

@@ -233,7 +233,7 @@ const Footer = ({
 				<div>
 					<label className="text-sm text-slate-600 font-normal">Narrator</label>
 					<Select onValueChange={onUpdateNarrator}>
-						<SelectTrigger className="max-w-fit py-1.5 px-3">
+						<SelectTrigger className=" py-1.5 px-3 w-[180px]">
 							<Radio className="stroke-1 opacity-50 pr-1" />
 							<SelectValue placeholder="Generic Male" />
 						</SelectTrigger>
@@ -271,7 +271,7 @@ const Footer = ({
 
 				<div className="flex space-x-1 items-center">
 					<ChevronLeft onClick={scrollLeft} className="w-8 h-8 opacity-50" />
-					<div ref={scrollRef} className="flex overflow-x-hidden">
+					<div ref={scrollRef} className="flex 2xl:overflow-x-visible overflow-x-hidden ">
 						<div className="flex gap-x-1">
 							{Object.entries(images).map(([key, image], index) => (
 								<div
