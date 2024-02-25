@@ -61,8 +61,10 @@ const LoadingIndicator = () => <div></div>;
 
 export default function StripeForm({
 	setupStripe,
+	onLoadStripe,
 }: {
 	setupStripe: SetupStripe;
+	onLoadStripe?: () => void;
 }) {
 	const [clientSecret, setClientSecret] = useState("");
 	const [ready, setReady] = useState(false);
@@ -80,6 +82,13 @@ export default function StripeForm({
 			}
 		})();
 	}, [clientSecret]);
+
+	useEffect(() => {
+		if (ready) {
+			onLoadStripe?.();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ready]);
 
 	return (
 		<div className="flex w-full flex-col relative min-h-[280px]">

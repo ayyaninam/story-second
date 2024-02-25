@@ -7,6 +7,7 @@ import {
 	DialogDescription,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button, ButtonProps } from "@/components/ui/button";
 import StripeForm, { SetupStripe } from "@/features/pricing/stripe-form";
 
 interface Item {
@@ -22,7 +23,9 @@ interface CheckoutDialogProps {
 	items: Item[];
 	total: string;
 	submitButtonText: React.ReactNode;
+	buttonProps?: ButtonProps;
 	setupStripe: SetupStripe;
+	onLoadStripe: () => void;
 }
 
 const CheckoutDialogView = ({
@@ -32,7 +35,9 @@ const CheckoutDialogView = ({
 	items,
 	total,
 	setupStripe,
+	onLoadStripe,
 	submitButtonText,
+	buttonProps,
 }: CheckoutDialogProps) => {
 	return (
 		<Dialog>
@@ -85,10 +90,10 @@ const CheckoutDialogView = ({
 					<div className="font-medium text-slate-400">Billing Info</div>
 
 					<div className="min-h-[375px]">
-						<StripeForm setupStripe={setupStripe} />
+						<StripeForm setupStripe={setupStripe} onLoadStripe={onLoadStripe} />
 					</div>
 
-					<button
+					<Button
 						style={{
 							background:
 								"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #8F22CE, #8F22CE)",
@@ -105,9 +110,10 @@ const CheckoutDialogView = ({
 							e.currentTarget.style.background =
 								"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #8F22CE, #8F22CE)";
 						}}
+						{...buttonProps}
 					>
 						{submitButtonText}
-					</button>
+					</Button>
 				</div>
 			</DialogContent>
 		</Dialog>

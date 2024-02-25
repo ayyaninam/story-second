@@ -19,6 +19,7 @@ export interface CreditsCheckoutDialogProps {
 
 const CreditsCheckoutDialog = ({ children }: CreditsCheckoutDialogProps) => {
 	const { setupStripe, confirmSetup, confirmPayment } = useStripeSetup();
+	const [stripeLoaded, setStripeLoaded] = useState(false);
 	const [videoCredit, setVideoCredit] = useState<VideoCreditValue>(10);
 
 	return (
@@ -58,7 +59,14 @@ const CreditsCheckoutDialog = ({ children }: CreditsCheckoutDialogProps) => {
 			]}
 			total={`$${videoCredit}`}
 			setupStripe={setupStripe}
+			onLoadStripe={() => {
+				setStripeLoaded(true);
+			}}
 			submitButtonText="Submit Payment"
+			buttonProps={{
+				disabled: !stripeLoaded,
+				// onClick: () => onCreateCredits(),
+			}}
 		>
 			{children}
 		</CheckoutDialogView>
