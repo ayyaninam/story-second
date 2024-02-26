@@ -51,8 +51,10 @@ Library.getLayout = function getLayout(page: ReactElement) {
 
 export default Library;
 
-export const getServerSideProps = withPageAuthRequired({
-	async getServerSideProps(context: GetServerSidePropsContext) {
+// export const getServerSideProps = withPageAuthRequired({
+// 	async getServerSideProps(context: GetServerSidePropsContext) {
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
 		const session = await getSession(context.req, context.res);
 		if (!session) {
 			return {
@@ -215,4 +217,4 @@ export const getServerSideProps = withPageAuthRequired({
 			},
 		};
 	}
-});
+// });
