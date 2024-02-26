@@ -13,13 +13,13 @@ import Stepper from "../scenes/components/Stepper";
 import Navbar from "../scenes/components/Navbar";
 import Footer from "../scenes/components/Footer";
 import EditorContainer from "../scenes/components/EditorContainer";
-import ShareEditor from "./components/share-editor";
 import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
 } from "@/features/scenes/reducers/edit-reducer";
 import { WebstoryToStoryDraft } from "@/features/scenes/utils/storydraft";
+import PreviewEditor from "./components/preview-editor";
 
 export default function EditStory() {
 	const router = useRouter();
@@ -75,12 +75,12 @@ export default function EditStory() {
 			/>
 
 			{/* Stepper */}
-			<Stepper step={StepperStep.Share} />
+			<Stepper step={StepperStep.Preview} />
 
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>
-				<EditorContainer view="share">
-					<ShareEditor
+				<EditorContainer view="preview">
+					<PreviewEditor
 						ImageRatio={ImageRatio}
 						WebstoryData={Webstory.data}
 						isLoading={isLoading}
@@ -94,7 +94,7 @@ export default function EditStory() {
 				WebstoryData={Webstory.data}
 				story={story}
 				dispatch={dispatch}
-				view="share"
+				view="preview"
 			/>
 		</div>
 	);

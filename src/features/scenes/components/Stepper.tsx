@@ -8,10 +8,10 @@ import {
 	ScrollText,
 	LayoutList,
 	Film,
-	Upload,
+	ScanEye,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import { use, useState } from "react";
+import { useState } from "react";
 
 const activeStyles =
 	"border border-purple-500 bg-purple-100 text-purple-900 stepper-box-shadow";
@@ -105,7 +105,7 @@ export default function Stepper({ step }: { step: StepperStep }) {
 			<Badge
 				variant="outline"
 				onMouseEnter={() => {
-					setCurrentHover(StepperStep.Share);
+					setCurrentHover(StepperStep.Preview);
 				}}
 				onMouseLeave={() => {
 					setCurrentHover(step);
@@ -121,11 +121,12 @@ export default function Stepper({ step }: { step: StepperStep }) {
 				}
 				className={clsx(baseStyles, {
 					[activeStyles]:
-						step === StepperStep.Share || currentHover === StepperStep.Share,
+						step === StepperStep.Preview ||
+						currentHover === StepperStep.Preview,
 				})}
 			>
-				<Upload className="stroke-purple-600 mr-1 h-4 w-4" />
-				Share
+				<ScanEye className="stroke-purple-600 mr-1 h-4 w-4" />
+				Preview
 			</Badge>
 		</div>
 	);

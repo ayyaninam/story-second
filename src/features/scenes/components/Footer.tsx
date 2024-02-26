@@ -92,7 +92,7 @@ const Footer = ({
 	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
 	dispatch: React.Dispatch<EditStoryAction>;
 	story: EditStoryDraft;
-	view: "script" | "storyboard" | "scene" | "share";
+	view: "script" | "storyboard" | "scene" | "preview";
 }) => {
 	const router = useRouter();
 
@@ -264,7 +264,7 @@ const Footer = ({
 				</div>
 			</div>
 		),
-		share: () => (
+		preview: () => (
 			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div className="flex flex-col">
 					<Button
@@ -322,7 +322,7 @@ const Footer = ({
 			</div>
 
 			<div className="text-center max-w-md">
-				{view !== "share" && (
+				{view !== "preview" && (
 					<>
 						<span className="text-sm font-normal">
 							<span className="text-slate-600">Primary Image Style:</span>{" "}

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Film, HelpCircle, ScrollText, LayoutList, Video } from "lucide-react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
 
-const getBadgeData = (view: "script" | "story" | "scene" | "share") => {
+const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 	switch (view) {
 		default:
 		case "script":
@@ -39,7 +39,7 @@ const getBadgeData = (view: "script" | "story" | "scene" | "share") => {
 					icon: <Video className="stroke-purple-600 mr-1 h-4 w-4" />,
 				},
 			};
-		case "share":
+		case "preview":
 			return {
 				top: {
 					text: "Generate & Edit Your Scenes",
@@ -55,7 +55,7 @@ const getBadgeData = (view: "script" | "story" | "scene" | "share") => {
 
 const EditorContainer: FC<{
 	children: ReactNode;
-	view: "script" | "story" | "scene" | "share";
+	view: "script" | "story" | "scene" | "preview";
 }> = ({ children, view = "script" }) => {
 	const badgeData = getBadgeData(view);
 	return (
