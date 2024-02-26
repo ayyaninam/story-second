@@ -10,7 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
+import {
+	SubscriptionPeriod,
+	SubscriptionPlan,
+	AllowanceType,
+} from "@/utils/enums";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 
 export interface PricingTierFrequency {
@@ -309,9 +313,8 @@ export default function PricingPage() {
 								</p>
 
 								<CheckoutDialog
-									variant="subscription"
-									plan={SubscriptionPlan.Pro}
-									period={SubscriptionPeriod.Monthly}
+									variant="credits"
+									allowanceType={AllowanceType.Videos}
 								>
 									<Button
 										size="lg"

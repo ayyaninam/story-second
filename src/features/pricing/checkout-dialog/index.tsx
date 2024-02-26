@@ -9,7 +9,7 @@ type CheckoutDialogProps =
 	| ({
 			variant: "credits";
 			children?: ReactNode;
-	  } & CreditsCheckoutDialogProps)
+	  } & Omit<CreditsCheckoutDialogProps, "onClose">)
 	| ({
 			variant: "subscription";
 			children?: ReactNode;
@@ -23,7 +23,10 @@ const CheckoutDialog = (props: CheckoutDialogProps) => {
 			<DialogTrigger asChild>{props.children}</DialogTrigger>
 			<DialogContent className="rounded-md p-0 shadow-xl gap-0 overflow-hidden">
 				{props.variant === "credits" ? (
-					<CreditsCheckoutDialog />
+					<CreditsCheckoutDialog
+						allowanceType={props.allowanceType}
+						onClose={() => setOpen(false)}
+					/>
 				) : props.variant === "subscription" ? (
 					<SubscriptionCheckoutDialog
 						plan={props.plan}

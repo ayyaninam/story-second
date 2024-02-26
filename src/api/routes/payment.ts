@@ -59,6 +59,38 @@ const payment = {
 				},
 			})
 			.json(),
+	refillAllowance: async ({
+		allowanceType,
+		quantity,
+	}: mainSchema["AdditionalCreditsDTO"]): Promise<
+		mainSchema["InternalTransactionDTOApiResponse"]
+	> =>
+		await authFetcher(getJwt())
+			.post(`api/Payment/RefillAllowance`, {
+				json: {
+					allowanceType,
+					quantity,
+				},
+			})
+			.json(),
+	verifyPurchaseCredits: async ({
+		paymentIntentId,
+		amount,
+		allowanceType,
+		quantity,
+	}: mainSchema["ConfirmPaymentDTO"]): Promise<
+		mainSchema["StringApiResponse"]
+	> =>
+		await authFetcher(getJwt())
+			.post(`api/Payment/VerifyPurchaseCredits`, {
+				json: {
+					paymentIntentId,
+					amount,
+					allowanceType,
+					quantity,
+				},
+			})
+			.json(),
 };
 
 export default payment;

@@ -7,8 +7,7 @@ import StripeForm from "@/features/pricing/stripe-form";
 import PaymentCard, { getUserHasCard } from "@/features/pricing/payment-card";
 import { SubscriptionPlan, SubscriptionPeriod } from "@/utils/enums";
 import { useStripeSetup, useUser } from "../hooks";
-import CheckoutDialogContent from "./view";
-import { useTimeout } from "usehooks-ts";
+import CheckoutDialogContent from "./content";
 
 const base_url = "http://localhost:3000/";
 
