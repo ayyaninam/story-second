@@ -75,7 +75,7 @@ export default function PreviewEditor({
 						</p>
 					)}
 					<Button
-						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
+						className={`p-2 text-muted-foreground text-sm shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
 						variant="outline"
 					>
 						<Upload className={cn("mr-2 h-4 w-4")} /> Publish Video
