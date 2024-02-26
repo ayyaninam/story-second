@@ -152,7 +152,11 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 			</div>
 			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-600">
 				<div className="mb-4 mx-3">
-					<StoryLogoFullWhite />
+					<Link
+						href={"/"}
+					>
+						<StoryLogoFullWhite />
+					</Link>
 				</div>
 				<div className="my-2 mx-3 space-y-2">
 					<p className="font-medium text-sm">Base Plan</p>
