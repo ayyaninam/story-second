@@ -70,7 +70,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 		// # TODO: For development purposes only - remove this in production
 		// Avoids redirect to dev pages and sends to absolute path
-		if (context?.req?.url && context.req.url.toString() === "/_next/data/development/library.json") {
+		if (context?.req?.url && context.req.url.toString().includes("/_next/data")) {
 			context.req.url = "/library?genre=all";
 		}
 

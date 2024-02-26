@@ -86,7 +86,7 @@ export const GenreTabSwitcher = () => {
 
 	return (
 		<div className="flex gap-1.5 items-center bg-none absolute right-1/2 translate-x-1/2">
-			{genreOptions?.slice(0, 3).map((category) => (
+			{genreOptions?.slice(0, 4).map((category) => (
 				<Button
 					key={category.id}
 					className={`h-7 py-0.5 bg-background px-4 justify-center rounded-[10000px] text-sm 
