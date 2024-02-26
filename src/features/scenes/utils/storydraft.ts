@@ -34,10 +34,7 @@ export const WebstoryToStoryDraft = (
 				segments:
 					scene.videoSegments?.map((segment) => {
 						let imageStatus = StoryStatus.READY;
-						if (segment.imageKey && !segment.imageRegenerating)
-							imageStatus = StoryStatus.COMPLETE;
-						else if (segment.imageRegenerating)
-							imageStatus = StoryStatus.PENDING;
+						if (segment.imageKey) imageStatus = StoryStatus.COMPLETE;
 						else if (!segment.imageKey) imageStatus = StoryStatus.READY;
 
 						let videoStatus = StoryStatus.READY;

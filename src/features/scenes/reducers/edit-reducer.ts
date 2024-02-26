@@ -41,7 +41,10 @@ export type Segment = {
 	imageStatus: StoryStatus;
 	videoStatus: StoryStatus;
 	audioStatus: StoryStatus;
+	alternateImageKeys?: string[];
+	alternateImagesStatus?: StoryStatus;
 };
+
 export type Scene = {
 	id: string;
 	status: StoryStatus;

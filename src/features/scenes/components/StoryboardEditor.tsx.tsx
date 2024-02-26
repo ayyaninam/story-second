@@ -41,6 +41,7 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetImageRatio } from "@/utils/image-ratio";
 import { Button } from "@/components/ui/button";
+import SegmentImage from "./SegmentImage";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -70,6 +71,9 @@ export default function VideoEditorStoryboard({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
+	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
+		number | null
+	>(null);
 
 	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
 		open?: boolean;
@@ -285,27 +289,19 @@ export default function VideoEditorStoryboard({
 																	<React.Fragment key={segmentIndex}>
 																		{segment.imageStatus ===
 																			StoryStatus.COMPLETE && (
-																			<>
-																				<div
-																					className="relative h-32"
-																					style={{
-																						aspectRatio: GetImageRatio(
-																							story.resolution
-																						).ratio,
-																					}}
-																				>
-																					<Image
-																						alt={segment.textContent}
-																						src={Format.GetImageUrl(
-																							segment.imageKey
-																						)}
-																						className="rounded-sm"
-																						layout="fill"
-																						objectFit="cover" // Or use 'cover' depending on the desired effect
-																						style={{ objectFit: "contain" }}
-																					/>
-																				</div>
-																			</>
+																			<SegmentImage
+																				segment={segment}
+																				story={story}
+																				imageRegenerationSegmentId={
+																					imageRegenerationSegmentId
+																				}
+																				setImageRegenerationSegmentId={
+																					setImageRegenerationSegmentId
+																				}
+																				dispatch={dispatch}
+																				segmentIndex={segmentIndex}
+																				sceneIndex={sceneIndex}
+																			/>
 																		)}
 																		{segment.imageStatus ===
 																			StoryStatus.PENDING && (
