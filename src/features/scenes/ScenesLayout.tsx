@@ -53,11 +53,7 @@ export default function StoryScenes({
 	return (
 		<div className="relative w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
 			{/* Navbar */}
-			<Navbar
-				ImageRatio={ImageRatio}
-				WebstoryData={Webstory.data}
-				genre={router.query.genre!.toString()}
-			/>
+			<Navbar ImageRatio={ImageRatio} WebstoryData={Webstory.data} />
 
 			{/* Stepper */}
 			<Stepper step={StepperStep.Scenes} />

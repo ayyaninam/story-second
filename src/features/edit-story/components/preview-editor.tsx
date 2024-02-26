@@ -36,25 +36,26 @@ export default function PreviewEditor({
 	return (
 		<div
 			className={cn(
+				"relative w-4/5 h-4/5 m-auto",
 				`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row m-auto`,
 				// Based on aspect ratio we need to adjust the parent width
 				// NOTE: taking 65% of the actual size on right (eg: 1080px, etc.)
 				ImageRatio.width === 1 && "md:max-w-[702px]", // 1080px
 				ImageRatio.width === 3 && "md:max-w-[585px]", // 900px
 				ImageRatio.width === 4 && "md:max-w-[832px]", // 1280px
-				ImageRatio.width === 9 && "md:max-w-[507px]", // 780px
-				ImageRatio.width === 16 && "md:max-w-[1053px]" // 1620px
+				ImageRatio.width === 9 && "md:max-w-[600px]", // 780px
+				ImageRatio.width === 16 && "md:max-w-[1200px]" // 1620px
 			)}
 		>
 			<div
-				className="relative w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
+				className=" rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
 				style={{ aspectRatio: ImageRatio.ratio }}
 			>
 				<StoryScreen Webstory={WebstoryData} isError={isError} />
 			</div>
 			<div
 				className={cn(
-					`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-background rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`
+					`p-6 flex flex-col-reverse w-full justify-between md:flex-col lg:max-w-sm bg-background rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`
 				)}
 			>
 				<div className="relative space-y-2">

@@ -36,6 +36,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
+import { cn } from "@/utils";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -58,7 +59,7 @@ export default function EditSegmentModalItem({
 			<div className="w-full text-slate-950 space-y-2">
 				<div className="flex flex-row space-x-2">
 					<div
-						className="relative h-20 "
+						className="relative h-56"
 						style={{ aspectRatio: GetImageRatio(story.resolution).ratio }}
 					>
 						{segment.imageStatus !== StoryStatus.COMPLETE ? (
@@ -140,20 +141,19 @@ export default function EditSegmentModalItem({
 								</Button>
 							</div>
 						</div>
+						{isChecked && (
+							<AdvancedEditingOptions
+								settings={segment.settings}
+								onSettingsChange={(settings) => {
+									onSegmentEdit({
+										...segment,
+										settings: settings,
+									});
+								}}
+							/>
+						)}
 					</div>
 				</div>
-
-				{isChecked && (
-					<AdvancedEditingOptions
-						settings={segment.settings}
-						onSettingsChange={(settings) => {
-							onSegmentEdit({
-								...segment,
-								settings: settings,
-							});
-						}}
-					/>
-				)}
 			</div>
 		</div>
 	);
@@ -187,7 +187,7 @@ function AdvancedEditingOptions({
 				</label>
 				<Textarea
 					id="image-animation-prompt"
-					rows={5}
+					rows={3}
 					className="w-full border-[1px] m-1 rounded-md p-2"
 					placeholder="Write your image animation prompt here"
 					value={settings?.prompt ?? ""}

@@ -358,8 +358,8 @@ const SceneEditorView = ({
 					</div>
 
 					<Separator className="w-[35%] ml-9" />
-					<div className="w-fit ml-9 mb-[3rem] mt-auto flex pt-2">
-						<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2">
+						<Button className="w-[190px] text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
 							<Sparkle fill="white" className="w-4 h-4" />
 							Regenerate All Scenes
 						</Button>

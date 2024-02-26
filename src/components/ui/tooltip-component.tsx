@@ -15,7 +15,11 @@ export default function TooltipComponent({
 	return (
 		<Tooltip>
 			<TooltipTrigger>{children}</TooltipTrigger>
-			<TooltipContent className="">
+			<TooltipContent
+				align="start"
+				{...{ "[data-state]": "instant-open" }}
+				className=""
+			>
 				<p>{label}</p>
 			</TooltipContent>
 		</Tooltip>

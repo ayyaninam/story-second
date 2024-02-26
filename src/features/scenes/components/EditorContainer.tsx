@@ -1,6 +1,13 @@
 import { FC, ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Film, HelpCircle, ScrollText, LayoutList, Video } from "lucide-react";
+import {
+	Film,
+	HelpCircle,
+	ScrollText,
+	LayoutList,
+	Video,
+	Upload,
+} from "lucide-react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
 
 const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
@@ -42,12 +49,12 @@ const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 		case "preview":
 			return {
 				top: {
-					text: "Generate & Edit Your Scenes",
-					icon: <Film className="stroke-purple-600 mr-1 h-4 w-4" />,
+					text: "Review Your Final Version",
+					icon: <Video className="stroke-purple-600 mr-1 h-4 w-4" />,
 				},
 				bottom: {
-					text: "View & Share The Final Cut",
-					icon: <Video className="stroke-purple-600 mr-1 h-4 w-4" />,
+					text: "Publish Your Masterpiece",
+					icon: <Upload className="stroke-purple-600 mr-1 h-4 w-4" />,
 				},
 			};
 	}

@@ -258,7 +258,7 @@ const Footer = ({
 						className="bg-purple-700 space-x-1.5"
 					>
 						<BrandShortLogo />
-						<p className="font-bold text-slate-50">Share & Export Video</p>
+						<p className="font-bold text-slate-50">Preview Your Video</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>
@@ -286,8 +286,8 @@ const Footer = ({
 
 	const FooterRightButtons = View[view];
 	return (
-		<div className="sticky bottom-0 bg-background border-border border-t-[1px] p-3 pt-1.5 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
-			<div className="flex gap-1 ">
+		<div className="sticky bottom-0  bg-background border-border border-t-[1px] p-3 pt-1.5 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
+			<div className="flex gap-1 py-2">
 				<div>
 					<label className="text-sm text-slate-600 font-normal">Narrator</label>
 					<Select onValueChange={onUpdateNarrator}>

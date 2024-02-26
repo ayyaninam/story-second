@@ -57,7 +57,7 @@ const EditSegmentModal = ({
 					!open && onClose();
 				}}
 			>
-				<DialogContent className="max-w-[45%]">
+				<DialogContent className="max-w-[1000px]">
 					<DialogTitle className="m-0 font-semibold text-[#121113] px-3 text-md">
 						<div className="flex gap-2 items-center">
 							<Settings2 width={16} height={16} />
