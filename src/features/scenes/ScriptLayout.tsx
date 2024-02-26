@@ -56,10 +56,8 @@ export default function ScriptLayout({
 				WebstoryData={Webstory.data}
 				genre={router.query.genre!.toString()}
 			/>
-
 			{/* Stepper */}
 			<Stepper step={StepperStep.Script} />
-
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>
 				<EditorContainer view="script">
@@ -73,7 +71,6 @@ export default function ScriptLayout({
 					/>
 				</EditorContainer>
 			</div>
-
 			{/* BottomBar */}
 			<Footer
 				WebstoryData={Webstory.data}

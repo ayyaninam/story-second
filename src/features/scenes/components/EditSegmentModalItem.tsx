@@ -1,20 +1,15 @@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
-	GripVertical,
-	Trash2,
-	ChevronDown,
 	Plus,
 	ImagePlus,
-	Palette,
-	Volume2,
 	Info,
 	ScrollText,
 	Unlock,
 	RefreshCcw,
 } from "lucide-react";
 import Image from "next/image";
-import { PropsWithChildren, useState } from "react";
+import { useState } from "react";
 import React from "react";
 import {
 	EditStoryDraft,
@@ -29,19 +24,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { GetImageRatio } from "@/utils/image-ratio";
-import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
 import { MAX_SEGMENT_LENGTH } from "@/constants";
 import {
 	Select,
 	SelectContent,
-	SelectGroup,
 	SelectItem,
-	SelectLabel,
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import TooltipComponent from "@/components/ui/tooltip-component";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -173,240 +167,255 @@ function AdvancedEditingOptions({
 	onSettingsChange: (settings: Settings) => void;
 }) {
 	return (
-		<div
-			className="border-[1px] rounded-md p-5 text-sm"
-			style={{
-				background: "linear-gradient(180deg, #FFF 0%, #F8FAFC 100%)",
-				boxShadow: "0px 0px 6px 0px #D7CBE1",
-				border: "0.5px solid #BB55F7",
-			}}
-		>
-			<label
-				htmlFor="image-animation-prompt"
-				className="flex items-center gap-1"
-			>
-				Image Prompt
-				<Info width={"18px"} height={"18px"} color="#A6B6FC" />
-			</label>
-			<Textarea
-				id="image-animation-prompt"
-				rows={5}
-				className="w-full border-[1px] m-1 rounded-md p-2"
-				placeholder="Write your image animation prompt here"
-				value={settings?.prompt ?? ""}
-				onChange={(e) => {
-					if (settings)
-						onSettingsChange({
-							...settings,
-							prompt: e.target.value,
-						});
-					else
-						onSettingsChange({
-							denoising: 0,
-							prompt: e.target.value,
-							samplingSteps: 1,
-							style: StoryImageStyles.Realistic,
-							voice: "",
-						});
+		<TooltipProvider>
+			<div
+				className="border-[1px] rounded-md p-5 text-sm"
+				style={{
+					background: "linear-gradient(180deg, #FFF 0%, #F8FAFC 100%)",
+					boxShadow: "0px 0px 6px 0px #D7CBE1",
+					border: "0.5px solid #BB55F7",
 				}}
-			/>
+			>
+				<label
+					htmlFor="image-animation-prompt"
+					className="flex items-center gap-1"
+				>
+					Image Prompt
+					<TooltipComponent label="The Image Prompt">
+						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
+					</TooltipComponent>
+				</label>
+				<Textarea
+					id="image-animation-prompt"
+					rows={5}
+					className="w-full border-[1px] m-1 rounded-md p-2"
+					placeholder="Write your image animation prompt here"
+					value={settings?.prompt ?? ""}
+					onChange={(e) => {
+						if (settings)
+							onSettingsChange({
+								...settings,
+								prompt: e.target.value,
+							});
+						else
+							onSettingsChange({
+								denoising: 0,
+								prompt: e.target.value,
+								samplingSteps: 1,
+								style: StoryImageStyles.Realistic,
+								voice: "",
+							});
+					}}
+				/>
 
-			<div className="flex gap-6">
-				<div className="w-[50%] ">
-					<label
-						htmlFor="image-animation-style"
-						className="flex items-center gap-1"
-					>
-						Style
-						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
-					</label>
-					<Select
-						defaultValue={(
-							settings?.style ?? StoryImageStyles.Realistic
-						).toString()}
-						onValueChange={(value) =>
-							onSettingsChange({ ...settings, style: Number(value) })
-						}
-					>
-						<SelectTrigger className="w-full m-1">
-							<SelectValue
-								placeholder="Select a style"
-								defaultValue={StoryImageStyles.Realistic}
+				<div className="flex gap-6">
+					<div className="w-[50%] ">
+						<label
+							htmlFor="image-animation-style"
+							className="flex items-center gap-1"
+						>
+							Style
+							<TooltipComponent label="The Image Style">
+								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
+							</TooltipComponent>
+						</label>
+						<Select
+							defaultValue={(
+								settings?.style ?? StoryImageStyles.Realistic
+							).toString()}
+							onValueChange={(value) =>
+								onSettingsChange({ ...settings, style: Number(value) })
+							}
+						>
+							<SelectTrigger className="w-full m-1">
+								<SelectValue
+									placeholder="Select a style"
+									defaultValue={StoryImageStyles.Realistic}
+								/>
+							</SelectTrigger>
+							<SelectContent>
+								{keys(StoryImageStyles).map((label, index) => (
+									<SelectItem key={index} value={index.toString()}>
+										{label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+					<div className="w-[50%] ">
+						<label
+							htmlFor="image-animation-prompt"
+							className="flex items-center gap-1"
+						>
+							Seed
+							<TooltipComponent label="A random seed for the image">
+								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
+							</TooltipComponent>
+						</label>
+						<Input
+							id="seed"
+							type="number"
+							// min={0}
+							// max={2e16 - 1}
+							className="w-full border-[1px] rounded-md m-1 p-2"
+							placeholder="2"
+							value={settings?.seed ?? 1}
+							onChange={(e) => {
+								if (settings)
+									onSettingsChange({
+										...settings,
+										seed: parseInt(e.target.value),
+									});
+								else
+									onSettingsChange({
+										denoising: 0,
+										prompt: "",
+										samplingSteps: 1,
+										style: StoryImageStyles.Realistic,
+										seed: parseInt(e.target.value),
+									});
+							}}
+						/>
+					</div>
+				</div>
+				<div className="flex gap-6">
+					<div className="w-[50%] ">
+						<label
+							htmlFor="denoising-factor"
+							className="flex items-center gap-1"
+						>
+							Prompt Guidance
+							<TooltipComponent label="How much the image should follow the instructions of the prompt">
+								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
+							</TooltipComponent>
+						</label>
+						<div
+							className="flex w-full gap-1 px-1 rounded-sm"
+							style={{
+								background:
+									"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
+							}}
+						>
+							<Input
+								id="denoising-factor"
+								className="w-16"
+								type="number"
+								min={0}
+								max={100}
+								step={1}
+								placeholder="2"
+								value={settings?.denoising ?? 2}
+								onChange={(e) => {
+									if (settings)
+										onSettingsChange({
+											...settings,
+											denoising: parseInt(e.target.value),
+										});
+									else
+										onSettingsChange({
+											denoising: parseInt(e.target.value),
+											prompt: "",
+											samplingSteps: 1,
+											style: StoryImageStyles.Realistic,
+											seed: 1,
+											voice: "",
+										});
+								}}
 							/>
-						</SelectTrigger>
-						<SelectContent>
-							{keys(StoryImageStyles).map((label, index) => (
-								<SelectItem key={index} value={index.toString()}>
-									{label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
-				<div className="w-[50%] ">
-					<label
-						htmlFor="image-animation-prompt"
-						className="flex items-center gap-1"
-					>
-						Seed
-						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
-					</label>
-					<Input
-						id="seed"
-						type="number"
-						// min={0}
-						// max={2e16 - 1}
-						className="w-full border-[1px] rounded-md m-1 p-2"
-						placeholder="2"
-						value={settings?.seed ?? 1}
-						onChange={(e) => {
-							if (settings)
-								onSettingsChange({
-									...settings,
-									seed: parseInt(e.target.value),
-								});
-							else
-								onSettingsChange({
-									denoising: 0,
-									prompt: "",
-									samplingSteps: 1,
-									style: StoryImageStyles.Realistic,
-									seed: parseInt(e.target.value),
-								});
-						}}
-					/>
-				</div>
-			</div>
-			<div className="flex gap-6">
-				<div className="w-[50%] ">
-					<label htmlFor="denoising-factor" className="flex items-center gap-1">
-						Prompt Guidance
-						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
-					</label>
-					<div
-						className="flex w-full gap-1 px-1 rounded-sm"
-						style={{
-							background:
-								"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
-						}}
-					>
-						<Input
-							id="denoising-factor"
-							className="w-16"
-							type="number"
-							min={0}
-							max={100}
-							step={1}
-							placeholder="2"
-							value={settings?.denoising ?? 2}
-							onChange={(e) => {
-								if (settings)
-									onSettingsChange({
-										...settings,
-										denoising: parseInt(e.target.value),
-									});
-								else
-									onSettingsChange({
-										denoising: parseInt(e.target.value),
-										prompt: "",
-										samplingSteps: 1,
-										style: StoryImageStyles.Realistic,
-										seed: 1,
-										voice: "",
-									});
-							}}
-						/>
-						<Slider
-							value={[settings?.denoising ?? 2]}
-							max={10}
-							min={0}
-							trackBgColor="bg-indigo-600"
-							trackBorderColor="border-indigo-600"
-							step={0.5}
-							onValueChange={(value) => {
-								if (settings)
-									onSettingsChange({
-										...settings,
-										denoising: value[0],
-									});
-								else
-									onSettingsChange({
-										denoising: value[0],
-										prompt: "",
-										samplingSteps: 1,
-										style: StoryImageStyles.Realistic,
-										seed: 1,
-										voice: "",
-									});
-							}}
-						/>
+							<Slider
+								value={[settings?.denoising ?? 2]}
+								max={10}
+								min={0}
+								trackBgColor="bg-indigo-600"
+								trackBorderColor="border-indigo-600"
+								step={0.5}
+								onValueChange={(value) => {
+									if (settings)
+										onSettingsChange({
+											...settings,
+											denoising: value[0],
+										});
+									else
+										onSettingsChange({
+											denoising: value[0],
+											prompt: "",
+											samplingSteps: 1,
+											style: StoryImageStyles.Realistic,
+											seed: 1,
+											voice: "",
+										});
+								}}
+							/>
+						</div>
 					</div>
-				</div>
-				<div className="w-[50%] ">
-					<label
-						htmlFor="image-animation-prompt"
-						className="flex items-center gap-1"
-					>
-						Quality & Details
-						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
-					</label>
-					<div
-						className="flex w-full gap-1 px-1 rounded-sm"
-						style={{
-							background:
-								"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
-						}}
-					>
-						<Input
-							id="sampling-steps"
-							type="number"
-							min={1}
-							max={15}
-							className="w-16"
-							placeholder="2"
-							value={settings?.samplingSteps ?? 1}
-							onChange={(e) => {
-								if (settings)
-									onSettingsChange({
-										...settings,
-										samplingSteps: parseInt(e.target.value),
-									});
-								else
-									onSettingsChange({
-										denoising: 0,
-										prompt: "",
-										samplingSteps: parseInt(e.target.value),
-										style: StoryImageStyles.Realistic,
-										seed: 1,
-									});
+					<div className="w-[50%] ">
+						<label
+							htmlFor="image-animation-prompt"
+							className="flex items-center gap-1"
+						>
+							Quality & Details
+							<TooltipComponent label="The quality and level of detail in the image">
+								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
+							</TooltipComponent>
+						</label>
+						<div
+							className="flex w-full gap-1 px-1 rounded-sm"
+							style={{
+								background:
+									"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
 							}}
-						/>
-						<Slider
-							value={[settings?.samplingSteps ?? 2]}
-							max={15}
-							min={2}
-							step={1}
-							trackBgColor="bg-indigo-600"
-							trackBorderColor="border-indigo-600"
-							onValueChange={(value) => {
-								if (settings)
-									onSettingsChange({
-										...settings,
-										samplingSteps: value[0],
-									});
-								else
-									onSettingsChange({
-										denoising: 0,
-										prompt: "",
-										samplingSteps: value[0],
-										style: StoryImageStyles.Realistic,
-										seed: 1,
-									});
-							}}
-						/>
+						>
+							<Input
+								id="sampling-steps"
+								type="number"
+								min={1}
+								max={15}
+								className="w-16"
+								placeholder="2"
+								value={settings?.samplingSteps ?? 1}
+								onChange={(e) => {
+									if (settings)
+										onSettingsChange({
+											...settings,
+											samplingSteps: parseInt(e.target.value),
+										});
+									else
+										onSettingsChange({
+											denoising: 0,
+											prompt: "",
+											samplingSteps: parseInt(e.target.value),
+											style: StoryImageStyles.Realistic,
+											seed: 1,
+										});
+								}}
+							/>
+							<Slider
+								value={[settings?.samplingSteps ?? 2]}
+								max={15}
+								min={2}
+								step={1}
+								trackBgColor="bg-indigo-600"
+								trackBorderColor="border-indigo-600"
+								onValueChange={(value) => {
+									if (settings)
+										onSettingsChange({
+											...settings,
+											samplingSteps: value[0],
+										});
+									else
+										onSettingsChange({
+											denoising: 0,
+											prompt: "",
+											samplingSteps: value[0],
+											style: StoryImageStyles.Realistic,
+											seed: 1,
+										});
+								}}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</TooltipProvider>
 	);
 }
