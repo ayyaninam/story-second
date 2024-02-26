@@ -268,7 +268,7 @@ export default function EditStory() {
 												src={Webstory.data.user?.profilePicture ?? undefined}
 											/>
 											<AvatarFallback>
-												{Format.AvatarName(Webstory.data.user?.name)}
+												{Format.AvatarName(Webstory.data.user?.name, Webstory.data.user?.lastName)}
 											</AvatarFallback>
 										</Avatar>
 									)}
@@ -277,20 +277,25 @@ export default function EditStory() {
 									) : (
 										<span className="flex flex-col">
 											<span>{Webstory.data.user?.name} </span>
-											<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
-												<p>
-													{(Webstory.data.user?.videoCount ?? 0) +
-														(Webstory.data.user?.storyCount ?? 0)}{" "}
-													Stories
-												</p>
-												<p className="text-slate-300"> • </p>
-												{/* <a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
-											</span>
+											{Webstory.data.user && (
+												<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
+													<>
+														{Webstory.data.user.videoCount > 0 && (
+															<p>
+																{Webstory.data.user?.videoCount} {" "} Videos
+															</p>
+														)}
+														{Webstory.data.user.videoCount > 0 && Webstory.data.user.storyCount > 0 && (
+															<p className="text-slate-300"> • </p>
+														)}
+														{Webstory.data.user.storyCount > 0 && (
+															<p>
+																{Webstory.data.user.storyCount} {" "} Stories
+															</p>
+														)}
+													</>
+												</span>
+											)}
 										</span>
 									)}
 								</div>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AuthPromptProps } from "@/types";
-import AuthorlyLogo from "../../../public/auth-prompt/authorly-logo";
+import StoryLogo from "../../../public/auth-prompt/story-logo";
 
 export default function AuthPrompt({ onLogIn, onSignUp }: AuthPromptProps) {
 	return (
@@ -13,7 +13,7 @@ export default function AuthPrompt({ onLogIn, onSignUp }: AuthPromptProps) {
 		>
 			{/* Div 1 */}
 			<div className="w-full flex flex-col justify-between p-8 lg:max-w-[68%] md:max-w-[50%]">
-				<AuthorlyLogo />
+				<StoryLogo />
 
 				{/* This can be replaced with some dynamic data as well */}
 				<div className="w-full space-y-3 max-w-[80%] text-background">

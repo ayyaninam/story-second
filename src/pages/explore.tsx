@@ -12,11 +12,27 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/explore/constants";
 import ScenesLayout from "@/features/scenes/components/Layout";
 
+import { NextSeo } from "next-seo";
+
 function Explore({
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<HydrationBoundary state={dehydratedState}>
+			<NextSeo
+				title="Explore"
+				description="Explore our massive colleciton of videos, storybooks, and more"
+				openGraph={{
+					images: [
+						{
+							url: "/og-assets/og-explore.png",
+							width: 1200,
+							height: 630,
+							alt: "Explore Story.com",
+						},
+					],
+				}}
+			/>
 			{/* declare css variables */}
 			<style jsx global>{`
 				:root {

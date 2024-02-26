@@ -13,6 +13,7 @@ import { VIDEO_ORIENTATIONS } from "@/features/library/constants";
 import ScenesLayout from "@/features/scenes/components/Layout";
 import {getSession} from "@auth0/nextjs-auth0";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
+import {NextSeo} from "next-seo";
 
 function Library({
   session,
@@ -21,6 +22,10 @@ function Library({
 	const accessToken = session.accessToken as string || "";
 	return (
 		<HydrationBoundary state={dehydratedState}>
+			<NextSeo
+				title="Library"
+				description="Find your videos, trends, storybooks, all in one place"
+			/>
 			{/* declare css variables */}
 			<style jsx global>{`
 				:root {
