@@ -197,7 +197,7 @@ export default function VideoEditorStoryboard({
 	return (
 		<>
 			<div
-				className="relative w-4/5 h-4/5 m-auto  overflow-hidden"
+				className="relative w-4/5 h-4/5 m-auto overflow-hidden"
 				style={{
 					borderRadius: "8px",
 					background: "#FEFEFF",
@@ -435,7 +435,6 @@ export default function VideoEditorStoryboard({
 					</div>
 				</div>
 			</div>
-
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<EditSegmentModal
