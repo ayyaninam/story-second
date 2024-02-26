@@ -181,12 +181,19 @@ const Footer = ({
 								});
 							}
 
-							await api.video.regenerateAllImages({
+							api.video.regenerateAllImages({
 								// @ts-expect-error
 								image_style: story.settings?.style ?? StoryImageStyles.Auto,
 								story_id: story.id,
 								story_type: story.type,
 							});
+							router.push(
+								Routes.EditStoryboard(
+									story.type,
+									story.topLevelCategory,
+									story.slug
+								)
+							);
 							// dispatch({
 							// 	type: "update_segment_statuses",
 							// 	key: "imageStatus",
@@ -198,13 +205,6 @@ const Footer = ({
 							// 	),
 							// 	status: StoryStatus.PENDING,
 							// });
-							router.push(
-								Routes.EditStoryboard(
-									story.type,
-									story.topLevelCategory,
-									story.slug
-								)
-							);
 						}}
 						className="stroke-slate-600 text-slate-600"
 					>

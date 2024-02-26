@@ -363,8 +363,8 @@ function AdvancedEditingOptions({
 							min={1}
 							max={15}
 							className="w-16"
-							placeholder="2"
-							value={settings?.samplingSteps ?? 1}
+							placeholder={"8"}
+							value={settings?.samplingSteps ?? 8}
 							onChange={(e) => {
 								if (settings)
 									onSettingsChange({
@@ -382,7 +382,7 @@ function AdvancedEditingOptions({
 							}}
 						/>
 						<Slider
-							value={[settings?.samplingSteps ?? 2]}
+							value={[settings?.samplingSteps ?? 8]}
 							max={15}
 							min={2}
 							step={1}
