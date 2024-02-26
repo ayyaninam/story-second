@@ -13,18 +13,12 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	LayoutGrid,
-	Music,
 	Radio,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useImmerReducer } from "use-immer";
-import editStoryReducer, {
-	EditStoryAction,
-	EditStoryDraft,
-	StoryStatus,
-} from "../reducers/edit-reducer";
+import { useCallback, useRef } from "react";
+import { EditStoryAction, EditStoryDraft } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import {
@@ -98,11 +92,9 @@ const Footer = ({
 	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
 	dispatch: React.Dispatch<EditStoryAction>;
 	story: EditStoryDraft;
-	view: "script" | "storyboard" | "scene";
+	view: "script" | "storyboard" | "scene" | "share";
 }) => {
 	const router = useRouter();
-
-	const { genre } = router.query;
 
 	const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -272,6 +264,24 @@ const Footer = ({
 				</div>
 			</div>
 		),
+		share: () => (
+			<div className="flex gap-2 mt-6 w-full justify-end">
+				<div className="flex flex-col">
+					<Button
+						onClick={() => {
+							router.push(
+								Routes.EditStory(story.type, story.topLevelCategory, story.slug)
+							);
+						}}
+						className="bg-purple-700 space-x-1.5"
+					>
+						<BrandShortLogo />
+						<p className="font-bold text-slate-50">Share & Export Video</p>
+						<ArrowRight className="w-4 h-4 opacity-50" />
+					</Button>
+				</div>
+			</div>
+		),
 	};
 
 	const FooterRightButtons = View[view];
@@ -312,57 +322,64 @@ const Footer = ({
 			</div>
 
 			<div className="text-center max-w-md">
-				<span className="text-sm font-normal">
-					<span className="text-slate-600">Primary Image Style:</span>{" "}
-					<span className="text-purple-600">
-						{
-							images[
-								story.settings?.style ??
-									(StoryImageStyles.Auto as StoryImageStyles)
-							].label
-						}
-					</span>
-				</span>
+				{view !== "share" && (
+					<>
+						<span className="text-sm font-normal">
+							<span className="text-slate-600">Primary Image Style:</span>{" "}
+							<span className="text-purple-600">
+								{
+									images[
+										story.settings?.style ??
+											(StoryImageStyles.Auto as StoryImageStyles)
+									].label
+								}
+							</span>
+						</span>
 
-				<div className="flex space-x-1 items-center">
-					<ChevronLeft onClick={scrollLeft} className="w-8 h-8 opacity-50 " />
-					<div
-						ref={scrollRef}
-						className="flex 2xl:overflow-x-visible overflow-x-hidden "
-					>
-						<div className="flex gap-x-1 py-1">
-							{Object.entries(images).map(([key, image], index) => (
-								<>
-									<Image
-										src={image.src}
-										alt={image.label}
-										key={index}
-										width={64}
-										height={48}
-										className={clsx(
-											"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
-											{
-												["ring-purple-600 ring-[1.5px] ring-offset-1"]:
-													generationStyle === Number(key),
-											}
-										)}
-										role="button"
-										onClick={() =>
-											updateImageStyle(
-												Number(key) as unknown as StoryImageStyles
-											)
-										}
-										style={{ objectFit: "cover" }}
-									/>
-								</>
-							))}
+						<div className="flex space-x-1 items-center">
+							<ChevronLeft
+								onClick={scrollLeft}
+								className="w-8 h-8 opacity-50 "
+							/>
+							<div
+								ref={scrollRef}
+								className="flex 2xl:overflow-x-visible overflow-x-hidden "
+							>
+								<div className="flex gap-x-1 py-1">
+									{Object.entries(images).map(([key, image], index) => (
+										<>
+											<Image
+												src={image.src}
+												alt={image.label}
+												key={index}
+												width={64}
+												height={48}
+												className={clsx(
+													"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
+													{
+														["ring-purple-600 ring-[1.5px] ring-offset-1"]:
+															generationStyle === Number(key),
+													}
+												)}
+												role="button"
+												onClick={() =>
+													updateImageStyle(
+														Number(key) as unknown as StoryImageStyles
+													)
+												}
+												style={{ objectFit: "cover" }}
+											/>
+										</>
+									))}
+								</div>
+							</div>
+							<ChevronRight
+								onClick={scrollRight}
+								className="w-8 h-8 opacity-50 hover:bg-slate-200 hover:cursor-pointer rounded-sm"
+							/>
 						</div>
-					</div>
-					<ChevronRight
-						onClick={scrollRight}
-						className="w-8 h-8 opacity-50 hover:bg-slate-200 hover:cursor-pointer rounded-sm"
-					/>
-				</div>
+					</>
+				)}
 			</div>
 			<FooterRightButtons />
 

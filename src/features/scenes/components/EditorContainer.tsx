@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Film, HelpCircle, ScrollText, LayoutList, Video } from "lucide-react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
 
-const getBadgeData = (view: "script" | "story" | "scene") => {
+const getBadgeData = (view: "script" | "story" | "scene" | "share") => {
 	switch (view) {
 		default:
 		case "script":
@@ -39,17 +39,28 @@ const getBadgeData = (view: "script" | "story" | "scene") => {
 					icon: <Video className="stroke-purple-600 mr-1 h-4 w-4" />,
 				},
 			};
+		case "share":
+			return {
+				top: {
+					text: "Generate & Edit Your Scenes",
+					icon: <Film className="stroke-purple-600 mr-1 h-4 w-4" />,
+				},
+				bottom: {
+					text: "View & Share The Final Cut",
+					icon: <Video className="stroke-purple-600 mr-1 h-4 w-4" />,
+				},
+			};
 	}
 };
 
 const EditorContainer: FC<{
 	children: ReactNode;
-	view: "script" | "story" | "scene";
+	view: "script" | "story" | "scene" | "share";
 }> = ({ children, view = "script" }) => {
 	const badgeData = getBadgeData(view);
 	return (
-		<div className="relative z-0 w-full items-center justify-center flex flex-col h-full px-2 lg:px-5 py-2">
-			<div className="flex justify-center mt-auto">
+		<div className="relative z-0 w-full gap-1 items-center justify-center flex flex-col h-full px-2 lg:px-5 py-2">
+			<div className="flex justify-center mt-auto mb-auto">
 				<Badge
 					variant="outline"
 					className={`bg-primary-foreground font-normal text-sm`}
@@ -59,7 +70,7 @@ const EditorContainer: FC<{
 				</Badge>
 			</div>
 			{children}
-			<div className="flex justify-center mb-auto">
+			<div className="flex justify-center mt-auto mb-auto">
 				<Badge
 					variant="outline"
 					className={`bg-primary-foreground font-normal text-sm`}
