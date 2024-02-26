@@ -29,8 +29,8 @@ export default function Navbar({
 			<div className="flex gap-x-2.5 items-center">
 				<GenerateIcon />
 				<div className="items-center">
-					<div className="flex items-center gap-x-2 text-slate-500">
-						<p className="text-sm rounded-sm font-bold text-slate-950">
+					<div className="flex items-center gap-x-2">
+						<p className="text-sm rounded-sm font-bold text-muted-foreground">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
 					</div>

@@ -54,8 +54,8 @@ const SceneEditSegmentModal = ({
 				<Dialog.Root open={open}>
 					<Dialog.Portal>
 						<Dialog.Overlay className="bg-[#0000000d] fixed inset-0" />
-						<Dialog.Content className="bg-white rounded-sm shadow-sm fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 focus:outline-none font-mono">
-							<Dialog.Title className="m-0 font-semibold text-[#121113] px-3 text-md">
+						<Dialog.Content className="bg-background rounded-sm shadow-sm fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 focus:outline-none font-mono">
+							<Dialog.Title className="m-0 font-semibold text-foreground px-3 text-md">
 								<div className="flex gap-2 items-center">
 									<Settings2 width={16} height={16} />
 									<p>Edit Segments</p>

@@ -135,16 +135,14 @@ export default function ScriptEditor({
 	return (
 		<>
 			<div
-				className="relative w-4/5 h-4/5 m-auto"
+				className="relative w-4/5 h-4/5 m-auto bg-background rounded-md"
 				style={{
-					borderRadius: "8px",
-					background: "#FEFEFF",
 					boxShadow:
 						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
 					backdropFilter: "blur(5px)",
 				}}
 			>
-				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
+				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
 						<p>Script View</p>
@@ -165,7 +163,7 @@ export default function ScriptEditor({
 						</div> */}
 					</div>
 				</div>
-				<div className="relative px-6 pt-6 pb-2 bg-[#FEFEFF]">
+				<div className="relative px-6 pt-6 pb-2">
 					<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
 						{Format.Title(WebstoryData?.storyTitle)}
 					</p>
@@ -185,7 +183,7 @@ export default function ScriptEditor({
 				<div className="flex flex-col md:flex-row items-center justify-center w-full">
 					<div
 						className={cn(
-							`w-full pb-6 bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
+							`w-full pb-6 bg-background rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
 						)}
 						// border-[1px]
 					>
@@ -211,10 +209,11 @@ export default function ScriptEditor({
 														key={sceneIndex}
 														className="flex flex-wrap flex-col  w-full"
 													>
-														<div className="bg-slate-50 font-normal text-slate-600 text-sm w-fit my-2 px-1">
+														<div className="bg-primary-foreground font-normal text-muted-foreground text-sm w-fit my-2 px-1">
 															{`Scene ${sceneIndex + 1}: `}
 															{scene.description}
 														</div>
+
 														<div className="flex flex-wrap flex-row">
 															{scene.segments.map((segment, segmentIndex) => (
 																<span
@@ -235,7 +234,7 @@ export default function ScriptEditor({
 																		}}
 																		name={segmentIndex.toString()}
 																		inputClassName={cn(
-																			"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
+																			"active:outline-none bg-transparent text-foreground hover:text-slate-950 focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
 																			segment.textStatus ===
 																				TextStatus.EDITED && "text-purple-500"
 																		)}
