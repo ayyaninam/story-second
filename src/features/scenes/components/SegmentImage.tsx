@@ -35,7 +35,7 @@ function SegmentImage({
 		<Popover open={imageRegenerationSegmentId === segment.id}>
 			<PopoverTrigger onClick={() => setImageRegenerationSegmentId(segment.id)}>
 				<div
-					className="relative h-32"
+					className="relative h-40"
 					style={{
 						aspectRatio: imageAspectRatio,
 					}}

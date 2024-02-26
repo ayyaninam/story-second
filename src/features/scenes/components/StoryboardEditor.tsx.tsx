@@ -45,7 +45,7 @@ import SegmentImage from "./SegmentImage";
 
 const MAX_SUMMARY_LENGTH = 251;
 
-export default function VideoEditorStoryboard({
+export default function StoryboardEditor({
 	WebstoryData,
 	ImageRatio,
 	isError,
@@ -201,7 +201,7 @@ export default function VideoEditorStoryboard({
 	return (
 		<>
 			<div
-				className="relative w-4/5 h-4/5 m-auto  overflow-hidden"
+				className="relative w-4/5 h-4/5 m-auto overflow-hidden"
 				style={{
 					borderRadius: "8px",
 					background: "#FEFEFF",
@@ -281,7 +281,7 @@ export default function VideoEditorStoryboard({
 												{story.scenes.map((scene, sceneIndex) => (
 													<div
 														key={sceneIndex}
-														className="flex flex-row justify-between w-full rounded-md hover:bg-slate-50 group items-center"
+														className="pt-2 flex flex-row justify-between w-full rounded-md hover:bg-slate-50 group items-center"
 													>
 														<div className="flex items-center space-y-1 flex-wrap">
 															{scene.segments.map((segment, segmentIndex) => {
@@ -306,7 +306,7 @@ export default function VideoEditorStoryboard({
 																		{segment.imageStatus ===
 																			StoryStatus.PENDING && (
 																			<div
-																				className="relative h-32"
+																				className="relative h-40"
 																				style={{
 																					aspectRatio: GetImageRatio(
 																						story.resolution
@@ -319,7 +319,7 @@ export default function VideoEditorStoryboard({
 																		{segment.imageStatus ===
 																			StoryStatus.READY && (
 																			<div
-																				className="relative h-32"
+																				className="relative h-40"
 																				style={{
 																					aspectRatio: GetImageRatio(
 																						story.resolution
@@ -431,7 +431,6 @@ export default function VideoEditorStoryboard({
 					</div>
 				</div>
 			</div>
-
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<EditSegmentModal

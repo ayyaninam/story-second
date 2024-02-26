@@ -83,7 +83,7 @@ export enum StepperStep {
 	Script,
 	Storyboard,
 	Scenes,
-	Share,
+	Preview
 }
 
 export enum SegmentModifications {

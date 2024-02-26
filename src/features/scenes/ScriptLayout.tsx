@@ -51,15 +51,9 @@ export default function ScriptLayout({
 	return (
 		<div className="relative w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
 			{/* Navbar */}
-			<Navbar
-				ImageRatio={ImageRatio}
-				WebstoryData={Webstory.data}
-				genre={router.query.genre!.toString()}
-			/>
-
+			<Navbar ImageRatio={ImageRatio} WebstoryData={Webstory.data} />
 			{/* Stepper */}
 			<Stepper step={StepperStep.Script} />
-
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>
 				<EditorContainer view="script">
@@ -73,7 +67,6 @@ export default function ScriptLayout({
 					/>
 				</EditorContainer>
 			</div>
-
 			{/* BottomBar */}
 			<Footer
 				WebstoryData={Webstory.data}
