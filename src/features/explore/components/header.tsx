@@ -33,7 +33,7 @@ const mainHeaderContainer: {
 
 const createNewButton: CSSProperties = {
 	background:
-		"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-Indigo-700, #157A6E)",
+		"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-accent-700, #157A6E)",
 	boxShadow:
 		" 0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #157A6E",
 	borderRadius: "6px",
@@ -83,7 +83,7 @@ export const ExploreHeader = ({
 					/>
 					<div className="pl-[12px] flex flex-col items-start">
 						<span className="text-slate-950 text-base font-bold">Explore</span>
-						<span className="text-indigo-700 text-sm font-normal">17 Videos</span>
+						<span className="text-accent-700 text-sm font-normal">17 Videos</span>
 					</div>
 				</div>
 				<HeaderTabSwitcher
@@ -123,7 +123,7 @@ export const ExploreHeader = ({
 						Tutorial
 					</Button>
 					<Button
-						className={`px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 border border-indigo-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
+						className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 						variant="default"
 						onClick={() => {
 							// TODO: Implement
@@ -195,7 +195,7 @@ export const ExploreHeader = ({
 						defaultValue={router.query.sort as string || "desc"}
 					>
 						<SelectTrigger className="max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
-							<div className="text-indigo-600">
+							<div className="text-accent-600">
 								<SelectValue placeholder="Sort by" />
 							</div>
 						</SelectTrigger>

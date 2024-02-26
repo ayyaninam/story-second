@@ -44,6 +44,18 @@ function Explore({
 					);
 					--menu-item-selected-border-color: rgba(56, 142, 131, 0.20);
 					--stepper-box-shadow: 0px 4px 4px 0px rgba(122, 255, 133, 0.4);
+
+					--accent-color-50: #334155;
+					--accent-color-100: #E0E7FF;
+					--accent-color-200: #C7D2FE;
+					--accent-color-300: #A5B4FC;
+					--accent-color-400: #818CF8;
+					--accent-color-500: #6366F1;
+					--accent-color-600: #4F46E5;
+					--accent-color-700: #4338CA;
+					--accent-color-800: #3730A3;
+					--accent-color-900: #312E81;
+					--accent-color-950: #1E1B4B;
 				}
 			`}</style>
 			<ExplorePage />

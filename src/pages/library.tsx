@@ -38,6 +38,18 @@ function Library({
 					);
 					--menu-item-selected-border-color: rgba(56, 142, 131, 0.20);
 					--stepper-box-shadow: 0px 4px 4px 0px rgba(122, 255, 133, 0.4);
+					
+					--accent-color-50: #F0FDFA;
+					--accent-color-100: #CCFBF1;
+					--accent-color-200: #99F6E4;
+					--accent-color-300: #5EEAD4;
+					--accent-color-400: #2DD4BF;
+					--accent-color-500: #14B8A6;
+					--accent-color-600: #0D9488;
+					--accent-color-700: #0F766E;
+					--accent-color-800: #115E59;
+					--accent-color-900: #134E4A;
+					--accent-color-950: #042F2E;
 				}
 			`}</style>
 			<LibraryPage accessToken={accessToken} />
