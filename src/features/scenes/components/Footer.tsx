@@ -105,7 +105,7 @@ const Footer = ({
 		scrollRef.current?.scroll({ left: 50, behavior: "smooth" });
 	}, []);
 
-	const generationStyle = story.settings?.style ?? StoryImageStyles.Auto;
+	const generationStyle = story.settings?.style ?? StoryImageStyles.Realistic;
 
 	const updateImageStyle = useCallback(
 		(style: StoryImageStyles) => {
@@ -175,7 +175,8 @@ const Footer = ({
 
 							api.video.regenerateAllImages({
 								// @ts-expect-error
-								image_style: story.settings?.style ?? StoryImageStyles.Auto,
+								image_style:
+									story.settings?.style ?? StoryImageStyles.Realistic,
 								story_id: story.id,
 								story_type: story.type,
 							});
@@ -330,7 +331,7 @@ const Footer = ({
 								{
 									images[
 										story.settings?.style ??
-											(StoryImageStyles.Auto as StoryImageStyles)
+											(StoryImageStyles.Realistic as StoryImageStyles)
 									].label
 								}
 							</span>

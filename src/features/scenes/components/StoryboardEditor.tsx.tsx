@@ -168,6 +168,7 @@ export default function StoryboardEditor({
 				(el) => el.textContent === segment.textContent
 			);
 		}
+
 		const regeneratedImages = await api.video.regenerateImage({
 			// @ts-ignore
 			image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
@@ -175,7 +176,7 @@ export default function StoryboardEditor({
 			segment_idx: newSegment?.index ?? segment.id,
 			story_id: story.id,
 			story_type: WebstoryData?.storyType!,
-			cfg_scale: segment.settings?.denoising ?? 7,
+			cfg_scale: segment.settings?.denoising ?? 2,
 			sampling_steps: segment.settings?.samplingSteps ?? 8,
 			seed: segment.settings?.seed ?? 3121472823,
 		});

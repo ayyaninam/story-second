@@ -37,6 +37,7 @@ import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { cn } from "@/utils";
+import createSeed from "@/utils/create-seed";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -199,9 +200,9 @@ function AdvancedEditingOptions({
 							});
 						else
 							onSettingsChange({
-								denoising: 0,
+								denoising: 2,
 								prompt: e.target.value,
-								samplingSteps: 1,
+								samplingSteps: 8,
 								style: StoryImageStyles.Realistic,
 								voice: "",
 							});
@@ -268,9 +269,9 @@ function AdvancedEditingOptions({
 									});
 								else
 									onSettingsChange({
-										denoising: 0,
+										denoising: 2,
 										prompt: "",
-										samplingSteps: 1,
+										samplingSteps: 8,
 										style: StoryImageStyles.Realistic,
 										seed: parseInt(e.target.value),
 									});
@@ -315,7 +316,7 @@ function AdvancedEditingOptions({
 										onSettingsChange({
 											denoising: parseInt(e.target.value),
 											prompt: "",
-											samplingSteps: 1,
+											samplingSteps: 8,
 											style: StoryImageStyles.Realistic,
 											seed: 1,
 											voice: "",
@@ -324,7 +325,7 @@ function AdvancedEditingOptions({
 							/>
 							<Slider
 								value={[settings?.denoising ?? 2]}
-								max={10}
+								max={5}
 								min={0}
 								trackBgColor="bg-indigo-600"
 								trackBorderColor="border-indigo-600"
@@ -339,9 +340,9 @@ function AdvancedEditingOptions({
 										onSettingsChange({
 											denoising: value[0],
 											prompt: "",
-											samplingSteps: 1,
+											samplingSteps: 8,
 											style: StoryImageStyles.Realistic,
-											seed: 1,
+											seed: createSeed(),
 											voice: "",
 										});
 								}}
@@ -372,7 +373,7 @@ function AdvancedEditingOptions({
 								max={15}
 								className="w-16"
 								placeholder="2"
-								value={settings?.samplingSteps ?? 1}
+								value={settings?.samplingSteps ?? 8}
 								onChange={(e) => {
 									if (settings)
 										onSettingsChange({
@@ -385,12 +386,12 @@ function AdvancedEditingOptions({
 											prompt: "",
 											samplingSteps: parseInt(e.target.value),
 											style: StoryImageStyles.Realistic,
-											seed: 1,
+											seed: createSeed(),
 										});
 								}}
 							/>
 							<Slider
-								value={[settings?.samplingSteps ?? 2]}
+								value={[settings?.samplingSteps ?? 8]}
 								max={15}
 								min={2}
 								step={1}
@@ -408,7 +409,7 @@ function AdvancedEditingOptions({
 											prompt: "",
 											samplingSteps: value[0],
 											style: StoryImageStyles.Realistic,
-											seed: 1,
+											seed: createSeed(),
 										});
 								}}
 							/>

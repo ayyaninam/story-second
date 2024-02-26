@@ -33,9 +33,13 @@ export interface paths {
     /** Regenerate Video */
     post: operations["regenerate_video_regenerate_video_post"];
   };
-  "save-image": {
+  "/regenerate-all-videos": {
+    /** Regenerate All Videos */
+    post: operations["regenerate_all_videos_regenerate_all_videos_post"];
+  };
+  "/save-image": {
     /** Save Image */
-    put: operations["save_imagesave_image_put"];
+    put: operations["save_image_save_image_put"];
   };
   "/edit-segments": {
     /** Edit Segment */
@@ -199,7 +203,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 98016362
+       * @default 93194800
        */
       seed?: number;
       /**
@@ -441,8 +445,30 @@ export interface operations {
       };
     };
   };
+  /** Regenerate All Videos */
+  regenerate_all_videos_regenerate_all_videos_post: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegenerateVideoRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   /** Save Image */
-  save_imagesave_image_put: {
+  save_image_save_image_put: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["SaveImageRequest"];
