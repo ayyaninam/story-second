@@ -77,7 +77,7 @@ const video = {
 		accessToken?: string
 	): Promise<unknown> => {
 		const data = await mlFetcher(accessToken ?? getJwt())
-			.post(`save-image`, {
+			.put(`save-image`, {
 				body: JSON.stringify(params),
 			})
 			.json();
