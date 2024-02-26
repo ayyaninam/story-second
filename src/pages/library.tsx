@@ -25,6 +25,16 @@ function Library({
 			<NextSeo
 				title="Library"
 				description="Find your videos, trends, storybooks, all in one place"
+				openGraph={{
+					images: [
+						{
+							url: "/og-assets/og-library.png",
+							width: 1200,
+							height: 630,
+							alt: "Library Story.com",
+						},
+					],
+				}}
 			/>
 			{/* declare css variables */}
 			<style jsx global>{`
