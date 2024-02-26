@@ -13,7 +13,6 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/library/constants";
 import ScenesLayout from "@/features/scenes/components/Layout";
 import {getSession, withPageAuthRequired} from "@auth0/nextjs-auth0";
-import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import {NextSeo} from "next-seo";
 
 function Library({
@@ -38,6 +37,18 @@ function Library({
 					);
 					--menu-item-selected-border-color: rgba(56, 142, 131, 0.20);
 					--stepper-box-shadow: 0px 4px 4px 0px rgba(122, 255, 133, 0.4);
+					
+					--accent-color-50: #F0FDFA;
+					--accent-color-100: #CCFBF1;
+					--accent-color-200: #99F6E4;
+					--accent-color-300: #5EEAD4;
+					--accent-color-400: #2DD4BF;
+					--accent-color-500: #14B8A6;
+					--accent-color-600: #0D9488;
+					--accent-color-700: #0F766E;
+					--accent-color-800: #115E59;
+					--accent-color-900: #134E4A;
+					--accent-color-950: #042F2E;
 				}
 			`}</style>
 			<LibraryPage accessToken={accessToken} />
@@ -51,9 +62,18 @@ Library.getLayout = function getLayout(page: ReactElement) {
 
 export default Library;
 
-export const getServerSideProps = withPageAuthRequired({
-	async getServerSideProps(context: GetServerSidePropsContext) {
+// export const getServerSideProps = withPageAuthRequired({
+// 	async getServerSideProps(context: GetServerSidePropsContext) {
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
 		const session = await getSession(context.req, context.res);
+
+		// # TODO: For development purposes only - remove this in production
+		// Avoids redirect to dev pages and sends to absolute path
+		if (context?.req?.url && context.req.url.toString() === "/_next/data/development/library.json") {
+			context.req.url = "/library?genre=all";
+		}
+
 		if (!session) {
 			return {
 				redirect: {
@@ -204,7 +224,16 @@ export const getServerSideProps = withPageAuthRequired({
 					staleTime: 3000,
 				});
 			}
-		} catch (error) {
+		} catch (error: any) {
+			if (error.response?.status === 401) {
+				return {
+					redirect: {
+						destination: "/auth/login?returnTo=" + context.req.url,
+						permanent: false,
+					},
+				};
+
+			}
 			console.error("Error fetching data", error);
 		}
 
@@ -215,4 +244,4 @@ export const getServerSideProps = withPageAuthRequired({
 			},
 		};
 	}
-});
+// });

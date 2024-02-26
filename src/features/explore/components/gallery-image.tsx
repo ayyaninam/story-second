@@ -108,7 +108,7 @@ function GalleryImage({
 							Play
 						</Button>
 						<Button
-							className="flex grow gap-1 bg-indigo-600 hover:bg-indigo-800 text-white text-sm font-normal py-1.5 px-2 h-fit"
+							className="flex grow gap-1 bg-accent-600 hover:bg-accent-800 text-white text-sm font-normal py-1.5 px-2 h-fit"
 							onClick={(e) => {
 								e.stopPropagation();
 								const categoryId = story.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all";

@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import StoryLogo from "../../../../public/auth-prompt/story-logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import ExploreIcon from "./icons/ExploreIcon";
@@ -10,6 +9,12 @@ import ChallengesIcon from "./icons/ChallengesIcon";
 import { Command } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import RightPlay from "@/components/icons/right-play";
+import Format from "@/utils/format";
+import {getSession} from "@auth0/nextjs-auth0";
+import api from "@/api";
+import StoryLogoFullWhite from "@/components/brand-logos/primary-white";
 
 export const menuItems = [
 	{
@@ -17,62 +22,106 @@ export const menuItems = [
 		text: "Explore",
 		shortcut: "E",
 		redirectUrl: "/explore",
+		cssVars: {
+			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
+			"--hover-background": "radial-gradient(88.31% 100% at 0% 50%, rgba(102, 129, 255, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+		}
 	},
 	{
 		icon: <GenerateIcon />,
 		text: "Generate",
 		shortcut: "G",
 		redirectUrl: "/",
+		cssVars: {
+			"--hover-border-color": "rgba(206, 122, 255, 0.2)",
+			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(187, 85, 247, 0.5) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+		}
 	},
 	{
 		icon: <LibraryIcon />,
 		text: "Library",
 		shortcut: "L",
 		redirectUrl: "/library",
+		cssVars: {
+			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
+			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(48, 149, 136, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+		}
 	},
 	{
 		icon: <ChallengesIcon />,
 		text: "Challenges",
 		shortcut: "C",
 		redirectUrl: "/challenges",
+		cssVars: {
+			"--hover-border-color": "rgba(152, 230, 55, 0.50)",
+			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(152, 230, 55, 0.00) 100%)",
+		}
 	},
 	{
 		icon: <FreeCreditsIcon />,
 		text: "Free Credits",
 		shortcut: "F",
 		redirectUrl: "/credits",
+		cssVars: {
+			"--hover-border-color": "rgba(148, 171, 184, 0.50)",
+			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+		}
 	},
 ];
 
-export default function SideNav({ pageIndex }: { pageIndex: number }) {
+export default function SideNav({ pageIndex, userDetails }: { pageIndex: number; userDetails?: any }) {
 	const selectedStyle = {
-		background: "var(--menu-item-selected-background-color)",
-		borderColor: "var(--menu-item-selected-border-color)",
-		border: "1px solid rgba(255, 255, 255, 0.12)",
+		border: "0.5px solid rgba(255, 255, 255, 0.08)",
+		background: "linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.00) 100%)",
+		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset",
 	};
+
+	const userHandlerStyle = {
+		borderRadius: "2px",
+		border: "0.5px solid rgba(255, 255, 255, 0.12)",
+		background: "linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%)",
+		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset"
+	}
+
+	const { user } = useUser();
 	return (
 		<div className="w-[18rem] flex flex-col justify-between">
 			<div>
-				<div className="ml-3.5 flex mt-5 mb-4 items-center justify-between mr-4">
-					<StoryLogo
-
-					/>
+				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
 
 					<Avatar className="h-8 w-8 border-[1px] border-gray-200">
-						<AvatarImage src="https://github.com/shadcn.png" />
+						<AvatarImage src={user?.picture || ""} />
 						<AvatarFallback>
-							CN
-							{/* {Format.AvatarName(WebstoryData?.user?.name)} */}
+							 {Format.AvatarName(user?.name?.split(" ")[0] || "S", user?.name?.split(" ")[1])}
 						</AvatarFallback>
 					</Avatar>
+						{/*// # TODO: enable profile pages when ready*/}
+						{/*// # TODO: replace with userDetails*/}
+					<Link
+						href={"#"}
+						// href={"/" + user?.nickname || ""}
+					>
+						<span className="flex flex-col text-white gap-y-1">
+							<span>{user?.name || "Story.com"}</span>
+							<span
+								className="flex gap-x-2 items-center text-sm text-white p-0.25 px-2"
+								style={userHandlerStyle}
+							>
+								<RightPlay size={6} />
+								<span>{user?.nickname?.length || 0 > 7 ? "/"+user?.nickname : "story.com"}</span>
+							</span>
+						</span>
+					</Link>
 				</div>
 				<div className="space-y-1">
 					{menuItems.map((menuItem, index) => (
 						<Link
 							href={menuItem.redirectUrl}
+							as={menuItem.redirectUrl}
 							key={index}
 							aria-selected={index === pageIndex}
 							className="ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem"
+							style={{ ...menuItem.cssVars as React.CSSProperties}}
 						>
 							{menuItem.icon}
 							{menuItem.text}
@@ -101,7 +150,14 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 					))}
 				</div>
 			</div>
-			<div className="w-full flex-col px-1.5 my-6 items-center text-white">
+			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-600">
+				<div className="mb-4 mx-3">
+					<Link
+						href={"/"}
+					>
+						<StoryLogoFullWhite />
+					</Link>
+				</div>
 				<div className="my-2 mx-3 space-y-2">
 					<p className="font-medium text-sm">Base Plan</p>
 
@@ -172,13 +228,34 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 				<Link href="/pricing">
 					<Button
 						variant="outline"
-						className="min-w-full rounded-lg bg-transparent py-1.5 font-normal shadow-[inset_0px_0px_12px_0px_rgba(255, 255, 255, 0.08)]"
+						className="min-w-full rounded-lg py-1.5 text-white font-normal hover:text-accent-600"
 						style={selectedStyle}
 					>
-						Upgrade Authorly
+						Upgrade Subscription
 					</Button>
 				</Link>
 			</div>
 		</div>
 	);
+}
+
+//getServerSideProps
+
+export async function getServerSideProps() {
+	const session = await getSession();
+	if (!session) {
+		return {
+			props: {},
+		};
+	}
+	const accessToken = session.accessToken || "";
+	if (!accessToken) {
+		return {
+			props: {},
+		};
+	}
+	const userDetail = api.user.get(accessToken);
+	return {
+		props: { userDetail },
+	};
 }

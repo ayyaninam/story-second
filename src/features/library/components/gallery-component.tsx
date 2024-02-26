@@ -3,6 +3,7 @@ import { GalleryData, VideoOrientation, VideoThumbnail } from "@/types";
 import { Button } from "@/components/ui/button";
 import GalleryImage from "./gallery-image";
 import GalleryComponentLoader from "./gallery-component-loader";
+import RightArrow from "@/features/explore/components/svgs/right-arrow";
 
 const navigationButtonStyles = {
 	border: "0.5px solid var(--border)",
@@ -28,7 +29,7 @@ function LibraryGalleryComponent({
 			<div className="flex justify-between self-stretch min-w-100 items-center">
 				<div className="flex gap-2 h-[44px] items-center">
 					<div
-						className="w-[40px] h-[40px] bg-white rounded-lg flex items-center justify-center"
+						className="w-[40px] h-[40px] bg-white rounded-lg flex items-center justify-center text-accent-600"
 						style={{
 							boxShadow:
 								"0px 1px 2px 0px rgba(9, 25, 72, 0.13), 0px 3px 8px 0px rgba(9, 25, 72, 0.05)",
@@ -49,7 +50,8 @@ function LibraryGalleryComponent({
 					<Button
 						type="button"
 						className={
-							"flex py-2 px-4 gap-1 justify-center rounded-[52px] text-primary h-fit"
+							"flex py-2 px-4 gap-1 justify-center rounded-[52px] h-fit text-accent-600 bg-white " +
+							"hover:bg-accent-100 hover:text-accent-700"
 						}
 						style={navigationButtonStyles}
 						onClick={() => {
@@ -59,6 +61,7 @@ function LibraryGalleryComponent({
 						}}
 					>
 						{galleryDetails.header.buttonText}
+						<RightArrow fill="#0D9488"/>
 					</Button>
 				)}
 

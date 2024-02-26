@@ -147,7 +147,9 @@ function ExploreHomePage({
 			{/*	randomThumbnail={segregatedStories[VIDEO_ORIENTATIONS.WIDE.id]?.[0]?.thumbnail}*/}
 			{/*/>*/}
 			<div className="flex max-w-[1440px] w-full flex-col gap-4">
-				{Object.values(VIDEO_ORIENTATIONS).map((orientation) =>
+				{Object.values(VIDEO_ORIENTATIONS)
+					.filter((orientation) => segregatedStories[orientation.id]?.length)
+					.map((orientation) =>
 					orientation.id !== VIDEO_ORIENTATIONS.ALL.id &&
 					EXPLORE_HOME_GALLERY_DATA[orientation.id] ? (
 						<ExploreGalleryComponent

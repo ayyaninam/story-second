@@ -62,29 +62,36 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	}
 
 	const queryClient = new QueryClient();
-	const storyData = await queryClient.fetchQuery({
-		queryFn: async () =>
-			await api.video.get(genre, id, StoryOutputTypes.SplitScreen),
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
-	});
-	if (session?.accessToken) {
-		await queryClient.prefetchQuery({
+	try {
+		const storyData = await queryClient.fetchQuery({
 			queryFn: async () =>
-				await api.webstory.interactions(
-					storyData?.id as string,
-					session?.accessToken
-				),
+				await api.video.get(genre, id, StoryOutputTypes.SplitScreen),
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-			queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
+			queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 		});
-	}
+		if (session?.accessToken) {
+			await queryClient.prefetchQuery({
+				queryFn: async () =>
+					await api.webstory.interactions(
+						storyData?.id as string,
+						session?.accessToken
+					),
+				// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+				queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
+			});
+		}
 
-	return {
-		props: {
-			session: { ...session },
-			storyData,
-			dehydratedState: dehydrate(queryClient),
-		},
-	};
+		return {
+			props: {
+				session: { ...session },
+				storyData,
+				dehydratedState: dehydrate(queryClient),
+			},
+		};
+	}
+	catch (error: any) {
+		return {
+			notFound: true,
+		};
+	}
 };
