@@ -168,6 +168,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 	} else {
 		return (
 			<VideoPlayer
+				playerClassName="rounded-tl-lg rounded-bl-lg"
 				ref={videoPlayerRef}
 				Webstory={Webstory}
 				onPlay={onPlay}
