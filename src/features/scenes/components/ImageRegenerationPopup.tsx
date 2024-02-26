@@ -272,16 +272,7 @@ function ImageRegenerationPopup({
 			});
 			setSelectedImageKey(regeneratedImages.target_paths?.[0]);
 		} catch (error) {
-			// handle error
-			dispatch({
-				type: "edit_segment",
-				sceneIndex,
-				segmentIndex: segmentIndex,
-				segment: {
-					...segment,
-					alternateImagesStatus: StoryStatus.READY,
-				},
-			});
+			// TODO: handle error case
 		}
 	}, [segment, story, dispatch, segmentIndex, sceneIndex]);
 
@@ -305,7 +296,7 @@ function ImageRegenerationPopup({
 				},
 			});
 		} catch (error) {
-			// handle error
+			// TODO: handle error case
 		}
 		onClose();
 	}, [
