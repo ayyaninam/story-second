@@ -139,7 +139,8 @@ export default function EditSegmentModalItem({
 										height={"18px"}
 									/>
 									{segment.imageStatus === StoryStatus.COMPLETE && "Regenerate"}
-									{segment.imageStatus === StoryStatus.PENDING && "Regnerating"}
+									{segment.imageStatus === StoryStatus.PENDING &&
+										"Regenerating"}
 									{segment.imageStatus === StoryStatus.READY &&
 										"Save & Generate"}
 								</Button>

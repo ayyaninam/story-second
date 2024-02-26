@@ -3,6 +3,7 @@ import {
 	AspectRatios,
 	DisplayAspectRatios,
 	StoryImageStyles,
+	StoryOutputTypes,
 } from "@/utils/enums";
 import { nanoid } from "nanoid";
 
@@ -55,6 +56,8 @@ export type Scene = {
 
 export type EditStoryDraft = {
 	id: string;
+	slug: string;
+	topLevelCategory: string;
 	title: string;
 	displayResolution: DisplayAspectRatios;
 	resolution: AspectRatios;
@@ -64,6 +67,7 @@ export type EditStoryDraft = {
 	};
 	status: StoryStatus;
 	scenes: Scene[];
+	type: StoryOutputTypes;
 };
 
 export type EditStoryAction =
@@ -113,6 +117,12 @@ export type EditStoryAction =
 	| {
 			type: "update_settings";
 			draft: Settings;
+	  }
+	| {
+			type: "update_segment_statuses";
+			key: "imageStatus" | "videoStatus" | "audioStatus";
+			segmentIndices: { segmentIndex: number; sceneIndex: number }[];
+			status: StoryStatus;
 	  };
 
 const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
@@ -173,6 +183,24 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			draft = action.draft;
 			return draft;
 		}
+		case "update_segment_statuses": {
+			const { segmentIndices, key, status } = action;
+			const sceneIdSegmentIndexKeys = segmentIndices.map(
+				(el) => `${el.sceneIndex}&${el.segmentIndex}`
+			);
+			draft.scenes.forEach((scene, sceneIndex) =>
+				scene.segments.forEach((segment, segmentIndex) => {
+					if (
+						sceneIdSegmentIndexKeys.includes(`${sceneIndex}&${segmentIndex}`)
+					) {
+						// @ts-expect-error not sure why ts is complaining
+						draft.scenes[sceneIndex].segments[segmentIndex][key] = status;
+					}
+				})
+			);
+		}
+		default:
+			break;
 	}
 };
 

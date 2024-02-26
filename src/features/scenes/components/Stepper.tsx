@@ -1,4 +1,6 @@
 import { Badge } from "@/components/ui/badge";
+import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
+import Routes from "@/routes";
 import { StepperStep } from "@/utils/enums";
 import clsx from "clsx";
 import {
@@ -8,13 +10,16 @@ import {
 	Film,
 	Upload,
 } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { use, useState } from "react";
 
 const activeStyles =
 	"border border-purple-500 bg-purple-100 text-purple-900 stepper-box-shadow";
 const baseStyles = `bg-primary-foreground font-normal text-sm cursor-pointer transition-all ease-in-out duration-300`;
 
 export default function Stepper({ step }: { step: StepperStep }) {
+	const router = useRouter();
+	const [WebstoryData] = useWebstoryContext();
 	const [currentHover, setCurrentHover] = useState<StepperStep>(step);
 	return (
 		<div className="w-full bg-background border-border border-[1px] py-2 min-h-8 flex items-center justify-center">
@@ -25,6 +30,15 @@ export default function Stepper({ step }: { step: StepperStep }) {
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
+				onClick={() =>
+					router.push(
+						Routes.EditScript(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
 				variant="outline"
 				className={clsx(baseStyles, {
 					[activeStyles]:
@@ -42,6 +56,15 @@ export default function Stepper({ step }: { step: StepperStep }) {
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
+				onClick={() =>
+					router.push(
+						Routes.EditStoryboard(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
 				variant="outline"
 				className={clsx(baseStyles, {
 					[activeStyles]:
@@ -61,6 +84,15 @@ export default function Stepper({ step }: { step: StepperStep }) {
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
+				onClick={() =>
+					router.push(
+						Routes.EditScenes(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
 				className={clsx(baseStyles, {
 					[activeStyles]:
 						step === StepperStep.Scenes || currentHover === StepperStep.Scenes,
@@ -78,6 +110,15 @@ export default function Stepper({ step }: { step: StepperStep }) {
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
+				onClick={() =>
+					router.push(
+						Routes.EditStory(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
 				className={clsx(baseStyles, {
 					[activeStyles]:
 						step === StepperStep.Share || currentHover === StepperStep.Share,

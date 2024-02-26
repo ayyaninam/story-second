@@ -6050,6 +6050,16 @@ export interface components {
       frameInterpolationKey?: string | null;
       imageStyle?: components["schemas"]["ImageStyles"];
       /**
+       * ImageRegenerating
+       * @description The status of the image regeneration.
+       */
+      imageRegenerating?: boolean;
+      /**
+       * VideoRegenerating
+       * @description The status of the video regeneration.
+       */
+      videoRegenerating?: boolean;
+      /**
        * ImagePrompt
        * @description The prompt of the image.
        */
@@ -7231,6 +7241,7 @@ export interface components {
       originalMediaKey?: string | null;
       storyType?: components["schemas"]["StoryType"];
       resolution?: components["schemas"]["DisplayResolution"];
+      imageStyle?: components["schemas"]["ImageStyles"];
       /** Format: uuid */
       userId?: string | null;
       user?: components["schemas"]["UserAccount"];

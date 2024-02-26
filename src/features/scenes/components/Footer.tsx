@@ -23,6 +23,7 @@ import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
+	StoryStatus,
 } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
@@ -43,6 +44,7 @@ import WaterColorImg from "/public/images/editor/watercolor.png";
 import AnimeImg from "/public/images/editor/anime.png";
 import HorrorImg from "/public/images/editor/horror.png";
 import SciFiImg from "/public/images/editor/scifi.png";
+import Routes from "@/routes";
 
 const images = {
 	[StoryImageStyles.Auto]: {
@@ -98,12 +100,6 @@ const Footer = ({
 	story: EditStoryDraft;
 	view: "script" | "storyboard" | "scene";
 }) => {
-	useEffect(() => {
-		dispatch({
-			type: "reset",
-			draft: WebstoryToStoryDraft(WebstoryData),
-		});
-	}, [WebstoryData]);
 	const router = useRouter();
 
 	const { genre } = router.query;
@@ -133,25 +129,16 @@ const Footer = ({
 		[dispatch]
 	);
 
-	const onGenerate = useCallback(() => {
-		console.log(story, "story..");
-	}, [story]);
-
 	const EditSegment = useMutation({
 		mutationFn: api.video.editSegment,
 	});
 
 	const View = {
 		script: () => (
-			<div className="flex gap-2 mt-6">
+			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div>
-					<Button variant="outline" className="stroke-slate-600 text-slate-600">
-						<LayoutGrid strokeWidth={1} className="mr-2" />
-						Generate Images & Continue
-					</Button>
-				</div>
-				<div className="flex flex-col">
 					<Button
+						variant="outline"
 						onClick={async () => {
 							const diff = GenerateStoryDiff(
 								WebstoryToStoryDraft(WebstoryData!),
@@ -166,16 +153,19 @@ const Footer = ({
 								})
 							);
 							const additions: SegmentModificationData[] = diff.additions.map(
-								(segment) => ({
+								(segmentSet) => ({
 									details: {
-										Ind: segment.id,
-										segments: [
-											{ Text: segment.textContent, SceneId: segment.sceneId },
-										],
+										// @ts-ignore should be defined though??
+										Ind: segmentSet[0].id + 1,
+										segments: segmentSet.map((el) => ({
+											Text: el.textContent,
+											SceneId: el.sceneId,
+										})),
 									},
 									operation: SegmentModifications.Add,
 								})
 							);
+
 							const deletions: SegmentModificationData[] =
 								diff.subtractions.map((segment) => ({
 									details: {
@@ -183,22 +173,56 @@ const Footer = ({
 									},
 									operation: SegmentModifications.Delete,
 								}));
-							if (!additions.length && !edits.length && !deletions.length) {
-								console.log("No edits found");
-								return;
+							if (additions.length || edits.length || deletions.length) {
+								const editedResponse = await EditSegment.mutateAsync({
+									story_id: WebstoryData?.id as string,
+									story_type: WebstoryData?.storyType,
+									edits: [...edits, ...additions, ...deletions],
+								});
 							}
 
-							const editedResponse = await EditSegment.mutateAsync({
-								story_id: WebstoryData?.id as string,
-								story_type: WebstoryData?.storyType,
-								edits: [...edits, ...additions, ...deletions],
+							await api.video.regenerateAllImages({
+								// @ts-expect-error
+								image_style: story.settings?.style ?? StoryImageStyles.Auto,
+								story_id: story.id,
+								story_type: story.type,
 							});
-
-							// await api.video.regenerateAllImages({
-							//   image_style: story.settings?.style,
-							//   story_id: story.storyId,story_type:
-							// })
+							// dispatch({
+							// 	type: "update_segment_statuses",
+							// 	key: "imageStatus",
+							// 	segmentIndices: story.scenes.flatMap((el, sceneIdx) =>
+							// 		el.segments.map((_, segIdx) => ({
+							// 			segmentIndex: segIdx,
+							// 			sceneIndex: sceneIdx,
+							// 		}))
+							// 	),
+							// 	status: StoryStatus.PENDING,
+							// });
+							router.push(
+								Routes.EditStoryboard(
+									story.type,
+									story.topLevelCategory,
+									story.slug
+								)
+							);
 						}}
+						className="stroke-slate-600 text-slate-600"
+					>
+						<LayoutGrid strokeWidth={1} className="mr-2" />
+						Generate Images & Continue
+					</Button>
+				</div>
+				<div className="flex flex-col">
+					<Button
+						onClick={() =>
+							router.push(
+								Routes.EditStoryboard(
+									story.type,
+									story.topLevelCategory,
+									story.slug
+								)
+							)
+						}
 						className="bg-purple-700 space-x-1.5"
 					>
 						<BrandShortLogo />
@@ -211,7 +235,18 @@ const Footer = ({
 		storyboard: () => (
 			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div className="flex flex-col">
-					<Button onClick={onGenerate} className="bg-purple-700 space-x-1.5">
+					<Button
+						onClick={() => {
+							router.push(
+								Routes.EditScenes(
+									story.type,
+									story.topLevelCategory,
+									story.slug
+								)
+							);
+						}}
+						className="bg-purple-700 space-x-1.5"
+					>
 						<BrandShortLogo />
 						<p className="font-bold text-slate-50">Generate Video Scenes</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
@@ -222,7 +257,14 @@ const Footer = ({
 		scene: () => (
 			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div className="flex flex-col">
-					<Button onClick={onGenerate} className="bg-purple-700 space-x-1.5">
+					<Button
+						onClick={() => {
+							router.push(
+								Routes.EditStory(story.type, story.topLevelCategory, story.slug)
+							);
+						}}
+						className="bg-purple-700 space-x-1.5"
+					>
 						<BrandShortLogo />
 						<p className="font-bold text-slate-50">Share & Export Video</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
@@ -288,7 +330,7 @@ const Footer = ({
 						ref={scrollRef}
 						className="flex 2xl:overflow-x-visible overflow-x-hidden "
 					>
-						<div className="flex gap-x-1">
+						<div className="flex gap-x-1 py-1">
 							{Object.entries(images).map(([key, image], index) => (
 								<>
 									<Image
@@ -297,10 +339,13 @@ const Footer = ({
 										key={index}
 										width={64}
 										height={48}
-										className={clsx("w-16 h-12 rounded-lg", {
-											["ring-purple-600 ring-[1.5px] ring-offset-1"]:
-												generationStyle === Number(key),
-										})}
+										className={clsx(
+											"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
+											{
+												["ring-purple-600 ring-[1.5px] ring-offset-1"]:
+													generationStyle === Number(key),
+											}
+										)}
 										role="button"
 										onClick={() =>
 											updateImageStyle(

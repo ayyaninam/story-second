@@ -30,7 +30,7 @@ import {
 } from "next";
 import { notFound } from "next/navigation";
 import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { useImmerReducer } from "use-immer";
 
 const EditorPage = ({
@@ -59,6 +59,18 @@ const EditorPage = ({
 		editStoryReducer,
 		WebstoryToStoryDraft(Webstory.data!)
 	);
+
+	useEffect(() => {
+		console.log(story);
+	}, [story]);
+
+	useEffect(() => {
+		console.log("resetting >>", Webstory.data);
+		dispatch({
+			type: "reset",
+			draft: WebstoryToStoryDraft(Webstory.data),
+		});
+	}, [JSON.stringify(Webstory.data)]);
 	if (router.query.editor === "script") {
 		return (
 			<WebStoryProvider initialValue={storyData}>

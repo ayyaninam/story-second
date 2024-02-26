@@ -20,6 +20,9 @@ export const WebstoryToStoryDraft = (
 ): EditStoryDraft => {
 	return {
 		id: Webstory.id!,
+		type: Webstory.storyType,
+		slug: Webstory.slug!,
+		topLevelCategory: Webstory.topLevelCategory!,
 		// @ts-ignore
 		displayResolution: Webstory.resolution,
 		resolution:
@@ -30,12 +33,25 @@ export const WebstoryToStoryDraft = (
 				id: scene.id!,
 				segments:
 					scene.videoSegments?.map((segment) => {
+						let imageStatus = StoryStatus.READY;
+						if (segment.imageKey && !segment.imageRegenerating)
+							imageStatus = StoryStatus.COMPLETE;
+						else if (segment.imageRegenerating)
+							imageStatus = StoryStatus.PENDING;
+						else if (!segment.imageKey) imageStatus = StoryStatus.READY;
+
+						let videoStatus = StoryStatus.READY;
+						if (segment.videoKey && !segment.videoRegenerating)
+							videoStatus = StoryStatus.COMPLETE;
+						else if (segment.videoRegenerating)
+							videoStatus = StoryStatus.PENDING;
+						else if (!segment.videoKey) videoStatus = StoryStatus.READY;
 						return {
 							settings: {
-								prompt: segment.imagePrompt,
-								denoising: segment.imageCFGScale,
-								style: segment.imageStyle,
-								seed: segment.imageSeed,
+								prompt: segment.imagePrompt!,
+								denoising: segment.imageCFGScale!,
+								style: segment.imageStyle!,
+								seed: segment.imageSeed!,
 							},
 							audioKey: segment.femaleAudioKey!,
 							audioStatus: segment.femaleAudioKey
@@ -43,21 +59,19 @@ export const WebstoryToStoryDraft = (
 								: StoryStatus.PENDING,
 							id: segment.index!,
 							imageKey: segment.imageKey!,
-							imageStatus: segment.imageKey
-								? StoryStatus.COMPLETE
-								: StoryStatus.PENDING,
+							imageStatus,
 							textContent: segment.textContent!,
 							textStatus: TextStatus.UNEDITED,
 							videoKey: segment.videoKey!,
-							videoStatus: segment.videoKey
-								? StoryStatus.COMPLETE
-								: StoryStatus.PENDING,
+							videoStatus,
 						};
 					}) ?? [],
-				status: scene.videoSegments?.every((el) => el.videoKey && el.imageKey)
+				status: scene.videoSegments?.every(
+					(el) => el.videoKey && !el.videoRegenerating && el.imageKey
+				)
 					? StoryStatus.COMPLETE
 					: StoryStatus.PENDING,
-				description: scene.sceneDescription,
+				description: scene.sceneDescription!,
 			})) ?? [],
 		status: StoryStatus.COMPLETE,
 		title: Webstory.storyTitle!,
@@ -75,7 +89,7 @@ export const GenerateStoryDiff = (
 	current: EditStoryDraft
 ) => {
 	let edits: SegmentWithIndices[] = [];
-	let additions: SegmentWithIndices[] = [];
+	let additions: SegmentWithIndices[][] = [];
 	let subtractions: SegmentWithIndices[] = [];
 
 	//
@@ -121,8 +135,9 @@ export const GenerateStoryDiff = (
 	mapArray.forEach((el) => {
 		if (previousMap.has(el) && currentMap.has(el)) {
 			const initialSegments = previousMap.get(el)!;
-			const currentSegments = currentMap.get(el)!;
-
+			const currentSegments = currentMap
+				.get(el)
+				?.filter((seg) => seg.textContent.trim().length > 0)!;
 			if (
 				currentSegments[0] &&
 				initialSegments[0]?.textContent !== currentSegments[0]?.textContent
@@ -130,10 +145,11 @@ export const GenerateStoryDiff = (
 				edits.push(currentSegments[0]); // if initial value is not equal the new value, then it's an edit
 			}
 			if (currentSegments.length > 1) {
-				additions.push(...currentSegments.slice(1)); // any additional segments with the same ids are considered additions
+				additions.push(currentSegments.slice(1)); // any additional segments with the same ids are considered additions
 			}
-		} else if (!previousMap.has(el)) {
-			additions.push(...(currentMap.get(el) ?? [])); // if the id is not in the initial data, then it's an addition
+		} else if (!previousMap.has(el) && currentMap.has(el)) {
+			// @ts-expect-error Not detecting that currentMap<el> is defined
+			additions.push(currentMap.get(el)); // if the id is not in the initial data, then it's an addition
 		} else if (!currentMap.has(el)) {
 			subtractions.push(...(previousMap.get(el) ?? [])); // if the id is not in the current data, then it's a subtraction
 		}

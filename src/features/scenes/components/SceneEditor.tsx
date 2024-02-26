@@ -1,4 +1,11 @@
-import { ChevronDown, MoreHorizontal, Settings2, Sparkle } from "lucide-react";
+import {
+	ChevronDown,
+	LayoutList,
+	MoreHorizontal,
+	RefreshCcw,
+	Settings2,
+	Sparkle,
+} from "lucide-react";
 import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
@@ -26,7 +33,7 @@ import { Button } from "@/components/ui/button";
 import VideoPlayer, {
 	VideoPlayerHandler,
 } from "@/features/edit-story/components/video-player";
-import { AspectRatios } from "@/utils/enums";
+import { AspectRatios, DisplayAspectRatios } from "@/utils/enums";
 import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
 import { Separator } from "@/components/ui/separator";
@@ -144,7 +151,7 @@ const SceneEditorView = ({
 		width: number;
 		height: number;
 		ratio: number;
-		enumValue: AspectRatios;
+		enumValue: DisplayAspectRatios;
 	};
 	story: EditStoryDraft;
 	dispatch: React.Dispatch<EditStoryAction>;
@@ -159,32 +166,9 @@ const SceneEditorView = ({
 		story?: EditStoryDraft;
 	}>();
 
-	useEffect(() => {
-		if (WebstoryData) {
-			console.log(
-				"Resetting webstory with new data:",
-				WebstoryToStoryDraft(WebstoryData)
-			);
-			dispatch({ type: "reset", draft: WebstoryToStoryDraft(WebstoryData) });
-		}
-	}, [WebstoryData, dispatch]);
-
 	const statuses = story.scenes.flatMap((el) =>
 		el.segments.map((el) => el.videoStatus)
 	);
-	useEffect(() => {
-		console.log("Statuses changed:", statuses);
-	}, [statuses]);
-
-	useEffect(() => {
-		if (WebstoryData) {
-			console.log(
-				"Resetting webstory with new data:",
-				WebstoryToStoryDraft(WebstoryData)
-			);
-			dispatch({ type: "reset", draft: WebstoryToStoryDraft(WebstoryData) });
-		}
-	}, [WebstoryData, dispatch]);
 
 	const handleRegenerateVideo = async (
 		segment: Segment,
@@ -216,19 +200,25 @@ const SceneEditorView = ({
 					backdropFilter: "blur(5px)",
 				}}
 			>
-				<div className="w-full flex justify-between py-1.5 px-3.5 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-200 bg-purple-100 text-purple-600">
+				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
-						<p className="font-medium text-sm">
-							Scene Editor • Playing Scene 3
-						</p>
-						<ChevronDown className="w-4 h-4 opacity-50" />
+						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
+						<p>Scene Editor</p>
+						{/* <StoryboardViewTypes type={StoryboardViewType.Outline} /> */}
 					</div>
-					<p className="font-medium text-sm">
-						Pro Tip — You can individually regenerate video subsegments.{" "}
-						<a className="underline" href="#">
-							Learn how
-						</a>
-					</p>
+					<div className="flex gap-1 items-center">
+						<p className="px-1 text-purple-900">
+							Pro Tip — You can individually regenerate video subsegments.
+							{/* <a href="#">
+								<u>Learn how</u>
+							</a> */}
+						</p>
+						{/* <div className="flex gap-1 items-center text-purple-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
+							<SparkleIcon width={"18px"} height={"18px"} />
+							<p className="text-xs">Regenerate</p>
+							<ChevronDown width={"18px"} height={"18px"} />
+						</div> */}
+					</div>
 				</div>
 
 				<div className="w-full h-full flex flex-col">
@@ -237,7 +227,7 @@ const SceneEditorView = ({
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
 
-						<div className="flex gap-1 text-slate-600 text-sm py-1">
+						<div className="flex gap-1 text-slate-400 text-xs py-1">
 							<p>by {WebstoryData?.user?.name}</p>
 						</div>
 						<Separator className="w-[35%]" />
@@ -245,7 +235,7 @@ const SceneEditorView = ({
 					<div className="absolute h-[85%] w-px bg-slate-200 mt-6 ml-5" />
 
 					<div className="h-screen flex justify-between overflow-y-hidden w-full">
-						<div className="h-full ml-2 max-w-md flex flex-col justify-between overflow-y-auto">
+						<div className="h-full flex-grow ml-2  flex flex-col justify-between overflow-y-auto">
 							<div className="flex flex-col my-3 md:flex-row items-center w-full">
 								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
 									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
@@ -273,10 +263,11 @@ const SceneEditorView = ({
 																	// }
 																>
 																	{scene.status === StoryStatus.PENDING && (
-																		<Loader
-																			percentage={20}
-																			index={sceneIndex}
-																		/>
+																		<RefreshCcw className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}]" />
+																		// <Loader
+																		// 	percentage={20}
+																		// 	index={sceneIndex}
+																		// />
 																	)}
 
 																	{/* <div className="group-hover:hidden flex flex-shrink-0 flex-col -space-y-4 overflow-hidden mx-1 my-[18px] items-center justify-center">
@@ -325,23 +316,20 @@ const SceneEditorView = ({
 																		)}
 																	</span>
 																	<div className="invisible flex group-hover:visible gap-x-1 p-2">
-																		<span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
-																			<Settings2
-																				className="w-4 h-4 stroke-slate-500"
-																				onClick={() =>
-																					setEditSegmentsModalState({
-																						open: true,
-																						scene: scene,
-																						sceneId: sceneIndex,
-																						dispatch,
-																						story,
-																					})
-																				}
-																			/>
+																		<span
+																			className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
+																			onClick={() =>
+																				setEditSegmentsModalState({
+																					open: true,
+																					scene: scene,
+																					sceneId: sceneIndex,
+																					dispatch,
+																					story,
+																				})
+																			}
+																		>
+																			<Settings2 className="w-4 h-4 stroke-slate-500" />
 																		</span>
-																		{/* <span className="hover:bg-gray-100 cursor-pointer rounded-sm p-1">
-																			<MoreHorizontal className="w-4 h-4 stroke-slate-500" />
-																		</span> */}
 																	</div>
 																</div>
 															</>
@@ -355,16 +343,7 @@ const SceneEditorView = ({
 							</div>
 						</div>
 
-						{/* <div
-							className={cn(
-								"absolute rounded-none",
-								ImageRatio.width === 16
-									? "w-[440px] right-4 bottom-24"
-									: "w-[220px] bottom-4 right-24"
-							)}
-						> */}
-
-						<div className="h-full w-full flex items-center justify-center">
+						<div className="h-full w-full px-4 flex items-center justify-center">
 							<div
 								className="h-full "
 								style={{ aspectRatio: ImageRatio.ratio }}
@@ -383,10 +362,6 @@ const SceneEditorView = ({
 						<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
 							<Sparkle fill="white" className="w-4 h-4" />
 							Regenerate All Scenes
-						</Button>
-						<Button className=" invisible w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
-							<Sparkle fill="white" className="w-4 h-4" />
-							Regenerate 2 Edited
 						</Button>
 						{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
 							Use 25 credits to regenerate ·{" "}

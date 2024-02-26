@@ -199,7 +199,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 40923759
+       * @default 98016362
        */
       seed?: number;
       /**

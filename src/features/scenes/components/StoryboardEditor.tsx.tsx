@@ -1,6 +1,8 @@
 import {
 	AspectRatios,
+	DisplayAspectRatios,
 	SegmentModifications,
+	StoryImageStyles,
 	StoryboardViewType,
 } from "@/utils/enums";
 import {
@@ -47,12 +49,14 @@ export default function VideoEditorStoryboard({
 	ImageRatio,
 	isError,
 	isLoading,
+	story,
+	dispatch,
 }: {
 	ImageRatio: {
 		width: number;
 		height: number;
 		ratio: number;
-		enumValue: AspectRatios;
+		enumValue: DisplayAspectRatios;
 	};
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	isError?: boolean;
@@ -71,28 +75,13 @@ export default function VideoEditorStoryboard({
 		open?: boolean;
 		scene?: Scene;
 		sceneId?: number;
-		dispatch?: React.Dispatch<EditStoryAction>;
-		story?: EditStoryDraft;
+		dispatch: React.Dispatch<EditStoryAction>;
+		story: EditStoryDraft;
 	}>();
 
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
 		WebstoryToStoryDraft(WebstoryData!)
 	);
-	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
-		editStoryReducer,
-		WebstoryToStoryDraft(WebstoryData!)
-	);
-
-	useEffect(() => {
-		if (WebstoryData) {
-			console.log(
-				WebstoryData!.scenes?.flatMap((el) =>
-					el.videoSegments?.map((seg) => seg.imageKey)
-				)
-			);
-			dispatch({ type: "reset", draft: WebstoryToStoryDraft(WebstoryData!) });
-		}
-	}, [WebstoryData]);
 
 	// useEffect(() => {
 	// 	console.log(
@@ -115,15 +104,19 @@ export default function VideoEditorStoryboard({
 			details: { Ind: segment.id, Text: segment.textContent },
 			operation: SegmentModifications.Edit,
 		}));
-		const additions: SegmentModificationData[] = diff.additions.map(
-			(segment) => ({
+		const additions: SegmentModificationData[] = diff.additions
+			.filter((segmentSet) => segmentSet.length > 0)
+			.map((segmentSet) => ({
 				details: {
-					Ind: segment.id,
-					segments: [{ Text: segment.textContent, SceneId: segment.sceneId }],
+					// @ts-ignore should be defined though??
+					Ind: segmentSet[0].id + 1,
+					segments: segmentSet.map((el) => ({
+						Text: el.textContent,
+						SceneId: el.sceneId,
+					})),
 				},
 				operation: SegmentModifications.Add,
-			})
-		);
+			}));
 		const deletions: SegmentModificationData[] = diff.subtractions.map(
 			(segment) => ({
 				details: {
@@ -152,6 +145,7 @@ export default function VideoEditorStoryboard({
 
 		setPreviousStory(WebstoryToStoryDraft(newStory));
 		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
+		return newStory;
 	};
 
 	const handleRegenerateImage = async (
@@ -166,19 +160,24 @@ export default function VideoEditorStoryboard({
 			segmentIndex: segmentIndex,
 			segment: { ...segment, imageStatus: StoryStatus.PENDING },
 		});
+
+		let newSegment = null;
 		if (saveBeforeRegenerating) {
-			await handleSubmitEditSegments();
+			const newStory = await handleSubmitEditSegments();
+			newSegment = newStory?.scenes?.[sceneIndex]?.videoSegments?.find(
+				(el) => el.textContent === segment.textContent
+			);
 		}
 		const regeneratedImages = await api.video.regenerateImage({
 			// @ts-ignore
-			image_style: segment.settings?.style!,
+			image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
 			prompt: segment.settings?.prompt ?? segment.textContent,
-			segment_idx: segment.id,
+			segment_idx: newSegment?.index ?? segment.id,
 			story_id: story.id,
 			story_type: WebstoryData?.storyType!,
-			cfg_scale: segment.settings?.denoising,
-			sampling_steps: segment.settings?.samplingSteps,
-			seed: segment.settings?.seed,
+			cfg_scale: segment.settings?.denoising ?? 7,
+			sampling_steps: segment.settings?.samplingSteps ?? 8,
+			seed: segment.settings?.seed ?? 3121472823,
 		});
 
 		if (regeneratedImages.target_paths.length === 1) {
@@ -195,14 +194,10 @@ export default function VideoEditorStoryboard({
 		}
 	};
 
-	useEffect(() => {
-		console.log(">>>> WebstoryData", WebstoryData);
-	}, [WebstoryData]);
-
 	return (
 		<>
 			<div
-				className=" m-auto max-h-[500px] max-w-[900px] overflow-hidden"
+				className="relative w-4/5 h-4/5 m-auto  overflow-hidden"
 				style={{
 					borderRadius: "8px",
 					background: "#FEFEFF",
@@ -234,24 +229,24 @@ export default function VideoEditorStoryboard({
 						</Button> */}
 					</div>
 				</div>
-				<div className="relative px-6 pt-6 pb-2 bg-[#FEFEFF]">
+				<div className="relative  px-6 pt-6 pb-2 bg-[#FEFEFF]">
 					<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
 						{Format.Title(WebstoryData?.storyTitle)}
 					</p>
 
 					<div className="w-full inline-flex text-slate-400 text-xs py-1">
-						<div className="flex">
+						{/* <div className="flex">
 							Storyboard for a <u> 60 Second</u>{" "}
 							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
 							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div>
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div>
-						<p className="ms-1">by Anthony Deloso</p>
+						</div> */}
+						<p className="ms-1">by {WebstoryData?.user?.name}</p>
 					</div>
 				</div>
-				<div className="flex flex-col md:flex-row items-center justify-center w-full">
+				<div className="flex flex-col md:flex-row items-center justify-center h-full w-full">
 					<div
 						className={cn(
 							`w-full pb-6 bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
@@ -259,10 +254,10 @@ export default function VideoEditorStoryboard({
 						// border-[1px]
 					>
 						<div
-							className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
+							className={`px-6 flex w-full h-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
 						>
 							<div
-								className="space-y-2"
+								className="space-y-2 h-[80%] overflow-y-scroll"
 								// onMouseLeave={(e) => {
 								// 	setShowActionItems({});
 								// }}
@@ -276,7 +271,7 @@ export default function VideoEditorStoryboard({
 										return (
 											<div
 												className={cn(
-													"w-full h-[300px] overflow-y-scroll divide-y divide-dashed space-y-2"
+													"w-full  divide-y divide-dashed space-y-2"
 												)}
 											>
 												{story.scenes.map((scene, sceneIndex) => (
@@ -292,7 +287,7 @@ export default function VideoEditorStoryboard({
 																			StoryStatus.COMPLETE && (
 																			<>
 																				<div
-																					className="relative h-20"
+																					className="relative h-32"
 																					style={{
 																						aspectRatio: GetImageRatio(
 																							story.resolution
@@ -315,7 +310,7 @@ export default function VideoEditorStoryboard({
 																		{segment.imageStatus ===
 																			StoryStatus.PENDING && (
 																			<div
-																				className="relative h-20"
+																				className="relative h-32"
 																				style={{
 																					aspectRatio: GetImageRatio(
 																						story.resolution
@@ -328,7 +323,7 @@ export default function VideoEditorStoryboard({
 																		{segment.imageStatus ===
 																			StoryStatus.READY && (
 																			<div
-																				className="relative h-20"
+																				className="relative h-32"
 																				style={{
 																					aspectRatio: GetImageRatio(
 																						story.resolution
@@ -449,7 +444,7 @@ export default function VideoEditorStoryboard({
 							editSegmentsModalState.scene !== undefined &&
 							editSegmentsModalState.sceneId !== undefined
 						}
-						onClose={() => setEditSegmentsModalState({})}
+						onClose={() => setEditSegmentsModalState(undefined)}
 						handleRegenerateImage={handleRegenerateImage}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}

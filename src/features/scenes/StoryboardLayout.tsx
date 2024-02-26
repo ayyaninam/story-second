@@ -12,14 +12,14 @@ import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio, GetImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import useWebstoryContext from "../edit-story/providers/WebstoryContext";
 import Stepper from "./components/Stepper";
 import { StepperStep } from "@/utils/enums";
 import Navbar from "./components/Navbar";
-import VideoEditorStoryboard from "./components/VideoEditorStoryboard";
+import VideoEditorStoryboard from "./components/StoryboardEditor.tsx";
 import EditorContainer from "./components/EditorContainer";
 import Footer from "./components/Footer";
 import { useImmerReducer } from "use-immer";
@@ -57,7 +57,7 @@ export default function EditScript({
 	});
 
 	const isLoading = Webstory.isLoading || !Webstory.data;
-	const ImageRatio = GetImageRatio(Webstory.data.resolution);
+	const ImageRatio = GetDisplayImageRatio(Webstory.data.resolution);
 
 	return (
 		<div className="relative w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">

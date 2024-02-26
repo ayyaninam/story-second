@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { AspectRatios } from "@/utils/enums";
+import { AspectRatios, DisplayAspectRatios } from "@/utils/enums";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
 import { PlayCircle, Plus } from "lucide-react";
@@ -17,7 +17,7 @@ export default function Navbar({
 		width: number;
 		height: number;
 		ratio: number;
-		enumValue: AspectRatios;
+		enumValue: DisplayAspectRatios;
 	};
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	genre: string;

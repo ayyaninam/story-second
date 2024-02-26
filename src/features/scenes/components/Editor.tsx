@@ -102,9 +102,12 @@ const Editor = ({
 		) {
 			return InputStatus.EDITED;
 		} else if (
-			diff.additions.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
+			diff.additions
+				.flat()
+				.find(
+					(el) =>
+						el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
+				)
 		) {
 			return InputStatus.ADDED;
 		} else if (
@@ -221,7 +224,7 @@ const Editor = ({
 							textStatus: TextStatus.ADDED,
 						},
 					],
-					description:"",
+					description: "",
 					status: StoryStatus.READY,
 					id: scene.id,
 				},

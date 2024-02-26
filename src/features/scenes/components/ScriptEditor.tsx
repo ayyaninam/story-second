@@ -1,5 +1,6 @@
 import {
 	AspectRatios,
+	DisplayAspectRatios,
 	SegmentModifications,
 	StoryboardViewType,
 } from "@/utils/enums";
@@ -41,7 +42,7 @@ export default function ScriptEditor({
 		width: number;
 		height: number;
 		ratio: number;
-		enumValue: AspectRatios;
+		enumValue: DisplayAspectRatios;
 	};
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	isError?: boolean;
@@ -67,11 +68,6 @@ export default function ScriptEditor({
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
 		WebstoryToStoryDraft(WebstoryData!)
 	);
-
-	useEffect(() => {
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(WebstoryData!) });
-	}, [WebstoryData]);
-
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
 	const diff = GenerateStoryDiff(previousStory, story);
@@ -86,15 +82,19 @@ export default function ScriptEditor({
 			details: { Ind: segment.id, Text: segment.textContent },
 			operation: SegmentModifications.Edit,
 		}));
-		const additions: SegmentModificationData[] = diff.additions.map(
-			(segment) => ({
+		const additions: SegmentModificationData[] = diff.additions
+			.filter((segmentSet) => segmentSet.length > 0)
+			.map((segmentSet) => ({
 				details: {
-					Ind: segment.id,
-					segments: [{ Text: segment.textContent, SceneId: segment.sceneId }],
+					// @ts-ignore should be defined though??
+					Ind: segmentSet[0].id + 1,
+					segments: segmentSet.map((el) => ({
+						Text: el.textContent,
+						SceneId: el.sceneId,
+					})),
 				},
 				operation: SegmentModifications.Add,
-			})
-		);
+			}));
 		const deletions: SegmentModificationData[] = diff.subtractions.map(
 			(segment) => ({
 				details: {
@@ -135,7 +135,7 @@ export default function ScriptEditor({
 	return (
 		<>
 			<div
-				className="w-[60%] m-auto"
+				className="relative w-4/5 h-4/5 m-auto"
 				style={{
 					borderRadius: "8px",
 					background: "#FEFEFF",
@@ -193,7 +193,7 @@ export default function ScriptEditor({
 							className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
 						>
 							<div
-								className="space-y-2 max-h-[40vh] overflow-scroll overflow-x-hidden"
+								className="space-y-2 max-h-[40vh] overflow-y-auto overflow-x-hidden"
 								// onMouseLeave={(e) => {
 								// 	setShowActionItems({});
 								// }}
