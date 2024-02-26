@@ -13,7 +13,6 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/library/constants";
 import ScenesLayout from "@/features/scenes/components/Layout";
 import {getSession, withPageAuthRequired} from "@auth0/nextjs-auth0";
-import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import {NextSeo} from "next-seo";
 
 function Library({
@@ -68,6 +67,18 @@ export default Library;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 		const session = await getSession(context.req, context.res);
+
+		// # TODO: For development purposes only - remove this in production
+		// Avoids redirect to dev pages and sends to absolute path
+		if (context?.req?.url && context.req.url.toString() === "/_next/data/development/library.json") {
+			return {
+				redirect: {
+					destination: '/auth/login?returnTo=/library',
+					permanent: false,
+				},
+			}
+		}
+
 		if (!session) {
 			return {
 				redirect: {
@@ -218,7 +229,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 					staleTime: 3000,
 				});
 			}
-		} catch (error) {
+		} catch (error: any) {
+			if (error.response?.status === 401) {
+				return {
+					redirect: {
+						destination: "/auth/login?returnTo=" + context.req.url,
+						permanent: false,
+					},
+				};
+
+			}
 			console.error("Error fetching data", error);
 		}
 
