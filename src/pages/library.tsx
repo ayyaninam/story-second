@@ -73,7 +73,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		if (context?.req?.url && context.req.url.toString() === "/_next/data/development/library.json") {
 			return {
 				redirect: {
-					destination: '/auth/login?returnTo=/library',
+					destination: '/library?genre=all',
 					permanent: false,
 				},
 			}
