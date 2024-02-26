@@ -83,35 +83,39 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset"
 	}
 
-	const { user } = useUser();
+	const { user, isLoading } = useUser();
+
 	return (
 		<div className="w-[18rem] flex flex-col justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
-
-					<Avatar className="h-8 w-8 border-[1px] border-gray-200">
-						<AvatarImage src={user?.picture || ""} />
-						<AvatarFallback>
-							 {Format.AvatarName(user?.name?.split(" ")[0] || "S", user?.name?.split(" ")[1])}
-						</AvatarFallback>
-					</Avatar>
-						{/*// # TODO: enable profile pages when ready*/}
-						{/*// # TODO: replace with userDetails*/}
-					<Link
-						href={"#"}
-						// href={"/" + user?.nickname || ""}
-					>
-						<span className="flex flex-col text-white gap-y-1">
-							<span>{user?.name || "Story.com"}</span>
-							<span
-								className="flex gap-x-2 items-center text-sm text-white p-0.25 px-2"
-								style={userHandlerStyle}
+					{!isLoading && (
+						<>
+							<Avatar className="h-8 w-8 border-[1px] border-gray-200">
+								<AvatarImage src={user?.picture || ""} />
+								<AvatarFallback>
+									 {Format.AvatarName(user?.name?.split(" ")[0] || "S", user?.name?.split(" ")[1])}
+								</AvatarFallback>
+							</Avatar>
+								{/*// # TODO: enable profile pages when ready*/}
+								{/*// # TODO: replace with userDetails*/}
+							<Link
+								href={"#"}
+								// href={"/" + user?.nickname || ""}
 							>
-								<RightPlay size={6} />
-								<span>{user?.nickname?.length || 0 > 7 ? "/"+user?.nickname : "story.com"}</span>
-							</span>
-						</span>
-					</Link>
+								<span className="flex flex-col text-white gap-y-1">
+									<span>{user?.name || "Story.com"}</span>
+									<span
+										className="flex gap-x-2 items-center text-sm text-white p-0.25 px-2"
+										style={userHandlerStyle}
+									>
+										<RightPlay size={6} />
+										<span>{(user?.nickname?.length || 0) > 7 ? "/"+user?.nickname : "story.com/"+user?.nickname}</span>
+									</span>
+								</span>
+							</Link>
+						</>
+					)}
 				</div>
 				<div className="space-y-1">
 					{menuItems.map((menuItem, index) => (

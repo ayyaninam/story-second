@@ -12,7 +12,7 @@ import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/library/constants";
 import ScenesLayout from "@/features/scenes/components/Layout";
-import {getSession, withPageAuthRequired} from "@auth0/nextjs-auth0";
+import {getSession} from "@auth0/nextjs-auth0";
 import {NextSeo} from "next-seo";
 
 function Library({
