@@ -4,6 +4,7 @@ import {
 	ChevronRight,
 	DownloadCloudIcon,
 	DownloadIcon,
+	Edit,
 	Heart,
 	HelpCircle,
 	LogOutIcon,
@@ -398,6 +399,32 @@ export default function PublishedStory({
 											/>{" "}
 											Like video
 										</Button>
+										{User?.data?.data?.id === Webstory.data?.user?.id && (
+											<Button
+												className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
+												variant="outline"
+												onClick={() =>
+													router.push(
+														Routes.EditScript(
+															storyData.storyType,
+															storyData.topLevelCategory!,
+															storyData.slug!
+														)
+													)
+												}
+											>
+												<Edit
+													className={cn("mr-2 h-4 w-4")}
+													style={{
+														fill:
+															isBrowser && Interactions.data?.liked
+																? "#EC4899"
+																: undefined,
+													}}
+												/>{" "}
+												Edit Video
+											</Button>
+										)}
 
 										{User?.data?.data?.id !== Webstory.data?.user?.id ||
 										(numVideoSegmentsReady ?? 0) <
