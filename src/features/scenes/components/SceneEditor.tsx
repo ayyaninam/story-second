@@ -145,6 +145,7 @@ const SceneEditorView = ({
 	ImageRatio,
 	story,
 	dispatch,
+	isError,
 }: {
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 	ImageRatio: {
@@ -155,8 +156,14 @@ const SceneEditorView = ({
 	};
 	story: EditStoryDraft;
 	dispatch: React.Dispatch<EditStoryAction>;
+	isError?: boolean;
 }) => {
 	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
+	const blurredVideoPlayerRef = useRef<VideoPlayerHandler | null>(null);
+
+	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
+	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
+
 	const [hoveredThumbnails, setHoveredThumbnails] = useState<HoveredThumbs>();
 	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
 		open?: boolean;
@@ -234,7 +241,10 @@ const SceneEditorView = ({
 					</div>
 					<div className="absolute h-[85%] w-px bg-slate-200 mt-6 ml-5" />
 
-					<div className="h-screen flex justify-between overflow-y-hidden w-full">
+					<div
+						className="h-screen flex justify-between overflow-y-hidden w-full"
+						style={{ background: "transparent" }}
+					>
 						<div className="h-full flex-grow ml-2  flex flex-col justify-between overflow-y-auto">
 							<div className="flex flex-col my-3 md:flex-row items-center w-full">
 								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
@@ -343,15 +353,42 @@ const SceneEditorView = ({
 							</div>
 						</div>
 
-						<div className="h-full w-full px-4 flex items-center justify-center">
+						<div className="relative h-full w-full px-4 flex items-center justify-center">
 							<div
-								className="h-full "
+								className="h-[95%] blur-lg"
+								style={{ aspectRatio: ImageRatio.ratio }}
+							>
+								<VideoPlayer
+									playerClassName="rounded-lg"
+									ref={blurredVideoPlayerRef}
+									Webstory={WebstoryData}
+									isError={isError}
+									isPlaying={isPlaying}
+									seekedFrame={seekedFrame}
+								/>
+							</div>
+							<div
+								className="absolute h-[95%]"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
 								<VideoPlayer
 									playerClassName="rounded-lg"
 									ref={videoPlayerRef}
 									Webstory={WebstoryData}
+									isError={isError}
+									onPlay={() => {
+										setIsPlaying(true);
+									}}
+									onPause={() => {
+										setIsPlaying(false);
+									}}
+									onSeeked={(e) => {
+										setSeekedFrame(e.detail.frame);
+									}}
+									onEnded={() => {
+										setIsPlaying(false);
+										setSeekedFrame(0);
+									}}
 								/>
 							</div>
 						</div>
