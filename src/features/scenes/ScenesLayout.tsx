@@ -66,6 +66,7 @@ export default function StoryScenes({
 						ImageRatio={ImageRatio}
 						story={story}
 						dispatch={dispatch}
+						isError={Webstory.isError}
 					/>
 				</EditorContainer>
 			</div>
