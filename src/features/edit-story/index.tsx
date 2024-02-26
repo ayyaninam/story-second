@@ -24,7 +24,7 @@ import Format from "@/utils/format";
 import StoryScreen from "./story-screen";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRemotionPlayerProps } from "./video-player/hooks";
-import { StoryOutputTypes, VoiceType } from "@/utils/enums";
+import { StepperStep, StoryOutputTypes, VoiceType } from "@/utils/enums";
 import { ModeToggle } from "./components/mode-toggle";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -36,6 +36,7 @@ import { env } from "@/env.mjs";
 import useWebstoryContext, {
 	WebStoryProvider,
 } from "./providers/WebstoryContext";
+import Stepper from "../scenes/components/Stepper";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -80,7 +81,7 @@ export default function EditStory() {
 	const ImageRatio = GetDisplayImageRatio(Webstory.data.resolution);
 
 	return (
-		<div className="max-w-full min-h-screen bg-secondary">
+		<div className=" w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
 			{/* Navbar */}
 			<div className="flex justify-between bg-primary-foreground border-b-[0.5px] border-border p-4">
 				<div className="flex gap-x-2.5 items-center">
@@ -149,38 +150,7 @@ export default function EditStory() {
 			</div>
 
 			{/* Stepper */}
-			<div className="w-full min-h-8 flex items-center justify-center">
-				<Badge
-					variant="outline"
-					className="bg-primary-foreground font-normal text-sm"
-				>
-					<LucideSparkles className="stroke-purple-600 mr-1 h-4 w-4" />
-					Story
-				</Badge>
-				<ChevronRight className="w-4 h-4 opacity-50" />
-				<Badge
-					variant="outline"
-					className="bg-primary-foreground font-normal text-sm"
-				>
-					<LucideSparkles className="stroke-purple-600 mr-1 h-4 w-4" />
-					Scenes
-				</Badge>
-				<ChevronRight className="w-4 h-4 opacity-50" />
-				<Badge
-					variant="outline"
-					className="bg-primary-foreground font-normal text-sm"
-				>
-					Final
-				</Badge>
-				<ChevronRight className="w-4 h-4 opacity-50" />
-				<Badge
-					variant="outline"
-					className="bg-primary-foreground font-normal text-sm border border-purple-500 bg-purple-100 text-purple-900"
-					style={{ boxShadow: "0px 4px 4px 0px rgba(206, 122, 255, 0.40)" }}
-				>
-					Share
-				</Badge>
-			</div>
+			<Stepper step={StepperStep.Share} />
 
 			{/* MainSection */}
 			<div
@@ -298,7 +268,7 @@ export default function EditStory() {
 												src={Webstory.data.user?.profilePicture ?? undefined}
 											/>
 											<AvatarFallback>
-												{Format.AvatarName(Webstory.data.user?.name)}
+												{Format.AvatarName(Webstory.data.user?.name, Webstory.data.user?.lastName)}
 											</AvatarFallback>
 										</Avatar>
 									)}
@@ -307,20 +277,25 @@ export default function EditStory() {
 									) : (
 										<span className="flex flex-col">
 											<span>{Webstory.data.user?.name} </span>
-											<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
-												<p>
-													{(Webstory.data.user?.videoCount ?? 0) +
-														(Webstory.data.user?.storyCount ?? 0)}{" "}
-													Stories
-												</p>
-												<p className="text-slate-300"> • </p>
-												{/* <a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
-											</span>
+											{Webstory.data.user && (
+												<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
+													<>
+														{Webstory.data.user.videoCount > 0 && (
+															<p>
+																{Webstory.data.user?.videoCount} {" "} Videos
+															</p>
+														)}
+														{Webstory.data.user.videoCount > 0 && Webstory.data.user.storyCount > 0 && (
+															<p className="text-slate-300"> • </p>
+														)}
+														{Webstory.data.user.storyCount > 0 && (
+															<p>
+																{Webstory.data.user.storyCount} {" "} Stories
+															</p>
+														)}
+													</>
+												</span>
+											)}
 										</span>
 									)}
 								</div>

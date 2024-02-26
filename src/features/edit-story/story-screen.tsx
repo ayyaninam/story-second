@@ -1,10 +1,11 @@
 import Format from "@/utils/format";
 import ImageLoader from "./components/image-loader";
-import VideoPlayer from "./components/video-player";
-import { FC, useEffect, useState } from "react";
+import VideoPlayer, { VideoPlayerHandler } from "./components/video-player";
+import { FC, useEffect, useState, useRef } from "react";
 import { prefetch } from "remotion";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { VideoPlayerProps } from "@/types";
+import { mainSchema } from "@/api/schema";
 
 const loadingTexts = [
 	"Starting your story",
@@ -62,6 +63,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 					.catch((e) => console.error(e)); // I think the errors are about cors
 			}
 		}
+
 		const originalTikTokVideoKey = Webstory?.originalMediaKey;
 		if (
 			originalTikTokVideoKey &&
@@ -70,7 +72,6 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 			const url = Format.GetVideoUrl(originalTikTokVideoKey);
 			prefetch(url, {
 				method: "blob-url",
-				contentType: "video/webm",
 			})
 				.waitUntilDone()
 				.then(() => {
@@ -123,6 +124,14 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 
 	const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
 
+	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
+
+	const seekToSegment = (segment: mainSchema["ReturnVideoSegmentDTO"]) => {
+		videoPlayerRef.current?.seekToSegment(segment);
+	};
+
+	console.log(Webstory?.scenes);
+
 	if (isError)
 		return (
 			<div
@@ -159,6 +168,7 @@ const StoryScreen: FC<VideoPlayerProps> = ({
 	} else {
 		return (
 			<VideoPlayer
+				ref={videoPlayerRef}
 				Webstory={Webstory}
 				onPlay={onPlay}
 				onPause={onPause}

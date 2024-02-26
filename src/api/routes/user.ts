@@ -18,6 +18,14 @@ const user = {
 			.get(`api/User`)
 			.json();
 	},
+	updateDetails: async (
+		params: { test: string },
+		token?: string
+	): Promise<mainSchema["StringApiResponse"]> => {
+		return await authFetcher(token || getJwt())
+			.patch(`api/User/Details`, { body: JSON.stringify(params) })
+			.json();
+	},
 };
 
 export default user;

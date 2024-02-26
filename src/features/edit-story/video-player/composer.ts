@@ -24,7 +24,7 @@ const calculateSegmentDuration = async ({
 	audioURL: string | null;
 	isLastSegment: boolean;
 }) => {
-	const minContentDuration = 2 * VIDEO_FPS;
+	const minContentDuration = 3 * VIDEO_FPS;
 
 	const silentTime = 2 * SILENT_DURATION * VIDEO_FPS;
 
@@ -51,38 +51,58 @@ const calculateSegmentDuration = async ({
 };
 
 type ToRemotionSegmentProps = {
+	variant: RemotionVariant;
 	audioURL: string | null;
 	storyText: string;
 	videoURL: string | null;
+	imageURL: string | null;
 	interpolationURL: string | null;
+	isFirstSegment: boolean;
 	isLastSegment: boolean;
+	seekId: string;
 };
 
 export const toRemotionSegment = async ({
+	variant,
 	audioURL,
 	storyText,
 	videoURL,
+	imageURL,
 	interpolationURL,
+	isFirstSegment,
 	isLastSegment,
+	seekId,
 }: ToRemotionSegmentProps): Promise<Omit<RemotionSegment, "index">[]> => {
 	const { contentDuration, durationInFrames } = await calculateSegmentDuration({
 		audioURL,
 		isLastSegment,
 	});
 
-	let pageSegment: Omit<RemotionPageSegment, "index"> | null = null;
+	let pageSegment: Omit<RemotionPageSegment, "index"> | null = {
+		type: "page",
+		id: uuidv4(),
+		storyText,
+		audioURL,
+		durationInFrames,
+		contentDuration,
+		seekId,
+	};
+
 	if (videoURL) {
 		pageSegment = {
-			type: "page",
-			id: uuidv4(),
-			storyText,
+			...pageSegment,
 			visual: {
 				format: "video",
 				videoURL,
 			},
-			audioURL,
-			durationInFrames,
-			contentDuration,
+		};
+	} else if (imageURL) {
+		pageSegment = {
+			...pageSegment,
+			visual: {
+				format: "image",
+				imageURL,
+			},
 		};
 	}
 
@@ -109,20 +129,13 @@ export const toRemotionSegment = async ({
 
 	// @ts-ignore
 	return [
-		intermediateSegment ?? transitionSegment,
+		isFirstSegment ? undefined : intermediateSegment ?? transitionSegment,
 		pageSegment,
-		isLastSegment ? transitionSegment : undefined,
+		isLastSegment && (variant === "landscape" || variant === "portrait")
+			? transitionSegment
+			: undefined,
 	].filter(Boolean);
 };
-
-const TO_END_OF_VIDEO = 9999999;
-
-const extendLastSegmentOfTopVideo = (segments: RemotionSegment[]) =>
-	segments.map((segment, index) =>
-		index === segments.length - 1
-			? { ...segment, durationInFrames: TO_END_OF_VIDEO }
-			: segment
-	);
 
 interface ProcessSegmentPromisesParams {
 	segmentsPromises: Promise<Omit<RemotionSegment, "index">[]>[];
@@ -157,7 +170,7 @@ export const toRemotionInputProps = async ({
 					segment.type === "transition" ? 0 : segment.durationInFrames
 			);
 
-			const theEndPageFrames = 5 * VIDEO_FPS;
+			const theEndPageFrames = 3 * VIDEO_FPS;
 
 			return {
 				showLoadingVideo: false,
@@ -179,19 +192,24 @@ export const toRemotionInputProps = async ({
 					segment.type === "transition" ? 0 : segment.durationInFrames
 			);
 
-			const durationInFrames = Math.max(
+			const pagesDurationInFrames = Math.max(
 				bottomVideoDurationInFrames,
 				topVideoDurationInFrames
 			);
 
+			const theEndPageFramesInSplitFormat = 3 * VIDEO_FPS;
+
 			return {
 				showLoadingVideo: false,
-				durationInFrames,
+				durationInFrames: pagesDurationInFrames + theEndPageFramesInSplitFormat,
 				enableAudio: false,
 				enableSubtitles: false,
+				topEndDurationInFrames:
+					pagesDurationInFrames - topVideoDurationInFrames,
+				pagesDurationInFrames,
 				variant,
 				bottomVideoURL: bottomVideoURL as string,
-				segments: extendLastSegmentOfTopVideo(segments),
+				segments,
 			};
 	}
 };
