@@ -9,6 +9,8 @@ import Format from "@/utils/format";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRouter } from "next/router";
+import Routes from "@/routes";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -29,6 +31,7 @@ export default function PreviewEditor({
 	isError?: boolean;
 }) {
 	const [showFullDescription, setShowFullDescription] = useState(false);
+	const router = useRouter();
 
 	return (
 		<div
@@ -77,6 +80,15 @@ export default function PreviewEditor({
 					<Button
 						className={`p-2 text-muted-foreground text-sm shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
 						variant="outline"
+						onClick={() => {
+							router.push(
+								Routes.ViewStory(
+									WebstoryData?.storyType,
+									router.query.genre!.toString(),
+									router.query.id!.toString()
+								)
+							);
+						}}
 					>
 						<Upload className={cn("mr-2 h-4 w-4")} /> Publish Video
 					</Button>
