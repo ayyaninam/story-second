@@ -13,6 +13,7 @@ import { ReactElement, ReactNode, useState } from "react";
 import { NextPage } from "next/types";
 
 import {DefaultSeo, DefaultSeoProps} from "next-seo";
+import {env} from "@/env.mjs";
 
 const randFont = localFont({
 	variable: "--font-rand",
@@ -161,7 +162,7 @@ const defaultSeoProps: DefaultSeoProps = {
 	openGraph: {
 		type: "website",
 		locale: "en_US",
-		url: process.env.NEXT_PUBLIC_BASE_URL,
+		url: env.NEXT_PUBLIC_BASE_URL,
 		siteName: "Story.com",
 		images: [
 			{

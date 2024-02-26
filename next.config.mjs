@@ -29,6 +29,10 @@ const nextConfig = {
 					source: "/tiktok",
 					destination: "/tiktok/index.html",
 				},
+				{
+					source: "/sitemap.xml",
+					destination: "/api/sitemap",
+				}
 			],
 		};
 	},
