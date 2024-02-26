@@ -42,8 +42,10 @@ const nextConfig = {
 		];
 	},
 	images: {
-		domains: ["ik.imagekit.io"],
-	},
+		remotePatterns: [{
+			hostname: "ik.imagekit.io"
+		}],
+	}
 };
 
 export default nextConfig;
