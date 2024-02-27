@@ -13,7 +13,7 @@ export default function TooltipComponent({
 	label: string;
 }) {
 	return (
-		<Tooltip>
+		<Tooltip delayDuration={100}>
 			<TooltipTrigger>{children}</TooltipTrigger>
 			<TooltipContent
 				align="start"
