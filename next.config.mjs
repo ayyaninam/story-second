@@ -1,4 +1,13 @@
 /** @type {import('next').NextConfig} */
+
+import withPWAInit from "next-pwa";
+
+const withPWA = withPWAInit({
+	pwa: {
+		dest: "public",
+	},
+});
+
 const nextConfig = {
 	reactStrictMode: true,
 	// Make custominput file cached so that it won't be get-pull again
@@ -52,4 +61,4 @@ const nextConfig = {
 	}
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);
