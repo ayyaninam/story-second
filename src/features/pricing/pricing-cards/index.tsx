@@ -112,7 +112,10 @@ const PricingCards = () => {
 						button={(isHovered) => (
 							<Button
 								variant="outline"
-								className={cn("w-full", isHovered ? "border-2" : undefined)}
+								className={cn(
+									"w-full transition-none",
+									isHovered ? "border-2" : undefined
+								)}
 								size="sm"
 							>
 								Get Started For Free
@@ -140,7 +143,7 @@ const PricingCards = () => {
 						button={(isHovered) => (
 							<Button
 								variant={isHovered ? "purple" : "outline"}
-								className="w-full"
+								className="w-full transition-none"
 								size="sm"
 							>
 								Sign Up For Starter
@@ -166,7 +169,7 @@ const PricingCards = () => {
 						button={(isHovered) => (
 							<Button
 								variant={isHovered ? "purple" : "outline"}
-								className="w-full"
+								className="w-full transition-none"
 								size="sm"
 							>
 								Sign Up For Creator
@@ -183,19 +186,19 @@ const PricingCards = () => {
 							</>,
 						]}
 					/>
-					<div className="block lg:hidden">
+					<div className="block lg:hidden relative">
 						<PricingCard
 							variant="Paid"
 							title="Enterprise"
 							description="More videos. More stories. Faster generation times."
 							priceLabel={
-								frequency.label === "Monthly" ? "$799.99" : "your soul"
+								frequency.label === "Monthly" ? "$799.99" : "many money"
 							}
 							priceSuffix={frequency.priceSuffix}
 							button={(isHovered) => (
 								<Button
 									variant={isHovered ? "purple" : "outline"}
-									className="w-full"
+									className="w-full transition-none"
 									size="sm"
 								>
 									Contact Us
@@ -209,6 +212,11 @@ const PricingCards = () => {
 								"$1 per additional story",
 								"Dedicated support",
 							]}
+							icon={
+								<div className="absolute -top-10 z-10 -right-20">
+									<Subtrack size={200} />
+								</div>
+							}
 						/>
 					</div>
 				</div>
@@ -225,7 +233,7 @@ const PricingCards = () => {
 							</div>
 							<Button
 								variant={isHoveredLargeCard ? "purple" : "outline"}
-								className="px-4"
+								className="px-4 transition-none"
 								size="sm"
 							>
 								Contact Us
@@ -235,7 +243,7 @@ const PricingCards = () => {
 							<div className="flex w-[193px] pl-0 pr-[17.87px] py-0 flex-col items-start relative">
 								<div className="pl-0 pr-[50.73px] py-0 mr-[-31.60px] inline-flex items-baseline gap-[8px] relative flex-[0_0_auto]">
 									<div className="relative w-fit mt-[-1.00px] font-light text-slate-700 text-[32px] tracking-[0] leading-[48px] whitespace-nowrap">
-										{frequency.label === "Monthly" ? "$799.99" : "your soul"}
+										{frequency.label === "Monthly" ? "$799.99" : "many money"}
 									</div>
 									<div className="relative w-fit font-medium text-slate-400 text-[14px] tracking-[0] leading-[24px] whitespace-nowrap">
 										{frequency.priceSuffix}

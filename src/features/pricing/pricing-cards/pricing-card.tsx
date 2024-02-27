@@ -9,6 +9,7 @@ interface PricingCard {
 	priceSuffix: string;
 	button: (isHovered: boolean) => React.ReactNode;
 	items: React.ReactNode[];
+	icon?: React.ReactNode;
 }
 
 const PricingCard = ({
@@ -19,6 +20,7 @@ const PricingCard = ({
 	priceSuffix,
 	button,
 	items,
+	icon,
 }: PricingCard) => {
 	const [isHovered, setIsHovered] = useState(false);
 
@@ -73,6 +75,8 @@ const PricingCard = ({
 					</div>
 				))}
 			</div>
+
+			{icon}
 		</div>
 	);
 };

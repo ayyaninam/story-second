@@ -37,9 +37,17 @@ export interface paths {
     /** Forward Request To Node */
     put: operations["forward_request_to_node_save_image_put"];
   };
+  "/regenerate-all-videos": {
+    /** Forward Request To Node */
+    post: operations["forward_request_to_node_regenerate_all_videos_post"];
+  };
   "/regenerate-video": {
     /** Forward Request To Node */
     post: operations["forward_request_to_node_regenerate_video_post"];
+  };
+  "/regenerate-all-images": {
+    /** Forward Request To Node */
+    post: operations["forward_request_to_node_regenerate_all_images_post"];
   };
   "/regenerate-image": {
     /** Forward Request To Node */
@@ -234,7 +242,51 @@ export interface operations {
     };
   };
   /** Forward Request To Node */
+  forward_request_to_node_regenerate_all_videos_post: {
+    parameters: {
+      query?: {
+        node?: unknown;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Forward Request To Node */
   forward_request_to_node_regenerate_video_post: {
+    parameters: {
+      query?: {
+        node?: unknown;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Forward Request To Node */
+  forward_request_to_node_regenerate_all_images_post: {
     parameters: {
       query?: {
         node?: unknown;
