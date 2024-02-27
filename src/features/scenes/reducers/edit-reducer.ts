@@ -1,11 +1,9 @@
-import { mainSchema } from "@/api/schema";
 import {
 	AspectRatios,
 	DisplayAspectRatios,
 	StoryImageStyles,
 	StoryOutputTypes,
 } from "@/utils/enums";
-import { nanoid } from "nanoid";
 
 export enum StoryStatus {
 	READY,
