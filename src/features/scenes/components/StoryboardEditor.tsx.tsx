@@ -39,7 +39,7 @@ import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { Button } from "@/components/ui/button";
 import SegmentImage from "./SegmentImage";
 
@@ -257,10 +257,21 @@ export default function StoryboardEditor({
 														key={sceneIndex}
 														className="pt-2 flex flex-row justify-between w-full rounded-md hover:bg-slate-50 group items-center"
 													>
-														<div className="flex items-center space-y-1 flex-wrap">
+														<div
+															className={cn(
+																"grid items-center gap-4 max-w-1/2 w-1/2",
+																story.displayResolution ===
+																	DisplayAspectRatios["1024x576"]
+																	? "grid-cols-2"
+																	: "grid-cols-4"
+															)}
+														>
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
-																	<React.Fragment key={segmentIndex}>
+																	<div
+																		className={cn("flex gap-1 items-center")}
+																		key={segmentIndex}
+																	>
 																		{(segment.imageStatus ===
 																			StoryStatus.COMPLETE ||
 																			segment.imageStatus ===
@@ -284,8 +295,8 @@ export default function StoryboardEditor({
 																			<div
 																				className="relative h-40"
 																				style={{
-																					aspectRatio: GetImageRatio(
-																						story.resolution
+																					aspectRatio: GetDisplayImageRatio(
+																						story.displayResolution
 																					).ratio,
 																				}}
 																			>
@@ -302,13 +313,15 @@ export default function StoryboardEditor({
 																		)}
 																		{segmentIndex !==
 																			scene.segments.length - 1 && (
-																			<ChevronRight
-																				width={16}
-																				height={16}
-																				className="text-slate-500 stroke-1"
-																			/>
+																			<div className="min-w-4 min-h-4">
+																				<ChevronRight
+																					width={16}
+																					height={16}
+																					className="text-slate-500 stroke-1 min-w-4 min-h-4"
+																				/>
+																			</div>
 																		)}
-																	</React.Fragment>
+																	</div>
 																);
 															})}
 														</div>

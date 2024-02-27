@@ -183,11 +183,11 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			break;
 		}
 		case "reset": {
-			// Only update the keys that are present in the new draft,
-			// facing issues with direct update because there are few keys that are not present in the new draft.
-			// I needed some of the data at reducer level to not update with the poling data
-			// because not everything is present in the data from backend. Eg alternateImageKeys, alternateImagesStatus etc.
-			// and recursively because there are nested objects and array in that
+			/* Only update the keys that are present in the new draft,
+			 facing issues with direct update because there are few keys that are not present in the new draft.
+			 I needed some of the data at reducer level to not update with the poling data
+			 because not everything is present in the data from backend. Eg alternateImageKeys, alternateImagesStatus etc.
+			 and recursively because there are nested objects and array in that */
 			recursivelyUpdateOverlappingKeys(draft, action.draft);
 			return draft;
 		}
