@@ -18,7 +18,11 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useCallback, useRef } from "react";
-import { EditStoryAction, EditStoryDraft } from "../reducers/edit-reducer";
+import {
+	EditStoryAction,
+	EditStoryDraft,
+	StoryStatus,
+} from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import {
@@ -110,12 +114,15 @@ const Footer = ({
 
 	const generationStyle = story.settings?.style ?? StoryImageStyles.Realistic;
 
-	const imagesToGenerate = story.scenes?.flatMap((scene) =>
+	const ungeneratedImages = story.scenes?.flatMap((scene) =>
 		scene.segments
 			?.map((el, index) => ({ ...el, sceneId: scene.id }))
 			?.filter((segment) => !segment.imageKey)
 	);
-	const imageCreditCost = getImageCost(imagesToGenerate.length);
+	const regenUngeneratedImagesCost = getImageCost(ungeneratedImages.length);
+
+	const numImages = story.scenes.flatMap((el) => el.segments);
+	const regenAllImagesCreditCost = getImageCost(numImages.length);
 
 	const updateImageStyle = useCallback(
 		(style: StoryImageStyles) => {
@@ -187,14 +194,14 @@ const Footer = ({
 								story.slug,
 								story.type
 							);
-							const imagesToGenerate = newStory.scenes?.flatMap((scene) =>
+							const ungeneratedImages = newStory.scenes?.flatMap((scene) =>
 								scene.videoSegments
 									?.map((el, index) => ({ ...el, sceneId: scene.id }))
 									?.filter((segment) => !segment.imageKey)
 							);
-							console.log(imagesToGenerate, newStory);
-							if (imagesToGenerate && imagesToGenerate?.length > 0) {
-								const Promises = imagesToGenerate?.map(
+							console.log(ungeneratedImages, newStory);
+							if (ungeneratedImages && ungeneratedImages?.length > 0) {
+								const Promises = ungeneratedImages?.map(
 									async (el) =>
 										(await api.video.regenerateImage({
 											segment_idx: el?.index!,
@@ -228,13 +235,14 @@ const Footer = ({
 						}}
 						className={cn(
 							"stroke-muted text-muted-foreground",
-							imageCreditCost === 0 && "hidden"
+							regenUngeneratedImagesCost === 0 && "hidden"
 						)}
 					>
 						<LayoutGrid strokeWidth={1} className="mr-2" />
 						Generate Images{" "}
 						<span className="ml-1">
-							({imageCreditCost} {Format.Pluralize("Credit", imageCreditCost)})
+							({regenUngeneratedImagesCost}{" "}
+							{Format.Pluralize("Credit", regenUngeneratedImagesCost)})
 						</span>
 					</Button>
 				</div>
@@ -261,7 +269,41 @@ const Footer = ({
 		),
 		storyboard: () => (
 			<div className="flex gap-2 mt-6 w-full justify-end">
-				<div className="flex flex-col">
+				<div>
+					<Button
+						variant="outline"
+						onClick={async () => {
+							await saveEdits();
+							dispatch({
+								type: "update_segment_statuses",
+								key: "imageStatus",
+								segmentIndices: story.scenes.flatMap((el, sceneIndex) =>
+									el.segments.map((el, segmentIndex) => ({
+										sceneIndex,
+										segmentIndex,
+									}))
+								),
+								status: StoryStatus.PENDING,
+							});
+							api.video.regenerateAllImages({
+								// @ts-expect-error
+								image_style:
+									story.settings?.style ?? StoryImageStyles.Realistic,
+								story_id: story.id,
+								story_type: story.type,
+							});
+						}}
+						className={cn("stroke-muted text-muted-foreground")}
+					>
+						<LayoutGrid strokeWidth={1} className="mr-2" />
+						Regenerate All Images{" "}
+						<span className="ml-1">
+							({regenAllImagesCreditCost}{" "}
+							{Format.Pluralize("Credit", regenAllImagesCreditCost)})
+						</span>
+					</Button>
+				</div>
+				<div>
 					<Button
 						onClick={async () => {
 							await saveEdits();
