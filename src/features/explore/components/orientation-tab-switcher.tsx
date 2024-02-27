@@ -24,7 +24,7 @@ export const HeaderTabSwitcher = ({
 					className={`w-[120px] h-[28px] justify-center rounded-[10000px] text-sm font-normal ease-linear duration-300 transition-all flex gap-2 items-center ${
 						selectedTab === orientation.id
 							? "bg-white text-slate-950"
-							: "text-[#3A54CB] bg-transparent"
+							: "text-accent-500 bg-transparent"
 					}`}
 					style={{
 						boxShadow:
@@ -37,7 +37,7 @@ export const HeaderTabSwitcher = ({
 					<div
 						className={cn(
 							"ease-linear duration-300 transition-all",
-							orientation.id === selectedTab ? "text-[#3A54CB]" : ""
+							orientation.id === selectedTab ? "text-accent-600" : ""
 						)}
 					>
 						{orientation.icon}

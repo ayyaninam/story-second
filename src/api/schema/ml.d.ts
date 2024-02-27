@@ -25,17 +25,29 @@ export interface paths {
     /** Regenerate Image */
     post: operations["regenerate_image_regenerate_image_post"];
   };
+  "/regenerate-all-images": {
+    /** Regenerate All Images */
+    post: operations["regenerate_all_images_regenerate_all_images_post"];
+  };
   "/regenerate-video": {
     /** Regenerate Video */
     post: operations["regenerate_video_regenerate_video_post"];
   };
-  "/edit-segment": {
-    /** Edit Segment */
-    put: operations["edit_segment_edit_segment_put"];
+  "/regenerate-all-videos": {
+    /** Regenerate All Videos */
+    post: operations["regenerate_all_videos_regenerate_all_videos_post"];
   };
-  "/edit-scene": {
+  "/save-image": {
+    /** Save Image */
+    put: operations["save_image_save_image_put"];
+  };
+  "/edit-segments": {
+    /** Edit Segment */
+    put: operations["edit_segment_edit_segments_put"];
+  };
+  "/edit-scenes": {
     /** Edit Scene */
-    put: operations["edit_scene_edit_scene_put"];
+    put: operations["edit_scene_edit_scenes_put"];
   };
 }
 
@@ -162,6 +174,13 @@ export interface components {
      * @enum {integer}
      */
     OutputTypeEnum: 0 | 1 | 2;
+    /** RegenerateAllImagesRequest */
+    RegenerateAllImagesRequest: {
+      /** Story Id */
+      story_id: string;
+      story_type: components["schemas"]["OutputTypeEnum"];
+      image_style: components["schemas"]["ImageStyleEnum"];
+    };
     /** RegenerateImageRequest */
     RegenerateImageRequest: {
       /** Story Id */
@@ -173,13 +192,18 @@ export interface components {
       prompt: string;
       image_style: components["schemas"]["ImageStyleEnum"];
       /**
+       * Batch Size
+       * @default 1
+       */
+      batch_size?: number;
+      /**
        * Cover Image
        * @default false
        */
       cover_image?: boolean;
       /**
        * Seed
-       * @default 79731714
+       * @default 93194800
        */
       seed?: number;
       /**
@@ -200,6 +224,16 @@ export interface components {
       /** Segment Idx */
       segment_idx: number;
       story_type: components["schemas"]["OutputTypeEnum"];
+    };
+    /** SaveImageRequest */
+    SaveImageRequest: {
+      /** Story Id */
+      story_id: string;
+      /** Segment Idx */
+      segment_idx: number;
+      story_type: components["schemas"]["OutputTypeEnum"];
+      /** Image Key */
+      image_key: string;
     };
     /** SceneAdd */
     SceneAdd: {
@@ -367,6 +401,28 @@ export interface operations {
       };
     };
   };
+  /** Regenerate All Images */
+  regenerate_all_images_regenerate_all_images_post: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegenerateAllImagesRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   /** Regenerate Video */
   regenerate_video_regenerate_video_post: {
     requestBody: {
@@ -389,8 +445,52 @@ export interface operations {
       };
     };
   };
+  /** Regenerate All Videos */
+  regenerate_all_videos_regenerate_all_videos_post: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegenerateVideoRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Save Image */
+  save_image_save_image_put: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SaveImageRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   /** Edit Segment */
-  edit_segment_edit_segment_put: {
+  edit_segment_edit_segments_put: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["EditSegmentRequest"];
@@ -412,7 +512,7 @@ export interface operations {
     };
   };
   /** Edit Scene */
-  edit_scene_edit_scene_put: {
+  edit_scene_edit_scenes_put: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["EditSceneRequest"];

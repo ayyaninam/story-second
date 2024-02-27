@@ -29,6 +29,10 @@ const nextConfig = {
 					source: "/tiktok",
 					destination: "/tiktok/index.html",
 				},
+				{
+					source: "/sitemap.xml",
+					destination: "/api/sitemap",
+				}
 			],
 		};
 	},
@@ -42,8 +46,10 @@ const nextConfig = {
 		];
 	},
 	images: {
-		domains: ["ik.imagekit.io"],
-	},
+		remotePatterns: [{
+			hostname: "ik.imagekit.io"
+		}],
+	}
 };
 
 export default nextConfig;

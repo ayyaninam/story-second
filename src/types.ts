@@ -17,6 +17,7 @@ export interface AuthPromptProps {
 export type VideoPlayerProps = {
 	Webstory?: mainSchema["ReturnVideoStoryDTO"];
 	isError?: boolean;
+	playerClassName?: string;
 	onPlay?: CallbackListener<"play">;
 	onEnded?: CallbackListener<"ended">;
 	onPause?: CallbackListener<"pause">;
@@ -87,6 +88,16 @@ export type LibraryPageVideoQueryOptions = {
 	resolution?: DisplayAspectRatios;
 	isDescending?: boolean;
 	topLevelCategory: string;
+};
+export type RegenerateVideoSegments = {
+	image_key: string;
+	image_prompt: string;
+	image_cfg_scale: number;
+	image_resolution: number;
+	image_sampling_steps: number;
+	image_seed: number;
+	image_alt_text: string;
+	target_paths: string[];
 };
 
 export type ExplorePageVideoQueryOptions = {

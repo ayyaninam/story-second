@@ -12,11 +12,27 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { VIDEO_ORIENTATIONS } from "@/features/explore/constants";
 import PageLayout from "@/components/layouts/PageLayout";
 
+import { NextSeo } from "next-seo";
+
 function Explore({
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<HydrationBoundary state={dehydratedState}>
+			<NextSeo
+				title="Explore"
+				description="Explore our massive colleciton of videos, storybooks, and more"
+				openGraph={{
+					images: [
+						{
+							url: "/og-assets/og-explore.png",
+							width: 1200,
+							height: 630,
+							alt: "Explore Story.com",
+						},
+					],
+				}}
+			/>
 			{/* declare css variables */}
 			<style jsx global>{`
 				:root {
@@ -28,6 +44,18 @@ function Explore({
 					);
 					--menu-item-selected-border-color: rgba(56, 142, 131, 0.20);
 					--stepper-box-shadow: 0px 4px 4px 0px rgba(122, 255, 133, 0.4);
+
+					--accent-color-50: #334155;
+					--accent-color-100: #E0E7FF;
+					--accent-color-200: #C7D2FE;
+					--accent-color-300: #A5B4FC;
+					--accent-color-400: #818CF8;
+					--accent-color-500: #6366F1;
+					--accent-color-600: #4F46E5;
+					--accent-color-700: #4338CA;
+					--accent-color-800: #3730A3;
+					--accent-color-900: #312E81;
+					--accent-color-950: #1E1B4B;
 				}
 			`}</style>
 			<ExplorePage />

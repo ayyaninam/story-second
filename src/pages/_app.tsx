@@ -12,6 +12,9 @@ import { Toaster } from "react-hot-toast";
 import { ReactElement, ReactNode, useState } from "react";
 import { NextPage } from "next/types";
 
+import {DefaultSeo, DefaultSeoProps} from "next-seo";
+import {env} from "@/env.mjs";
+
 const randFont = localFont({
 	variable: "--font-rand",
 	src: [
@@ -152,6 +155,29 @@ type AppPropsWithLayout = AppProps & {
 	Component: NextPageWithLayout;
 };
 
+const defaultSeoProps: DefaultSeoProps = {
+	defaultTitle: "Story.com | Imagination meets creativity.",
+	titleTemplate: "%s | Story.com",
+	description: "Unlock your imagination with Story.com. Everyone has a story to tell, what is your story?",
+	openGraph: {
+		type: "website",
+		locale: "en_US",
+		url: env.NEXT_PUBLIC_BASE_URL,
+		siteName: "Story.com",
+		images: [
+			{
+				url: `/og-assets/og-story.png`,
+				width: 1200,
+				height: 630,
+				alt: "Story.com",
+			},
+		],
+	},
+	twitter: {
+		cardType: "summary_large_image",
+	}
+};
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
 	const [queryClient] = useState(
 		() =>
@@ -169,6 +195,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
 	return (
 		<QueryClientProvider client={queryClient}>
+			<DefaultSeo {...defaultSeoProps} />
 			<HydrationBoundary state={pageProps.dehydratedState}>
 				<style jsx global>{`
 					html {
@@ -177,6 +204,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 				`}</style>
 				<main className={randFont.className}>
 					<Toaster />
+
 					<ThemeProvider
 						attribute="class"
 						defaultTheme="light"

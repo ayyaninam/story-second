@@ -1305,6 +1305,33 @@ export interface paths {
       };
     };
   };
+  "/api/Payment/RefillAllowance": {
+    /** Buy video credits. */
+    post: {
+      requestBody?: {
+        content: {
+          "application/json-patch+json": components["schemas"]["AdditionalCreditsDTO"];
+          "application/json": components["schemas"]["AdditionalCreditsDTO"];
+          "text/json": components["schemas"]["AdditionalCreditsDTO"];
+          "application/*+json": components["schemas"]["AdditionalCreditsDTO"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["StringApiResponse"];
+            "application/json": components["schemas"]["StringApiResponse"];
+            "text/json": components["schemas"]["StringApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/generate_story": {
     /**
      * Generate a story from plugin
@@ -2050,6 +2077,20 @@ export interface paths {
         };
       };
     };
+  };
+  "/api/User/StoryBooks/{topLevelCategory}": {
+    /**
+     * Get user stories under the specified category
+     * @description Get user's stories under the specified category based on pagination parameters
+     */
+    get: operations["GetUserStoriesByTopLevelCategory"];
+  };
+  "/api/User/Videos/{topLevelCategory}": {
+    /**
+     * Get user videos under the specified category
+     * @description Get user's videos under the specified category based on pagination parameters
+     */
+    get: operations["GetUserVideosByTopLevelCategory"];
   };
   "/api/Video/PreSignedUrl": {
     get: {
@@ -3281,6 +3322,21 @@ export interface components {
       generateParagraph?: boolean;
       imageStyle?: components["schemas"]["ImageStyles"];
     };
+    /** @description Request body for buying additional credits. */
+    AdditionalCreditsDTO: {
+      allowanceType?: components["schemas"]["AllowanceType"];
+      /**
+       * Format: int32
+       * @description The amount of credits to buy.
+       */
+      quantity?: number;
+    };
+    /**
+     * Format: int32
+     * @description The type of allowance.
+     * @enum {integer}
+     */
+    AllowanceType: StoryBooks | Videos | Credits;
     AmazonBook: {
       coverPDFUrl?: string | null;
       gutsPDFUrl?: string | null;
@@ -3593,7 +3649,9 @@ export interface components {
       paymentIntentId?: string | null;
       /** Format: float */
       amount?: number;
-      creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
+      allowanceType?: components["schemas"]["AllowanceType"];
+      /** Format: int32 */
+      quantity?: number;
     };
     /** @description Request body for confirming a subscription. */
     ConfirmSubscriptionDTO: {
@@ -4066,6 +4124,11 @@ export interface components {
     };
     /** @description DTO used to register a new user. */
     RegisterUserDTO: {
+      /**
+       * AuthId
+       * @description The user's unique identifier from Social Sign-On.
+       */
+      authId: string;
       /**
        * Name
        * @description The user's name.
@@ -5715,13 +5778,13 @@ export interface components {
        * Format: int32
        * @description The number of stories the user has.
        */
-      storyCount?: number;
+      storyCount: number;
       /**
        * VideoCount
        * Format: int32
        * @description The number of videos the user has.
        */
-      videoCount?: number;
+      videoCount: number;
       /**
        * Created
        * Format: date-time
@@ -5987,6 +6050,16 @@ export interface components {
       frameInterpolationKey?: string | null;
       imageStyle?: components["schemas"]["ImageStyles"];
       /**
+       * ImageRegenerating
+       * @description The status of the image regeneration.
+       */
+      imageRegenerating?: boolean;
+      /**
+       * VideoRegenerating
+       * @description The status of the video regeneration.
+       */
+      videoRegenerating?: boolean;
+      /**
        * ImagePrompt
        * @description The prompt of the image.
        */
@@ -6105,10 +6178,10 @@ export interface components {
        */
       storyDone?: boolean;
       /**
-       * VideoDone
+       * VideosDone
        * @description Whether the story video generation is done or not.
        */
-      videoDone?: boolean;
+      videosDone?: boolean;
       /**
        * ImagesDone
        * @description Whether the story image generation is done or not.
@@ -6651,7 +6724,10 @@ export interface components {
       /** Format: double */
       amountPaid?: number;
       /** Format: double */
-      amountCredited?: number;
+      amountCredited?: number | null;
+      allowanceType?: components["schemas"]["AllowanceType"];
+      /** Format: int32 */
+      quantity?: number;
       /** Format: uuid */
       userId?: string;
       user?: components["schemas"]["UserAccount"];
@@ -6667,7 +6743,7 @@ export interface components {
      * @description The type of Subscription Plan.
      * @enum {integer}
      */
-    SubscriptionPlan: Free | Basic | Pro | Premium;
+    SubscriptionPlan: Free | Starter | Creator | Enterprise;
     /** @description DTO used to return User's Token Transaction list. */
     TokenTransactionDTO: {
       /** Format: uuid */
@@ -6833,9 +6909,9 @@ export interface components {
       voiceRecordingName?: string | null;
       defaultPublic?: boolean;
       /** Format: int32 */
-      storyCount?: number | null;
+      storyCount: number | null;
       /** Format: int32 */
-      videoCount?: number | null;
+      videoCount: number | null;
       subscriptions?: components["schemas"]["UserSubscription"][] | null;
       allowance?: components["schemas"]["UserAllowance"];
       amazonBook?: components["schemas"]["AmazonBook"][] | null;
@@ -6922,13 +6998,13 @@ export interface components {
        * Format: int32
        * @description The number of stories the user has.
        */
-      storyCount?: number;
+      storyCount: number;
       /**
        * VideoCount
        * Format: int32
        * @description The number of videos the user has.
        */
-      videoCount?: number;
+      videoCount: number;
       /**
        * CardBrand
        * @description The brand of the user's card.
@@ -7029,9 +7105,7 @@ export interface components {
       /** Format: date-time */
       endDate?: string | null;
       /** Format: date-time */
-      nextBillingDate?: string | null;
-      /** Format: date-time */
-      lastRenewalDate?: string | null;
+      nextRefreshDate?: string | null;
       /** Format: date-time */
       canceledDate?: string | null;
       /** Format: uuid */
@@ -7067,6 +7141,11 @@ export interface components {
        * @description The date and time the user's subscription will expire.
        */
       endDate?: string | null;
+      /**
+       * Format: date-time
+       * @description The date and time the user's subscription will refresh.
+       */
+      nextRefreshDate?: string | null;
     };
     /** @description DTO used to verify a user's email address. */
     VerifyEmailDTO: {
@@ -7130,7 +7209,7 @@ export interface components {
       /** Format: date-time */
       created?: string;
       storyDone?: boolean;
-      videoDone?: boolean;
+      videosDone?: boolean;
       imagesDone?: boolean;
       isPublic?: boolean;
       pluginGenerated?: boolean | null;
@@ -7162,6 +7241,7 @@ export interface components {
       originalMediaKey?: string | null;
       storyType?: components["schemas"]["StoryType"];
       resolution?: components["schemas"]["DisplayResolution"];
+      imageStyle?: components["schemas"]["ImageStyles"];
       /** Format: uuid */
       userId?: string | null;
       user?: components["schemas"]["UserAccount"];
@@ -7582,6 +7662,70 @@ export interface operations {
       /** @description Success */
       200: {
         content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Get user stories under the specified category
+   * @description Get user's stories under the specified category based on pagination parameters
+   */
+  GetUserStoriesByTopLevelCategory: {
+    parameters: {
+      query?: {
+        CurrentPage?: number;
+        PageSize?: number;
+        searchTerm?: string;
+        isDescending?: boolean;
+      };
+      path: {
+        topLevelCategory: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+          "application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+          "text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Get user videos under the specified category
+   * @description Get user's videos under the specified category based on pagination parameters
+   */
+  GetUserVideosByTopLevelCategory: {
+    parameters: {
+      query?: {
+        CurrentPage?: number;
+        PageSize?: number;
+        storyType?: components["schemas"]["StoryType"];
+        searchTerm?: string;
+        resolution?: components["schemas"]["DisplayResolution"];
+        isDescending?: boolean;
+      };
+      path: {
+        topLevelCategory: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "text/plain": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+          "application/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+          "text/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+        };
       };
       /** @description Unauthorized */
       401: {
