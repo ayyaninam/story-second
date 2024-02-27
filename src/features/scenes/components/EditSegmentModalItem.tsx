@@ -256,11 +256,11 @@ function AdvancedEditingOptions({
 						<Input
 							id="seed"
 							type="number"
-							// min={0}
-							// max={2e16 - 1}
+							min={-1}
+							max={2e16 - 1}
 							className="w-full border-[1px] rounded-md m-1 p-2"
 							placeholder="2"
-							value={settings?.seed ?? 1}
+							value={settings?.seed ?? -1}
 							onChange={(e) => {
 								if (settings)
 									onSettingsChange({

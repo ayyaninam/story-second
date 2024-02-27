@@ -97,7 +97,7 @@ const video = {
 		return data;
 	},
 	regenerateAllVideos: async (
-		params: mlSchema["RegenerateVideoRequest"],
+		params: mlSchema["RegenerateAllVideosRequest"],
 		accessToken?: string
 	): Promise<unknown> => {
 		const data = await mlFetcher(accessToken ?? getJwt())

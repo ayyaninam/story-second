@@ -37,6 +37,7 @@ import { AspectRatios, DisplayAspectRatios } from "@/utils/enums";
 import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
 import { Separator } from "@/components/ui/separator";
+import { useMutation } from "@tanstack/react-query";
 
 // Circular loader as per the designs. Removed for now as we can't determine the progress
 const Loader = ({
@@ -136,6 +137,17 @@ const SceneEditorView = ({
 	const statuses = story.scenes.flatMap((el) =>
 		el.segments.map((el) => el.videoStatus)
 	);
+
+	const RegenerateAllVideos = useMutation({
+		mutationFn: api.video.regenerateAllVideos,
+	});
+
+	const handleRegenerateAllVideos = async () => {
+		await RegenerateAllVideos.mutateAsync({
+			story_id: story.id,
+			story_type: story.type,
+		});
+	};
 
 	const handleRegenerateVideo = async (
 		segment: Segment,
@@ -356,9 +368,15 @@ const SceneEditorView = ({
 
 					<Separator className="w-[35%] ml-9" />
 					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2">
-						<Button className="w-[190px] text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
+						<Button
+							className="w-[190px] text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2"
+							onClick={handleRegenerateAllVideos}
+							disabled={RegenerateAllVideos.isPending}
+						>
 							<Sparkle fill="white" className="w-4 h-4" />
-							Regenerate All Scenes
+							{RegenerateAllVideos.isPending
+								? "Regenerating"
+								: "Regenerate All Scenes"}
 						</Button>
 						{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
 							Use 25 credits to regenerate ·{" "}
