@@ -5,6 +5,7 @@ import Subtrack from "@/components/icons/subtrack";
 import { SubscriptionPeriod } from "@/utils/enums";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import cn from "../../utils/cn";
+import { useBreakpoint } from "@/features/pricing/hooks";
 
 export interface PricingTierFrequency {
 	id: string;
@@ -286,34 +287,32 @@ const PricingCards = () => {
 							</div>
 						</div>
 					</div>
-				</div>
-				<div className="gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-white rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow">
-					<div className="flex justify-between pt-0 pb-[0.25px] px-0 self-stretch w-full items-start relative flex-[0_0_auto]">
-						<div className="relative w-fit mt-[-1.00px] font-medium text-theme-variables-text-colors-text-base text-[26px] tracking-[0] leading-[39px] whitespace-nowrap">
-							Enterprise
-						</div>
-						<Button variant="outline" className="px-4" size="sm">
-							Contact Us
-						</Button>
-					</div>
-					<div className="items-center justify-between self-stretch w-full flex relative flex-[0_0_auto]">
-						<div className="flex w-[193px] pl-0 pr-[17.87px] py-0 flex-col items-start relative">
-							<div className="pl-0 pr-[50.73px] py-0 mr-[-31.60px] inline-flex items-baseline gap-[8px] relative flex-[0_0_auto]">
+
+					<div className="block lg:hidden">
+						<div className="w-[312px] gap-[20px] pt-[24px] pb-[40px] px-[24px] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-white rounded-[10px] overflow-hidden border-[0.5px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow">
+							<div className="inline-flex flex-col pl-0 pr-[115.76px] pt-0 pb-[0.25px] items-start relative flex-[0_0_auto]">
+								<div className="relative w-fit mt-[-1.00px] font-medium text-theme-variables-text-colors-text-base text-[26px] tracking-[0] leading-[39px] whitespace-nowrap">
+									Enterprise
+								</div>
+							</div>
+							<div className="inline-flex flex-col items-start pl-0 pr-[17.87px] py-0 relative flex-[0_0_auto]">
+								<p className="relative w-[174px] mt-[-1.00px] font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px]">
+									More videos. More stories. Faster generation times.
+								</p>
+							</div>
+							<div className="pl-0 pr-[50.73px] py-0 inline-flex items-baseline gap-[8px] relative flex-[0_0_auto]">
 								<div className="relative w-fit mt-[-1.00px] font-light text-slate-700 text-[32px] tracking-[0] leading-[48px] whitespace-nowrap">
-									{frequency.label === "Monthly" ? "$799.99" : "♾️"}
+									{frequency.label === "Monthly" ? "$799.99" : "your soul"}
 								</div>
 								<div className="relative w-fit font-medium text-slate-400 text-[14px] tracking-[0] leading-[24px] whitespace-nowrap">
 									{frequency.priceSuffix}
 								</div>
 							</div>
-							<p className="relative self-stretch font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px]">
-								Maximum power and flexibility for large-scale content generation
-								needs.
-							</p>
-						</div>
-						<div className="flex flex-col items-end gap-[12px] relative">
-							<div className="items-start gap-[12px] mr-[-34.00px] flex flex-col lg:flex-row relative flex-[0_0_auto]">
-								<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
+							<Button variant="outline" className="w-full" size="sm">
+								Sign Up For Creator
+							</Button>
+							<div className="self-stretch w-full flex-[0_0_auto] flex flex-col items-start gap-[12px] relative">
+								<div className="flex pl-0 pr-[50.61px] py-0 self-stretch w-full flex-[0_0_auto] items-start gap-[12px] relative">
 									<CheckIcon
 										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
 										aria-hidden="true"
@@ -322,7 +321,7 @@ const PricingCards = () => {
 										175 videos / month
 									</div>
 								</div>
-								<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
+								<div className="flex pl-0 pr-[48.77px] py-0 self-stretch w-full flex-[0_0_auto] items-start gap-[12px] relative">
 									<CheckIcon
 										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
 										aria-hidden="true"
@@ -331,51 +330,138 @@ const PricingCards = () => {
 										350 stories / month
 									</div>
 								</div>
-							</div>
-							<div className="items-start gap-[12px] mr-[-34.00px] flex flex-col lg:flex-row relative flex-[0_0_auto]">
-								<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
-									<CheckIcon
-										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-										aria-hidden="true"
-									/>
-									<div className="relative w-fit mt-[-1.00px] mr-[-4.61px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-										Fast Generation Time
-									</div>
-								</div>
-								<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
-									<CheckIcon
-										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-										aria-hidden="true"
-									/>
-									<div className="relative w-fit mt-[-1.00px] mr-[-13.77px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-										$5 per additional video
-									</div>
-								</div>
-							</div>
-							<div className="items-start gap-[12px] mr-[-34.00px] flex flex-col lg:flex-row relative flex-[0_0_auto]">
-								<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
-									<CheckIcon
-										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-										aria-hidden="true"
-									/>
-									<div className="relative w-fit mt-[-1.00px] mr-[-9.61px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-										$1 per additional story
-									</div>
-								</div>
-								<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
+								<div className="flex pl-0 pr-[27.07px] py-0 self-stretch w-full flex-[0_0_auto] items-start gap-[12px] relative">
 									<CheckIcon
 										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
 										aria-hidden="true"
 									/>
 									<div className="relative w-fit mt-[-1.00px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-										Dedicated support
+										Fast Generation Time
 									</div>
+								</div>
+								<div className="flex pl-0 pr-[0.98px] py-0 self-stretch w-full flex-[0_0_auto] items-start gap-[12px] relative">
+									<CheckIcon
+										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+										aria-hidden="true"
+									/>
+									<p className="relative flex-1 mt-[-1.00px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px]">
+										$5 per additional video
+									</p>
+								</div>
+								<div className="flex pl-0 pr-[0.98px] py-0 self-stretch w-full flex-[0_0_auto] items-start gap-[12px] relative">
+									<CheckIcon
+										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+										aria-hidden="true"
+									/>
+									<p className="relative flex-1 mt-[-1.00px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px]">
+										$1 per additional story
+									</p>
+								</div>
+								<div className="flex pl-0 pr-[0.98px] py-0 self-stretch w-full flex-[0_0_auto] items-start gap-[12px] relative">
+									<CheckIcon
+										className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+										aria-hidden="true"
+									/>
+									<p className="relative flex-1 mt-[-1.00px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px]">
+										Dedicated support
+									</p>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div className="absolute -top-10 -left-20 -z-10 lg:left-60">
-						<Subtrack size={200} />
+				</div>
+
+				<div className="hidden lg:block w-full">
+					<div className="gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-white rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow">
+						<div className="flex justify-between pt-0 pb-[0.25px] px-0 self-stretch w-full items-start relative flex-[0_0_auto]">
+							<div className="relative w-fit mt-[-1.00px] font-medium text-theme-variables-text-colors-text-base text-[26px] tracking-[0] leading-[39px] whitespace-nowrap">
+								Enterprise
+							</div>
+							<Button variant="outline" className="px-4" size="sm">
+								Contact Us
+							</Button>
+						</div>
+						<div className="items-center justify-between self-stretch w-full flex relative flex-[0_0_auto]">
+							<div className="flex w-[193px] pl-0 pr-[17.87px] py-0 flex-col items-start relative">
+								<div className="pl-0 pr-[50.73px] py-0 mr-[-31.60px] inline-flex items-baseline gap-[8px] relative flex-[0_0_auto]">
+									<div className="relative w-fit mt-[-1.00px] font-light text-slate-700 text-[32px] tracking-[0] leading-[48px] whitespace-nowrap">
+										{frequency.label === "Monthly" ? "$799.99" : "your soul"}
+									</div>
+									<div className="relative w-fit font-medium text-slate-400 text-[14px] tracking-[0] leading-[24px] whitespace-nowrap">
+										{frequency.priceSuffix}
+									</div>
+								</div>
+								<p className="relative self-stretch font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px]">
+									Maximum power and flexibility for large-scale content
+									generation needs.
+								</p>
+							</div>
+							<div className="w-[458px] flex flex-col items-start gap-[12px] relative">
+								<div className="w-[492px] items-start gap-[12px] mr-[-34.00px] flex relative flex-[0_0_auto]">
+									<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
+										<CheckIcon
+											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+											aria-hidden="true"
+										/>
+										<div className="text-gray-700 relative w-fit mt-[-1.00px] font-normal text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+											175 videos / month
+										</div>
+									</div>
+									<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
+										<CheckIcon
+											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+											aria-hidden="true"
+										/>
+										<div className="text-gray-700 relative w-fit mt-[-1.00px] font-normal text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+											350 stories / month
+										</div>
+									</div>
+								</div>
+								<div className="w-[492px] items-start gap-[12px] mr-[-34.00px] flex relative flex-[0_0_auto]">
+									<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
+										<CheckIcon
+											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+											aria-hidden="true"
+										/>
+										<div className="relative w-fit mt-[-1.00px] mr-[-4.61px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+											Fast Generation Time
+										</div>
+									</div>
+									<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
+										<CheckIcon
+											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+											aria-hidden="true"
+										/>
+										<div className="relative w-fit mt-[-1.00px] mr-[-13.77px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+											$5 per additional video
+										</div>
+									</div>
+								</div>
+								<div className="w-[492px] items-start gap-[12px] mr-[-34.00px] flex relative flex-[0_0_auto]">
+									<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
+										<CheckIcon
+											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+											aria-hidden="true"
+										/>
+										<div className="relative w-fit mt-[-1.00px] mr-[-9.61px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+											$1 per additional story
+										</div>
+									</div>
+									<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
+										<CheckIcon
+											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+											aria-hidden="true"
+										/>
+										<div className="relative w-fit mt-[-1.00px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+											Dedicated support
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className="absolute -top-10 -z-10 left-60">
+							<Subtrack size={200} />
+						</div>
 					</div>
 				</div>
 			</div>
