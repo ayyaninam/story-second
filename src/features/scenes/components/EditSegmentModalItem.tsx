@@ -67,7 +67,7 @@ export default function EditSegmentModalItem({
 								src={Format.GetImageUrl(segment.imageKey)}
 								className="rounded-sm"
 								layout="fill"
-								objectFit="cover" // Or use 'cover' depending on the desired effect
+								objectFit="cover"
 								style={{ objectFit: "contain" }}
 							/>
 						)}
