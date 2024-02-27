@@ -207,13 +207,13 @@ export default function StoryboardEditor({
 					backdropFilter: "blur(5px)",
 				}}
 			>
-				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
+				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
 					<div className="flex items-center gap-1">
-						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
+						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 						<p>Storyboard View</p>
 					</div>
 					<div className="flex gap-1 items-center">
-						<p className="px-1 text-purple-900">
+						<p className="px-1 text-accent-900">
 							Pro Tip — You can individually regenerate images in this
 							Storyboard.{" "}
 							{/* <a href="#">
@@ -222,7 +222,7 @@ export default function StoryboardEditor({
 						</p>
 						{/* <Button
 							variant="outline"
-							className="flex gap-1 items-center h-fit py-0 text-purple-600 bg-white rounded-sm p-[1px] hover:text-purple-700 hover:cursor-pointer hover:bg-slate-50"
+							className="flex gap-1 items-center h-fit py-0 text-accent-600 bg-white rounded-sm p-[1px] hover:text-accent-700 hover:cursor-pointer hover:bg-slate-50"
 						>
 							<SparkleIcon width={"18px"} height={"18px"} />
 							<p className="text-xs">Regenerate</p>
@@ -382,7 +382,7 @@ export default function StoryboardEditor({
 																			}}
 																			name={segmentIndex.toString()}
 																			inputClassName={cn(
-																				"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
+																				"active:outline-none bg-transparent focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
 																				segment.textStatus ===
 																					TextStatus.EDITED && "text-slate-500"
 																			)}

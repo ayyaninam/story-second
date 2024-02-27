@@ -25,7 +25,7 @@ export const menuItems = [
 		redirectUrl: "/explore",
 		cssVars: {
 			"--hover-border-color": "rgba(122,255,180,0.1)",
-			"--hover-background": "radial-gradient(88.31% 100% at 0% 50%, rgba(102, 129, 255, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(102, 129, 255, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		},
 	},
 	{
@@ -35,7 +35,7 @@ export const menuItems = [
 		redirectUrl: "/",
 		cssVars: {
 			"--hover-border-color": "rgba(206, 122, 255, 0.2)",
-			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(187, 85, 247, 0.5) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(187, 85, 247, 0.5) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
 	},
 	{
@@ -45,7 +45,7 @@ export const menuItems = [
 		redirectUrl: "/library",
 		cssVars: {
 			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
-			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(48, 149, 136, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(48, 149, 136, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
 	},
 	{
@@ -55,7 +55,7 @@ export const menuItems = [
 		redirectUrl: "/challenges",
 		cssVars: {
 			"--hover-border-color": "rgba(152, 230, 55, 0.50)",
-			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
 	},
 	{
@@ -65,7 +65,7 @@ export const menuItems = [
 		redirectUrl: "/credits",
 		cssVars: {
 			"--hover-border-color": "rgba(148, 171, 184, 0.50)",
-			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
 	},
 ];
