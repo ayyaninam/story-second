@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import React from "react";
 import {
+	EditStoryAction,
 	EditStoryDraft,
 	Segment,
 	Settings,
@@ -37,20 +38,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
+import ImageRegenerationPopoverHOC from "./ImageRegenerationPopoverHOC";
 import createSeed from "@/utils/create-seed";
+import ImageRegenerationLoader from "./ImageRegenerationLoader";
 
 export default function EditSegmentModalItem({
 	segment,
 	story,
 	onSegmentEdit,
 	onRegenerateImage,
+	segmentIndex,
+	onSegmentDelete,
+	imageRegenerationSegmentId,
+	setImageRegenerationSegmentId,
+	dispatch,
+	sceneIndex,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
 	onSegmentEdit: (updatedSegment: Segment) => void;
-	onSegmentDelete: () => void;
-	onRegenerateImage: () => void;
-	regeneratingImage: boolean;
+	dispatch: React.Dispatch<EditStoryAction>;
+	segmentIndex: number;
+	onSegmentDelete: (segmentIndex: number) => void;
+	imageRegenerationSegmentId: number | null;
+	setImageRegenerationSegmentId: React.Dispatch<
+		React.SetStateAction<number | null>
+	>;
+	sceneIndex: number;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
 	const [imageStatus, setImageStatus] = useState(segment.imageStatus);
@@ -65,26 +79,54 @@ export default function EditSegmentModalItem({
 		setImageStatus(segment.imageStatus);
 	}, [segment.imageStatus]);
 
+	const [regeneratingImage, setRegeneratingImage] = useState(false);
 	return (
 		<div className="flex bg-primary-foreground rounded-md border-border border-[1px] p-2 m-2 gap-2">
 			<div className="w-full text-foreground space-y-2">
 				<div className="flex flex-row space-x-2">
 					<div
-						className="relative h-56"
+						className="h-56"
 						style={{ aspectRatio: GetImageRatio(story.resolution).ratio }}
 					>
-						{imageStatus !== StoryStatus.COMPLETE ? (
-							<Skeleton className="w-full h-full" />
-						) : (
-							<Image
-								alt={segment.textContent}
-								src={Format.GetImageUrl(segment.imageKey)}
-								className="rounded-sm"
-								layout="fill"
-								objectFit="cover"
-								style={{ objectFit: "contain" }}
-							/>
-						)}
+						<ImageRegenerationPopoverHOC
+							segment={segment}
+							story={story}
+							open={imageRegenerationSegmentId === segment.id}
+							onClose={() => {
+								setImageRegenerationSegmentId((prevSegmentId) => {
+									if (prevSegmentId === segment.id) return null;
+									return prevSegmentId;
+								});
+							}}
+							dispatch={dispatch}
+							segmentIndex={segmentIndex}
+							sceneIndex={sceneIndex}
+							regenerateOnOpen={regeneratingImage}
+							triggerButtonClassName="w-full h-full"
+						>
+							<div className="relative w-full h-full">
+								{segment.imageStatus !== StoryStatus.COMPLETE ? (
+									<ImageRegenerationLoader
+										arcSize={42}
+										starSize={16}
+										circleSize={48}
+									/>
+								) : (
+									<Image
+										onClick={() => {
+											setImageRegenerationSegmentId(segment.id);
+											setRegeneratingImage(false);
+										}}
+										alt={segment.textContent}
+										src={Format.GetImageUrl(segment.imageKey)}
+										className="rounded-sm"
+										layout="fill"
+										objectFit="cover" // Or use 'cover' depending on the desired effect
+										style={{ objectFit: "contain" }}
+									/>
+								)}
+							</div>
+						</ImageRegenerationPopoverHOC>
 					</div>
 					<div className="w-full h-full flex flex-col space-y-3">
 						<div>
@@ -136,17 +178,23 @@ export default function EditSegmentModalItem({
 								<Button
 									className="flex py-1 gap-1 bg-muted h-fit  border-border border-[1px] rounded-md items-center"
 									variant="outline"
-									onClick={onRegenerateImage}
-									disabled={imageStatus === StoryStatus.PENDING}
+									onClick={() => {
+										setImageRegenerationSegmentId(segment.id);
+										setRegeneratingImage(true);
+									}}
+									disabled={
+										segment.alternateImagesStatus === StoryStatus.PENDING
+									}
 								>
 									<RefreshCcw
 										className="stroke-1"
 										width={"18px"}
 										height={"18px"}
 									/>
-									{imageStatus === StoryStatus.COMPLETE && "Regenerate"}
-									{imageStatus === StoryStatus.PENDING && "Regenerating"}
-									{imageStatus === StoryStatus.READY && "Save & Generate"}
+									{segment.alternateImagesStatus !== StoryStatus.PENDING &&
+										"Regenerate"}
+									{segment.alternateImagesStatus === StoryStatus.PENDING &&
+										"Regenerating"}
 								</Button>
 							</div>
 						</div>

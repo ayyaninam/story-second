@@ -72,6 +72,18 @@ const video = {
 
 		return data as RegenerateVideoSegments;
 	},
+	saveImage: async (
+		params: mlSchema["SaveImageRequest"],
+		accessToken?: string
+	): Promise<unknown> => {
+		const data = await mlFetcher(accessToken ?? getJwt())
+			.put(`save-image`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		return data;
+	},
 	regenerateVideo: async (
 		params: mlSchema["RegenerateVideoRequest"],
 		accessToken?: string

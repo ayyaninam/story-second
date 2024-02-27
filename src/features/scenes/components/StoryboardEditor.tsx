@@ -31,6 +31,8 @@ import AutosizeInput from "react-input-autosize";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetImageRatio } from "@/utils/image-ratio";
+import { Button } from "@/components/ui/button";
+import SegmentImage from "./SegmentImage";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -60,6 +62,9 @@ export default function StoryboardEditor({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
+	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
+		number | null
+	>(null);
 
 	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
 		open?: boolean;
@@ -67,6 +72,7 @@ export default function StoryboardEditor({
 		sceneId?: number;
 		dispatch: React.Dispatch<EditStoryAction>;
 		story: EditStoryDraft;
+		sceneIndex?: number;
 	}>();
 
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
@@ -83,7 +89,7 @@ export default function StoryboardEditor({
 
 	const handleSubmitEditSegments = async () => {
 		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-		console.log(diff);
+		console.log(diff, "updating diffing");
 		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
 			details: { Ind: segment.id, Text: segment.textContent },
 			operation: SegmentModifications.Edit,
@@ -132,52 +138,6 @@ export default function StoryboardEditor({
 		return newStory;
 	};
 
-	const handleRegenerateImage = async (
-		segment: Segment,
-		sceneIndex: number,
-		segmentIndex: number,
-		saveBeforeRegenerating: boolean = false
-	) => {
-		dispatch({
-			type: "edit_segment",
-			sceneIndex,
-			segmentIndex: segmentIndex,
-			segment: { ...segment, imageStatus: StoryStatus.PENDING },
-		});
-
-		let newSegment = null;
-		if (saveBeforeRegenerating) {
-			const newStory = await handleSubmitEditSegments();
-			newSegment = newStory?.scenes?.[sceneIndex]?.videoSegments?.find(
-				(el) => el.textContent === segment.textContent
-			);
-		}
-
-		const regeneratedImages = await api.video.regenerateImage({
-			// @ts-ignore
-			image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
-			prompt: segment.settings?.prompt ?? "",
-			segment_idx: newSegment?.index ?? segment.id,
-			story_id: story.id,
-			story_type: WebstoryData?.storyType!,
-			cfg_scale: segment.settings?.denoising ?? 2,
-			sampling_steps: segment.settings?.samplingSteps ?? 8,
-			seed: segment.settings?.seed ?? -1,
-		});
-
-		if (regeneratedImages.target_paths.length === 1) {
-			dispatch({
-				type: "edit_segment",
-				sceneIndex,
-				segmentIndex: segmentIndex,
-				segment: {
-					...segment,
-					imageStatus: StoryStatus.COMPLETE,
-					imageKey: regeneratedImages.image_key,
-				},
-			});
-		}
-	};
 	const handleRegenerateSceneImages = async (sceneIndex: number) => {
 		const scene = story.scenes[sceneIndex];
 		if (!scene) return;
@@ -283,42 +243,23 @@ export default function StoryboardEditor({
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
 																	<React.Fragment key={segmentIndex}>
-																		{segment.imageStatus ===
-																			StoryStatus.COMPLETE && (
-																			<>
-																				<div
-																					className="relative h-40"
-																					style={{
-																						aspectRatio: GetImageRatio(
-																							story.resolution
-																						).ratio,
-																					}}
-																				>
-																					<Image
-																						alt={segment.textContent}
-																						src={Format.GetImageUrl(
-																							segment.imageKey
-																						)}
-																						className="rounded-sm"
-																						layout="fill"
-																						objectFit="cover" // Or use 'cover' depending on the desired effect
-																						style={{ objectFit: "contain" }}
-																					/>
-																				</div>
-																			</>
-																		)}
-																		{segment.imageStatus ===
-																			StoryStatus.PENDING && (
-																			<div
-																				className="relative h-40"
-																				style={{
-																					aspectRatio: GetImageRatio(
-																						story.resolution
-																					).ratio,
-																				}}
-																			>
-																				<Skeleton className="w-full h-full" />
-																			</div>
+																		{(segment.imageStatus ===
+																			StoryStatus.COMPLETE ||
+																			segment.imageStatus ===
+																				StoryStatus.PENDING) && (
+																			<SegmentImage
+																				segment={segment}
+																				story={story}
+																				imageRegenerationSegmentId={
+																					imageRegenerationSegmentId
+																				}
+																				setImageRegenerationSegmentId={
+																					setImageRegenerationSegmentId
+																				}
+																				dispatch={dispatch}
+																				segmentIndex={segmentIndex}
+																				sceneIndex={sceneIndex}
+																			/>
 																		)}
 																		{segment.imageStatus ===
 																			StoryStatus.READY && (
@@ -420,6 +361,7 @@ export default function StoryboardEditor({
 																			scene: scene,
 																			sceneId: sceneIndex,
 																			story: story,
+																			sceneIndex: sceneIndex,
 																		})
 																	}
 																>
@@ -447,7 +389,6 @@ export default function StoryboardEditor({
 							editSegmentsModalState.sceneId !== undefined
 						}
 						onClose={() => setEditSegmentsModalState(undefined)}
-						handleRegenerateImage={handleRegenerateImage}
 						handleRegenerateSceneImages={handleRegenerateSceneImages}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
@@ -460,6 +401,7 @@ export default function StoryboardEditor({
 								index: index,
 							});
 						}}
+						sceneIndex={editSegmentsModalState?.sceneIndex!}
 					/>
 				)}
 		</>
