@@ -29,6 +29,7 @@ import {
 } from "@/utils/image-ratio";
 import { useRouter } from "next/router";
 import useWebstoryContext from "../providers/WebstoryContext";
+import { cn } from "@/utils";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
@@ -47,6 +48,7 @@ type RemotionPlayerProps = {
 	seekedFrame?: number;
 	isPlaying?: boolean;
 	isMuted?: boolean;
+	playerClassName?: string;
 } & Omit<Partial<ComponentProps<typeof Player>>, "component">;
 
 const controlBackgroundStyles =
@@ -61,6 +63,7 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 			onPause,
 			onSeeked,
 			seekedFrame,
+			playerClassName,
 			isPlaying,
 			isMuted,
 			...props
@@ -327,7 +330,7 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 					compositionHeight={VIDEO_HEIGHT[inputProps.variant]}
 					compositionWidth={VIDEO_WIDTH[inputProps.variant]}
 					style={style}
-					className="lg:[&>div]:rounded-bl-lg"
+					className={cn("lg:[&>div]:rounded-bl-lg ", playerClassName ?? "")}
 					autoPlay={false}
 					numberOfSharedAudioTags={0}
 					controls={!inputProps.showLoadingVideo}

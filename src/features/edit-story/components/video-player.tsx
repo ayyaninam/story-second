@@ -19,7 +19,16 @@ const VideoPlayer: FC<
 	}
 > = forwardRef<VideoPlayerHandler, VideoPlayerProps>(
 	(
-		{ Webstory, onPlay, onPause, onSeeked, seekedFrame, isPlaying, isMuted },
+		{
+			Webstory,
+			onPlay,
+			onPause,
+			onSeeked,
+			seekedFrame,
+			isPlaying,
+			isMuted,
+			playerClassName,
+		},
 		ref
 	) => {
 		const remotionPlayerProps = useRemotionPlayerProps({
@@ -67,6 +76,7 @@ const VideoPlayer: FC<
 
 		return (
 			<RemotionPlayer
+				playerClassName={playerClassName}
 				ref={remotionPlayerRef}
 				{...remotionPlayerProps}
 				onPlay={onPlay}

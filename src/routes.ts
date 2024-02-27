@@ -46,6 +46,15 @@ class Routes {
 	static Signup(returnTo = "/") {
 		return `/api/auth/signup?returnTo=${encodeURIComponent(returnTo)}`;
 	}
+	static EditScript(type: StoryOutputTypes, genre: string, id: string) {
+		return `/${this.StoryTypeToPath(type)}/${genre}/${id}/edit/script`;
+	}
+	static EditStoryboard(type: StoryOutputTypes, genre: string, id: string) {
+		return `/${this.StoryTypeToPath(type)}/${genre}/${id}/edit/storyboard`;
+	}
+	static EditScenes(type: StoryOutputTypes, genre: string, id: string) {
+		return `/${this.StoryTypeToPath(type)}/${genre}/${id}/edit/scenes`;
+	}
 	private static StoryTypeToPath(type: StoryOutputTypes) {
 		switch (type) {
 			case StoryOutputTypes.SplitScreen:

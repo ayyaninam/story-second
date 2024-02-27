@@ -1,4 +1,6 @@
 import { Badge } from "@/components/ui/badge";
+import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
+import Routes from "@/routes";
 import { StepperStep } from "@/utils/enums";
 import clsx from "clsx";
 import {
@@ -6,8 +8,9 @@ import {
 	ScrollText,
 	LayoutList,
 	Film,
-	Upload,
+	ScanEye,
 } from "lucide-react";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 const activeStyles =
@@ -15,6 +18,8 @@ const activeStyles =
 const baseStyles = `bg-primary-foreground font-normal text-sm cursor-pointer transition-all ease-in-out duration-300`;
 
 export default function Stepper({ step }: { step: StepperStep }) {
+	const router = useRouter();
+	const [WebstoryData] = useWebstoryContext();
 	const [currentHover, setCurrentHover] = useState<StepperStep>(step);
 	return (
 		<div className="w-full bg-background border-border border-[1px] py-2 min-h-8 flex items-center justify-center">
@@ -25,6 +30,15 @@ export default function Stepper({ step }: { step: StepperStep }) {
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
+				onClick={() =>
+					router.push(
+						Routes.EditScript(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
 				variant="outline"
 				className={clsx(baseStyles, {
 					[activeStyles]:
@@ -42,6 +56,15 @@ export default function Stepper({ step }: { step: StepperStep }) {
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
+				onClick={() =>
+					router.push(
+						Routes.EditStoryboard(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
 				variant="outline"
 				className={clsx(baseStyles, {
 					[activeStyles]:
@@ -61,6 +84,15 @@ export default function Stepper({ step }: { step: StepperStep }) {
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
+				onClick={() =>
+					router.push(
+						Routes.EditScenes(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
 				className={clsx(baseStyles, {
 					[activeStyles]:
 						step === StepperStep.Scenes || currentHover === StepperStep.Scenes,
@@ -73,18 +105,28 @@ export default function Stepper({ step }: { step: StepperStep }) {
 			<Badge
 				variant="outline"
 				onMouseEnter={() => {
-					setCurrentHover(StepperStep.Share);
+					setCurrentHover(StepperStep.Preview);
 				}}
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
+				onClick={() =>
+					router.push(
+						Routes.EditStory(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
 				className={clsx(baseStyles, {
 					[activeStyles]:
-						step === StepperStep.Share || currentHover === StepperStep.Share,
+						step === StepperStep.Preview ||
+						currentHover === StepperStep.Preview,
 				})}
 			>
-				<Upload className="stroke-purple-600 mr-1 h-4 w-4" />
-				Share
+				<ScanEye className="stroke-purple-600 mr-1 h-4 w-4" />
+				Preview
 			</Badge>
 		</div>
 	);

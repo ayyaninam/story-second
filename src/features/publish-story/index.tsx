@@ -4,15 +4,14 @@ import {
 	ChevronRight,
 	DownloadCloudIcon,
 	DownloadIcon,
+	Edit,
 	Heart,
 	HelpCircle,
 	LogOutIcon,
 	Share2,
-	Star,
 	Video,
 } from "lucide-react";
 import { useRouter } from "next/router";
-
 import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,14 +20,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
-import { useMediaQuery } from "usehooks-ts";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { cn } from "@/utils";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import Routes from "@/routes";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import { getJwt } from "@/utils/jwt";
 import { SessionType } from "@/hooks/useSaveSessionToken";
 import isBrowser from "@/utils/isBrowser";
 import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
@@ -59,7 +55,6 @@ export default function PublishedStory({
 	const [isVideoDownloading, setIsVideoDownloading] = useState(false);
 
 	// Queries
-
 	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
 		queryFn: () =>
 			api.video.get(
@@ -110,8 +105,6 @@ export default function PublishedStory({
 				);
 			}
 			setStory(Webstory.data);
-
-			// console.log(">>>> video keys", Webstory.data.storySegments, );
 		}
 	}, [Webstory.data]);
 
@@ -349,6 +342,32 @@ export default function PublishedStory({
 											/>{" "}
 											Like video
 										</Button>
+										{User?.data?.data?.id === Webstory.data?.user?.id && (
+											<Button
+												className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
+												variant="outline"
+												onClick={() =>
+													router.push(
+														Routes.EditScript(
+															storyData.storyType,
+															storyData.topLevelCategory!,
+															storyData.slug!
+														)
+													)
+												}
+											>
+												<Edit
+													className={cn("mr-2 h-4 w-4")}
+													style={{
+														fill:
+															isBrowser && Interactions.data?.liked
+																? "#EC4899"
+																: undefined,
+													}}
+												/>{" "}
+												Edit Video
+											</Button>
+										)}
 
 										{User?.data?.data?.id !== Webstory.data?.user?.id ||
 										(numVideoSegmentsReady ?? 0) <

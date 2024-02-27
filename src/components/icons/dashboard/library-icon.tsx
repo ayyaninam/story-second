@@ -69,7 +69,7 @@ export default function LibraryIcon() {
 						width="34"
 						height="34"
 						filterUnits="userSpaceOnUse"
-						color-interpolation-filters="sRGB"
+						colorInterpolationFilters="sRGB"
 					>
 						<feFlood flood-opacity="0" result="BackgroundImageFix" />
 						<feColorMatrix
@@ -104,7 +104,7 @@ export default function LibraryIcon() {
 						width="33.6"
 						height="33.6"
 						filterUnits="userSpaceOnUse"
-						color-interpolation-filters="sRGB"
+						colorInterpolationFilters="sRGB"
 					>
 						<feFlood flood-opacity="0" result="BackgroundImageFix" />
 						<feColorMatrix
@@ -162,7 +162,7 @@ export default function LibraryIcon() {
 						width="28"
 						height="28.25"
 						filterUnits="userSpaceOnUse"
-						color-interpolation-filters="sRGB"
+						colorInterpolationFilters="sRGB"
 					>
 						<feFlood flood-opacity="0" result="BackgroundImageFix" />
 						<feColorMatrix

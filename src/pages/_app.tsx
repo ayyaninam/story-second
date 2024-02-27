@@ -204,6 +204,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 				`}</style>
 				<main className={randFont.className}>
 					<Toaster />
+
 					<ThemeProvider
 						attribute="class"
 						defaultTheme="light"

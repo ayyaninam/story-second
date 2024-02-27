@@ -1,27 +1,24 @@
 import { Button } from "@/components/ui/button";
-import { AspectRatios } from "@/utils/enums";
+import { AspectRatios, DisplayAspectRatios } from "@/utils/enums";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
 import { PlayCircle, Plus } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import EditSegmentModal from "./EditSegmentModal";
 
 import GenerateIcon from "@/components/icons/dashboard/generate-icon";
 
 export default function Navbar({
 	ImageRatio,
 	WebstoryData,
-	genre,
 }: {
 	ImageRatio: {
 		width: number;
 		height: number;
 		ratio: number;
-		enumValue: AspectRatios;
+		enumValue: DisplayAspectRatios;
 	};
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
-	genre: string;
 }) {
 	const [isEditSegmentsDialogOpen, setIsEditSegmentsDialogOpen] =
 		useState(false);
@@ -54,7 +51,7 @@ export default function Navbar({
 							</p>
 						</span>
 						<p className="text-xs rounded-sm bg-slate-100 p-1">
-							{Format.Title(genre)}
+							{Format.Title(WebstoryData?.topLevelCategory)}
 						</p>
 					</div>
 				</div>
