@@ -229,6 +229,7 @@ export default function ScriptEditor({
 																		className={cn(`flex flex-wrap `)}
 																	>
 																		<AutosizeInput
+																			autoComplete="false"
 																			disabled={!WebstoryData?.storyDone}
 																			onKeyDown={(e) => {
 																				if (e.key === "Enter") {
