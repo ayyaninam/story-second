@@ -51,5 +51,9 @@ class Format {
 		if (!string || string.length < limit) return string;
 		return string.slice(0, limit) + "...";
 	}
+	public static Pluralize(string: string | undefined | null, n: number) {
+		if (!string || n === 1) return string;
+		else return string + "s";
+	}
 }
 export default Format;

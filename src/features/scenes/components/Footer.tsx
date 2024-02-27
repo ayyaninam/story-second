@@ -39,6 +39,9 @@ import AnimeImg from "/public/images/editor/anime.png";
 import HorrorImg from "/public/images/editor/horror.png";
 import SciFiImg from "/public/images/editor/scifi.png";
 import Routes from "@/routes";
+import { getImageCost } from "@/utils/image-cost";
+import Format from "@/utils/format";
+import { cn } from "@/utils";
 
 const images = {
 	[StoryImageStyles.Auto]: {
@@ -107,6 +110,13 @@ const Footer = ({
 
 	const generationStyle = story.settings?.style ?? StoryImageStyles.Realistic;
 
+	const imagesToGenerate = story.scenes?.flatMap((scene) =>
+		scene.segments
+			?.map((el, index) => ({ ...el, sceneId: scene.id }))
+			?.filter((segment) => !segment.imageKey)
+	);
+	const imageCreditCost = getImageCost(imagesToGenerate.length);
+
 	const updateImageStyle = useCallback(
 		(style: StoryImageStyles) => {
 			dispatch({ type: "update_image_style", style: style });
@@ -172,13 +182,42 @@ const Footer = ({
 						variant="outline"
 						onClick={async () => {
 							await saveEdits();
-							api.video.regenerateAllImages({
-								// @ts-expect-error
-								image_style:
-									story.settings?.style ?? StoryImageStyles.Realistic,
-								story_id: story.id,
-								story_type: story.type,
-							});
+							const newStory = await api.video.get(
+								story.topLevelCategory,
+								story.slug,
+								story.type
+							);
+							const imagesToGenerate = newStory.scenes?.flatMap((scene) =>
+								scene.videoSegments
+									?.map((el, index) => ({ ...el, sceneId: scene.id }))
+									?.filter((segment) => !segment.imageKey)
+							);
+							console.log(imagesToGenerate, newStory);
+							if (imagesToGenerate && imagesToGenerate?.length > 0) {
+								const Promises = imagesToGenerate?.map(
+									async (el) =>
+										(await api.video.regenerateImage({
+											segment_idx: el?.index!,
+											story_id: story.id,
+											story_type: story.type!,
+											// @ts-expect-error
+											image_style:
+												story.settings?.style ?? StoryImageStyles.Realistic,
+											prompt: el?.textContent!,
+										})) ?? Promise.resolve()
+								);
+								Promise.all(Promises).then((val) =>
+									val.map((el) => console.log(el))
+								);
+							}
+
+							// api.video.regenerateAllImages({
+							// 	// @ts-expect-error
+							// 	image_style:
+							// 		story.settings?.style ?? StoryImageStyles.Realistic,
+							// 	story_id: story.id,
+							// 	story_type: story.type,
+							// });
 							router.push(
 								Routes.EditStoryboard(
 									story.type,
@@ -187,10 +226,16 @@ const Footer = ({
 								)
 							);
 						}}
-						className="stroke-muted text-muted-foreground"
+						className={cn(
+							"stroke-muted text-muted-foreground",
+							imageCreditCost === 0 && "hidden"
+						)}
 					>
 						<LayoutGrid strokeWidth={1} className="mr-2" />
-						Generate Images & Continue
+						Generate Images{" "}
+						<span className="ml-1">
+							({imageCreditCost} {Format.Pluralize("Credit", imageCreditCost)})
+						</span>
 					</Button>
 				</div>
 				<div className="flex flex-col">
