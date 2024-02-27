@@ -2,7 +2,7 @@
 import React from "react";
 import styles from "./pricing.module.css";
 import cn from "@/utils/cn";
-import PricingCards from "@/features/pricing/PricingCards";
+import PricingCards from "@/features/pricing/pricing-cards";
 
 export default function PricingPage() {
 	const bannerText = "hello world 😄";
