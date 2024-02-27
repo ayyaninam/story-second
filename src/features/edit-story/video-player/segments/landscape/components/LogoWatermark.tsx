@@ -3,7 +3,7 @@ import { AbsoluteFill, Img, staticFile } from "remotion";
 
 const logoWatermarkContainer: CSSProperties = {
 	position: "absolute",
-	bottom: 20,
+	top: 20,
 	right: 20,
 };
 
