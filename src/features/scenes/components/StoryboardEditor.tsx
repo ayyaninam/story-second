@@ -30,7 +30,7 @@ import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { Button } from "@/components/ui/button";
 import SegmentImage from "./SegmentImage";
 
@@ -239,10 +239,21 @@ export default function StoryboardEditor({
 														key={sceneIndex}
 														className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
 													>
-														<div className="flex items-center space-y-1 flex-wrap">
+														<div
+															className={cn(
+																"grid items-center gap-4 max-w-1/2 w-1/2",
+																story.displayResolution ===
+																	DisplayAspectRatios["1024x576"]
+																	? "grid-cols-2"
+																	: "grid-cols-4"
+															)}
+														>
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
-																	<React.Fragment key={segmentIndex}>
+																	<div
+																		className={cn("flex gap-1 items-center")}
+																		key={segmentIndex}
+																	>
 																		{(segment.imageStatus ===
 																			StoryStatus.COMPLETE ||
 																			segment.imageStatus ===
@@ -264,10 +275,10 @@ export default function StoryboardEditor({
 																		{segment.imageStatus ===
 																			StoryStatus.READY && (
 																			<div
-																				className="relative h-40"
+																				className="relative max-w-full h-40"
 																				style={{
-																					aspectRatio: GetImageRatio(
-																						story.resolution
+																					aspectRatio: GetDisplayImageRatio(
+																						story.displayResolution
 																					).ratio,
 																				}}
 																			>
@@ -284,13 +295,15 @@ export default function StoryboardEditor({
 																		)}
 																		{segmentIndex !==
 																			scene.segments.length - 1 && (
-																			<ChevronRight
-																				width={16}
-																				height={16}
-																				className="text-slate-500 stroke-1"
-																			/>
+																			<div className="min-w-4 min-h-4">
+																				<ChevronRight
+																					width={16}
+																					height={16}
+																					className="text-slate-500 stroke-1 min-w-4 min-h-4"
+																				/>
+																			</div>
 																		)}
-																	</React.Fragment>
+																	</div>
 																);
 															})}
 														</div>

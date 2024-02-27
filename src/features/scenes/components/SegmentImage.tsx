@@ -7,7 +7,7 @@ import {
 	Segment,
 	StoryStatus,
 } from "../reducers/edit-reducer";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import ImageRegenerationPopoverHOC from "./ImageRegenerationPopoverHOC";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
 
@@ -30,7 +30,7 @@ function SegmentImage({
 		React.SetStateAction<number | null>
 	>;
 }) {
-	const imageAspectRatio = GetImageRatio(story.resolution).ratio;
+	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
 	return (
 		<ImageRegenerationPopoverHOC
 			segment={segment}
@@ -45,9 +45,10 @@ function SegmentImage({
 			dispatch={dispatch}
 			segmentIndex={segmentIndex}
 			sceneIndex={sceneIndex}
+			triggerButtonClassName="max-w-full"
 		>
 			<div
-				className="relative h-40"
+				className="relative max-w-full h-40"
 				style={{
 					aspectRatio: imageAspectRatio,
 				}}

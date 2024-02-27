@@ -1,4 +1,3 @@
-import PurpleStarIcon from "@/components/icons/scene-editor/purple-star-icon";
 import SpinnerArc from "@/components/icons/scene-editor/spinner-arc";
 import { cn } from "@/utils";
 import { Sparkle } from "lucide-react";

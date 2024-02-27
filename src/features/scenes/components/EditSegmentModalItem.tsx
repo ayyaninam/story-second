@@ -22,10 +22,9 @@ import {
 import { StoryImageStyles } from "@/utils/enums";
 import { keys } from "@/utils/enumKeys";
 import Format from "@/utils/format";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { MAX_SEGMENT_LENGTH } from "@/constants";
 import {
 	Select,
@@ -86,7 +85,9 @@ export default function EditSegmentModalItem({
 				<div className="flex flex-row space-x-2">
 					<div
 						className="h-56"
-						style={{ aspectRatio: GetImageRatio(story.resolution).ratio }}
+						style={{
+							aspectRatio: GetDisplayImageRatio(story.displayResolution).ratio,
+						}}
 					>
 						<ImageRegenerationPopoverHOC
 							segment={segment}

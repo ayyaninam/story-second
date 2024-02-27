@@ -3,7 +3,7 @@ import { PopoverContent } from "@/components/ui/popover";
 import { cn } from "@/utils";
 import { AspectRatios, StoryImageStyles } from "@/utils/enums";
 import Format from "@/utils/format";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import Image from "next/image";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -17,7 +17,7 @@ import UncheckedCheckBox from "@/components/icons/scene-editor/unchecked-check-b
 import CheckedCheckBox from "@/components/icons/scene-editor/checked-check-box";
 import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-image-icon";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
-import { Lock, ScrollText } from "lucide-react";
+import { Lock, ScrollText, Sparkle, X } from "lucide-react";
 
 function RegenerationPopupHeader({
 	title,
@@ -28,49 +28,15 @@ function RegenerationPopupHeader({
 }) {
 	return (
 		<div className="flex w-full gap-1 items-center">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="15"
-				height="16"
-				viewBox="0 0 15 16"
-				fill="none"
-			>
-				<path
-					d="M7.5 0.5L5.91667 5.33333C5.83559 5.58435 5.69609 5.81253 5.50964 5.99913C5.32319 6.18572 5.09512 6.3254 4.84417 6.40667L0 8L4.83333 9.58333C5.08435 9.66441 5.31253 9.80391 5.49913 9.99036C5.68572 10.1768 5.8254 10.4049 5.90667 10.6558L7.5 15.5L9.08333 10.6667C9.16441 10.4157 9.30391 10.1875 9.49036 10.0009C9.67681 9.81428 9.90488 9.6746 10.1558 9.59333L15 8L10.1667 6.41667C9.91565 6.33559 9.68747 6.19609 9.50087 6.00964C9.31428 5.82319 9.1746 5.59512 9.09333 5.34417L7.5 0.5Z"
-					fill="#A734EA"
-				/>
-			</svg>
+			<Sparkle fill="#A734EA" stroke="transparent" width={18} height={18} />
 			<div className="text-[#06070F] text-sm font-medium grow">{title}</div>
 			<div
-				className="p-1 cursor-pointer"
+				className="p-1 cursor-pointer rounded-full bg-[#F1F6F9] w-6 h-6 overflow-hidden flex items-center justify-center"
 				onClick={() => {
 					onClose();
 				}}
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="14"
-					height="14"
-					viewBox="0 0 14 14"
-					fill="none"
-				>
-					<path
-						d="M10.5 3.5L3.5 10.5L10.5 3.5Z"
-						fill="#0F1324"
-						fillOpacity="0.6"
-					/>
-					<path
-						d="M3.5 3.5L10.5 10.5L3.5 3.5Z"
-						fill="#0F1324"
-						fillOpacity="0.6"
-					/>
-					<path
-						d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5"
-						stroke="#020817"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					/>
-				</svg>
+				<X stroke="#0F1324" fill="#0F1324" strokeWidth={2} width={16} />
 			</div>
 		</div>
 	);
@@ -206,7 +172,7 @@ function ImageRegenerationPopup({
 	regenerateOnOpen?: boolean;
 	open: boolean;
 }) {
-	const imageAspectRatio = GetImageRatio(story.resolution).ratio;
+	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
 	const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
 	const loading =
 		segment.alternateImagesStatus === StoryStatus.PENDING ||
