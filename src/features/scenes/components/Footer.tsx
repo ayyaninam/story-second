@@ -105,7 +105,7 @@ const Footer = ({
 		scrollRef.current?.scroll({ left: 50, behavior: "smooth" });
 	}, []);
 
-	const generationStyle = story.settings?.style ?? StoryImageStyles.Auto;
+	const generationStyle = story.settings?.style ?? StoryImageStyles.Realistic;
 
 	const updateImageStyle = useCallback(
 		(style: StoryImageStyles) => {
@@ -125,6 +125,45 @@ const Footer = ({
 		mutationFn: api.video.editSegment,
 	});
 
+	const saveEdits = useCallback(async () => {
+		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
+		console.log(diff);
+		// console.log(WebstoryToStoryDraft(WebstoryData!), story);
+		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
+			details: { Ind: segment.id, Text: segment.textContent },
+			operation: SegmentModifications.Edit,
+		}));
+		const additions: SegmentModificationData[] = diff.additions.map(
+			(segmentSet) => ({
+				details: {
+					// @ts-ignore should be defined though??
+					Ind: segmentSet[0].id + 1,
+					segments: segmentSet.map((el) => ({
+						Text: el.textContent,
+						SceneId: el.sceneId,
+					})),
+				},
+				operation: SegmentModifications.Add,
+			})
+		);
+
+		const deletions: SegmentModificationData[] = diff.subtractions.map(
+			(segment) => ({
+				details: {
+					Ind: segment.id,
+				},
+				operation: SegmentModifications.Delete,
+			})
+		);
+		if (additions.length || edits.length || deletions.length) {
+			const editedResponse = await EditSegment.mutateAsync({
+				story_id: WebstoryData?.id as string,
+				story_type: WebstoryData?.storyType,
+				edits: [...edits, ...additions, ...deletions],
+			});
+		}
+	}, [WebstoryData, story, EditSegment]);
+
 	const View = {
 		script: () => (
 			<div className="flex gap-2 mt-6 w-full justify-end">
@@ -132,50 +171,11 @@ const Footer = ({
 					<Button
 						variant="outline"
 						onClick={async () => {
-							const diff = GenerateStoryDiff(
-								WebstoryToStoryDraft(WebstoryData!),
-								story
-							);
-							console.log(diff);
-							// console.log(WebstoryToStoryDraft(WebstoryData!), story);
-							const edits: SegmentModificationData[] = diff.edits.map(
-								(segment) => ({
-									details: { Ind: segment.id, Text: segment.textContent },
-									operation: SegmentModifications.Edit,
-								})
-							);
-							const additions: SegmentModificationData[] = diff.additions.map(
-								(segmentSet) => ({
-									details: {
-										// @ts-ignore should be defined though??
-										Ind: segmentSet[0].id + 1,
-										segments: segmentSet.map((el) => ({
-											Text: el.textContent,
-											SceneId: el.sceneId,
-										})),
-									},
-									operation: SegmentModifications.Add,
-								})
-							);
-
-							const deletions: SegmentModificationData[] =
-								diff.subtractions.map((segment) => ({
-									details: {
-										Ind: segment.id,
-									},
-									operation: SegmentModifications.Delete,
-								}));
-							if (additions.length || edits.length || deletions.length) {
-								const editedResponse = await EditSegment.mutateAsync({
-									story_id: WebstoryData?.id as string,
-									story_type: WebstoryData?.storyType,
-									edits: [...edits, ...additions, ...deletions],
-								});
-							}
-
+							await saveEdits();
 							api.video.regenerateAllImages({
 								// @ts-expect-error
-								image_style: story.settings?.style ?? StoryImageStyles.Auto,
+								image_style:
+									story.settings?.style ?? StoryImageStyles.Realistic,
 								story_id: story.id,
 								story_type: story.type,
 							});
@@ -186,17 +186,6 @@ const Footer = ({
 									story.slug
 								)
 							);
-							// dispatch({
-							// 	type: "update_segment_statuses",
-							// 	key: "imageStatus",
-							// 	segmentIndices: story.scenes.flatMap((el, sceneIdx) =>
-							// 		el.segments.map((_, segIdx) => ({
-							// 			segmentIndex: segIdx,
-							// 			sceneIndex: sceneIdx,
-							// 		}))
-							// 	),
-							// 	status: StoryStatus.PENDING,
-							// });
 						}}
 						className="stroke-slate-600 text-slate-600"
 					>
@@ -206,15 +195,16 @@ const Footer = ({
 				</div>
 				<div className="flex flex-col">
 					<Button
-						onClick={() =>
+						onClick={async () => {
+							await saveEdits();
 							router.push(
 								Routes.EditStoryboard(
 									story.type,
 									story.topLevelCategory,
 									story.slug
 								)
-							)
-						}
+							);
+						}}
 						className="bg-purple-700 space-x-1.5"
 					>
 						<BrandShortLogo />
@@ -228,7 +218,8 @@ const Footer = ({
 			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div className="flex flex-col">
 					<Button
-						onClick={() => {
+						onClick={async () => {
+							await saveEdits();
 							router.push(
 								Routes.EditScenes(
 									story.type,
@@ -330,7 +321,7 @@ const Footer = ({
 								{
 									images[
 										story.settings?.style ??
-											(StoryImageStyles.Auto as StoryImageStyles)
+											(StoryImageStyles.Realistic as StoryImageStyles)
 									].label
 								}
 							</span>

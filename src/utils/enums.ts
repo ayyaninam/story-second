@@ -83,7 +83,7 @@ export enum StepperStep {
 	Script,
 	Storyboard,
 	Scenes,
-	Preview
+	Preview,
 }
 
 export enum SegmentModifications {
@@ -110,12 +110,12 @@ export enum SubscriptionPeriod {
 
 export enum StoryboardViewType {
 	Outline,
-	Slides
+	Slides,
 }
 
 export enum ScriptEditorViewType {
 	Title_Scenes,
-	Just_Text
+	Just_Text,
 }
 
 export enum InputStatus {

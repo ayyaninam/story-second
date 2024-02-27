@@ -88,12 +88,6 @@ export default function StoryboardEditor({
 		WebstoryToStoryDraft(WebstoryData!)
 	);
 
-	// useEffect(() => {
-	// 	console.log(
-	// 		story.scenes.flatMap((el) => el.segments.map((seg) => seg.videoKey))
-	// 	);
-	// }, [story]);
-
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
 	const diff = GenerateStoryDiff(previousStory, story);
@@ -151,6 +145,31 @@ export default function StoryboardEditor({
 		setPreviousStory(WebstoryToStoryDraft(newStory));
 		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
 		return newStory;
+	};
+
+	const handleRegenerateSceneImages = async (sceneIndex: number) => {
+		const scene = story.scenes[sceneIndex];
+		if (!scene) return;
+		// dispatch({
+		// 	type: "update_segment_statuses",
+		// 	key: "imageStatus",
+		// 	segmentIndices:
+		// 		scene.segments?.map((el, segmentIndex) => ({
+		// 			segmentIndex,
+		// 			sceneIndex,
+		// 		})) ?? [],
+		// 	status: StoryStatus.PENDING,
+		// });
+
+		const newStory = await handleSubmitEditSegments();
+
+		const regeneratedImages = await api.video.regenerateAllImages({
+			// @ts-expect-error
+			image_style: scene.settings?.style ?? StoryImageStyles.Realistic,
+			story_id: story.id,
+			story_type: story.type,
+			scene_id: scene.id,
+		});
 	};
 
 	return (
@@ -396,6 +415,7 @@ export default function StoryboardEditor({
 							editSegmentsModalState.sceneId !== undefined
 						}
 						onClose={() => setEditSegmentsModalState(undefined)}
+						handleRegenerateSceneImages={handleRegenerateSceneImages}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
 						dispatch={dispatch}
