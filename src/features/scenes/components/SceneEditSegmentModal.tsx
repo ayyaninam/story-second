@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Check, RefreshCw, Settings2, Sparkle } from "lucide-react";
-import EditSegmentModalItem from "./EditSegmentModalItem";
+import { Settings2 } from "lucide-react";
+import EditVideoSegmentModalitem from "./EditVideoSegmentModalItem";
 import { Button } from "@/components/ui/button";
 import {
 	EditStoryAction,
 	EditStoryDraft,
 	Scene,
-	Segment,
 	StoryStatus,
 } from "../reducers/edit-reducer";
 import api from "@/api";
@@ -19,35 +18,42 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 
-const EditSegmentModal = ({
+const SceneEditSegmentModal = ({
 	open,
 	onClose,
 	scene,
 	sceneId,
-	onSceneEdit,
 	dispatch,
 	story,
-	handleRegenerateImage,
 }: {
 	open?: boolean;
 	onClose: () => void;
 	scene?: Scene;
 	sceneId?: number;
-	onSceneEdit: (scene: Scene, index: number) => void;
 	dispatch: React.Dispatch<EditStoryAction>;
 	story: EditStoryDraft;
-	handleRegenerateImage: (
-		segment: Segment,
-		sceneIndex: number,
-		segmentIndex: number,
-		saveBeforeRegenerating?: boolean
-	) => Promise<void>;
 }) => {
 	const [webstory] = useWebstoryContext();
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
-
+	const handleRegenerateVideo = async (segmentIndex: number) => {
+		const segment = story.scenes[sceneId ?? 0]?.segments[segmentIndex]!;
+		dispatch({
+			type: "edit_segment",
+			sceneIndex: sceneId!,
+			segmentIndex,
+			segment: {
+				...segment,
+				videoStatus: StoryStatus.PENDING,
+			},
+		});
+		await api.video.regenerateVideo({
+			segment_idx: segment.id,
+			story_id: story.id,
+			story_type: webstory.storyType,
+		});
+	};
 	if (scene && sceneId !== undefined) {
 		return (
 			<Dialog
@@ -64,20 +70,17 @@ const EditSegmentModal = ({
 							<p>Edit Segments</p>
 						</div>
 					</DialogTitle>
-					<DialogDescription className="mt-3 px-3 text-muted-foreground text-sm font-thin">
+					<DialogDescription className="mt-3 mb-6 px-3 text-muted-foreground text-sm font-thin">
 						Individually edit & regenerate the segments of each scene. For more
 						control, used the advanced editing options. When you’re ready to see
 						it, click regenerate.
 					</DialogDescription>
 					<div className="overflow-auto max-h-[70vh] px-3">
 						{story.scenes[sceneId]?.segments?.map((segment, index) => (
-							<EditSegmentModalItem
+							<EditVideoSegmentModalitem
 								key={index}
-								story={story}
 								segment={segment}
-								onRegenerateImage={() => {
-									handleRegenerateImage(segment, sceneId, index, true);
-								}}
+								onRegenerateImage={() => handleRegenerateVideo(index)}
 								regeneratingImage={regeratingImages[index]}
 								onSegmentEdit={(updatedSegment) => {
 									dispatch({
@@ -86,39 +89,18 @@ const EditSegmentModal = ({
 										segmentIndex: index,
 										segment: updatedSegment,
 									});
-									// setEditedScene(updatedScene);
 								}}
-								onSegmentDelete={() => {
-									dispatch({
-										type: "delete_segment",
-										sceneIndex: sceneId,
-										segmentIndex: index,
-									});
-								}}
+								showAdvancedSettings={false}
 							/>
 						))}
 					</div>
 					<div className="flex mt-2 gap-1 mx-4 justify-end text-sm">
-						<Button
-							className="w-[50%] p-2 flex gap-1 text-purple-600 items-center"
-							variant="outline"
-							onClick={onClose}
-						>
-							<RefreshCw width={16} height={16} />
-							<p className="text-sm text-slate-950 font-semibold">
-								Regenerate All Images
-							</p>
-							<p className="text-sm">(5 Credits)</p>
+						{/* <Button className="p-2" variant="outline" onClick={onClose}>
+									Close
+								</Button> */}
+						<Button className="p-2" variant="outline" onClick={onClose}>
+							Close
 						</Button>
-						<DialogClose asChild>
-							<Button
-								className="w-[50%] p-2 flex gap-1 items-center text-white bg-purple-600"
-								variant="default"
-							>
-								<Check width={16} height={16} />
-								<p className="text-sm">Done</p>
-							</Button>
-						</DialogClose>
 					</div>
 				</DialogContent>
 			</Dialog>
@@ -128,4 +110,4 @@ const EditSegmentModal = ({
 	return null;
 };
 
-export default EditSegmentModal;
+export default SceneEditSegmentModal;

@@ -59,7 +59,7 @@ export default function GenerateIcon() {
 					width="54"
 					height="54"
 					filterUnits="userSpaceOnUse"
-					color-interpolation-filters="sRGB"
+					colorInterpolationFilters="sRGB"
 				>
 					<feFlood flood-opacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
@@ -112,7 +112,7 @@ export default function GenerateIcon() {
 					width="33.6"
 					height="33.6"
 					filterUnits="userSpaceOnUse"
-					color-interpolation-filters="sRGB"
+					colorInterpolationFilters="sRGB"
 				>
 					<feFlood flood-opacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
@@ -170,7 +170,7 @@ export default function GenerateIcon() {
 					width="28"
 					height="28.25"
 					filterUnits="userSpaceOnUse"
-					color-interpolation-filters="sRGB"
+					colorInterpolationFilters="sRGB"
 				>
 					<feFlood flood-opacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
@@ -221,7 +221,7 @@ export default function GenerateIcon() {
 					width="30.4"
 					height="30.4"
 					filterUnits="userSpaceOnUse"
-					color-interpolation-filters="sRGB"
+					colorInterpolationFilters="sRGB"
 				>
 					<feFlood flood-opacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
