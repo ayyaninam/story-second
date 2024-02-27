@@ -16,16 +16,15 @@ import {getSession} from "@auth0/nextjs-auth0";
 import api from "@/api";
 import StoryLogoFullWhite from "@/components/brand-logos/primary-white";
 
+// # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
 	{
 		icon: <ExploreIcon />,
 		text: "Explore",
 		shortcut: "E",
 		redirectUrl: "/explore",
-		background: "linear-gradient(270deg, #002FFF 69.69%, #020817 99.69%)",
-		mobileBackground: "linear-gradient(180deg, #4865E5 86.59%, #020817 100%)",
 		cssVars: {
-			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
+			"--hover-border-color": "rgba(122,255,180,0.1)",
 			"--hover-background": "radial-gradient(88.31% 100% at 0% 50%, rgba(102, 129, 255, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		},
 	},
@@ -34,8 +33,6 @@ export const menuItems = [
 		text: "Generate",
 		shortcut: "G",
 		redirectUrl: "/",
-		background: "linear-gradient(270deg, #BB55F7 69.69%, #020817 99.69%)",
-		mobileBackground: "linear-gradient(180deg, #A734EA 86.59%, #020817 100%)",
 		cssVars: {
 			"--hover-border-color": "rgba(206, 122, 255, 0.2)",
 			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(187, 85, 247, 0.5) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
@@ -46,8 +43,6 @@ export const menuItems = [
 		text: "Library",
 		shortcut: "L",
 		redirectUrl: "/library",
-		background: "linear-gradient(270deg, #157A6E 69.69%, #020817 99.69%)",
-		mobileBackground: "linear-gradient(180deg, #1FA393 86.59%, #020817 100%)",
 		cssVars: {
 			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
 			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(48, 149, 136, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
@@ -58,11 +53,9 @@ export const menuItems = [
 		text: "Challenges",
 		shortcut: "C",
 		redirectUrl: "/challenges",
-		background: "linear-gradient(270deg, #A734EA 69.69%, #020817 99.69%)",
-		mobileBackground: "linear-gradient(180deg, #61A50D 86.59%, #020817 100%)",
 		cssVars: {
 			"--hover-border-color": "rgba(152, 230, 55, 0.50)",
-			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(152, 230, 55, 0.00) 100%)",
+			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
 	},
 	{
@@ -70,8 +63,6 @@ export const menuItems = [
 		text: "Free Credits",
 		shortcut: "F",
 		redirectUrl: "/credits",
-		background: "linear-gradient(270deg, #FF3370 69.69%, #020817 99.69%)",
-		mobileBackground: "linear-gradient(180deg, #485E6A 86.59%, #020817 100%)",
 		cssVars: {
 			"--hover-border-color": "rgba(148, 171, 184, 0.50)",
 			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",

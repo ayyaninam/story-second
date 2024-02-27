@@ -26,12 +26,22 @@ export const MobileSelector = ({
       >
         <SelectValue />
       </SelectTrigger>
-      <SelectContent className="bg-white text-[#000000] border-muted">
+      <SelectContent className="bg-white text-[#000000] border-muted"
+         ref={(ref) => {
+           {/*Necessary to prevent default*/}
+           if (!ref) {
+             return
+           }
+
+           ref.ontouchstart = (e) => {
+             e.preventDefault()
+           }
+         }}>
         {tabs.map((tab) => (
           <SelectItem
             value={tab.id}
             key={tab.id}
-            highlightSelection={false}
+            highlightSelection={true}
           >
             <div className="flex items-center gap-2">
               <span>{tab.icon}</span>
