@@ -293,7 +293,7 @@ export default function StoryboardEditor({
 																		{segment.imageStatus ===
 																			StoryStatus.READY && (
 																			<div
-																				className="relative h-40"
+																				className="relative max-w-full h-40"
 																				style={{
 																					aspectRatio: GetDisplayImageRatio(
 																						story.displayResolution
