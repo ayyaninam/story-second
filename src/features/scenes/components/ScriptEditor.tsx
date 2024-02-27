@@ -212,9 +212,12 @@ export default function ScriptEditor({
 													{story.scenes.map((scene, sceneIndex) => (
 														<div
 															key={sceneIndex}
-															className="flex flex-wrap flex-col  w-full"
+															className="flex flex-wrap flex-col  w-fit"
 														>
-															<TooltipComponent label="You can edit scenes in the storyboard">
+															<TooltipComponent
+																align="start"
+																label="You can edit scenes in the storyboard"
+															>
 																<div className="bg-slate-50 font-normal text-slate-600 text-sm w-fit my-2 px-1">
 																	{`Scene ${sceneIndex + 1}: `}
 																	{scene.description}

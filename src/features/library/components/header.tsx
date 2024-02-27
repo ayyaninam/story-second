@@ -29,7 +29,13 @@ const mainHeaderContainer: {
 		boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
 	},
 };
-
+const createNewButton: CSSProperties = {
+	background:
+		"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-Purple-700, #8F22CE)",
+	boxShadow:
+		" 0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #8F22CE",
+	borderRadius: "6px",
+};
 const tutorialButton: CSSProperties = {
 	background: "transparent",
 	color: "#303546",
@@ -115,6 +121,7 @@ export const LibraryHeader = ({
 					<Button
 						className={`px-4 py-1.5 text-white text-sm font-medium flex gap-2 items-center h-fit`}
 						variant="default"
+						style={createNewButton}
 						onClick={() => {
 							// TODO: Implement
 						}}

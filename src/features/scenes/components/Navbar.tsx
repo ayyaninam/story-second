@@ -58,10 +58,10 @@ export default function Navbar({
 			</div>
 			<div className="hidden md:block text-muted-foreground space-x-2 items-center">
 				<Button className="p-2" variant="ghost">
-					<PlayCircle className="mr-2 h-4 w-4 text-purple-600" /> Tutorial
+					<PlayCircle className="mr-2 h-4 w-4 text-purple-700" /> Tutorial
 				</Button>
 				<Button
-					className="p-2 bg-purple-600"
+					className="p-"
 					variant="default"
 					onClick={() => setIsEditSegmentsDialogOpen(true)}
 				>

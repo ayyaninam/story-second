@@ -1,2 +1,2 @@
-export const MAX_SEGMENT_LENGTH = 50;
-export const MAX_SEGMENT_WORD_LENGTH = 40;
+export const MAX_SEGMENT_LENGTH = 60;
+export const MAX_SEGMENT_WORD_LENGTH = 50;
