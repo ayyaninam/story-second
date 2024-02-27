@@ -16,7 +16,7 @@ export const LogoWatermark = () => (
 	<AbsoluteFill>
 		<div style={logoWatermarkContainer} id="logoo">
 			<Img
-				src={staticFile("remotion/logo-watermark.svg")}
+				src={staticFile("remotion/logo-watermark-story.svg")}
 				style={logoWatermark}
 			/>
 		</div>
