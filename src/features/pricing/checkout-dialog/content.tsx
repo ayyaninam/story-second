@@ -81,7 +81,7 @@ const CheckoutDialogContent = ({
 
 				<div className="min-h-[375px]">{stripeForm}</div>
 
-				<Button variant="purple" {...buttonProps}>
+				<Button variant="purple" className="w-full" {...buttonProps}>
 					{submitButtonText}
 				</Button>
 			</div>
