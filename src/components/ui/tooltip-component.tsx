@@ -14,12 +14,8 @@ export default function TooltipComponent({
 }) {
 	return (
 		<Tooltip>
-			<TooltipTrigger>{children}</TooltipTrigger>
-			<TooltipContent
-				align="start"
-				{...{ "[data-state]": "instant-open" }}
-				className=""
-			>
+			<TooltipTrigger tabIndex={-1}>{children}</TooltipTrigger>
+			<TooltipContent align="start" {...{ "[data-state]": "instant-open" }}>
 				<p>{label}</p>
 			</TooltipContent>
 		</Tooltip>
