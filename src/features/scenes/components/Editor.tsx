@@ -19,14 +19,6 @@ enum InputStatus {
 	ADDED,
 	DELETED,
 }
-// onChange;
-// onMouseOverScene;
-// onMouseOverSegment;
-// sceneOptionsComponent;
-// onCreateSegment;
-// onDeleteSegment;
-// onCreateScene;
-// onDeleteScene;
 
 const Editor = ({
 	Webstory,

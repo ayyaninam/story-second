@@ -32,7 +32,9 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetImageRatio } from "@/utils/image-ratio";
 
-export default function VideoEditorStoryboard({
+const MAX_SUMMARY_LENGTH = 251;
+
+export default function StoryboardEditor({
 	WebstoryData,
 	ImageRatio,
 	isError,
@@ -70,12 +72,6 @@ export default function VideoEditorStoryboard({
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
 		WebstoryToStoryDraft(WebstoryData!)
 	);
-
-	// useEffect(() => {
-	// 	console.log(
-	// 		story.scenes.flatMap((el) => el.segments.map((seg) => seg.videoKey))
-	// 	);
-	// }, [story]);
 
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
@@ -156,16 +152,17 @@ export default function VideoEditorStoryboard({
 				(el) => el.textContent === segment.textContent
 			);
 		}
+
 		const regeneratedImages = await api.video.regenerateImage({
 			// @ts-ignore
 			image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
-			prompt: segment.settings?.prompt ?? segment.textContent,
+			prompt: segment.settings?.prompt ?? "",
 			segment_idx: newSegment?.index ?? segment.id,
 			story_id: story.id,
 			story_type: WebstoryData?.storyType!,
-			cfg_scale: segment.settings?.denoising ?? 7,
+			cfg_scale: segment.settings?.denoising ?? 2,
 			sampling_steps: segment.settings?.samplingSteps ?? 8,
-			seed: segment.settings?.seed ?? 3121472823,
+			seed: segment.settings?.seed ?? -1,
 		});
 
 		if (regeneratedImages.target_paths.length === 1) {
@@ -180,6 +177,30 @@ export default function VideoEditorStoryboard({
 				},
 			});
 		}
+	};
+	const handleRegenerateSceneImages = async (sceneIndex: number) => {
+		const scene = story.scenes[sceneIndex];
+		if (!scene) return;
+		// dispatch({
+		// 	type: "update_segment_statuses",
+		// 	key: "imageStatus",
+		// 	segmentIndices:
+		// 		scene.segments?.map((el, segmentIndex) => ({
+		// 			segmentIndex,
+		// 			sceneIndex,
+		// 		})) ?? [],
+		// 	status: StoryStatus.PENDING,
+		// });
+
+		const newStory = await handleSubmitEditSegments();
+
+		const regeneratedImages = await api.video.regenerateAllImages({
+			// @ts-expect-error
+			image_style: scene.settings?.style ?? StoryImageStyles.Realistic,
+			story_id: story.id,
+			story_type: story.type,
+			scene_id: scene.id,
+		});
 	};
 
 	return (
@@ -273,7 +294,7 @@ export default function VideoEditorStoryboard({
 																			StoryStatus.COMPLETE && (
 																			<>
 																				<div
-																					className="relative h-32"
+																					className="relative h-40"
 																					style={{
 																						aspectRatio: GetImageRatio(
 																							story.resolution
@@ -296,7 +317,7 @@ export default function VideoEditorStoryboard({
 																		{segment.imageStatus ===
 																			StoryStatus.PENDING && (
 																			<div
-																				className="relative h-32"
+																				className="relative h-40"
 																				style={{
 																					aspectRatio: GetImageRatio(
 																						story.resolution
@@ -309,7 +330,7 @@ export default function VideoEditorStoryboard({
 																		{segment.imageStatus ===
 																			StoryStatus.READY && (
 																			<div
-																				className="relative h-32"
+																				className="relative h-40"
 																				style={{
 																					aspectRatio: GetImageRatio(
 																						story.resolution
@@ -421,7 +442,6 @@ export default function VideoEditorStoryboard({
 					</div>
 				</div>
 			</div>
-
 			{editSegmentsModalState?.scene !== undefined &&
 				editSegmentsModalState?.sceneId !== undefined && (
 					<EditSegmentModal
@@ -432,6 +452,7 @@ export default function VideoEditorStoryboard({
 						}
 						onClose={() => setEditSegmentsModalState(undefined)}
 						handleRegenerateImage={handleRegenerateImage}
+						handleRegenerateSceneImages={handleRegenerateSceneImages}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
 						dispatch={dispatch}

@@ -82,13 +82,13 @@ function RegenerateSegmentBar({
 			)}
 			<p className="text-gray-600">{segment.textContent}</p>
 			<Button
-				className="bg-purple-600"
-				disabled={segment.videoStatus !== StoryStatus.COMPLETE}
+				className="w-[150px] bg-purple-600"
+				disabled={segment.videoStatus === StoryStatus.PENDING}
 				onClick={() => onRegenerateImage()}
 			>
-				{segment.videoStatus === StoryStatus.COMPLETE
-					? "Regenerate Video"
-					: "Loading"}
+				{segment.videoStatus === StoryStatus.PENDING
+					? "Loading"
+					: "Regenerate Video"}
 			</Button>
 		</div>
 	);

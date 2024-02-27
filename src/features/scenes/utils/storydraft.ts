@@ -7,7 +7,7 @@ import {
 } from "../reducers/edit-reducer";
 import React from "react";
 import { nanoid } from "nanoid";
-import { AspectRatios } from "@/utils/enums";
+import { AspectRatios, StoryImageStyles, VoiceType } from "@/utils/enums";
 
 // samplingSteps?: number; // 2-10
 // 	denoising?: number; // 0-1,
@@ -21,6 +21,11 @@ export const WebstoryToStoryDraft = (
 	return {
 		id: Webstory.id!,
 		type: Webstory.storyType,
+		settings: {
+			// @ts-expect-error types not working
+			voice: VoiceType.GenericFemale,
+			style: StoryImageStyles.Realistic,
+		},
 		slug: Webstory.slug!,
 		topLevelCategory: Webstory.topLevelCategory!,
 		// @ts-ignore
@@ -49,9 +54,10 @@ export const WebstoryToStoryDraft = (
 						return {
 							settings: {
 								prompt: segment.imagePrompt!,
-								denoising: segment.imageCFGScale!,
+								denoising: segment.imageCFGScale ?? 2,
 								style: segment.imageStyle!,
 								seed: segment.imageSeed!,
+								samplingSteps: segment.imageSamplingSteps ?? 8,
 							},
 							audioKey: segment.femaleAudioKey!,
 							audioStatus: segment.femaleAudioKey

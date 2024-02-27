@@ -11,7 +11,6 @@ import GenerateIcon from "@/components/icons/dashboard/generate-icon";
 export default function Navbar({
 	ImageRatio,
 	WebstoryData,
-	genre,
 }: {
 	ImageRatio: {
 		width: number;
@@ -20,7 +19,6 @@ export default function Navbar({
 		enumValue: DisplayAspectRatios;
 	};
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
-	genre: string;
 }) {
 	const [isEditSegmentsDialogOpen, setIsEditSegmentsDialogOpen] =
 		useState(false);
@@ -53,7 +51,7 @@ export default function Navbar({
 							</p>
 						</span>
 						<p className="text-xs rounded-sm bg-slate-100 p-1">
-							{Format.Title(genre)}
+							{Format.Title(WebstoryData?.topLevelCategory)}
 						</p>
 					</div>
 				</div>

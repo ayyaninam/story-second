@@ -28,6 +28,7 @@ const EditSegmentModal = ({
 	dispatch,
 	story,
 	handleRegenerateImage,
+	handleRegenerateSceneImages,
 }: {
 	open?: boolean;
 	onClose: () => void;
@@ -35,6 +36,7 @@ const EditSegmentModal = ({
 	sceneId?: number;
 	onSceneEdit: (scene: Scene, index: number) => void;
 	dispatch: React.Dispatch<EditStoryAction>;
+	handleRegenerateSceneImages: (sceneIndex: number) => Promise<void>;
 	story: EditStoryDraft;
 	handleRegenerateImage: (
 		segment: Segment,
@@ -102,7 +104,7 @@ const EditSegmentModal = ({
 						<Button
 							className="w-[50%] p-2 flex gap-1 text-purple-600 items-center"
 							variant="outline"
-							onClick={onClose}
+							onClick={() => handleRegenerateSceneImages(sceneId)}
 						>
 							<RefreshCw width={16} height={16} />
 							<p className="text-sm text-foreground font-semibold">
@@ -122,9 +124,6 @@ const EditSegmentModal = ({
 					</div>
 				</DialogContent>
 			</Dialog>
-			// <div className="absolute w-[90px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-
-			// </div>
 		);
 	}
 

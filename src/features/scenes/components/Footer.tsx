@@ -13,18 +13,12 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	LayoutGrid,
-	Music,
 	Radio,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useImmerReducer } from "use-immer";
-import editStoryReducer, {
-	EditStoryAction,
-	EditStoryDraft,
-	StoryStatus,
-} from "../reducers/edit-reducer";
+import { useCallback, useRef } from "react";
+import { EditStoryAction, EditStoryDraft } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import {
@@ -98,11 +92,9 @@ const Footer = ({
 	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
 	dispatch: React.Dispatch<EditStoryAction>;
 	story: EditStoryDraft;
-	view: "script" | "storyboard" | "scene";
+	view: "script" | "storyboard" | "scene" | "preview";
 }) => {
 	const router = useRouter();
-
-	const { genre } = router.query;
 
 	const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -113,7 +105,7 @@ const Footer = ({
 		scrollRef.current?.scroll({ left: 50, behavior: "smooth" });
 	}, []);
 
-	const generationStyle = story.settings?.style ?? StoryImageStyles.Auto;
+	const generationStyle = story.settings?.style ?? StoryImageStyles.Realistic;
 
 	const updateImageStyle = useCallback(
 		(style: StoryImageStyles) => {
@@ -133,6 +125,45 @@ const Footer = ({
 		mutationFn: api.video.editSegment,
 	});
 
+	const saveEdits = useCallback(async () => {
+		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
+		console.log(diff);
+		// console.log(WebstoryToStoryDraft(WebstoryData!), story);
+		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
+			details: { Ind: segment.id, Text: segment.textContent },
+			operation: SegmentModifications.Edit,
+		}));
+		const additions: SegmentModificationData[] = diff.additions.map(
+			(segmentSet) => ({
+				details: {
+					// @ts-ignore should be defined though??
+					Ind: segmentSet[0].id + 1,
+					segments: segmentSet.map((el) => ({
+						Text: el.textContent,
+						SceneId: el.sceneId,
+					})),
+				},
+				operation: SegmentModifications.Add,
+			})
+		);
+
+		const deletions: SegmentModificationData[] = diff.subtractions.map(
+			(segment) => ({
+				details: {
+					Ind: segment.id,
+				},
+				operation: SegmentModifications.Delete,
+			})
+		);
+		if (additions.length || edits.length || deletions.length) {
+			const editedResponse = await EditSegment.mutateAsync({
+				story_id: WebstoryData?.id as string,
+				story_type: WebstoryData?.storyType,
+				edits: [...edits, ...additions, ...deletions],
+			});
+		}
+	}, [WebstoryData, story, EditSegment]);
+
 	const View = {
 		script: () => (
 			<div className="flex gap-2 mt-6 w-full justify-end">
@@ -140,50 +171,11 @@ const Footer = ({
 					<Button
 						variant="outline"
 						onClick={async () => {
-							const diff = GenerateStoryDiff(
-								WebstoryToStoryDraft(WebstoryData!),
-								story
-							);
-							console.log(diff);
-							// console.log(WebstoryToStoryDraft(WebstoryData!), story);
-							const edits: SegmentModificationData[] = diff.edits.map(
-								(segment) => ({
-									details: { Ind: segment.id, Text: segment.textContent },
-									operation: SegmentModifications.Edit,
-								})
-							);
-							const additions: SegmentModificationData[] = diff.additions.map(
-								(segmentSet) => ({
-									details: {
-										// @ts-ignore should be defined though??
-										Ind: segmentSet[0].id + 1,
-										segments: segmentSet.map((el) => ({
-											Text: el.textContent,
-											SceneId: el.sceneId,
-										})),
-									},
-									operation: SegmentModifications.Add,
-								})
-							);
-
-							const deletions: SegmentModificationData[] =
-								diff.subtractions.map((segment) => ({
-									details: {
-										Ind: segment.id,
-									},
-									operation: SegmentModifications.Delete,
-								}));
-							if (additions.length || edits.length || deletions.length) {
-								const editedResponse = await EditSegment.mutateAsync({
-									story_id: WebstoryData?.id as string,
-									story_type: WebstoryData?.storyType,
-									edits: [...edits, ...additions, ...deletions],
-								});
-							}
-
+							await saveEdits();
 							api.video.regenerateAllImages({
 								// @ts-expect-error
-								image_style: story.settings?.style ?? StoryImageStyles.Auto,
+								image_style:
+									story.settings?.style ?? StoryImageStyles.Realistic,
 								story_id: story.id,
 								story_type: story.type,
 							});
@@ -194,17 +186,6 @@ const Footer = ({
 									story.slug
 								)
 							);
-							// dispatch({
-							// 	type: "update_segment_statuses",
-							// 	key: "imageStatus",
-							// 	segmentIndices: story.scenes.flatMap((el, sceneIdx) =>
-							// 		el.segments.map((_, segIdx) => ({
-							// 			segmentIndex: segIdx,
-							// 			sceneIndex: sceneIdx,
-							// 		}))
-							// 	),
-							// 	status: StoryStatus.PENDING,
-							// });
 						}}
 						className="stroke-slate-600 text-slate-600"
 					>
@@ -214,15 +195,16 @@ const Footer = ({
 				</div>
 				<div className="flex flex-col">
 					<Button
-						onClick={() =>
+						onClick={async () => {
+							await saveEdits();
 							router.push(
 								Routes.EditStoryboard(
 									story.type,
 									story.topLevelCategory,
 									story.slug
 								)
-							)
-						}
+							);
+						}}
 						className="bg-purple-700 space-x-1.5"
 					>
 						<BrandShortLogo />
@@ -236,7 +218,8 @@ const Footer = ({
 			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div className="flex flex-col">
 					<Button
-						onClick={() => {
+						onClick={async () => {
+							await saveEdits();
 							router.push(
 								Routes.EditScenes(
 									story.type,
@@ -266,6 +249,24 @@ const Footer = ({
 						className="bg-purple-700 space-x-1.5"
 					>
 						<BrandShortLogo />
+						<p className="font-bold text-slate-50">Preview Your Video</p>
+						<ArrowRight className="w-4 h-4 opacity-50" />
+					</Button>
+				</div>
+			</div>
+		),
+		preview: () => (
+			<div className="flex gap-2 mt-6 w-full justify-end">
+				<div className="flex flex-col">
+					<Button
+						onClick={() => {
+							router.push(
+								Routes.EditStory(story.type, story.topLevelCategory, story.slug)
+							);
+						}}
+						className="bg-purple-700 space-x-1.5"
+					>
+						<BrandShortLogo />
 						<p className="font-bold text-slate-50">Share & Export Video</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
@@ -276,8 +277,8 @@ const Footer = ({
 
 	const FooterRightButtons = View[view];
 	return (
-		<div className="sticky bottom-0 bg-background border-border border-t-[1px] p-3 pt-1.5 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
-			<div className="flex gap-1 ">
+		<div className="sticky bottom-0  bg-background border-border border-t-[1px] p-3 pt-1.5 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
+			<div className="flex gap-1 py-2">
 				<div>
 					<label className="text-sm text-slate-600 font-normal">Narrator</label>
 					<Select onValueChange={onUpdateNarrator}>
@@ -312,57 +313,64 @@ const Footer = ({
 			</div>
 
 			<div className="text-center max-w-md">
-				<span className="text-sm font-normal">
-					<span className="text-slate-600">Primary Image Style:</span>{" "}
-					<span className="text-purple-600">
-						{
-							images[
-								story.settings?.style ??
-									(StoryImageStyles.Auto as StoryImageStyles)
-							].label
-						}
-					</span>
-				</span>
+				{view !== "preview" && (
+					<>
+						<span className="text-sm font-normal">
+							<span className="text-slate-600">Primary Image Style:</span>{" "}
+							<span className="text-purple-600">
+								{
+									images[
+										story.settings?.style ??
+											(StoryImageStyles.Realistic as StoryImageStyles)
+									].label
+								}
+							</span>
+						</span>
 
-				<div className="flex space-x-1 items-center">
-					<ChevronLeft onClick={scrollLeft} className="w-8 h-8 opacity-50 " />
-					<div
-						ref={scrollRef}
-						className="flex 2xl:overflow-x-visible overflow-x-hidden "
-					>
-						<div className="flex gap-x-1 py-1">
-							{Object.entries(images).map(([key, image], index) => (
-								<>
-									<Image
-										src={image.src}
-										alt={image.label}
-										key={index}
-										width={64}
-										height={48}
-										className={clsx(
-											"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
-											{
-												["ring-purple-600 ring-[1.5px] ring-offset-1"]:
-													generationStyle === Number(key),
-											}
-										)}
-										role="button"
-										onClick={() =>
-											updateImageStyle(
-												Number(key) as unknown as StoryImageStyles
-											)
-										}
-										style={{ objectFit: "cover" }}
-									/>
-								</>
-							))}
+						<div className="flex space-x-1 items-center">
+							<ChevronLeft
+								onClick={scrollLeft}
+								className="w-8 h-8 opacity-50 "
+							/>
+							<div
+								ref={scrollRef}
+								className="flex 2xl:overflow-x-visible overflow-x-hidden "
+							>
+								<div className="flex gap-x-1 py-1">
+									{Object.entries(images).map(([key, image], index) => (
+										<>
+											<Image
+												src={image.src}
+												alt={image.label}
+												key={index}
+												width={64}
+												height={48}
+												className={clsx(
+													"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
+													{
+														["ring-purple-600 ring-[1.5px] ring-offset-1"]:
+															generationStyle === Number(key),
+													}
+												)}
+												role="button"
+												onClick={() =>
+													updateImageStyle(
+														Number(key) as unknown as StoryImageStyles
+													)
+												}
+												style={{ objectFit: "cover" }}
+											/>
+										</>
+									))}
+								</div>
+							</div>
+							<ChevronRight
+								onClick={scrollRight}
+								className="w-8 h-8 opacity-50 hover:bg-slate-200 hover:cursor-pointer rounded-sm"
+							/>
 						</div>
-					</div>
-					<ChevronRight
-						onClick={scrollRight}
-						className="w-8 h-8 opacity-50 hover:bg-slate-200 hover:cursor-pointer rounded-sm"
-					/>
-				</div>
+					</>
+				)}
 			</div>
 			<FooterRightButtons />
 
