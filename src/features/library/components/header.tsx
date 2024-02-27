@@ -30,13 +30,6 @@ const mainHeaderContainer: {
 	},
 };
 
-const createNewButton: CSSProperties = {
-	background:
-		"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-Purple-700, #8F22CE)",
-	boxShadow:
-		" 0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #8F22CE",
-	borderRadius: "6px",
-};
 const tutorialButton: CSSProperties = {
 	background: "transparent",
 	color: "#303546",
@@ -125,7 +118,6 @@ export const LibraryHeader = ({
 						onClick={() => {
 							// TODO: Implement
 						}}
-						style={createNewButton}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

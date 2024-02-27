@@ -205,7 +205,16 @@ const Footer = ({
 								)
 							);
 						}}
-						className="bg-purple-700 space-x-1.5"
+						className="space-x-1.5"
+						// 						border-radius: var(--Radii-radius-button, 6px);
+						// background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), #8F22CE;
+						// box-shadow: 0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #8F22CE;
+						style={{
+							background:
+								"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), #8F22CE",
+							boxShadow:
+								"0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #8F22CE",
+						}}
 					>
 						<BrandShortLogo />
 						<p className="font-bold text-slate-50">Generate Storyboard</p>
@@ -246,7 +255,7 @@ const Footer = ({
 								Routes.EditStory(story.type, story.topLevelCategory, story.slug)
 							);
 						}}
-						className="bg-purple-700 space-x-1.5"
+						className="space-x-1.5"
 					>
 						<BrandShortLogo />
 						<p className="font-bold text-slate-50">Preview Your Video</p>

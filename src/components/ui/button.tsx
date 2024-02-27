@@ -45,6 +45,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		return (
 			<Comp
 				className={cn(buttonVariants({ variant, size, className }))}
+				style={
+					!variant || variant === "default"
+						? {
+								background:
+									"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), #8F22CE",
+								boxShadow:
+									"0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #8F22CE",
+							}
+						: undefined
+				}
 				ref={ref}
 				{...props}
 			/>
