@@ -225,7 +225,7 @@ const SceneEditorView = ({
 																	// }
 																>
 																	{scene.status === StoryStatus.PENDING && (
-																		<RefreshCcw className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}]" />
+																		<RefreshCcw className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s" />
 																		// <Loader
 																		// 	percentage={20}
 																		// 	index={sceneIndex}
