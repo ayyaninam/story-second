@@ -3,7 +3,8 @@ import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
-import StoryScenes from "@/features/scenes";
+import StoryScenes from "@/features/scenes/ScenesLayout";
+import EditScript from "@/features/scenes/StoryboardLayout";
 import ScenesLayout from "@/features/scenes/components/Layout";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";
@@ -23,7 +24,7 @@ import {
 } from "next";
 import { ReactElement } from "react";
 
-const ScenesPage = ({
+const StoryboardPage = ({
 	dehydratedState,
 	session,
 	storyData,
@@ -32,12 +33,12 @@ const ScenesPage = ({
 
 	return (
 		<WebStoryProvider initialValue={storyData}>
-			<StoryScenes />
+			<EditScript />
 		</WebStoryProvider>
 	);
 };
 
-ScenesPage.getLayout = function getLayout(page: ReactElement) {
+StoryboardPage.getLayout = function getLayout(page: ReactElement) {
 	return <ScenesLayout>{page}</ScenesLayout>;
 };
 
@@ -80,4 +81,4 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	};
 };
 
-export default ScenesPage;
+export default StoryboardPage;

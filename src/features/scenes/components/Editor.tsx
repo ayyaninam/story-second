@@ -11,6 +11,7 @@ import { cn } from "@/utils";
 import React, { useRef } from "react";
 import { mainSchema } from "@/api/schema";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
+import { MAX_SEGMENT_LENGTH, MAX_SEGMENT_WORD_LENGTH } from "@/constants";
 
 enum InputStatus {
 	UNEDITED,
@@ -18,14 +19,6 @@ enum InputStatus {
 	ADDED,
 	DELETED,
 }
-// onChange;
-// onMouseOverScene;
-// onMouseOverSegment;
-// sceneOptionsComponent;
-// onCreateSegment;
-// onDeleteSegment;
-// onCreateScene;
-// onDeleteScene;
 
 const Editor = ({
 	Webstory,
@@ -101,9 +94,12 @@ const Editor = ({
 		) {
 			return InputStatus.EDITED;
 		} else if (
-			diff.additions.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
+			diff.additions
+				.flat()
+				.find(
+					(el) =>
+						el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
+				)
 		) {
 			return InputStatus.ADDED;
 		} else if (
@@ -125,10 +121,12 @@ const Editor = ({
 	) => {
 		const content = e.target.value ?? "";
 		onInputChange?.(e, segmentIndex, sceneIndex);
+
 		if (
 			// (No break) space or punctuation
-			([" ", "\u00A0"].includes(content.slice(-1)) && content.length > 40) ||
-			content.length > 50
+			([" ", "\u00A0"].includes(content.slice(-1)) &&
+				content.length > MAX_SEGMENT_WORD_LENGTH) ||
+			content.length > MAX_SEGMENT_LENGTH
 		) {
 			dispatch({
 				type: "edit_segment",
@@ -199,7 +197,9 @@ const Editor = ({
 		segmentIndex: number
 	) => {
 		// If the segment is the last segment in the scene, create a new scene
-		if (segmentIndex === scene.segments.length - 1) {
+		// if (segmentIndex === scene.segments.length - 1) {
+		if (false) {
+			// TODO: uncomment this when scene editor support is added
 			dispatch({
 				type: "create_scene",
 				scene: {
@@ -216,6 +216,7 @@ const Editor = ({
 							textStatus: TextStatus.ADDED,
 						},
 					],
+					description: "",
 					status: StoryStatus.READY,
 					id: scene.id,
 				},

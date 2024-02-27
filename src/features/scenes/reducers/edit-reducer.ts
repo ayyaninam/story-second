@@ -1,5 +1,10 @@
 import { mainSchema } from "@/api/schema";
-import { StoryImageStyles } from "@/utils/enums";
+import {
+	AspectRatios,
+	DisplayAspectRatios,
+	StoryImageStyles,
+	StoryOutputTypes,
+} from "@/utils/enums";
 import { nanoid } from "nanoid";
 
 export enum StoryStatus {
@@ -27,6 +32,7 @@ export type Settings = {
 export type Segment = {
 	id: number;
 	settings?: Settings;
+
 	textContent: string;
 	imageKey: string;
 	videoKey: string;
@@ -45,17 +51,23 @@ export type Scene = {
 		voice?: string;
 	};
 	segments: Segment[];
+	description: string;
 };
 
 export type EditStoryDraft = {
 	id: string;
+	slug: string;
+	topLevelCategory: string;
 	title: string;
+	displayResolution: DisplayAspectRatios;
+	resolution: AspectRatios;
 	settings?: {
-		style: StoryImageStyles;
+		style: StoryImageStyles | null;
 		voice: string;
 	};
 	status: StoryStatus;
 	scenes: Scene[];
+	type: StoryOutputTypes;
 };
 
 export type EditStoryAction =
@@ -93,6 +105,24 @@ export type EditStoryAction =
 	| {
 			type: "reset";
 			draft: EditStoryDraft;
+	  }
+	| {
+			type: "update_image_style";
+			style: StoryImageStyles;
+	  }
+	| {
+			type: "update_narrator";
+			voiceType: string;
+	  }
+	| {
+			type: "update_settings";
+			draft: Settings;
+	  }
+	| {
+			type: "update_segment_statuses";
+			key: "imageStatus" | "videoStatus" | "audioStatus";
+			segmentIndices: { segmentIndex: number; sceneIndex: number }[];
+			status: StoryStatus;
 	  };
 
 const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
@@ -131,6 +161,46 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			draft.scenes.splice(index, 1);
 			break;
 		}
+		case "update_image_style": {
+			const { style } = action;
+			if (!draft.settings) {
+				draft.settings = { style, voice: "" };
+			} else {
+				draft.settings.style = style;
+			}
+			break;
+		}
+		case "update_narrator": {
+			const { voiceType } = action;
+			if (!draft.settings) {
+				draft.settings = { style: null, voice: voiceType };
+			} else {
+				draft.settings.voice = voiceType;
+			}
+			break;
+		}
+		case "reset": {
+			draft = action.draft;
+			return draft;
+		}
+		case "update_segment_statuses": {
+			const { segmentIndices, key, status } = action;
+			const sceneIdSegmentIndexKeys = segmentIndices.map(
+				(el) => `${el.sceneIndex}&${el.segmentIndex}`
+			);
+			draft.scenes.forEach((scene, sceneIndex) =>
+				scene.segments.forEach((segment, segmentIndex) => {
+					if (
+						sceneIdSegmentIndexKeys.includes(`${sceneIndex}&${segmentIndex}`)
+					) {
+						// @ts-expect-error not sure why ts is complaining
+						draft.scenes[sceneIndex].segments[segmentIndex][key] = status;
+					}
+				})
+			);
+		}
+		default:
+			break;
 	}
 };
 
