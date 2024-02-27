@@ -71,7 +71,7 @@ export default function EditSegmentModalItem({
 						className="relative h-56"
 						style={{ aspectRatio: GetImageRatio(story.resolution).ratio }}
 					>
-						{segment.imageStatus !== StoryStatus.COMPLETE ? (
+						{imageStatus !== StoryStatus.COMPLETE ? (
 							<Skeleton className="w-full h-full" />
 						) : (
 							<Image
