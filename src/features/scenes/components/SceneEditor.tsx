@@ -1,23 +1,13 @@
+import { LayoutList, RefreshCcw, Settings2, Sparkle } from "lucide-react";
 import {
-	ChevronDown,
-	LayoutList,
-	MoreHorizontal,
-	RefreshCcw,
-	Settings2,
-	Sparkle,
-} from "lucide-react";
-import { useImmerReducer } from "use-immer";
-import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
 	Scene,
 	Segment,
-	TextStatus,
 	StoryStatus,
 } from "../reducers/edit-reducer";
-import { WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
@@ -28,12 +18,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import VideoPlayer, {
 	VideoPlayerHandler,
 } from "@/features/edit-story/components/video-player";
-import { AspectRatios, DisplayAspectRatios } from "@/utils/enums";
+import { DisplayAspectRatios } from "@/utils/enums";
 import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
 import { Separator } from "@/components/ui/separator";
@@ -169,16 +158,7 @@ const SceneEditorView = ({
 
 	return (
 		<>
-			<div
-				className="relative w-4/5 h-4/5 m-auto overflow-hidden"
-				style={{
-					borderRadius: "8px",
-					background: "#FEFEFF",
-					boxShadow:
-						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-					backdropFilter: "blur(5px)",
-				}}
-			>
+			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -201,7 +181,7 @@ const SceneEditorView = ({
 				</div>
 
 				<div className="w-full h-full flex flex-col">
-					<div className=" mb-4 w-full mt-6 mx-9 bg-[#FEFEFF]">
+					<div className=" mb-4 w-full mt-6 mx-9">
 						<p className="text-2xl font-bold -tracking-[-0.6px]">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
@@ -245,7 +225,7 @@ const SceneEditorView = ({
 																	// }
 																>
 																	{scene.status === StoryStatus.PENDING && (
-																		<RefreshCcw className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}]" />
+																		<RefreshCcw className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s" />
 																		// <Loader
 																		// 	percentage={20}
 																		// 	index={sceneIndex}
@@ -277,7 +257,7 @@ const SceneEditorView = ({
 																						backgroundColor: "transparent",
 																					}}
 																					className={cn(
-																						"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
+																						"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
 																						segment.videoStatus ===
 																							StoryStatus.PENDING &&
 																							"text-purple-800"
@@ -369,7 +349,7 @@ const SceneEditorView = ({
 					<Separator className="w-[35%] ml-9" />
 					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2">
 						<Button
-							className="w-[190px] text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2"
+							className="w-[190px] text-xs flex gap-2 text-white hover:text-background bg-purple-700 px-3 py-2"
 							onClick={handleRegenerateAllVideos}
 							disabled={RegenerateAllVideos.isPending}
 						>

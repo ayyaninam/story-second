@@ -15,9 +15,9 @@ export default function TooltipComponent({
 	label: string;
 }) {
 	return (
-		<Tooltip>
-			<TooltipTrigger tabIndex={-1}>{children}</TooltipTrigger>
-			<TooltipContent align={align ?? "center"} data-state="instant-open">
+		<Tooltip delayDuration={100}>
+			<TooltipTrigger>{children}</TooltipTrigger>
+			<TooltipContent align="start" className="">
 				<p>{label}</p>
 			</TooltipContent>
 		</Tooltip>

@@ -7,6 +7,7 @@ import {
 	ScrollText,
 	Unlock,
 	RefreshCcw,
+	Shuffle,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -36,6 +37,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
+import createSeed from "@/utils/create-seed";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -64,8 +66,8 @@ export default function EditSegmentModalItem({
 	}, [segment.imageStatus]);
 
 	return (
-		<div className="flex bg-slate-50 rounded-md border-border border-[1px] p-2 m-2 gap-2">
-			<div className="w-full text-slate-950 space-y-2">
+		<div className="flex bg-primary-foreground rounded-md border-border border-[1px] p-2 m-2 gap-2">
+			<div className="w-full text-foreground space-y-2">
 				<div className="flex flex-row space-x-2">
 					<div
 						className="relative h-56"
@@ -98,7 +100,7 @@ export default function EditSegmentModalItem({
 												textContent: e.target.value,
 											});
 									}}
-									className="pl-10 h-7 focus-visible:ring-purple-300 focus-visible:ring-1 text-slate-900"
+									className="pl-10 h-7 active:outline-none active:border-none focus-visible:ring-purple-300 focus-visible:ring-1"
 								/>
 							</div>
 							{segment.textContent.length >= MAX_SEGMENT_LENGTH - 1 && (
@@ -118,9 +120,9 @@ export default function EditSegmentModalItem({
 									Advanced Editing
 								</Label>
 							</div>
-							<div className="flex items-center space-x-1 ">
+							<div className="flex items-center space-x-1 text-muted-foreground">
 								<Button
-									className="flex  py-1 gap-1 h-fit bg-slate-50 text-slate-500 border-border border-[1px] rounded-md items-center"
+									className="flex  py-1 gap-1 h-fit bg-muted border-border border-[1px] rounded-md items-center"
 									variant="outline"
 								>
 									<ImagePlus
@@ -132,7 +134,7 @@ export default function EditSegmentModalItem({
 									<Plus width={"18px"} height={"18px"} className="stroke-1" />
 								</Button>
 								<Button
-									className="flex py-1 gap-1 bg-slate-50 h-fit text-slate-500 border-border border-[1px] rounded-md items-center"
+									className="flex py-1 gap-1 bg-muted h-fit  border-border border-[1px] rounded-md items-center"
 									variant="outline"
 									onClick={onRegenerateImage}
 									disabled={imageStatus === StoryStatus.PENDING}
@@ -178,7 +180,6 @@ function AdvancedEditingOptions({
 			<div
 				className="border-[1px] rounded-md p-5 text-sm"
 				style={{
-					background: "linear-gradient(180deg, #FFF 0%, #F8FAFC 100%)",
 					boxShadow: "0px 0px 6px 0px #D7CBE1",
 					border: "0.5px solid #BB55F7",
 				}}
@@ -250,21 +251,33 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<Input
-							id="seed"
-							type="number"
-							min={-1}
-							max={2e16 - 1}
-							className="w-full border-[1px] rounded-md m-1 p-2"
-							placeholder="2"
-							value={settings?.seed ?? -1}
-							onChange={(e) => {
-								onSettingsChange({
-									...settings,
-									seed: parseInt(e.target.value),
-								});
-							}}
-						/>
+
+						<div className="relative">
+							<Input
+								id="seed"
+								type="number"
+								min={-1}
+								max={2e16 - 1}
+								className="w-full border-[1px] rounded-md m-1 p-2"
+								placeholder="2"
+								value={settings?.seed ?? -1}
+								onChange={(e) => {
+									onSettingsChange({
+										...settings,
+										seed: parseInt(e.target.value),
+									});
+								}}
+							/>
+							<Shuffle
+								className="h-8 w-8 absolute right-0 top-1 p-1 rounded-sm shadow-sm hover:cursor-pointer border-border border-[1px]"
+								onClick={() => {
+									onSettingsChange({
+										...settings,
+										seed: createSeed(),
+									});
+								}}
+							/>
+						</div>
 					</div>
 				</div>
 				<div className="flex gap-6">
@@ -278,13 +291,7 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<div
-							className="flex w-full gap-1 px-1 rounded-sm"
-							style={{
-								background:
-									"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
-							}}
-						>
+						<div className="flex w-full gap-1 px-1 rounded-sm bg-gradient-to-l from-blue-200 via-white to-transparent">
 							<Input
 								id="denoising-factor"
 								className="w-16"
@@ -327,13 +334,7 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<div
-							className="flex w-full gap-1 px-1 rounded-sm"
-							style={{
-								background:
-									"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
-							}}
-						>
+						<div className="flex w-full gap-1 px-1 rounded-sm bg-gradient-to-l from-blue-200 via-white to-transparent">
 							<Input
 								id="sampling-steps"
 								type="number"

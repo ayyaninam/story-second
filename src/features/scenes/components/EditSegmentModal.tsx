@@ -59,8 +59,8 @@ const EditSegmentModal = ({
 					!open && onClose();
 				}}
 			>
-				<DialogContent className="max-w-[1000px]">
-					<DialogTitle className="m-0 font-semibold text-[#121113] px-3 text-md">
+				<DialogContent className="max-w-[45%] bg-background">
+					<DialogTitle className="m-0 font-semibold text-foreground px-3 text-md">
 						<div className="flex gap-2 items-center">
 							<Settings2 width={16} height={16} />
 							<p>Edit Segments</p>
@@ -107,7 +107,7 @@ const EditSegmentModal = ({
 							onClick={() => handleRegenerateSceneImages(sceneId)}
 						>
 							<RefreshCw width={16} height={16} />
-							<p className="text-sm text-slate-950 font-semibold">
+							<p className="text-sm text-foreground font-semibold">
 								Regenerate All Images
 							</p>
 							<p className="text-sm">(5 Credits)</p>
@@ -118,7 +118,7 @@ const EditSegmentModal = ({
 								variant="default"
 							>
 								<Check width={16} height={16} />
-								<p className="text-sm">Done</p>
+								<p className="text-sm font-semibold">Done</p>
 							</Button>
 						</DialogClose>
 					</div>

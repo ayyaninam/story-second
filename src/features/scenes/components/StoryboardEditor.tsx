@@ -1,19 +1,10 @@
 import {
-	AspectRatios,
 	DisplayAspectRatios,
 	SegmentModifications,
 	StoryImageStyles,
-	StoryboardViewType,
 } from "@/utils/enums";
+import { ChevronRight, LayoutList, Plus, Settings2 } from "lucide-react";
 import {
-	ChevronDown,
-	ChevronRight,
-	LayoutList,
-	Plus,
-	SparkleIcon,
-} from "lucide-react";
-import { useImmerReducer } from "use-immer";
-import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
 	Scene,
@@ -23,7 +14,7 @@ import editStoryReducer, {
 } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import EditSegmentModal from "./EditSegmentModal";
@@ -40,7 +31,6 @@ import AutosizeInput from "react-input-autosize";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetImageRatio } from "@/utils/image-ratio";
-import { Button } from "@/components/ui/button";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -215,16 +205,7 @@ export default function StoryboardEditor({
 
 	return (
 		<>
-			<div
-				className="relative w-4/5 h-4/5 m-auto overflow-hidden"
-				style={{
-					borderRadius: "8px",
-					background: "#FEFEFF",
-					boxShadow:
-						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-					backdropFilter: "blur(5px)",
-				}}
-			>
+			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -248,7 +229,7 @@ export default function StoryboardEditor({
 						</Button> */}
 					</div>
 				</div>
-				<div className="relative  px-6 pt-6 pb-2 bg-[#FEFEFF]">
+				<div className="relative  px-6 pt-6 pb-2">
 					<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
 						{Format.Title(WebstoryData?.storyTitle)}
 					</p>
@@ -296,7 +277,7 @@ export default function StoryboardEditor({
 												{story.scenes.map((scene, sceneIndex) => (
 													<div
 														key={sceneIndex}
-														className="pt-2 flex flex-row justify-between w-full rounded-md hover:bg-slate-50 group items-center"
+														className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
 													>
 														<div className="flex items-center space-y-1 flex-wrap">
 															{scene.segments.map((segment, segmentIndex) => {
@@ -400,7 +381,7 @@ export default function StoryboardEditor({
 																			}}
 																			name={segmentIndex.toString()}
 																			inputClassName={cn(
-																				"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
+																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-purple-200 hover:text-slate-950 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
 																				segment.textStatus ===
 																					TextStatus.EDITED && "text-slate-500"
 																			)}
@@ -429,8 +410,9 @@ export default function StoryboardEditor({
 																	</span>
 																))}
 															</div>
-															<div className="hidden group-hover:block ">
-																<OptionsButton
+															<div className="invisible flex group-hover:visible gap-x-1 p-2">
+																<span
+																	className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
 																	onClick={() =>
 																		setEditSegmentsModalState({
 																			open: true,
@@ -440,7 +422,9 @@ export default function StoryboardEditor({
 																			story: story,
 																		})
 																	}
-																/>
+																>
+																	<Settings2 className="w-4 h-4 stroke-slate-500" />
+																</span>
 															</div>
 														</div>
 													</div>

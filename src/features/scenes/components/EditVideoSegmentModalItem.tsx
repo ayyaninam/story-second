@@ -77,12 +77,12 @@ function RegenerateSegmentBar({
 				/>
 			) : (
 				<Skeleton>
-					<div className="bg-slate-500 w-[66px] h-[42px]"></div>
+					<div className="bg-muted w-[66px] h-[42px]"></div>
 				</Skeleton>
 			)}
-			<p className="text-gray-600">{segment.textContent}</p>
+			<p className="text-muted-foreground">{segment.textContent}</p>
 			<Button
-				className="w-[150px] bg-purple-600"
+				className="w-[150px] text-background bg-purple-600"
 				disabled={segment.videoStatus === StoryStatus.PENDING}
 				onClick={() => onRegenerateImage()}
 			>
@@ -353,11 +353,11 @@ export default function EditSegmentModalItem({
 	const [isChecked, setIsChecked] = useState(showAdvancedSettings);
 
 	return (
-		<div className="flex bg-slate-100 rounded-md border-border border-[1px] p-2 m-2 gap-2">
+		<div className="flex bg-primary-foreground rounded-md border-border border-[1px] p-2 m-2 gap-2">
 			{showAdvancedSettings && (
 				<VerticalControlButtons onDelete={() => onSegmentDelete?.()} />
 			)}
-			<div className="w-full text-slate-950 space-y-2">
+			<div className="w-full text-background space-y-2">
 				<RegenerateSegmentBar
 					segment={segment}
 					onRegenerateImage={onRegenerateImage}

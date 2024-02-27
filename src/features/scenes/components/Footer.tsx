@@ -187,7 +187,7 @@ const Footer = ({
 								)
 							);
 						}}
-						className="stroke-slate-600 text-slate-600"
+						className="stroke-muted text-muted-foreground"
 					>
 						<LayoutGrid strokeWidth={1} className="mr-2" />
 						Generate Images & Continue
