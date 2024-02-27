@@ -18,10 +18,10 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/",
+  "start_url": "/library",
   "background_color": "#f7f7f7",
   "display": "standalone",
   "scope": "/",
   "theme_color": "#f7f7f7",
-  "description": "Story.com is a platform for sharing and discovering stories.",
+  "description": "Story.com is a platform for sharing and discovering stories."
 }
