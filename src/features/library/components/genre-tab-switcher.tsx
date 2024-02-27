@@ -37,7 +37,7 @@ export const GenreTabSwitcher = () => {
 		queryFn: () => api.library.getCategories(),
 		queryKey: [QueryKeys.CATEGORIES],
 	});
-	const selectedGenre = router.query.genre as string;
+	const selectedGenre = router.query.genre as string || "all";
 	const setSelectedGenre = useCallback(
 		(genre: string) => {
 			router.push(

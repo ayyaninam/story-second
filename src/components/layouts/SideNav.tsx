@@ -10,7 +10,6 @@ import { Command } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import RightPlay from "@/components/icons/right-play";
 import Format from "@/utils/format";
 import {getSession} from "@auth0/nextjs-auth0";

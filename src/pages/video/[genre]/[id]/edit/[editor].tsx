@@ -6,7 +6,7 @@ import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContex
 import StoryScenes from "@/features/scenes/ScenesLayout";
 import ScriptLayout from "@/features/scenes/ScriptLayout";
 import EditScript from "@/features/scenes/StoryboardLayout";
-import ScenesLayout from "@/features/scenes/components/Layout";
+import PageLayout from "@/components/layouts/PageLayout";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
@@ -94,7 +94,7 @@ const EditorPage = ({
 };
 
 EditorPage.getLayout = function getLayout(page: ReactElement) {
-	return <ScenesLayout>{page}</ScenesLayout>;
+	return <PageLayout>{page}</PageLayout>;
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
