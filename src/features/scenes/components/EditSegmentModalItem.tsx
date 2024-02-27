@@ -9,7 +9,7 @@ import {
 	RefreshCcw,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import {
 	EditStoryDraft,
@@ -51,6 +51,18 @@ export default function EditSegmentModalItem({
 	regeneratingImage: boolean;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
+	const [imageStatus, setImageStatus] = useState(segment.imageStatus);
+
+	useEffect(() => {
+		// The idea cycle should be READY -> PENDING -> COMPLETE
+		if (
+			imageStatus === StoryStatus.PENDING &&
+			segment.imageStatus === StoryStatus.READY
+		)
+			return;
+		setImageStatus(segment.imageStatus);
+	}, [segment.imageStatus]);
+
 	return (
 		<div className="flex bg-slate-50 rounded-md border-border border-[1px] p-2 m-2 gap-2">
 			<div className="w-full text-slate-950 space-y-2">
@@ -123,18 +135,16 @@ export default function EditSegmentModalItem({
 									className="flex py-1 gap-1 bg-slate-50 h-fit text-slate-500 border-border border-[1px] rounded-md items-center"
 									variant="outline"
 									onClick={onRegenerateImage}
-									disabled={segment.imageStatus === StoryStatus.PENDING}
+									disabled={imageStatus === StoryStatus.PENDING}
 								>
 									<RefreshCcw
 										className="stroke-1"
 										width={"18px"}
 										height={"18px"}
 									/>
-									{segment.imageStatus === StoryStatus.COMPLETE && "Regenerate"}
-									{segment.imageStatus === StoryStatus.PENDING &&
-										"Regenerating"}
-									{segment.imageStatus === StoryStatus.READY &&
-										"Save & Generate"}
+									{imageStatus === StoryStatus.COMPLETE && "Regenerate"}
+									{imageStatus === StoryStatus.PENDING && "Regenerating"}
+									{imageStatus === StoryStatus.READY && "Save & Generate"}
 								</Button>
 							</div>
 						</div>
