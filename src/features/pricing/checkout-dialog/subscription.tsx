@@ -23,28 +23,28 @@ const pricingStructure = {
 		},
 		[SubscriptionPeriod.Annual]: {
 			title: "Basic Subscription",
-			label: "$100 / Year",
+			label: "$120 / Year",
 			item: {
 				description: "Basic Annual",
-				price: 100,
+				price: 120,
 			},
 		},
 	},
 	[SubscriptionPlan.Pro]: {
 		[SubscriptionPeriod.Monthly]: {
 			title: "Pro Subscription",
-			label: "$20 / Month",
+			label: "$80 / Month",
 			item: {
 				description: "Pro Monthly",
-				price: 20,
+				price: 80,
 			},
 		},
 		[SubscriptionPeriod.Annual]: {
 			title: "Pro Subscription",
-			label: "$200 / Year",
+			label: "$960 / Year",
 			item: {
 				description: "Pro Annual",
-				price: 200,
+				price: 960,
 			},
 		},
 	},

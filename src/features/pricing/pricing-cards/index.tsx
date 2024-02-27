@@ -3,10 +3,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Subtrack from "@/components/icons/subtrack";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
 
 import cn from "@/utils/cn";
-import { SubscriptionPeriod } from "@/utils/enums";
-
+import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
 import PricingCard from "./pricing-card";
 
 export interface PricingTierFrequency {
@@ -51,7 +51,7 @@ const CheckIcon = ({ className }: { className?: string }) => (
 
 const PricingCards = () => {
 	const [frequency, setFrequency] = useState<PricingTierFrequency>(
-		frequencies[0]
+		frequencies[1]
 	);
 	const [isHoveredLargeCard, setIsHoveredLargeCard] = useState(false);
 
@@ -138,16 +138,26 @@ const PricingCards = () => {
 								power and flexibility.
 							</>
 						}
-						priceLabel={frequency.label === "Monthly" ? "$11.99" : "$119.99"}
+						priceLabel={frequency.label === "Monthly" ? "$10" : "$120"}
 						priceSuffix={frequency.priceSuffix}
 						button={(isHovered) => (
-							<Button
-								variant={isHovered ? "purple" : "outline"}
-								className="w-full transition-none"
-								size="sm"
+							<CheckoutDialog
+								variant="subscription"
+								plan={SubscriptionPlan.Basic}
+								period={
+									frequency.label === "Monthly"
+										? SubscriptionPeriod.Monthly
+										: SubscriptionPeriod.Annual
+								}
 							>
-								Sign Up For Starter
-							</Button>
+								<Button
+									variant={isHovered ? "purple" : "outline"}
+									className="w-full transition-none"
+									size="sm"
+								>
+									Sign Up For Starter
+								</Button>
+							</CheckoutDialog>
 						)}
 						items={[
 							"2 videos / month",
@@ -164,16 +174,26 @@ const PricingCards = () => {
 						variant="Paid"
 						title="Creator"
 						description="More videos. More stories. Faster generation times."
-						priceLabel={frequency.label === "Monthly" ? "$79.99" : "$799.99"}
+						priceLabel={frequency.label === "Monthly" ? "$80" : "$960"}
 						priceSuffix={frequency.priceSuffix}
 						button={(isHovered) => (
-							<Button
-								variant={isHovered ? "purple" : "outline"}
-								className="w-full transition-none"
-								size="sm"
+							<CheckoutDialog
+								variant="subscription"
+								plan={SubscriptionPlan.Pro}
+								period={
+									frequency.label === "Monthly"
+										? SubscriptionPeriod.Monthly
+										: SubscriptionPeriod.Annual
+								}
 							>
-								Sign Up For Creator
-							</Button>
+								<Button
+									variant={isHovered ? "purple" : "outline"}
+									className="w-full transition-none"
+									size="sm"
+								>
+									Sign Up For Creator
+								</Button>
+							</CheckoutDialog>
 						)}
 						items={[
 							"12 videos / month",
@@ -191,9 +211,7 @@ const PricingCards = () => {
 							variant="Paid"
 							title="Enterprise"
 							description="More videos. More stories. Faster generation times."
-							priceLabel={
-								frequency.label === "Monthly" ? "$799.99" : "many money"
-							}
+							priceLabel={frequency.label === "Monthly" ? "$800" : "$9600"}
 							priceSuffix={frequency.priceSuffix}
 							button={(isHovered) => (
 								<Button
@@ -243,7 +261,7 @@ const PricingCards = () => {
 							<div className="flex w-[193px] pl-0 pr-[17.87px] py-0 flex-col items-start relative">
 								<div className="pl-0 pr-[50.73px] py-0 mr-[-31.60px] inline-flex items-baseline gap-[8px] relative flex-[0_0_auto]">
 									<div className="relative w-fit mt-[-1.00px] font-light text-slate-700 text-[32px] tracking-[0] leading-[48px] whitespace-nowrap">
-										{frequency.label === "Monthly" ? "$799.99" : "many money"}
+										{frequency.label === "Monthly" ? "$800" : "$9600"}
 									</div>
 									<div className="relative w-fit font-medium text-slate-400 text-[14px] tracking-[0] leading-[24px] whitespace-nowrap">
 										{frequency.priceSuffix}

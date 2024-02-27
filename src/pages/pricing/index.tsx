@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./pricing.module.css";
 import cn from "@/utils/cn";
 import PricingCards from "@/features/pricing/pricing-cards";
+import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
 
 export default function PricingPage() {
 	const bannerText = "hello world 😄";
@@ -33,6 +34,8 @@ export default function PricingPage() {
 					<div>
 						<PricingCards />
 					</div>
+
+					<ModeToggle />
 				</div>
 			</div>
 		</div>
