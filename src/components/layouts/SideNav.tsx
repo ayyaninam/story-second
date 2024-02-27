@@ -32,7 +32,7 @@ export const menuItems = [
 		icon: <GenerateIcon />,
 		text: "Generate",
 		shortcut: "G",
-		redirectUrl: "/",
+		redirectUrl: "/generate",
 		cssVars: {
 			"--hover-border-color": "rgba(206, 122, 255, 0.2)",
 			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(187, 85, 247, 0.5) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
@@ -158,7 +158,7 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-600">
 				<div className="mb-4 mx-3">
 					<Link
-						href={"/"}
+						href={"/explore"}
 					>
 						<StoryLogoFullWhite />
 					</Link>
