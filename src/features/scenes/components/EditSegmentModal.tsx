@@ -25,9 +25,9 @@ const EditSegmentModal = ({
 	scene,
 	sceneId,
 	onSceneEdit,
+	sceneIndex,
 	dispatch,
 	story,
-	handleRegenerateImage,
 }: {
 	open?: boolean;
 	onClose: () => void;
@@ -36,17 +36,15 @@ const EditSegmentModal = ({
 	onSceneEdit: (scene: Scene, index: number) => void;
 	dispatch: React.Dispatch<EditStoryAction>;
 	story: EditStoryDraft;
-	handleRegenerateImage: (
-		segment: Segment,
-		sceneIndex: number,
-		segmentIndex: number,
-		saveBeforeRegenerating?: boolean
-	) => Promise<void>;
+	sceneIndex: number;
 }) => {
 	const [webstory] = useWebstoryContext();
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
+	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
+		number | null
+	>(null);
 
 	if (scene && sceneId !== undefined) {
 		return (
@@ -75,10 +73,7 @@ const EditSegmentModal = ({
 								key={index}
 								story={story}
 								segment={segment}
-								onRegenerateImage={() => {
-									handleRegenerateImage(segment, sceneId, index, true);
-								}}
-								regeneratingImage={regeratingImages[index]}
+								dispatch={dispatch}
 								onSegmentEdit={(updatedSegment) => {
 									dispatch({
 										type: "edit_segment",
@@ -86,7 +81,6 @@ const EditSegmentModal = ({
 										segmentIndex: index,
 										segment: updatedSegment,
 									});
-									// setEditedScene(updatedScene);
 								}}
 								onSegmentDelete={() => {
 									dispatch({
@@ -95,6 +89,10 @@ const EditSegmentModal = ({
 										segmentIndex: index,
 									});
 								}}
+								segmentIndex={index}
+								imageRegenerationSegmentId={imageRegenerationSegmentId}
+								setImageRegenerationSegmentId={setImageRegenerationSegmentId}
+								sceneIndex={sceneIndex}
 							/>
 						))}
 					</div>

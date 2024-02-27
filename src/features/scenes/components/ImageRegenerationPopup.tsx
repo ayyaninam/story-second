@@ -5,7 +5,13 @@ import { AspectRatios, StoryImageStyles } from "@/utils/enums";
 import Format from "@/utils/format";
 import { GetImageRatio } from "@/utils/image-ratio";
 import Image from "next/image";
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+	ReactNode,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
@@ -219,25 +225,30 @@ function ImageRegenerationPopup({
 	story,
 	segment,
 	onClose,
-	imageRegenerationSegmentId,
 	dispatch,
 	segmentIndex,
 	sceneIndex,
+	regenerateOnOpen,
+	open,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
 	onClose: () => void;
-	imageRegenerationSegmentId: number | null;
 	dispatch: React.Dispatch<EditStoryAction>;
 	segmentIndex: number;
 	sceneIndex: number;
+	regenerateOnOpen?: boolean;
+	open: boolean;
 }) {
 	const imageAspectRatio = GetImageRatio(story.resolution).ratio;
 	const loading = segment.alternateImagesStatus === StoryStatus.PENDING;
 	const [selectedImageKey, setSelectedImageKey] = useState<string | undefined>(
 		""
 	);
-	const alternateImageKeys = segment.alternateImageKeys ?? [];
+	const alternateImageKeys = useMemo(
+		() => segment.alternateImageKeys ?? [],
+		[segment.alternateImageKeys]
+	);
 
 	const generateAlternateImageOptions = useCallback(async () => {
 		dispatch({
@@ -310,10 +321,16 @@ function ImageRegenerationPopup({
 		onClose,
 	]);
 
+	useEffect(() => {
+		if (open && regenerateOnOpen && !loading) {
+			generateAlternateImageOptions();
+		}
+	}, [open]);
+
 	if (loading || alternateImageKeys.length > 0) {
 		return (
 			<PopoverContent
-				side="top"
+				side="right"
 				onInteractOutside={(e) => {
 					if (loading) {
 						e.preventDefault();
@@ -459,9 +476,10 @@ function ImageRegenerationPopup({
 			</PopoverContent>
 		);
 	}
+
 	return (
 		<PopoverContent
-			side="top"
+			side="right"
 			onInteractOutside={() => {
 				onClose();
 			}}

@@ -81,6 +81,7 @@ export default function StoryboardEditor({
 		sceneId?: number;
 		dispatch: React.Dispatch<EditStoryAction>;
 		story: EditStoryDraft;
+		sceneIndex?: number;
 	}>();
 
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
@@ -150,52 +151,6 @@ export default function StoryboardEditor({
 		setPreviousStory(WebstoryToStoryDraft(newStory));
 		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
 		return newStory;
-	};
-
-	const handleRegenerateImage = async (
-		segment: Segment,
-		sceneIndex: number,
-		segmentIndex: number,
-		saveBeforeRegenerating: boolean = false
-	) => {
-		dispatch({
-			type: "edit_segment",
-			sceneIndex,
-			segmentIndex: segmentIndex,
-			segment: { ...segment, imageStatus: StoryStatus.PENDING },
-		});
-
-		let newSegment = null;
-		if (saveBeforeRegenerating) {
-			const newStory = await handleSubmitEditSegments();
-			newSegment = newStory?.scenes?.[sceneIndex]?.videoSegments?.find(
-				(el) => el.textContent === segment.textContent
-			);
-		}
-		const regeneratedImages = await api.video.regenerateImage({
-			// @ts-ignore
-			image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
-			prompt: segment.settings?.prompt ?? segment.textContent,
-			segment_idx: newSegment?.index ?? segment.id,
-			story_id: story.id,
-			story_type: WebstoryData?.storyType!,
-			cfg_scale: segment.settings?.denoising ?? 7,
-			sampling_steps: segment.settings?.samplingSteps ?? 8,
-			seed: segment.settings?.seed ?? 3121472823,
-		});
-
-		if (regeneratedImages.target_paths.length === 1) {
-			dispatch({
-				type: "edit_segment",
-				sceneIndex,
-				segmentIndex: segmentIndex,
-				segment: {
-					...segment,
-					imageStatus: StoryStatus.COMPLETE,
-					imageKey: regeneratedImages.image_key,
-				},
-			});
-		}
 	};
 
 	return (
@@ -415,6 +370,7 @@ export default function StoryboardEditor({
 																			scene: scene,
 																			sceneId: sceneIndex,
 																			story: story,
+																			sceneIndex: sceneIndex,
 																		})
 																	}
 																/>
@@ -440,7 +396,6 @@ export default function StoryboardEditor({
 							editSegmentsModalState.sceneId !== undefined
 						}
 						onClose={() => setEditSegmentsModalState(undefined)}
-						handleRegenerateImage={handleRegenerateImage}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
 						dispatch={dispatch}
@@ -452,6 +407,7 @@ export default function StoryboardEditor({
 								index: index,
 							});
 						}}
+						sceneIndex={editSegmentsModalState?.sceneIndex!}
 					/>
 				)}
 		</>

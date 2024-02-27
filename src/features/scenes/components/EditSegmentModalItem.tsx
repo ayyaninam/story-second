@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useState } from "react";
 import React from "react";
 import {
+	EditStoryAction,
 	EditStoryDraft,
 	Segment,
 	Settings,
@@ -37,42 +38,75 @@ import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { cn } from "@/utils";
+import ImageRegenerationPopoverHOC from "./ImageRegenerationPopoverHOC";
 
 export default function EditSegmentModalItem({
 	segment,
 	story,
 	onSegmentEdit,
+	segmentIndex,
 	onSegmentDelete,
-	onRegenerateImage,
-	regeneratingImage,
+	imageRegenerationSegmentId,
+	setImageRegenerationSegmentId,
+	dispatch,
+	sceneIndex,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
 	onSegmentEdit: (updatedSegment: Segment) => void;
-	onSegmentDelete: () => void;
-	onRegenerateImage: () => void;
-	regeneratingImage: boolean;
+	dispatch: React.Dispatch<EditStoryAction>;
+	segmentIndex: number;
+	onSegmentDelete: (segmentIndex: number) => void;
+	imageRegenerationSegmentId: number | null;
+	setImageRegenerationSegmentId: React.Dispatch<
+		React.SetStateAction<number | null>
+	>;
+	sceneIndex: number;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
+	const [regeneratingImage, setRegeneratingImage] = useState(false);
 	return (
 		<div className="flex bg-slate-50 rounded-md border-border border-[1px] p-2 m-2 gap-2">
 			<div className="w-full text-slate-950 space-y-2">
 				<div className="flex flex-row space-x-2">
 					<div
-						className="relative h-56"
+						className="h-56"
 						style={{ aspectRatio: GetImageRatio(story.resolution).ratio }}
 					>
 						{segment.imageStatus !== StoryStatus.COMPLETE ? (
 							<Skeleton className="w-full h-full" />
 						) : (
-							<Image
-								alt={segment.textContent}
-								src={Format.GetImageUrl(segment.imageKey)}
-								className="rounded-sm"
-								layout="fill"
-								objectFit="cover" // Or use 'cover' depending on the desired effect
-								style={{ objectFit: "contain" }}
-							/>
+							<ImageRegenerationPopoverHOC
+								segment={segment}
+								story={story}
+								open={imageRegenerationSegmentId === segment.id}
+								onClose={() => {
+									setImageRegenerationSegmentId((prevSegmentId) => {
+										if (prevSegmentId === segment.id) return null;
+										return prevSegmentId;
+									});
+								}}
+								dispatch={dispatch}
+								segmentIndex={segmentIndex}
+								sceneIndex={sceneIndex}
+								regenerateOnOpen={regeneratingImage}
+								triggerButtonClassName="w-full h-full"
+							>
+								<div className="relative w-full h-full">
+									<Image
+										onClick={() => {
+											setImageRegenerationSegmentId(segment.id);
+											setRegeneratingImage(false);
+										}}
+										alt={segment.textContent}
+										src={Format.GetImageUrl(segment.imageKey)}
+										className="rounded-sm"
+										layout="fill"
+										objectFit="cover" // Or use 'cover' depending on the desired effect
+										style={{ objectFit: "contain" }}
+									/>
+								</div>
+							</ImageRegenerationPopoverHOC>
 						)}
 					</div>
 					<div className="w-full h-full flex flex-col space-y-3">
@@ -125,19 +159,23 @@ export default function EditSegmentModalItem({
 								<Button
 									className="flex py-1 gap-1 bg-slate-50 h-fit text-slate-500 border-border border-[1px] rounded-md items-center"
 									variant="outline"
-									onClick={onRegenerateImage}
-									disabled={segment.imageStatus === StoryStatus.PENDING}
+									onClick={() => {
+										setImageRegenerationSegmentId(segment.id);
+										setRegeneratingImage(true);
+									}}
+									disabled={
+										segment.alternateImagesStatus === StoryStatus.PENDING
+									}
 								>
 									<RefreshCcw
 										className="stroke-1"
 										width={"18px"}
 										height={"18px"}
 									/>
-									{segment.imageStatus === StoryStatus.COMPLETE && "Regenerate"}
-									{segment.imageStatus === StoryStatus.PENDING &&
+									{segment.alternateImagesStatus !== StoryStatus.PENDING &&
+										"Regenerate"}
+									{segment.alternateImagesStatus === StoryStatus.PENDING &&
 										"Regenerating"}
-									{segment.imageStatus === StoryStatus.READY &&
-										"Save & Generate"}
 								</Button>
 							</div>
 						</div>
