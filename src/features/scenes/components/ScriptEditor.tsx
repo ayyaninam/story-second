@@ -4,7 +4,7 @@ import {
 	SegmentModifications,
 	StoryboardViewType,
 } from "@/utils/enums";
-import { ChevronDown, LayoutList, SparkleIcon } from "lucide-react";
+import { ChevronDown, LayoutList, RefreshCw, SparkleIcon } from "lucide-react";
 import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
@@ -229,6 +229,7 @@ export default function ScriptEditor({
 																		className={cn(`flex flex-wrap `)}
 																	>
 																		<AutosizeInput
+																			disabled={!WebstoryData?.storyDone}
 																			onKeyDown={(e) => {
 																				if (e.key === "Enter") {
 																					handleEnter(
@@ -272,6 +273,12 @@ export default function ScriptEditor({
 															</div>
 														</div>
 													))}
+													{!WebstoryData?.storyDone && (
+														<div className="flex w-full justify-center items-center border-t-2 p-2 gap-1">
+															<RefreshCw className="animate-spin stroke-purple-600" />
+															<p>Generating your story</p>
+														</div>
+													)}
 												</div>
 											);
 										}}
