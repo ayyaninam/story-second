@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import ExploreIcon from "./icons/ExploreIcon";
-import GenerateIcon from "./icons/GenerateIcon";
-import LibraryIcon from "./icons/LibraryIcon";
-import FreeCreditsIcon from "./icons/FreeCreditsIcon";
-import ChallengesIcon from "./icons/ChallengesIcon";
+import ExploreIcon from "@/components/icons/side-nav/ExploreIcon";
+import GenerateIcon from "@/components/icons/side-nav/GenerateIcon";
+import LibraryIcon from "@/components/icons/side-nav/LibraryIcon";
+import FreeCreditsIcon from "@/components/icons/side-nav/FreeCreditsIcon";
+import ChallengesIcon from "@/components/icons/side-nav/ChallengesIcon";
 import { Command } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
@@ -16,6 +16,7 @@ import {getSession} from "@auth0/nextjs-auth0";
 import api from "@/api";
 import StoryLogoFullWhite from "@/components/brand-logos/primary-white";
 
+// # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
 	{
 		icon: <ExploreIcon />,
@@ -23,9 +24,9 @@ export const menuItems = [
 		shortcut: "E",
 		redirectUrl: "/explore",
 		cssVars: {
-			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
+			"--hover-border-color": "rgba(122,255,180,0.1)",
 			"--hover-background": "radial-gradient(88.31% 100% at 0% 50%, rgba(102, 129, 255, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
-		}
+		},
 	},
 	{
 		icon: <GenerateIcon />,
@@ -54,7 +55,7 @@ export const menuItems = [
 		redirectUrl: "/challenges",
 		cssVars: {
 			"--hover-border-color": "rgba(152, 230, 55, 0.50)",
-			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(152, 230, 55, 0.00) 100%)",
+			"--hover-background": "radial-gradient(50.88% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
 	},
 	{
@@ -86,7 +87,7 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 	const { user, isLoading } = useUser();
 
 	return (
-		<div className="w-[18rem] flex flex-col justify-between">
+		<div className="hidden w-[18rem] lg:flex lg:flex-col lg:justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
 					{!isLoading && (

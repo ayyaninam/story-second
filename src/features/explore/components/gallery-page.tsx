@@ -18,10 +18,8 @@ import GenericPagination from "@/components/ui/generic-pagination";
 
 function ExploreGalleryPage({
 	orientation = "wide",
-	searchTerm,
 }: {
 	orientation: VideoOrientation;
-	searchTerm: string;
 }) {
 	const router = useRouter();
 	const galleryDetails = EXPLORE_HOME_GALLERY_DATA[orientation];
@@ -34,11 +32,10 @@ function ExploreGalleryPage({
 			const sort = router.query.sort as string || "desc"
 			return {
 				CurrentPage: parseInt(page),
-				topLevelCategory: router.query.genre as string,
-				searchTerm,
+				topLevelCategory: router.query.genre as string || "all",
 				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm, router.query.sort]),
+		}, [router.query.page, router.query.genre, router.query.sort]),
 		500
 	);
 	const storiesList = useQuery<

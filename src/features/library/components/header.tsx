@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/select";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
-import { SORTING_OPTIONS } from "../constants";
+import { genreOptions, SORTING_OPTIONS, VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
 import toast from "react-hot-toast";
+import {MobileSelector} from "@/components/ui/mobile-selector";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -52,16 +53,38 @@ const subHeaderContainer: CSSProperties = {
 export const LibraryHeader = ({
 	selectedOrientationTab,
 	setSelectedOrientationTab,
-	searchTerm,
-	setSearchTerm,
+	selectedGenre,
+	setSelectedGenre,
 }: {
 	selectedOrientationTab: string;
 	setSelectedOrientationTab: (orientation: string) => void;
-	searchTerm: string;
-	setSearchTerm: Dispatch<SetStateAction<string>>;
+	selectedGenre: string;
+	setSelectedGenre: (genre: string) => void;
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
+
+	const sort = router.query.sort as string || "desc";
+	const setSort = (sort: string) => {
+		router.push(
+			{
+				query: { ...router.query, sort: sort, page: 1 },
+			},
+			undefined,
+			{ shallow: true }
+		);
+	};
+	const sortOptions = Object.values(SORTING_OPTIONS);
+	const [isMobile, setIsMobile] = React.useState(true);
+
+	React.useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 	return (
 		<div
 			style={{
@@ -86,43 +109,49 @@ export const LibraryHeader = ({
 						<span className="text-accent-700 text-sm font-normal">17 Videos</span>
 					</div>
 				</div>
-				<HeaderTabSwitcher
-					selectedTab={selectedOrientationTab}
-					setSelectedTab={setSelectedOrientationTab}
-				/>
-				<div className="flex items-center gap-4">
-					<Button
-						className={`px-4 py-1.5 text-sm font-medium flex gap-2 items-center h-fit`}
-						variant="ghost"
-						onClick={() => {
-							// TODO: Implement
-								toast.success("Coming soon!")
-						}}
-						style={tutorialButton}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="17"
-							height="16"
-							viewBox="0 0 17 16"
-							fill="none"
-						>
-							<path
-								d="M8.69889 14.6666C12.3808 14.6666 15.3656 11.6819 15.3656 7.99998C15.3656 4.31808 12.3808 1.33331 8.69889 1.33331C5.01699 1.33331 2.03223 4.31808 2.03223 7.99998C2.03223 11.6819 5.01699 14.6666 8.69889 14.6666Z"
-								stroke="#157A6E"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M7.36556 5.33331L11.3656 7.99998L7.36556 10.6666V5.33331Z"
-								stroke="#157A6E"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							/>
-						</svg>
-						Tutorial
-					</Button>
-					<Button
+				{ isMobile ? <MobileSelector
+						selectedTab={selectedOrientationTab}
+						setSelectedTab={setSelectedOrientationTab}
+						tabs={Object.values(VIDEO_ORIENTATIONS)}
+					/>
+					: <HeaderTabSwitcher
+						selectedTab={selectedOrientationTab}
+						setSelectedTab={setSelectedOrientationTab}
+					/>
+				}
+				<div className="hidden lg:flex items-center gap-4">
+					{/*<Button*/}
+					{/*	className={`px-4 py-1.5 text-sm font-medium flex gap-2 items-center h-fit`}*/}
+					{/*	variant="ghost"*/}
+					{/*	onClick={() => {*/}
+					{/*		// TODO: Implement*/}
+					{/*			toast.success("Coming soon!")*/}
+					{/*	}}*/}
+					{/*	style={tutorialButton}*/}
+					{/*>*/}
+					{/*	<svg*/}
+					{/*		xmlns="http://www.w3.org/2000/svg"*/}
+					{/*		width="17"*/}
+					{/*		height="16"*/}
+					{/*		viewBox="0 0 17 16"*/}
+					{/*		fill="none"*/}
+					{/*	>*/}
+					{/*		<path*/}
+					{/*			d="M8.69889 14.6666C12.3808 14.6666 15.3656 11.6819 15.3656 7.99998C15.3656 4.31808 12.3808 1.33331 8.69889 1.33331C5.01699 1.33331 2.03223 4.31808 2.03223 7.99998C2.03223 11.6819 5.01699 14.6666 8.69889 14.6666Z"*/}
+					{/*			stroke="#157A6E"*/}
+					{/*			strokeLinecap="round"*/}
+					{/*			strokeLinejoin="round"*/}
+					{/*		/>*/}
+					{/*		<path*/}
+					{/*			d="M7.36556 5.33331L11.3656 7.99998L7.36556 10.6666V5.33331Z"*/}
+					{/*			stroke="#157A6E"*/}
+					{/*			strokeLinecap="round"*/}
+					{/*			strokeLinejoin="round"*/}
+					{/*		/>*/}
+					{/*	</svg>*/}
+					{/*	Tutorial*/}
+					{/*</Button>*/}
+					{!isMobile && (<Button
 						className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 						variant="default"
 						onClick={() => {
@@ -144,6 +173,7 @@ export const LibraryHeader = ({
 						</svg>
 						Create New
 					</Button>
+					)}
 				</div>
 			</div>
 			<div
@@ -176,38 +206,41 @@ export const LibraryHeader = ({
 					{/*	className="w-full bg-white border-none p-0 focus-visible:outline-none focus-visible:border-none focus-visible:ring-offset-none focus-visible:ring-0 focus-visible:ring-none text-slate-950"*/}
 					{/*/>*/}
 				</div>
-				<GenreTabSwitcher />
-				<div className="flex h-[40px] w-[180px] gap-2 items-center">
-					<Select
-						onValueChange={(value: string) => {
-							router.push(
-								{
-									query: {
-										...router.query,
-										sort: value,
-										page: "1",
-									},
-								},
-								undefined,
-								{ shallow: true }
-							);
-						}}
-						defaultValue={router.query.sort as string || "desc"}
-					>
-						<SelectTrigger className="max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
-							<div className="text-accent-600">
-								<SelectValue placeholder="Sort by" />
-							</div>
-						</SelectTrigger>
-						<SelectContent className="bg-white text-[#000000] border-muted">
-							{Object.values(SORTING_OPTIONS).map((option) => (
-								<SelectItem value={option.value} key={option.value}>
-									{option.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
+				{ isMobile ? <div className="flex flex-row w-full gap-4">
+						<MobileSelector
+							selectedTab={selectedGenre}
+							setSelectedTab={setSelectedGenre}
+							tabs={genreOptions}
+						/>
+						<MobileSelector
+							selectedTab={sort}
+							setSelectedTab={setSort}
+							tabs={sortOptions}
+						/>
+					</div>
+					: <>
+						<GenreTabSwitcher />
+						<div className="flex h-[40px] w-[180px] gap-2 items-center">
+							<Select
+								onValueChange={setSort}
+								defaultValue={sort}
+							>
+								<SelectTrigger className="max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
+									<div className="text-accent-600">
+										<SelectValue placeholder="Sort by" />
+									</div>
+								</SelectTrigger>
+								<SelectContent className="bg-white text-[#000000] border-muted">
+									{sortOptions.map((option) => (
+										<SelectItem value={option.id} key={option.id}>
+											{option.value}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</div>
+					</>
+				}
 			</div>
 		</div>
 	);

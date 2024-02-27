@@ -15,11 +15,9 @@ import {getJwt} from "@/utils/jwt";
 
 function LibraryHomePage({
 	setSelectedOrientationTab,
-	searchTerm,
 	accessToken,
 }: {
 	setSelectedOrientationTab: (orientation: string) => void;
-	searchTerm: string;
 	accessToken: string;
 }) {
 	const router = useRouter();
@@ -30,11 +28,10 @@ function LibraryHomePage({
 			const sort = router.query.sort as string || "desc";
 			return {
 				CurrentPage: parseInt(page),
-				topLevelCategory: router.query.genre as string,
-				searchTerm,
+				topLevelCategory: router.query.genre as string || "all",
 				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm, router.query.sort, accessToken]),
+		}, [router.query.page, router.query.genre, router.query.sort, accessToken]),
 		500
 	);
 
