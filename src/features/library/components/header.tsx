@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { genreOptions, SORTING_OPTIONS, VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
 import toast from "react-hot-toast";
 import {MobileSelector} from "@/components/ui/mobile-selector";
+import {Plus} from "lucide-react";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -159,19 +160,7 @@ export const LibraryHeader = ({
 							toast.success("Coming soon!")
 						}}
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="17"
-							height="16"
-							viewBox="0 0 17 16"
-							fill="none"
-						>
-							<path
-								d="M8.16725 7.96669H8.66725V7.46669V2.93336C8.66725 2.91495 8.68218 2.90002 8.70059 2.90002C8.71899 2.90002 8.73392 2.91495 8.73392 2.93336V7.46669V7.96669H9.23392H13.7673C13.7856 7.96669 13.8006 7.98164 13.8006 8.00002C13.8006 8.01841 13.7856 8.03336 13.7673 8.03336H9.23392H8.73392V8.53336V13.0667C8.73392 13.0851 8.71897 13.1 8.70059 13.1C8.6822 13.1 8.66725 13.0851 8.66725 13.0667V8.53336V8.03336H8.16725H3.63392C3.61551 8.03336 3.60059 8.01843 3.60059 8.00002C3.60059 7.98162 3.61551 7.96669 3.63392 7.96669H8.16725Z"
-								stroke="white"
-							/>
-						</svg>
-						Create New
+						<Plus className="h-4 w-4" /> Create New
 					</Button>
 					)}
 				</div>

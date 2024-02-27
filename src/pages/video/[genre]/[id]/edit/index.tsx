@@ -15,6 +15,7 @@ import {
 	InferGetServerSidePropsType,
 } from "next";
 import { ReactElement } from "react";
+import EditAccentStyles from "@/features/scenes/edit-accent-style";
 
 function StoryPage({
 	session,
@@ -24,12 +25,13 @@ function StoryPage({
 
 	return (
 		<WebStoryProvider initialValue={storyData}>
+			<EditAccentStyles />
 			<EditStory />
 		</WebStoryProvider>
 	);
 }
 StoryPage.getLayout = function getLayout(page: ReactElement) {
-	return <PageLayout>{page}</PageLayout>;
+	return <PageLayout pageIndex={1}>{page}</PageLayout>;
 };
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	try {

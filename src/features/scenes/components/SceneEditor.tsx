@@ -167,20 +167,20 @@ const SceneEditorView = ({
 					backdropFilter: "blur(5px)",
 				}}
 			>
-				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
+				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
 					<div className="flex items-center gap-1">
-						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
+						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 						<p>Scene Editor</p>
 						{/* <StoryboardViewTypes type={StoryboardViewType.Outline} /> */}
 					</div>
 					<div className="flex gap-1 items-center">
-						<p className="px-1 text-purple-900">
+						<p className="px-1 text-accent-900">
 							Pro Tip — You can individually regenerate video subsegments.
 							{/* <a href="#">
 								<u>Learn how</u>
 							</a> */}
 						</p>
-						{/* <div className="flex gap-1 items-center text-purple-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
+						{/* <div className="flex gap-1 items-center text-accent-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
 							<SparkleIcon width={"18px"} height={"18px"} />
 							<p className="text-xs">Regenerate</p>
 							<ChevronDown width={"18px"} height={"18px"} />
@@ -233,7 +233,7 @@ const SceneEditorView = ({
 																	// }
 																>
 																	{scene.status === StoryStatus.PENDING && (
-																		<RefreshCcw className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}]" />
+																		<RefreshCcw className="stroke-2 w-4 h-4 text-accent-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}]" />
 																		// <Loader
 																		// 	percentage={20}
 																		// 	index={sceneIndex}
@@ -265,10 +265,10 @@ const SceneEditorView = ({
 																						backgroundColor: "transparent",
 																					}}
 																					className={cn(
-																						"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 cursor-pointer",
+																						"flex max-w-sm focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 cursor-pointer",
 																						segment.videoStatus ===
 																							StoryStatus.PENDING &&
-																							"text-purple-800"
+																							"text-accent-800"
 																					)}
 																					onClick={() => {
 																						videoPlayerRef.current?.seekToSegment(
@@ -362,7 +362,7 @@ const SceneEditorView = ({
 						</Button>
 						{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
 							Use 25 credits to regenerate ·{" "}
-							<Link className="text-purple-600" href="#">
+							<Link className="text-accent-600" href="#">
 								See plans
 							</Link>
 						</span>
