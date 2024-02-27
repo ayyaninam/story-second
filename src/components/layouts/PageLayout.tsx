@@ -9,10 +9,21 @@ const PageLayout = ({
 	children: ReactNode;
 	pageIndex?: number;
 }) => {
+	const [isMobile, setIsMobile] = React.useState(true);
+
+	React.useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
 	return (
 		<div className="flex flex-col lg:flex-row w-screen h-screen bg-primary lg:p-2 overflow-hidden"
 				 style={{
-					 background: menuItems[pageIndex]?.background || "var(--primary-background-color)",
+					 background: (isMobile ? menuItems[pageIndex]?.mobileBackground : menuItems[pageIndex]?.background) || "var(--primary-background-color)",
 				 }}>
 			<SideNav pageIndex={pageIndex} />
 			<div className="flex-1 overflow-auto">
