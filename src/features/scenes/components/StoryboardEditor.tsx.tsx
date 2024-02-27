@@ -98,7 +98,7 @@ export default function StoryboardEditor({
 
 	const handleSubmitEditSegments = async () => {
 		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-		console.log(diff);
+		console.log(diff, "updating diffing");
 		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
 			details: { Ind: segment.id, Text: segment.textContent },
 			operation: SegmentModifications.Edit,
@@ -261,8 +261,10 @@ export default function StoryboardEditor({
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
 																	<React.Fragment key={segmentIndex}>
-																		{segment.imageStatus ===
-																			StoryStatus.COMPLETE && (
+																		{(segment.imageStatus ===
+																			StoryStatus.COMPLETE ||
+																			segment.imageStatus ===
+																				StoryStatus.PENDING) && (
 																			<SegmentImage
 																				segment={segment}
 																				story={story}
@@ -276,19 +278,6 @@ export default function StoryboardEditor({
 																				segmentIndex={segmentIndex}
 																				sceneIndex={sceneIndex}
 																			/>
-																		)}
-																		{segment.imageStatus ===
-																			StoryStatus.PENDING && (
-																			<div
-																				className="relative h-40"
-																				style={{
-																					aspectRatio: GetImageRatio(
-																						story.resolution
-																					).ratio,
-																				}}
-																			>
-																				<Skeleton className="w-full h-full" />
-																			</div>
 																		)}
 																		{segment.imageStatus ===
 																			StoryStatus.READY && (

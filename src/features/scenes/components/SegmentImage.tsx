@@ -5,9 +5,11 @@ import {
 	EditStoryAction,
 	EditStoryDraft,
 	Segment,
+	StoryStatus,
 } from "../reducers/edit-reducer";
 import { GetImageRatio } from "@/utils/image-ratio";
 import ImageRegenerationPopoverHOC from "./ImageRegenerationPopoverHOC";
+import ImageRegenerationLoader from "./ImageRegenerationLoader";
 
 function SegmentImage({
 	segment,
@@ -51,14 +53,18 @@ function SegmentImage({
 				}}
 				onClick={() => setImageRegenerationSegmentId(segment.id)}
 			>
-				<Image
-					alt={segment.textContent}
-					src={Format.GetImageUrl(segment.imageKey)}
-					className="rounded-sm"
-					layout="fill"
-					objectFit="cover" // Or use 'cover' depending on the desired effect
-					style={{ objectFit: "contain" }}
-				/>
+				{segment.imageStatus === StoryStatus.PENDING ? (
+					<ImageRegenerationLoader arcSize={42} starSize={16} circleSize={48} />
+				) : (
+					<Image
+						alt={segment.textContent}
+						src={Format.GetImageUrl(segment.imageKey)}
+						className="rounded-sm"
+						layout="fill"
+						objectFit="cover" // Or use 'cover' depending on the desired effect
+						style={{ objectFit: "contain" }}
+					/>
+				)}
 			</div>
 		</ImageRegenerationPopoverHOC>
 	);

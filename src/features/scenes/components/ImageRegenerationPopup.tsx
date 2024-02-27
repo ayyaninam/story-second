@@ -5,28 +5,19 @@ import { AspectRatios, StoryImageStyles } from "@/utils/enums";
 import Format from "@/utils/format";
 import { GetImageRatio } from "@/utils/image-ratio";
 import Image from "next/image";
-import React, {
-	ReactNode,
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
 	Segment,
 	StoryStatus,
 } from "../reducers/edit-reducer";
-import { Input } from "@/components/ui/input";
 import api from "@/api";
 import UncheckedCheckBox from "@/components/icons/scene-editor/unchecked-check-box";
 import CheckedCheckBox from "@/components/icons/scene-editor/checked-check-box";
 import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-image-icon";
-import ScriptNotesIcon from "@/components/icons/scene-editor/script-notes-icon";
-import LockIcon from "@/components/icons/scene-editor/lock-icon";
-import PurpleStarIcon from "@/components/icons/scene-editor/purple-star-icon";
-import SpinnerArc from "@/components/icons/scene-editor/spinner-arc";
+import ImageRegenerationLoader from "./ImageRegenerationLoader";
+import { Lock, ScrollText } from "lucide-react";
 
 function RegenerationPopupHeader({
 	title,
@@ -66,18 +57,18 @@ function RegenerationPopupHeader({
 					<path
 						d="M10.5 3.5L3.5 10.5L10.5 3.5Z"
 						fill="#0F1324"
-						fill-opacity="0.6"
+						fillOpacity="0.6"
 					/>
 					<path
 						d="M3.5 3.5L10.5 10.5L3.5 3.5Z"
 						fill="#0F1324"
-						fill-opacity="0.6"
+						fillOpacity="0.6"
 					/>
 					<path
 						d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5"
 						stroke="#020817"
-						stroke-linecap="round"
-						stroke-linejoin="round"
+						strokeLinecap="round"
+						strokeLinejoin="round"
 					/>
 				</svg>
 			</div>
@@ -88,11 +79,11 @@ function RegenerationPopupHeader({
 function RegenerationPopupScriptContent({ text }: { text: string }) {
 	return (
 		<div className="py-1 px-2 items-center bg-slate-100 rounded-sm border border-input w-full flex gap-2 overflow-hidden">
-			<ScriptNotesIcon />
+			<ScrollText stroke="#94ABB8" className="min-w-4 min-h-4" />
 			<div className="text-xs grow whitespace-nowrap text-ellipsis overflow-hidden">
 				{text}
 			</div>
-			<LockIcon />
+			<Lock stroke="#94ABB8" className="min-w-4 min-h-4" />
 		</div>
 	);
 }
@@ -150,36 +141,11 @@ const ImageContainer = ({
 						style={{}}
 					/>
 				) : (
-					<div
-						className="border-[0.5px] border-purple-200 rounded=[1.5px] flex justify-center items-center w-full h-full"
-						style={{
-							background: "linear-gradient(180deg, #F1F6F9 0%, #FBF5FF 100%)",
-						}}
-					>
-						<div
-							className={cn(
-								"rounded-full p-2.5 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
-								expanded ? "w-12 h-12" : "w-6 h-6"
-							)}
-							style={{
-								background:
-									"linear-gradient(180deg, rgba(151, 71, 255, 0.20) 0%, rgba(151, 71, 255, 0.00) 100%)",
-							}}
-						>
-							<div className="animate-spin absolute w-full h-full flex justify-center items-center">
-								<SpinnerArc
-									width={expanded ? 43 : 21}
-									height={expanded ? 43 : 21}
-								/>
-							</div>
-							<div className="absolute w-full h-full flex justify-center items-center">
-								<PurpleStarIcon
-									width={expanded ? 16 : 8}
-									height={expanded ? 16 : 8}
-								/>
-							</div>
-						</div>
-					</div>
+					<ImageRegenerationLoader
+						arcSize={expanded ? 43 : 21}
+						starSize={expanded ? 16 : 8}
+						circleSize={expanded ? 48 : 24}
+					/>
 				)}
 			</div>
 		</div>
@@ -252,13 +218,18 @@ function ImageRegenerationPopup({
 		() => segment.alternateImageKeys ?? [],
 		[segment.alternateImageKeys]
 	);
+	console.log("ImageRegenerationPopup", alternateImageKeys);
 
 	const generateAlternateImageOptions = useCallback(async () => {
 		dispatch({
 			type: "edit_segment",
 			sceneIndex,
 			segmentIndex: segmentIndex,
-			segment: { ...segment, alternateImagesStatus: StoryStatus.PENDING },
+			segment: {
+				...segment,
+				alternateImagesStatus: StoryStatus.PENDING,
+				imageStatus: StoryStatus.PENDING,
+			},
 		});
 		setIsRegeneratingImages(true);
 
@@ -281,6 +252,7 @@ function ImageRegenerationPopup({
 				segmentIndex: segmentIndex,
 				segment: {
 					...segment,
+					imageStatus: StoryStatus.COMPLETE,
 					alternateImagesStatus: StoryStatus.COMPLETE,
 					alternateImageKeys: regeneratedImages.target_paths,
 				},

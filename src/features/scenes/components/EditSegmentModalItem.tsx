@@ -39,6 +39,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import ImageRegenerationPopoverHOC from "./ImageRegenerationPopoverHOC";
 import createSeed from "@/utils/create-seed";
+import ImageRegenerationLoader from "./ImageRegenerationLoader";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -73,26 +74,30 @@ export default function EditSegmentModalItem({
 						className="h-56"
 						style={{ aspectRatio: GetImageRatio(story.resolution).ratio }}
 					>
-						{segment.imageStatus !== StoryStatus.COMPLETE ? (
-							<Skeleton className="w-full h-full" />
-						) : (
-							<ImageRegenerationPopoverHOC
-								segment={segment}
-								story={story}
-								open={imageRegenerationSegmentId === segment.id}
-								onClose={() => {
-									setImageRegenerationSegmentId((prevSegmentId) => {
-										if (prevSegmentId === segment.id) return null;
-										return prevSegmentId;
-									});
-								}}
-								dispatch={dispatch}
-								segmentIndex={segmentIndex}
-								sceneIndex={sceneIndex}
-								regenerateOnOpen={regeneratingImage}
-								triggerButtonClassName="w-full h-full"
-							>
-								<div className="relative w-full h-full">
+						<ImageRegenerationPopoverHOC
+							segment={segment}
+							story={story}
+							open={imageRegenerationSegmentId === segment.id}
+							onClose={() => {
+								setImageRegenerationSegmentId((prevSegmentId) => {
+									if (prevSegmentId === segment.id) return null;
+									return prevSegmentId;
+								});
+							}}
+							dispatch={dispatch}
+							segmentIndex={segmentIndex}
+							sceneIndex={sceneIndex}
+							regenerateOnOpen={regeneratingImage}
+							triggerButtonClassName="w-full h-full"
+						>
+							<div className="relative w-full h-full">
+								{segment.imageStatus !== StoryStatus.COMPLETE ? (
+									<ImageRegenerationLoader
+										arcSize={42}
+										starSize={16}
+										circleSize={48}
+									/>
+								) : (
 									<Image
 										onClick={() => {
 											setImageRegenerationSegmentId(segment.id);
@@ -105,9 +110,9 @@ export default function EditSegmentModalItem({
 										objectFit="cover" // Or use 'cover' depending on the desired effect
 										style={{ objectFit: "contain" }}
 									/>
-								</div>
-							</ImageRegenerationPopoverHOC>
-						)}
+								)}
+							</div>
+						</ImageRegenerationPopoverHOC>
 					</div>
 					<div className="w-full h-full flex flex-col space-y-3">
 						<div>
