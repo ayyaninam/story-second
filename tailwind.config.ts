@@ -358,6 +358,12 @@ const config = {
 					end: "hsl(var(--button-end))",
 				},
 			},
+			backgroundImage: {
+				"purple-button":
+					"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #8F22CE, #8F22CE)",
+				"purple-button-hover":
+					"linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #7E1DBE, #7E1DBE)",
+			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",

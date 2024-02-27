@@ -81,25 +81,7 @@ const CheckoutDialogContent = ({
 
 				<div className="min-h-[375px]">{stripeForm}</div>
 
-				<Button
-					style={{
-						background:
-							"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #8F22CE, #8F22CE)",
-						boxShadow:
-							"0px -1px 12px 0px #FFFFFF1F inset, 0px 0px 0px 1px #8F22CE",
-					}}
-					className="w-full h-9 px-2.5 py-1.5 mt-6 rounded-md text-white font-medium"
-					// Oscar: I asked chatgpt to build this hover effect, and it did it. lgtm imo. even though it's not on the design so feel free to modify it
-					onMouseEnter={(e) => {
-						e.currentTarget.style.background =
-							"linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #7E1DBE, #7E1DBE)";
-					}}
-					onMouseLeave={(e) => {
-						e.currentTarget.style.background =
-							"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #8F22CE, #8F22CE)";
-					}}
-					{...buttonProps}
-				>
+				<Button variant="purple" {...buttonProps}>
 					{submitButtonText}
 				</Button>
 			</div>
