@@ -15,6 +15,7 @@ import Format from "@/utils/format";
 import {getSession} from "@auth0/nextjs-auth0";
 import api from "@/api";
 import StoryLogoFullWhite from "@/components/brand-logos/primary-white";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
@@ -230,7 +231,7 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 					</div>
 				</div>
 
-				<Link href="/pricing">
+				<UpgradeSubscriptionDialog>
 					<Button
 						variant="outline"
 						className="min-w-full rounded-lg py-1.5 text-white font-normal hover:text-accent-600"
@@ -238,7 +239,7 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 					>
 						Upgrade Subscription
 					</Button>
-				</Link>
+				</UpgradeSubscriptionDialog>
 			</div>
 		</div>
 	);
