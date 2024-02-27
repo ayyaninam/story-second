@@ -6,7 +6,7 @@ import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContex
 import StoryScenes from "@/features/scenes/ScenesLayout";
 import ScriptLayout from "@/features/scenes/ScriptLayout";
 import EditScript from "@/features/scenes/StoryboardLayout";
-import ScenesLayout from "@/features/scenes/components/Layout";
+import PageLayout from "@/components/layouts/PageLayout";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
@@ -30,8 +30,9 @@ import {
 } from "next";
 import { notFound } from "next/navigation";
 import { useRouter } from "next/router";
-import { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useImmerReducer } from "use-immer";
+import EditAccentStyles from "@/features/scenes/edit-accent-style";
 
 const EditorPage = ({
 	dehydratedState,
@@ -74,18 +75,21 @@ const EditorPage = ({
 	if (router.query.editor === "script") {
 		return (
 			<WebStoryProvider initialValue={storyData}>
+				<EditAccentStyles />
 				<ScriptLayout {...{ story, dispatch }} />
 			</WebStoryProvider>
 		);
 	} else if (router.query.editor === "storyboard") {
 		return (
 			<WebStoryProvider initialValue={storyData}>
+				<EditAccentStyles />
 				<EditScript {...{ story, dispatch }} />
 			</WebStoryProvider>
 		);
 	} else if (router.query.editor === "scenes") {
 		return (
 			<WebStoryProvider initialValue={storyData}>
+				<EditAccentStyles />
 				<StoryScenes {...{ story, dispatch }} />
 			</WebStoryProvider>
 		);
@@ -94,7 +98,7 @@ const EditorPage = ({
 };
 
 EditorPage.getLayout = function getLayout(page: ReactElement) {
-	return <ScenesLayout>{page}</ScenesLayout>;
+	return <PageLayout pageIndex={1}>{page}</PageLayout>;
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

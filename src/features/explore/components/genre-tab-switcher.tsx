@@ -31,33 +31,15 @@ const getGenreOptions = (categories: string[]) => {
 	];
 };
 
-export const GenreTabSwitcher = () => {
-	const router = useRouter();
-	const categoriesList = useQuery<string[]>({
-		queryFn: () => api.explore.getCategories(),
-		queryKey: [QueryKeys.CATEGORIES],
-	});
-	const selectedGenre = router.query.genre as string;
-	const setSelectedGenre = useCallback(
-		(genre: string) => {
-			router.push(
-				{
-					pathname: "/explore",
-					query: { ...router.query, genre, page: 1 },
-				},
-				undefined,
-				{ shallow: true }
-			);
-		},
-		[router]
-	);
-
-	const genreOptions = useMemo(() => {
-		if (categoriesList.data) {
-			return getGenreOptions(categoriesList.data);
-		}
-		return [];
-	}, [categoriesList.data]);
+export const GenreTabSwitcher = ({
+	selectedGenre,
+	setSelectedGenre,
+	genreOptions,
+}: {
+	selectedGenre: string;
+	setSelectedGenre: (genre: string) => void;
+	genreOptions: { id: string; value: string }[];
+}) => {
 
 	const showExtraSelectedTab = useMemo(
 		() =>
@@ -66,23 +48,6 @@ export const GenreTabSwitcher = () => {
 				.some((category) => category.id === selectedGenre),
 		[genreOptions, selectedGenre]
 	);
-
-	useEffect(() => {
-		if (!categoriesList.isLoading) {
-			if (!categoriesList.data?.includes(selectedGenre)) {
-				setSelectedGenre("all");
-			}
-		}
-	}, [
-		categoriesList.data,
-		categoriesList.isLoading,
-		selectedGenre,
-		setSelectedGenre,
-	]);
-
-	if (categoriesList.isLoading) {
-		return null;
-	}
 
 	return (
 		<div className="flex gap-1.5 items-center bg-none absolute right-1/2 translate-x-1/2">
@@ -97,7 +62,7 @@ export const GenreTabSwitcher = () => {
 					}`}
 					onClick={() => setSelectedGenre(category.id)}
 				>
-					{category.name}
+					{category.value}
 				</Button>
 			))}
 			{showExtraSelectedTab && (
@@ -131,7 +96,7 @@ export const GenreTabSwitcher = () => {
 								onClick={() => setSelectedGenre(category.id)}
 								highlightSelection={false}
 							>
-								{category.name}
+								{category.value}
 							</SelectItem>
 						))}
 					</SelectContent>

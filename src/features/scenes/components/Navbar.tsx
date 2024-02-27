@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 import GenerateIcon from "@/components/icons/dashboard/generate-icon";
+import toast from "react-hot-toast";
 
 export default function Navbar({
 	ImageRatio,
@@ -57,13 +58,16 @@ export default function Navbar({
 				</div>
 			</div>
 			<div className="hidden md:block text-muted-foreground space-x-2 items-center">
-				<Button className="p-2" variant="ghost">
-					<PlayCircle className="mr-2 h-4 w-4 text-purple-600" /> Tutorial
-				</Button>
+				{/*<Button className="p-2" variant="ghost">*/}
+				{/*	<PlayCircle className="mr-2 h-4 w-4 text-accent-600" /> Tutorial*/}
+				{/*</Button>*/}
 				<Button
-					className="p-2 bg-purple-600"
+					className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 					variant="default"
-					onClick={() => setIsEditSegmentsDialogOpen(true)}
+					onClick={() => {
+						// TODO: Implement
+						toast.success("Coming soon!")
+					}}
 				>
 					<Plus className="mr-2 h-4 w-4" /> Create New
 				</Button>

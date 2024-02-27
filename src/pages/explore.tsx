@@ -1,18 +1,15 @@
 import ExplorePage from "@/features/explore";
-import React, { ReactElement } from "react";
-import {
-	dehydrate,
-	HydrationBoundary,
-	QueryClient,
-} from "@tanstack/react-query";
-import api from "@/api"; // Ensure this points to your API setup
-import { QueryKeys } from "@/lib/queryKeys";
-import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { VIDEO_ORIENTATIONS } from "@/features/explore/constants";
-import ScenesLayout from "@/features/scenes/components/Layout";
+import React, {ReactElement} from "react";
+import {dehydrate, HydrationBoundary, QueryClient,} from "@tanstack/react-query";
+import api from "@/api";
+import {QueryKeys} from "@/lib/queryKeys";
+import {DisplayAspectRatios, StoryOutputTypes} from "@/utils/enums";
+import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
+import {VIDEO_ORIENTATIONS} from "@/features/explore/constants";
+import PageLayout from "@/components/layouts/PageLayout";
 
-import { NextSeo } from "next-seo";
+import {NextSeo} from "next-seo";
+import {genreOptions} from "@/constants/feed-constants";
 
 function Explore({
 	dehydratedState,
@@ -64,7 +61,7 @@ function Explore({
 }
 
 Explore.getLayout = function getLayout(page: ReactElement) {
-	return <ScenesLayout pageIndex={0}>{page}</ScenesLayout>;
+	return <PageLayout pageIndex={0}>{page}</PageLayout>;
 };
 
 export default Explore;
@@ -78,19 +75,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		sort = "desc",
 	} = context.query;
 
-	try {
-		await queryClient.fetchQuery({
-			queryFn: () => api.explore.getCategories(),
-			queryKey: [QueryKeys.CATEGORIES],
-			staleTime: 3000,
-		});
-	} catch (error) {
-		console.error("Error fetching data", error);
-	}
-
-	const categories = queryClient.getQueryData<string[]>([QueryKeys.CATEGORIES]);
-
-	const genre = categories?.includes(queryGenre as string) ? queryGenre as string: "all";
+	const genre = genreOptions.find((g) => g.id === queryGenre)?.id || "all";
 
 	const isDescending = sort === "desc";
 
@@ -104,7 +89,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								PageSize: 7,
 								resolution: DisplayAspectRatios["1024x576"],
 								CurrentPage: 1,
-								topLevelCategory: genre as string,
+								topLevelCategory: genre,
 								storyType: StoryOutputTypes.Video,
 								isDescending: isDescending,
 							},
@@ -119,7 +104,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								PageSize: 5,
 								resolution: DisplayAspectRatios["576x1024"],
 								CurrentPage: 1,
-								topLevelCategory: genre as string,
+								topLevelCategory: genre,
 								storyType: StoryOutputTypes.Video,
 								isDescending: isDescending,
 							},
@@ -133,7 +118,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 							params: {
 								PageSize: 5,
 								CurrentPage: 1,
-								topLevelCategory: genre as string,
+								topLevelCategory: genre,
 								isDescending: isDescending,
 							},
 						}),
@@ -147,7 +132,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 								PageSize: 5,
 								storyType: StoryOutputTypes.SplitScreen,
 								CurrentPage: 1,
-								topLevelCategory: genre as string,
+								topLevelCategory: genre,
 								isDescending: isDescending,
 							},
 						}),
@@ -158,7 +143,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		} else {
 			const filterOptions = {
 				CurrentPage: parseInt(page as string),
-				topLevelCategory: genre as string,
+				topLevelCategory: genre,
 				searchTerm: "",
 			};
 			await queryClient.fetchQuery({

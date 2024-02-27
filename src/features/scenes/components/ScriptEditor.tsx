@@ -147,21 +147,21 @@ export default function ScriptEditor({
 						backdropFilter: "blur(5px)",
 					}}
 				>
-					<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
+					<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
 						<div className="flex items-center gap-1">
-							<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
+							<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 							<p>Script View</p>
 							{/* <StoryboardViewTypes type={StoryboardViewType.Outline} /> */}
 						</div>
 						<div className="flex gap-1 items-center">
-							<p className="px-1 text-purple-900">
+							<p className="px-1 text-accent-900">
 								Pro Tip — A script is the foundation of a video. Write
 								expressively.
 								{/* <a href="#">
 								<u>Learn how</u>
 							</a> */}
 							</p>
-							{/* <div className="flex gap-1 items-center text-purple-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
+							{/* <div className="flex gap-1 items-center text-accent-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
 							<SparkleIcon width={"18px"} height={"18px"} />
 							<p className="text-xs">Regenerate</p>
 							<ChevronDown width={"18px"} height={"18px"} />
@@ -241,9 +241,9 @@ export default function ScriptEditor({
 																			}}
 																			name={segmentIndex.toString()}
 																			inputClassName={cn(
-																				"active:outline-none bg-transparent focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
+																				"active:outline-none bg-transparent focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 focus:outline-none",
 																				segment.textStatus ===
-																					TextStatus.EDITED && "text-purple-500"
+																					TextStatus.EDITED && "text-accent-500"
 																			)}
 																			inputStyle={{
 																				outline: "none",

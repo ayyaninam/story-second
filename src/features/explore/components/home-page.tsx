@@ -14,10 +14,8 @@ import { getGalleryThumbnails } from "../utils";
 
 function ExploreHomePage({
 	setSelectedOrientationTab,
-	searchTerm,
 }: {
 	setSelectedOrientationTab: (orientation: string) => void;
-	searchTerm: string;
 }) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
@@ -28,11 +26,10 @@ function ExploreHomePage({
 			const sort = router.query.sort as string || "desc";
 			return {
 				CurrentPage: parseInt(page),
-				topLevelCategory: router.query.genre as string,
-				searchTerm,
+				topLevelCategory: router.query.genre as string || "all",
 				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm, router.query.sort]),
+		}, [router.query.page, router.query.genre, router.query.sort]),
 		500
 	);
 

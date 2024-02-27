@@ -11,7 +11,7 @@ import { cn } from "@/utils";
 import React, { useRef } from "react";
 import { mainSchema } from "@/api/schema";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
-import { MAX_SEGMENT_LENGTH, MAX_SEGMENT_WORD_LENGTH } from "@/constants";
+import { MAX_SEGMENT_LENGTH, MAX_SEGMENT_WORD_LENGTH } from "@/constants/constants";
 
 enum InputStatus {
 	UNEDITED,

@@ -24,7 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { GetImageRatio } from "@/utils/image-ratio";
-import { MAX_SEGMENT_LENGTH } from "@/constants";
+import { MAX_SEGMENT_LENGTH } from "@/constants/constants";
 import {
 	Select,
 	SelectContent,
@@ -90,7 +90,7 @@ export default function EditSegmentModalItem({
 												textContent: e.target.value,
 											});
 									}}
-									className="pl-10 h-7 active:outline-none active:border-none focus-visible:ring-purple-300 focus-visible:ring-1 text-slate-900"
+									className="pl-10 h-7 active:outline-none active:border-none focus-visible:ring-accent-300 focus-visible:ring-1 text-slate-900"
 								/>
 							</div>
 							{segment.textContent.length >= MAX_SEGMENT_LENGTH - 1 && (

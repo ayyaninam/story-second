@@ -104,11 +104,11 @@ export const EXPLORE_HOME_GALLERY_DATA: GalleryData = {
 
 export const SORTING_OPTIONS = {
 	DESCENDING: {
-		value: "desc",
-		label: "Newest First",
+		id: "desc",
+		value: "Newest First",
 	},
 	ASCENDING: {
-		value: "asc",
-		label: "Oldest First",
+		id: "asc",
+		value: "Oldest First",
 	},
 };

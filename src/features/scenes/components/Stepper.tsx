@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 const activeStyles =
-	"border border-purple-500 bg-purple-100 text-purple-900 stepper-box-shadow";
+	"border border-accent-500 bg-accent-100 text-accent-900 stepper-box-shadow";
 const baseStyles = `bg-primary-foreground font-normal text-sm cursor-pointer transition-all ease-in-out duration-300`;
 
 export default function Stepper({ step }: { step: StepperStep }) {
@@ -45,7 +45,7 @@ export default function Stepper({ step }: { step: StepperStep }) {
 						step === StepperStep.Script || currentHover === StepperStep.Script,
 				})}
 			>
-				<ScrollText className="stroke-purple-600 mr-1 h-4 w-4" />
+				<ScrollText className="stroke-accent-600 mr-1 h-4 w-4" />
 				Script
 			</Badge>
 			<ChevronRight className="w-4 h-4 opacity-50" />
@@ -72,7 +72,7 @@ export default function Stepper({ step }: { step: StepperStep }) {
 						currentHover === StepperStep.Storyboard,
 				})}
 			>
-				<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
+				<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 				Storyboard
 			</Badge>
 			<ChevronRight className="w-4 h-4 opacity-50" />
@@ -98,7 +98,7 @@ export default function Stepper({ step }: { step: StepperStep }) {
 						step === StepperStep.Scenes || currentHover === StepperStep.Scenes,
 				})}
 			>
-				<Film className="stroke-purple-600 mr-1 h-4 w-4" />
+				<Film className="stroke-accent-600 mr-1 h-4 w-4" />
 				Scenes
 			</Badge>
 			<ChevronRight className="w-4 h-4 opacity-50" />
@@ -125,7 +125,7 @@ export default function Stepper({ step }: { step: StepperStep }) {
 						currentHover === StepperStep.Preview,
 				})}
 			>
-				<ScanEye className="stroke-purple-600 mr-1 h-4 w-4" />
+				<ScanEye className="stroke-accent-600 mr-1 h-4 w-4" />
 				Preview
 			</Badge>
 		</div>

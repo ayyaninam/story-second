@@ -19,11 +19,9 @@ import {getJwt} from "@/utils/jwt";
 
 function LibraryGalleryPage({
 	orientation = "wide",
-	searchTerm,
 	accessToken,
 }: {
 	orientation: VideoOrientation;
-	searchTerm: string;
 	accessToken: string;
 }) {
 	const router = useRouter();
@@ -37,11 +35,10 @@ function LibraryGalleryPage({
 			const sort = router.query.sort as string || "desc"
 			return {
 				CurrentPage: parseInt(page),
-				topLevelCategory: router.query.genre as string,
-				searchTerm,
+				topLevelCategory: router.query.genre as string || "all",
 				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm, router.query.sort]),
+		}, [router.query.page, router.query.genre, router.query.sort]),
 		500
 	);
 	const storiesList = useQuery<

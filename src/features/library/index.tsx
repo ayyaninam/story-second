@@ -21,25 +21,34 @@ function LibraryPage({ accessToken }: { accessToken: string }) {
 		);
 	};
 
+	const selectedGenre = router.query.genre as string || "all";
+	const setSelectedGenre = (genre: string) => {
+		router.push(
+			{
+				query: { ...router.query, genre, page: 1 },
+			},
+			undefined,
+			{ shallow: true }
+		);
+	};
+
 	return (
-		<div className="h-full overflow-y-scroll bg-background rounded-lg mr-2 flex-grow">
+		<div className="h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
 			<LibraryHeader
 				selectedOrientationTab={selectedOrientationTab}
 				setSelectedOrientationTab={setSelectedOrientationTab}
-				searchTerm={searchTerm}
-				setSearchTerm={setSearchTerm}
+				selectedGenre={selectedGenre}
+				setSelectedGenre={setSelectedGenre}
 			/>
 			{selectedOrientationTab === VIDEO_ORIENTATIONS.ALL.id ? (
 				<LibraryHomePage
 					setSelectedOrientationTab={setSelectedOrientationTab}
-					searchTerm={searchTerm}
 					accessToken={accessToken}
 				/>
 			) : (
 				<LibraryGalleryPage
 					key={selectedOrientationTab}
 					orientation={selectedOrientationTab as VideoOrientation}
-					searchTerm={searchTerm}
 					accessToken={accessToken}
 				/>
 			)}
