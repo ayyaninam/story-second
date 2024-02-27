@@ -19,7 +19,7 @@ export const FAQs = () => {
       <main className="max-w-4xl mx-auto p-4">
         <h1 className="text-xl font-semibold mb-6">Transitioning to Story.com - FAQs</h1>
 
-        <Accordion type="single" collapsible>
+        <Accordion type="single" collapsible defaultValue="whats-new">
           <AccordionItem value="whats-new">
             <AccordionTrigger>What&apos;s new?</AccordionTrigger>
             <AccordionContent>
