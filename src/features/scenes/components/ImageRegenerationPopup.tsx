@@ -241,7 +241,10 @@ function ImageRegenerationPopup({
 	open: boolean;
 }) {
 	const imageAspectRatio = GetImageRatio(story.resolution).ratio;
-	const loading = segment.alternateImagesStatus === StoryStatus.PENDING;
+	const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
+	const loading =
+		segment.alternateImagesStatus === StoryStatus.PENDING ||
+		isRegeneratingImages;
 	const [selectedImageKey, setSelectedImageKey] = useState<string | undefined>(
 		""
 	);
@@ -257,6 +260,7 @@ function ImageRegenerationPopup({
 			segmentIndex: segmentIndex,
 			segment: { ...segment, alternateImagesStatus: StoryStatus.PENDING },
 		});
+		setIsRegeneratingImages(true);
 
 		try {
 			const regeneratedImages = await api.video.regenerateImage({
@@ -281,8 +285,10 @@ function ImageRegenerationPopup({
 					alternateImageKeys: regeneratedImages.target_paths,
 				},
 			});
+			setIsRegeneratingImages(false);
 			setSelectedImageKey(regeneratedImages.target_paths?.[0]);
 		} catch (error) {
+			setIsRegeneratingImages(false);
 			// TODO: handle error case
 		}
 	}, [segment, story, dispatch, segmentIndex, sceneIndex]);
