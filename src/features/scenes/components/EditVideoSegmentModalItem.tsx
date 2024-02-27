@@ -77,12 +77,12 @@ function RegenerateSegmentBar({
 				/>
 			) : (
 				<Skeleton>
-					<div className="bg-slate-500 w-[66px] h-[42px]"></div>
+					<div className="bg-muted w-[66px] h-[42px]"></div>
 				</Skeleton>
 			)}
-			<p className="text-gray-600">{segment.textContent}</p>
+			<p className="text-muted-foreground">{segment.textContent}</p>
 			<Button
-				className="w-[150px] bg-purple-600"
+				className="w-[150px] text-background bg-purple-600"
 				disabled={segment.videoStatus === StoryStatus.PENDING}
 				onClick={() => onRegenerateImage()}
 			>

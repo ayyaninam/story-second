@@ -33,7 +33,7 @@ export default function Navbar({
 						</p>
 					</div>
 					<div className="flex items-center gap-x-2 text-slate-500">
-						<span className="flex gap-x-1.5 rounded-sm bg-slate-100 p-1 items-center">
+						<span className="flex gap-x-1.5 rounded-sm bg-muted p-1 items-center">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="19"
@@ -46,11 +46,11 @@ export default function Navbar({
 									stroke="#94ABB8"
 								/>
 							</svg>
-							<p className="text-xs">
+							<p className="text-xs text-muted-foreground">
 								{ImageRatio.width}:{ImageRatio.height}
 							</p>
 						</span>
-						<p className="text-xs rounded-sm bg-slate-100 p-1">
+						<p className="text-xs text-muted-foreground rounded-sm bg-muted p-1">
 							{Format.Title(WebstoryData?.topLevelCategory)}
 						</p>
 					</div>

@@ -7,6 +7,7 @@ import {
 	ScrollText,
 	Unlock,
 	RefreshCcw,
+	Shuffle,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -112,7 +113,7 @@ export default function EditSegmentModalItem({
 							</div>
 							<div className="flex items-center space-x-1 text-muted-foreground">
 								<Button
-									className="flex  py-1 gap-1 h-fit bg-slate-50 border-border border-[1px] rounded-md items-center"
+									className="flex  py-1 gap-1 h-fit bg-muted border-border border-[1px] rounded-md items-center"
 									variant="outline"
 								>
 									<ImagePlus
@@ -124,7 +125,7 @@ export default function EditSegmentModalItem({
 									<Plus width={"18px"} height={"18px"} className="stroke-1" />
 								</Button>
 								<Button
-									className="flex py-1 gap-1 bg-slate-50 h-fit  border-border border-[1px] rounded-md items-center"
+									className="flex py-1 gap-1 bg-muted h-fit  border-border border-[1px] rounded-md items-center"
 									variant="outline"
 									onClick={onRegenerateImage}
 									disabled={segment.imageStatus === StoryStatus.PENDING}
@@ -172,7 +173,6 @@ function AdvancedEditingOptions({
 			<div
 				className="border-[1px] rounded-md p-5 text-sm"
 				style={{
-					background: "linear-gradient(180deg, #FFF 0%, #F8FAFC 100%)",
 					boxShadow: "0px 0px 6px 0px #D7CBE1",
 					border: "0.5px solid #BB55F7",
 				}}
@@ -253,30 +253,33 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<Input
-							id="seed"
-							type="number"
-							min={-1}
-							max={2e16 - 1}
-							className="w-full border-[1px] rounded-md m-1 p-2"
-							placeholder="2"
-							value={settings?.seed ?? -1}
-							onChange={(e) => {
-								if (settings)
-									onSettingsChange({
-										...settings,
-										seed: parseInt(e.target.value),
-									});
-								else
-									onSettingsChange({
-										denoising: 2,
-										prompt: "",
-										samplingSteps: 8,
-										style: StoryImageStyles.Realistic,
-										seed: parseInt(e.target.value),
-									});
-							}}
-						/>
+						<div className="relative">
+							<Input
+								id="seed"
+								type="number"
+								min={-1}
+								max={2e16 - 1}
+								className="w-full border-[1px] rounded-md m-1 p-2"
+								placeholder="2"
+								value={settings?.seed ?? -1}
+								onChange={(e) => {
+									if (settings)
+										onSettingsChange({
+											...settings,
+											seed: parseInt(e.target.value),
+										});
+									else
+										onSettingsChange({
+											denoising: 2,
+											prompt: "",
+											samplingSteps: 8,
+											style: StoryImageStyles.Realistic,
+											seed: parseInt(e.target.value),
+										});
+								}}
+							/>
+							<Shuffle className="h-8 w-8 absolute right-0 top-1 p-1 rounded-sm shadow-sm hover:cursor-pointer border-border border-[1px]" />
+						</div>
 					</div>
 				</div>
 				<div className="flex gap-6">
@@ -290,13 +293,7 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<div
-							className="flex w-full gap-1 px-1 rounded-sm"
-							style={{
-								background:
-									"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
-							}}
-						>
+						<div className="flex w-full gap-1 px-1 rounded-sm bg-gradient-to-l from-blue-200 via-white to-transparent">
 							<Input
 								id="denoising-factor"
 								className="w-16"
@@ -359,13 +356,7 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<div
-							className="flex w-full gap-1 px-1 rounded-sm"
-							style={{
-								background:
-									"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
-							}}
-						>
+						<div className="flex w-full gap-1 px-1 rounded-sm bg-gradient-to-l from-blue-200 via-white to-transparent">
 							<Input
 								id="sampling-steps"
 								type="number"

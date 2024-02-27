@@ -3,7 +3,7 @@ import {
 	SegmentModifications,
 	StoryImageStyles,
 } from "@/utils/enums";
-import { ChevronRight, LayoutList, Plus } from "lucide-react";
+import { ChevronRight, LayoutList, Plus, Settings2 } from "lucide-react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
@@ -205,14 +205,7 @@ export default function StoryboardEditor({
 
 	return (
 		<>
-			<div
-				className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md"
-				style={{
-					boxShadow:
-						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-					backdropFilter: "blur(5px)",
-				}}
-			>
+			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -388,7 +381,7 @@ export default function StoryboardEditor({
 																			}}
 																			name={segmentIndex.toString()}
 																			inputClassName={cn(
-																				"active:outline-none bg-transparent focus:!bg-purple-200 hover:text-slate-950 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
+																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-purple-200 hover:text-slate-950 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
 																				segment.textStatus ===
 																					TextStatus.EDITED && "text-slate-500"
 																			)}
@@ -417,8 +410,9 @@ export default function StoryboardEditor({
 																	</span>
 																))}
 															</div>
-															<div className="hidden group-hover:block ">
-																<OptionsButton
+															<div className="invisible flex group-hover:visible gap-x-1 p-2">
+																<span
+																	className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
 																	onClick={() =>
 																		setEditSegmentsModalState({
 																			open: true,
@@ -428,7 +422,9 @@ export default function StoryboardEditor({
 																			story: story,
 																		})
 																	}
-																/>
+																>
+																	<Settings2 className="w-4 h-4 stroke-slate-500" />
+																</span>
 															</div>
 														</div>
 													</div>

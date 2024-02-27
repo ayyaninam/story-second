@@ -1,33 +1,20 @@
 "use client";
-import {
-	Compass,
-	CrossIcon,
-	FlipVertical,
-	Menu,
-	Settings2,
-} from "lucide-react";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import { GetDisplayImageRatio, GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
-import { env } from "@/env.mjs";
 import useWebstoryContext from "../edit-story/providers/WebstoryContext";
 import Stepper from "./components/Stepper";
 import { StepperStep } from "@/utils/enums";
 import Navbar from "./components/Navbar";
-import StoryboardEditor from "./components/StoryboardEditor.tsx";
+import StoryboardEditor from "./components/StoryboardEditor";
 import EditorContainer from "./components/EditorContainer";
 import Footer from "./components/Footer";
-import { useImmerReducer } from "use-immer";
-import editStoryReducer, {
-	EditStoryAction,
-	EditStoryDraft,
-} from "./reducers/edit-reducer";
-import { WebstoryToStoryDraft } from "./utils/storydraft";
+import { EditStoryAction, EditStoryDraft } from "./reducers/edit-reducer";
 
 export default function EditScript({
 	story,

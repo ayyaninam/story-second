@@ -158,14 +158,7 @@ const SceneEditorView = ({
 
 	return (
 		<>
-			<div
-				className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md"
-				style={{
-					boxShadow:
-						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-					backdropFilter: "blur(5px)",
-				}}
-			>
+			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -356,7 +349,7 @@ const SceneEditorView = ({
 					<Separator className="w-[35%] ml-9" />
 					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2">
 						<Button
-							className="w-[190px] text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2"
+							className="w-[190px] text-xs flex gap-2 text-white hover:text-background bg-purple-700 px-3 py-2"
 							onClick={handleRegenerateAllVideos}
 							disabled={RegenerateAllVideos.isPending}
 						>
