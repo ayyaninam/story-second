@@ -26,18 +26,6 @@ export default function Document() {
 				<link rel="manifest" href="/manifest.json" />
 				<link rel="shortcut icon" href="/favicon.ico" />
 				<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
-
-				<meta name="twitter:card" content="summary" />
-				<meta name="twitter:url" content="https://story.com" />
-				<meta name="twitter:title" content="Story.com" />
-				<meta name="twitter:description" content="Imagination meets creativity" />
-				<meta name="twitter:image" content="https://story.com/images/icons/android-chrome-192x192.png" />
-				<meta property="og:type" content="website" />
-				<meta property="og:title" content="Story.com" />
-				<meta property="og:description" content="Imagination meets creativity" />
-				<meta property="og:site_name" content="Story.com" />
-				<meta property="og:url" content="https://story.com.com" />
-				<meta property="og:image" content="https://story.com/images/icons/apple-touch-icon.png" />
 			</Head>
 			<body>
 				<Main />

@@ -10,7 +10,7 @@ import { GetServerSideProps } from "next";
 
 const redirectToHomepage = {
 	redirect: {
-		destination: "/",
+		destination: "/generate",
 		permanent: false,
 	},
 };

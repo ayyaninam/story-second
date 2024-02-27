@@ -241,7 +241,7 @@ export default function PublishedStory({
 						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
 						variant="outline"
 						onClick={() => {
-							router.push(Routes.Logout("/"));
+							router.push(Routes.Logout("/explore"));
 						}}
 					>
 						<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
