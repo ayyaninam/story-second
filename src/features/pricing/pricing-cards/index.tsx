@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -110,16 +111,18 @@ const PricingCards = () => {
 						priceLabel="$0"
 						priceSuffix={frequency.priceSuffix}
 						button={(isHovered) => (
-							<Button
-								variant="outline"
-								className={cn(
-									"w-full transition-none",
-									isHovered ? "border-2" : undefined
-								)}
-								size="sm"
-							>
-								Get Started For Free
-							</Button>
+							<Link href="/generate" className="w-full">
+								<Button
+									variant="outline"
+									className={cn(
+										"w-full transition-none",
+										isHovered ? "border-2" : undefined
+									)}
+									size="sm"
+								>
+									Get Started For Free
+								</Button>
+							</Link>
 						)}
 						items={[
 							"1 video generation",
@@ -219,7 +222,7 @@ const PricingCards = () => {
 									className="w-full transition-none"
 									size="sm"
 								>
-									Contact Us
+									Sign Up for Enterprise
 								</Button>
 							)}
 							items={[
@@ -241,7 +244,7 @@ const PricingCards = () => {
 
 				<div className="hidden lg:block w-full">
 					<div
-						className="gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-white rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow"
+						className="gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-background rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow"
 						onMouseEnter={() => setIsHoveredLargeCard(true)}
 						onMouseLeave={() => setIsHoveredLargeCard(false)}
 					>
@@ -254,7 +257,7 @@ const PricingCards = () => {
 								className="px-4 transition-none"
 								size="sm"
 							>
-								Contact Us
+								Sign Up for Enterprise
 							</Button>
 						</div>
 						<div className="items-center justify-between self-stretch w-full flex relative flex-[0_0_auto]">
@@ -332,6 +335,15 @@ const PricingCards = () => {
 											Dedicated support
 										</div>
 									</div>
+								</div>
+								<div className="self-end font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px] mt-1">
+									if you want more than enterprise,{" "}
+									<Link
+										href="/contact-us"
+										className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+									>
+										contact us
+									</Link>
 								</div>
 							</div>
 						</div>

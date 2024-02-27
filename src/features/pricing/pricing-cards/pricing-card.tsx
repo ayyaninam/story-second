@@ -26,7 +26,7 @@ const PricingCard = ({
 
 	return (
 		<div
-			className="flex flex-col w-[312px] items-start gap-[20px] pt-[24px] pb-[40px] px-[24px] relative self-stretch bg-white rounded-[10px] overflow-hidden border-[0.5px] border-solid border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow"
+			className="flex flex-col w-[312px] items-start gap-[20px] pt-[24px] pb-[40px] px-[24px] relative self-stretch bg-background rounded-[10px] overflow-hidden border-[0.5px] border-solid border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow"
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 		>

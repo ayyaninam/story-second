@@ -6,8 +6,6 @@ import PricingCards from "@/features/pricing/pricing-cards";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
 
 export default function PricingPage() {
-	const bannerText = "hello world 😄";
-
 	return (
 		<div
 			className={cn("flex flex-col w-full items-center", styles.fancyOverlay)}
@@ -18,20 +16,9 @@ export default function PricingPage() {
 						<h1 className="text-black dark:text-white text-4xl font-semibold max-w-xs sm:max-w-none md:text-6xl !leading-tight">
 							Pricing
 						</h1>
-						<p className="text-black dark:text-white mt-6 md:text-xl lg:text-center max-w-prose">
-							Authorly
-						</p>
 					</div>
 
-					{bannerText ? (
-						<div className="w-full lg:w-auto flex justify-center my-4">
-							<p className="w-full px-4 py-3 text-xs bg-purple-100 text-black dark:bg-purple-300/30 dark:text-white/80 rounded-xl">
-								{bannerText}
-							</p>
-						</div>
-					) : null}
-
-					<div>
+					<div className="mt-40">
 						<PricingCards />
 					</div>
 
