@@ -36,16 +36,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
-import { cn } from "@/utils";
-import createSeed from "@/utils/create-seed";
 
 export default function EditSegmentModalItem({
 	segment,
 	story,
 	onSegmentEdit,
-	onSegmentDelete,
 	onRegenerateImage,
-	regeneratingImage,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
@@ -90,7 +86,7 @@ export default function EditSegmentModalItem({
 												textContent: e.target.value,
 											});
 									}}
-									className="pl-10 h-7 active:outline-none active:border-none focus-visible:ring-purple-300 focus-visible:ring-1 text-slate-900"
+									className="pl-10 h-7 focus-visible:ring-purple-300 focus-visible:ring-1 text-slate-900"
 								/>
 							</div>
 							{segment.textContent.length >= MAX_SEGMENT_LENGTH - 1 && (
@@ -193,19 +189,10 @@ function AdvancedEditingOptions({
 					placeholder="Write your image animation prompt here"
 					value={settings?.prompt ?? ""}
 					onChange={(e) => {
-						if (settings)
-							onSettingsChange({
-								...settings,
-								prompt: e.target.value,
-							});
-						else
-							onSettingsChange({
-								denoising: 2,
-								prompt: e.target.value,
-								samplingSteps: 8,
-								style: StoryImageStyles.Realistic,
-								voice: "",
-							});
+						onSettingsChange({
+							...settings,
+							prompt: e.target.value,
+						});
 					}}
 				/>
 
@@ -262,19 +249,10 @@ function AdvancedEditingOptions({
 							placeholder="2"
 							value={settings?.seed ?? -1}
 							onChange={(e) => {
-								if (settings)
-									onSettingsChange({
-										...settings,
-										seed: parseInt(e.target.value),
-									});
-								else
-									onSettingsChange({
-										denoising: 2,
-										prompt: "",
-										samplingSteps: 8,
-										style: StoryImageStyles.Realistic,
-										seed: parseInt(e.target.value),
-									});
+								onSettingsChange({
+									...settings,
+									seed: parseInt(e.target.value),
+								});
 							}}
 						/>
 					</div>
@@ -307,20 +285,10 @@ function AdvancedEditingOptions({
 								placeholder="2"
 								value={settings?.denoising ?? 2}
 								onChange={(e) => {
-									if (settings)
-										onSettingsChange({
-											...settings,
-											denoising: parseInt(e.target.value),
-										});
-									else
-										onSettingsChange({
-											denoising: parseInt(e.target.value),
-											prompt: "",
-											samplingSteps: 8,
-											style: StoryImageStyles.Realistic,
-											seed: 1,
-											voice: "",
-										});
+									onSettingsChange({
+										...settings,
+										denoising: parseInt(e.target.value),
+									});
 								}}
 							/>
 							<Slider
@@ -331,20 +299,10 @@ function AdvancedEditingOptions({
 								trackBorderColor="border-indigo-600"
 								step={0.5}
 								onValueChange={(value) => {
-									if (settings)
-										onSettingsChange({
-											...settings,
-											denoising: value[0],
-										});
-									else
-										onSettingsChange({
-											denoising: value[0],
-											prompt: "",
-											samplingSteps: 8,
-											style: StoryImageStyles.Realistic,
-											seed: createSeed(),
-											voice: "",
-										});
+									onSettingsChange({
+										...settings,
+										denoising: value[0],
+									});
 								}}
 							/>
 						</div>
@@ -375,19 +333,10 @@ function AdvancedEditingOptions({
 								placeholder="2"
 								value={settings?.samplingSteps ?? 8}
 								onChange={(e) => {
-									if (settings)
-										onSettingsChange({
-											...settings,
-											samplingSteps: parseInt(e.target.value),
-										});
-									else
-										onSettingsChange({
-											denoising: 0,
-											prompt: "",
-											samplingSteps: parseInt(e.target.value),
-											style: StoryImageStyles.Realistic,
-											seed: createSeed(),
-										});
+									onSettingsChange({
+										...settings,
+										samplingSteps: parseInt(e.target.value),
+									});
 								}}
 							/>
 							<Slider
@@ -398,19 +347,10 @@ function AdvancedEditingOptions({
 								trackBgColor="bg-indigo-600"
 								trackBorderColor="border-indigo-600"
 								onValueChange={(value) => {
-									if (settings)
-										onSettingsChange({
-											...settings,
-											samplingSteps: value[0],
-										});
-									else
-										onSettingsChange({
-											denoising: 0,
-											prompt: "",
-											samplingSteps: value[0],
-											style: StoryImageStyles.Realistic,
-											seed: createSeed(),
-										});
+									onSettingsChange({
+										...settings,
+										samplingSteps: value[0],
+									});
 								}}
 							/>
 						</div>
