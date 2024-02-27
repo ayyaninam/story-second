@@ -56,6 +56,7 @@ function ExploreGalleryPage({
 					params: {
 						PageSize: 50,
 						storyType: StoryOutputTypes.SplitScreen,
+						resolution: DisplayAspectRatios["576x1024"],
 						...filterOptions,
 					},
 				});

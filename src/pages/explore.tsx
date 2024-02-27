@@ -131,6 +131,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 							params: {
 								PageSize: 5,
 								storyType: StoryOutputTypes.SplitScreen,
+								resolution: DisplayAspectRatios["576x1024"],
 								CurrentPage: 1,
 								topLevelCategory: genre,
 								isDescending: isDescending,
@@ -161,6 +162,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 							params: {
 								PageSize: 50,
 								storyType: StoryOutputTypes.SplitScreen,
+								resolution: DisplayAspectRatios["576x1024"],
 								...filterOptions,
 							},
 						});

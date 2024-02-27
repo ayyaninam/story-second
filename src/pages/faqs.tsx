@@ -6,6 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {NextSeo} from "next-seo";
+import Link from "next/link";
 
 export const FAQs = () => {
   return (
@@ -22,7 +23,7 @@ export const FAQs = () => {
           <AccordionItem value="whats-new">
             <AccordionTrigger>What&apos;s new?</AccordionTrigger>
             <AccordionContent>
-              We have been working diligently on transforming our website into something new and innovative, story.com, to improve your story making capabilities with the help of narrative AI videos. Have a look at some samples here.
+              We have been working diligently on transforming our website into something new and innovative, story.com, to improve your story making capabilities with the help of narrative AI videos. Have a look at some samples <Link href={"/explore"} className="underline">here</Link>.
             </AccordionContent>
           </AccordionItem>
 
@@ -48,7 +49,7 @@ export const FAQs = () => {
           </AccordionItem>
 
           <AccordionItem value="book-publishing">
-            <AccordionTrigger>Why am I not seeing the book publishing and story creation options?</AccordionTrigger>
+            <AccordionTrigger>Can I still create books? Why am I not seeing the book publishing and story creation options?</AccordionTrigger>
             <AccordionContent>
               Yes. In time, all of the features available on StoryBird.ai will become available on Story.com. We are working on transitioning all of the same capabilities into our new platform. These will appear in the next few weeks.
             </AccordionContent>

@@ -109,6 +109,7 @@ function LibraryHomePage({
 					params: {
 						PageSize: 5,
 						storyType: StoryOutputTypes.SplitScreen,
+						resolution: DisplayAspectRatios["576x1024"],
 						CurrentPage: 1,
 						topLevelCategory: filterOptions.topLevelCategory,
 						isDescending: filterOptions.isDescending,
