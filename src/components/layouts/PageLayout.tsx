@@ -27,7 +27,7 @@ const PageLayout = ({
 						 : "linear-gradient(270deg, var(--accent-color-700) 69.69%, #020817 99.69%)"),
 				 }}>
 			<SideNav pageIndex={pageIndex} />
-			<div className="flex-1 overflow-auto">
+			<div className="flex-1 overflow-auto rounded">
 				{children}
 			</div>
 			<BottomNav pageIndex={pageIndex} />
