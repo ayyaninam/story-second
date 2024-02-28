@@ -138,6 +138,18 @@
 	width: 15px;
 }
 
+.rdp-vhidden {
+	display: none;
+}
+
+.rdp-caption_label {
+	display: none;
+}
+
+.rdp_captions select {
+	padding: 5px;
+	border-radius: 4px;
+}
 .ProseMirror:focus {
 	outline: none;
 }
