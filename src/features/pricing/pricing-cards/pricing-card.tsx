@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CheckIcon from "./check-icon";
 
-interface PricingCard {
+export interface PricingCardProps {
 	variant: "Free" | "Paid";
 	title: string;
 	description: React.ReactNode;
@@ -21,12 +21,12 @@ const PricingCard = ({
 	button,
 	items,
 	icon,
-}: PricingCard) => {
+}: PricingCardProps) => {
 	const [isHovered, setIsHovered] = useState(false);
 
 	return (
 		<div
-			className="flex flex-col w-[312px] items-start gap-[20px] pt-[24px] pb-[40px] px-[24px] relative self-stretch bg-background rounded-[10px] overflow-hidden border-[0.5px] border-solid border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow"
+			className="flex flex-col w-[312px] items-start gap-[20px] pt-[24px] pb-[40px] px-[24px] relative self-stretch bg-background rounded-[10px] overflow-hidden border-[0.5px] border-solid border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_var(--accent-color-500),0px_24px_32px_-12px_#36394a3d] transition-shadow"
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 		>
@@ -59,12 +59,12 @@ const PricingCard = ({
 					>
 						{variant === "Free" ? (
 							<CheckIcon
-								className="dark:text-black text-slate-400 h-6 w-5 flex-none"
+								className="dark:text-black text-accent-300 h-6 w-5 flex-none"
 								aria-hidden="true"
 							/>
 						) : variant === "Paid" ? (
 							<CheckIcon
-								className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
+								className="dark:text-black text-accent-700 h-6 w-5 flex-none"
 								aria-hidden="true"
 							/>
 						) : null}

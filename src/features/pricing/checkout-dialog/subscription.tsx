@@ -14,37 +14,55 @@ const base_url = "http://localhost:3000/";
 const pricingStructure = {
 	[SubscriptionPlan.Basic]: {
 		[SubscriptionPeriod.Monthly]: {
-			title: "Basic Subscription",
-			label: "$10 / Month",
+			title: "Starter Subscription",
+			label: "$11.99 / Month",
 			item: {
-				description: "Basic Monthly",
-				price: 10,
+				description: "Starter Monthly",
+				price: 11.99,
 			},
 		},
 		[SubscriptionPeriod.Annual]: {
-			title: "Basic Subscription",
-			label: "$120 / Year",
+			title: "Starter Subscription",
+			label: "$119.99 / Year",
 			item: {
-				description: "Basic Annual",
-				price: 120,
+				description: "Starter Annual",
+				price: 119.99,
 			},
 		},
 	},
 	[SubscriptionPlan.Pro]: {
 		[SubscriptionPeriod.Monthly]: {
-			title: "Pro Subscription",
-			label: "$80 / Month",
+			title: "Creator Subscription",
+			label: "$79.99 / Month",
 			item: {
-				description: "Pro Monthly",
-				price: 80,
+				description: "Creator Monthly",
+				price: 79.99,
 			},
 		},
 		[SubscriptionPeriod.Annual]: {
-			title: "Pro Subscription",
-			label: "$960 / Year",
+			title: "Creator Subscription",
+			label: "$719.99 / Year",
 			item: {
-				description: "Pro Annual",
-				price: 960,
+				description: "Creator Annual",
+				price: 719.99,
+			},
+		},
+	},
+	[SubscriptionPlan.Premium]: {
+		[SubscriptionPeriod.Monthly]: {
+			title: "Enterprise Subscription",
+			label: "$999.99 / Month",
+			item: {
+				description: "Enterprise Monthly",
+				price: 999.99,
+			},
+		},
+		[SubscriptionPeriod.Annual]: {
+			title: "Enterprise Subscription",
+			label: "$9599.99 / Year",
+			item: {
+				description: "Enterprise Annual",
+				price: 9599.99,
 			},
 		},
 	},

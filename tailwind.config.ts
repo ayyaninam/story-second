@@ -296,18 +296,18 @@ const config = {
 				950: "#4C0519",
 			},
 			accent: {
-				50: 'var(--accent-color-50)',
-				100: 'var(--accent-color-100)',
-				200: 'var(--accent-color-200)',
-				300: 'var(--accent-color-300)',
-				400: 'var(--accent-color-400)',
-				500: 'var(--accent-color-500)',
-				600: 'var(--accent-color-600)',
-				700: 'var(--accent-color-700)',
-				800: 'var(--accent-color-800)',
-				900: 'var(--accent-color-900)',
-				950: 'var(--accent-color-950)',
-			}
+				50: "var(--accent-color-50)",
+				100: "var(--accent-color-100)",
+				200: "var(--accent-color-200)",
+				300: "var(--accent-color-300)",
+				400: "var(--accent-color-400)",
+				500: "var(--accent-color-500)",
+				600: "var(--accent-color-600)",
+				700: "var(--accent-color-700)",
+				800: "var(--accent-color-800)",
+				900: "var(--accent-color-900)",
+				950: "var(--accent-color-950)",
+			},
 		},
 		container: {
 			center: true,
@@ -360,9 +360,9 @@ const config = {
 			},
 			backgroundImage: {
 				"purple-button":
-					"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #8F22CE, #8F22CE)",
+					"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, var(--accent-color-700), var(--accent-color-700))",
 				"purple-button-hover":
-					"linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, #7E1DBE, #7E1DBE)",
+					"linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, var(--accent-color-800), var(--accent-color-800))",
 			},
 			borderRadius: {
 				lg: "var(--radius)",

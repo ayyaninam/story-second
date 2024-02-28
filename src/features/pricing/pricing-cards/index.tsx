@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { chunk } from "lodash";
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 
 import cn from "@/utils/cn";
 import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
-import PricingCard from "./pricing-card";
+import PricingCard, { PricingCardProps } from "./pricing-card";
 
 export interface PricingTierFrequency {
 	id: string;
@@ -30,7 +31,7 @@ export const frequencies = [
 		id: "2",
 		value: "2",
 		label: "Annually",
-		priceSuffix: "/year",
+		priceSuffix: "/month",
 		subscriptionPeriod: SubscriptionPeriod.Annual,
 	},
 ] as const satisfies PricingTierFrequency[];
@@ -56,6 +57,59 @@ const PricingCards = () => {
 	);
 	const [isHoveredLargeCard, setIsHoveredLargeCard] = useState(false);
 
+	const enterpriseProps: PricingCardProps = {
+		variant: "Paid",
+		title: "Enterprise",
+		description:
+			"Maximum power and flexibility for large-scale content generation needs.",
+		priceLabel: frequency.label === "Monthly" ? "$999.99" : "$799.99",
+		priceSuffix: frequency.priceSuffix,
+		button: (isHovered) => (
+			<CheckoutDialog
+				variant="subscription"
+				plan={SubscriptionPlan.Premium}
+				period={
+					frequency.label === "Monthly"
+						? SubscriptionPeriod.Monthly
+						: SubscriptionPeriod.Annual
+				}
+			>
+				<Button
+					variant={isHovered ? "purple" : "outline"}
+					className="transition-none w-full"
+					size="sm"
+				>
+					Sign Up for Enterprise
+				</Button>
+			</CheckoutDialog>
+		),
+		items: [
+			"175 videos / month",
+			"350 stories / month",
+			"Fast Generation Time",
+			"$5 / extra video",
+			"$1 / extra story",
+			"Dedicated support",
+			"2500 credits",
+		],
+		icon: (
+			<>
+				<div className="self-end font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px] mt-1">
+					if you want more than enterprise,{" "}
+					<Link
+						href="/contact-us"
+						className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+					>
+						contact us
+					</Link>
+				</div>
+				<div className="absolute -top-10 z-10 -right-20">
+					<Subtrack size={200} />
+				</div>
+			</>
+		),
+	};
+
 	return (
 		<div className="inline-flex flex-col max-w-screen-xl items-center px-[32px] py-0 relative">
 			<div className="flex-col inline-flex items-start relative flex-[0_0_auto]">
@@ -76,7 +130,7 @@ const PricingCards = () => {
 								<Label
 									className={cn(
 										frequency.value === option.value
-											? "bg-[#8F22CE] text-white dark:bg-purple-900/70 dark:text-white/70"
+											? "bg-accent-700 text-white dark:bg-purple-900/70 dark:text-white/70"
 											: "bg-transparent text-gray-500 hover:bg-purple-500/10",
 										"cursor-pointer rounded-full px-2.5 py-2 transition-all"
 									)}
@@ -129,6 +183,7 @@ const PricingCards = () => {
 							"1 story generation",
 							"20 tokens for your editing",
 							"Free plans do NOT replenish",
+							"10 credits",
 						]}
 					/>
 					<PricingCard
@@ -141,7 +196,7 @@ const PricingCards = () => {
 								power and flexibility.
 							</>
 						}
-						priceLabel={frequency.label === "Monthly" ? "$10" : "$120"}
+						priceLabel={frequency.label === "Monthly" ? "$11.99" : "$9.99"}
 						priceSuffix={frequency.priceSuffix}
 						button={(isHovered) => (
 							<CheckoutDialog
@@ -171,13 +226,14 @@ const PricingCards = () => {
 								<br />
 								$2 per additional story
 							</>,
+							"30 credits",
 						]}
 					/>
 					<PricingCard
 						variant="Paid"
 						title="Creator"
 						description="More videos. More stories. Faster generation times."
-						priceLabel={frequency.label === "Monthly" ? "$80" : "$960"}
+						priceLabel={frequency.label === "Monthly" ? "$79.99" : "$59.99"}
 						priceSuffix={frequency.priceSuffix}
 						button={(isHovered) => (
 							<CheckoutDialog
@@ -207,146 +263,95 @@ const PricingCards = () => {
 								<br />
 								$1.5 per additional story
 							</>,
+							"200 credits",
 						]}
 					/>
 					<div className="block lg:hidden relative">
-						<PricingCard
-							variant="Paid"
-							title="Enterprise"
-							description="More videos. More stories. Faster generation times."
-							priceLabel={frequency.label === "Monthly" ? "$800" : "$9600"}
-							priceSuffix={frequency.priceSuffix}
-							button={(isHovered) => (
-								<Button
-									variant={isHovered ? "purple" : "outline"}
-									className="w-full transition-none"
-									size="sm"
-								>
-									Sign Up for Enterprise
-								</Button>
-							)}
-							items={[
-								"175 videos / month",
-								"350 stories / month",
-								"Fast Generation Time",
-								"$5 per additional video",
-								"$1 per additional story",
-								"Dedicated support",
-							]}
-							icon={
-								<div className="absolute -top-10 z-10 -right-20">
-									<Subtrack size={200} />
-								</div>
-							}
-						/>
+						<PricingCard {...enterpriseProps} />
 					</div>
 				</div>
 
 				<div className="hidden lg:block w-full">
 					<div
-						className="gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-background rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_#bb55f7,0px_24px_32px_-12px_#36394a3d] transition-shadow"
+						className="gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-background rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_var(--accent-color-500),0px_24px_32px_-12px_#36394a3d] transition-shadow"
 						onMouseEnter={() => setIsHoveredLargeCard(true)}
 						onMouseLeave={() => setIsHoveredLargeCard(false)}
 					>
 						<div className="flex justify-between pt-0 pb-[0.25px] px-0 self-stretch w-full items-start relative flex-[0_0_auto]">
 							<div className="relative w-fit mt-[-1.00px] font-medium text-theme-variables-text-colors-text-base text-[26px] tracking-[0] leading-[39px] whitespace-nowrap">
-								Enterprise
+								{enterpriseProps.title}
 							</div>
-							<Button
-								variant={isHoveredLargeCard ? "purple" : "outline"}
-								className="px-4 transition-none"
-								size="sm"
+							<CheckoutDialog
+								variant="subscription"
+								plan={SubscriptionPlan.Premium}
+								period={
+									frequency.label === "Monthly"
+										? SubscriptionPeriod.Monthly
+										: SubscriptionPeriod.Annual
+								}
 							>
-								Sign Up for Enterprise
-							</Button>
+								<Button
+									variant={isHoveredLargeCard ? "purple" : "outline"}
+									className="px-4 transition-none"
+									size="sm"
+								>
+									Sign Up for Enterprise
+								</Button>
+							</CheckoutDialog>
 						</div>
 						<div className="items-center justify-between self-stretch w-full flex relative flex-[0_0_auto]">
 							<div className="flex w-[193px] pl-0 pr-[17.87px] py-0 flex-col items-start relative">
 								<div className="pl-0 pr-[50.73px] py-0 mr-[-31.60px] inline-flex items-baseline gap-[8px] relative flex-[0_0_auto]">
 									<div className="relative w-fit mt-[-1.00px] font-light text-slate-700 text-[32px] tracking-[0] leading-[48px] whitespace-nowrap">
-										{frequency.label === "Monthly" ? "$800" : "$9600"}
+										{enterpriseProps.priceLabel}
 									</div>
 									<div className="relative w-fit font-medium text-slate-400 text-[14px] tracking-[0] leading-[24px] whitespace-nowrap">
-										{frequency.priceSuffix}
+										{enterpriseProps.priceSuffix}
 									</div>
 								</div>
 								<p className="relative self-stretch font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px]">
-									Maximum power and flexibility for large-scale content
-									generation needs.
+									{enterpriseProps.description}
 								</p>
 							</div>
 							<div className="w-[458px] flex flex-col items-start gap-[12px] relative">
-								<div className="w-[492px] items-start gap-[12px] mr-[-34.00px] flex relative flex-[0_0_auto]">
-									<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
-										<CheckIcon
-											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-											aria-hidden="true"
-										/>
-										<div className="text-gray-700 relative w-fit mt-[-1.00px] font-normal text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-											175 videos / month
+								{chunk(enterpriseProps.items, 2).map(([item1, item2]) => (
+									<>
+										<div className="w-[492px] items-start gap-[12px] mr-[-34.00px] flex relative flex-[0_0_auto]">
+											<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
+												<CheckIcon
+													className="dark:text-black text-accent-700 h-6 w-5 flex-none"
+													aria-hidden="true"
+												/>
+												<div className="relative w-fit mt-[-1.00px] mr-[-4.61px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+													{item1}
+												</div>
+											</div>
+											{item2 && (
+												<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
+													<CheckIcon
+														className="dark:text-black text-accent-700 h-6 w-5 flex-none"
+														aria-hidden="true"
+													/>
+													<div className="relative w-fit mt-[-1.00px] mr-[-13.77px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+														{item2}
+													</div>
+												</div>
+											)}
 										</div>
-									</div>
-									<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
-										<CheckIcon
-											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-											aria-hidden="true"
-										/>
-										<div className="text-gray-700 relative w-fit mt-[-1.00px] font-normal text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-											350 stories / month
-										</div>
-									</div>
-								</div>
-								<div className="w-[492px] items-start gap-[12px] mr-[-34.00px] flex relative flex-[0_0_auto]">
-									<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
-										<CheckIcon
-											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-											aria-hidden="true"
-										/>
-										<div className="relative w-fit mt-[-1.00px] mr-[-4.61px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-											Fast Generation Time
-										</div>
-									</div>
-									<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
-										<CheckIcon
-											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-											aria-hidden="true"
-										/>
-										<div className="relative w-fit mt-[-1.00px] mr-[-13.77px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-											$5 per additional video
-										</div>
-									</div>
-								</div>
-								<div className="w-[492px] items-start gap-[12px] mr-[-34.00px] flex relative flex-[0_0_auto]">
-									<div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
-										<CheckIcon
-											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-											aria-hidden="true"
-										/>
-										<div className="relative w-fit mt-[-1.00px] mr-[-9.61px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-											$1 per additional story
-										</div>
-									</div>
-									<div className="flex pl-0 pr-[48.77px] py-0 flex-1 grow items-start gap-[12px] relative">
-										<CheckIcon
-											className="dark:text-black text-[#ce7aff] h-6 w-5 flex-none"
-											aria-hidden="true"
-										/>
-										<div className="relative w-fit mt-[-1.00px] font-normal text-gray-700 text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-											Dedicated support
-										</div>
-									</div>
-								</div>
+									</>
+								))}
 								<div className="self-end font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px] mt-1">
 									if you want more than enterprise,{" "}
 									<Link
 										href="/contact-us"
-										className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+										className="font-medium text-accent-700 dark:text-blue-500 hover:underline"
 									>
 										contact us
 									</Link>
 								</div>
 							</div>
 						</div>
+						{/**/}
 						<div className="absolute -top-10 -z-10 left-60">
 							<Subtrack size={200} />
 						</div>
