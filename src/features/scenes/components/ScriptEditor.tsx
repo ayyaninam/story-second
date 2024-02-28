@@ -197,7 +197,7 @@ export default function ScriptEditor({
 										dispatch={dispatch}
 										story={story}
 									>
-										{({ handleEnter, handleInput, refs }) => {
+										{({ handleEnter, handleInput, handleNavigation, refs }) => {
 											return (
 												<div className={cn("w-full")}>
 													{story.scenes.map((scene, sceneIndex) => (
@@ -226,6 +226,49 @@ export default function ScriptEditor({
 																			autoComplete="false"
 																			disabled={!WebstoryData?.storyDone}
 																			onKeyDown={(e) => {
+																				// ! DEBT: Couldn't focus all elements at once
+																				// const selectedText = window
+																				// 	.getSelection()
+																				// 	?.toString();
+
+																				// console.log(
+																				// 	">>> selectObj",
+																				// 	selectedText
+																				// );
+																				// if (
+																				// 	(e.ctrlKey || e.metaKey) &&
+																				// 	e.key === "a"
+																				// ) {
+																				// 	console.log(
+																				// 		">>> selectObj2",
+																				// 		selectedText
+																				// 	);
+
+																				// 	if (
+																				// 		selectedText === segment.textContent
+																				// 	) {
+																				// 		// @ts-ignore
+																				// 		// refs.current?.[1][2]?.focus();
+																				// 		refs.current[sceneIndex]?.map(
+																				// 			(sgmtRef) => {
+																				// 				sgmtRef?.focus();
+																				// 			}
+																				// 		);
+																				// 	}
+																				// }
+																				if (e.key.startsWith("Arrow")) {
+																					handleNavigation({
+																						event: e,
+																						totalScenes: story.scenes.length,
+																						totalSegments:
+																							scene.segments.length,
+																						currentScene: sceneIndex,
+																						currentSegment: segmentIndex,
+																						segmentContentLength:
+																							segment.textContent.length,
+																					});
+																				}
+
 																				if (e.key === "Enter") {
 																					handleEnter(
 																						scene,
