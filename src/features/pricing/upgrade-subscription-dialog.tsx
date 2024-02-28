@@ -19,7 +19,7 @@ const UpgradeSubscriptionDialog = ({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="left-[50%] max-w-fit p-8">
+			<DialogContent className="left-[50%] max-w-fit p-8 overflow-y-scroll lg:overflow-y-hidden max-h-[1200px] lg:max-h-none">
 				<DialogHeader>
 					<DialogTitle>Upgrade Subscription</DialogTitle>
 					<DialogDescription>
