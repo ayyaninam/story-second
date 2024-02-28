@@ -60,6 +60,27 @@ const video = {
 
 		return data;
 	},
+	uploadSegmentImage: async (params: {
+		id: string;
+		image: File;
+		index: number;
+		accessToken?: string;
+	}) => {
+		const body = new FormData();
+		body.append("Image", params.image);
+		body.append("Index", params.index.toString());
+		const data: string = await authFetcher(params.accessToken ?? getJwt())
+			.post(`api/WebStory/SaveStorySegmentImage/${params.id}`, {
+				body,
+
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			})
+			.json();
+
+		return data;
+	},
 	regenerateImage: async (
 		params: mlSchema["RegenerateImageRequest"],
 		accessToken?: string

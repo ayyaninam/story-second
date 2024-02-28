@@ -40,12 +40,13 @@ import TooltipComponent from "@/components/ui/tooltip-component";
 import ImageRegenerationPopoverHOC from "./ImageRegenerationPopoverHOC";
 import createSeed from "@/utils/create-seed";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
+import { useMutation } from "@tanstack/react-query";
+import api from "@/api";
 
 export default function EditSegmentModalItem({
 	segment,
 	story,
 	onSegmentEdit,
-	onRegenerateImage,
 	segmentIndex,
 	onSegmentDelete,
 	imageRegenerationSegmentId,
@@ -67,6 +68,8 @@ export default function EditSegmentModalItem({
 }) {
 	const [isChecked, setIsChecked] = useState(false);
 	const [imageStatus, setImageStatus] = useState(segment.imageStatus);
+
+	const UploadImage = useMutation({ mutationFn: api.video.uploadSegmentImage });
 
 	useEffect(() => {
 		// The idea cycle should be READY -> PENDING -> COMPLETE
@@ -143,7 +146,7 @@ export default function EditSegmentModalItem({
 												textContent: e.target.value,
 											});
 									}}
-									className="pl-10 h-7 active:outline-none active:border-none focus-visible:ring-purple-300 focus-visible:ring-1"
+									className="pl-10 h-7 focus-visible:ring-purple-300 focus-visible:ring-1 text-slate-900"
 								/>
 							</div>
 							{segment.textContent.length >= MAX_SEGMENT_LENGTH - 1 && (
@@ -164,6 +167,42 @@ export default function EditSegmentModalItem({
 								</Label>
 							</div>
 							<div className="flex items-center space-x-1 text-muted-foreground">
+								<label className="flex py-[4px] w-36 justify-center gap-1 h-fit bg-muted border-border border-[1px] pl-3 pr-2 rounded-md items-center cursor-pointer hover:text-slate-700 transition-colors ease-in-out font-medium text-sm">
+									<Input
+										onChange={(e) => {
+											if (e.target.files?.[0]) {
+												UploadImage.mutateAsync({
+													id: story.id,
+													image: e.target.files[0],
+													index: segmentIndex,
+												});
+											}
+										}}
+										disabled={UploadImage.isPending}
+										type="file"
+										accept="image/*"
+										className="hidden" // Hide the actual input but keep it functional
+										// onChange={/* your file change handler here */}
+									/>
+									{UploadImage.isPending ? (
+										<RefreshCcw
+											width={"18px"}
+											height={"18px"}
+											className="stroke-1 animate-spin"
+											style={{ animationDirection: "reverse" }}
+										/>
+									) : (
+										<ImagePlus
+											width={"18px"}
+											height={"18px"}
+											className="stroke-1"
+										/>
+									)}
+
+									{UploadImage.isPending ? "Uploading" : "Image"}
+									<Plus width={"18px"} height={"18px"} className="stroke-1" />
+								</label>
+								{/* 
 								<Button
 									className="flex  py-1 gap-1 h-fit bg-muted border-border border-[1px] rounded-md items-center"
 									variant="outline"
@@ -175,7 +214,7 @@ export default function EditSegmentModalItem({
 									/>
 									Image
 									<Plus width={"18px"} height={"18px"} className="stroke-1" />
-								</Button>
+								</Button> */}
 								<Button
 									className="flex py-1 gap-1 bg-muted h-fit  border-border border-[1px] rounded-md items-center"
 									variant="outline"

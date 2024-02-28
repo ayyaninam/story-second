@@ -240,13 +240,7 @@ export default function StoryboardEditor({
 														className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
 													>
 														<div
-															className={cn(
-																"grid items-center gap-4 max-w-1/2 w-1/2",
-																story.displayResolution ===
-																	DisplayAspectRatios["1024x576"]
-																	? "grid-cols-2"
-																	: "grid-cols-4 xl:grid-cols-6"
-															)}
+															className={cn("gap-4 flex max-w-1/2 flex-wrap")}
 														>
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
@@ -364,7 +358,7 @@ export default function StoryboardEditor({
 																	</span>
 																))}
 															</div>
-															<div className="invisible flex group-hover:visible gap-x-1 p-2">
+															<div className="flex gap-x-1 p-2">
 																<span
 																	className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
 																	onClick={() =>

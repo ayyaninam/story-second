@@ -163,20 +163,11 @@ const SceneEditorView = ({
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
 						<p>Scene Editor</p>
-						{/* <StoryboardViewTypes type={StoryboardViewType.Outline} /> */}
 					</div>
 					<div className="flex gap-1 items-center">
 						<p className="px-1 text-purple-900">
 							Pro Tip — You can individually regenerate video subsegments.
-							{/* <a href="#">
-								<u>Learn how</u>
-							</a> */}
 						</p>
-						{/* <div className="flex gap-1 items-center text-purple-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
-							<SparkleIcon width={"18px"} height={"18px"} />
-							<p className="text-xs">Regenerate</p>
-							<ChevronDown width={"18px"} height={"18px"} />
-						</div> */}
 					</div>
 				</div>
 
@@ -214,39 +205,15 @@ const SceneEditorView = ({
 																<div
 																	key={sceneIndex}
 																	className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
-																	// onMouseEnter={() =>
-																	// 	setHoveredThumbnails(() => ({
-																	// 		index: sceneIndex,
-																	// 		thumbs: [...images],
-																	// 	}))
-																	// }
-																	// onMouseLeave={() =>
-																	// 	setHoveredThumbnails(undefined)
-																	// }
 																>
 																	{scene.status === StoryStatus.PENDING && (
-																		<RefreshCcw className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s" />
-																		// <Loader
-																		// 	percentage={20}
-																		// 	index={sceneIndex}
-																		// />
+																		<RefreshCcw
+																			className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s"
+																			style={{
+																				animationDirection: "reverse",
+																			}}
+																		/>
 																	)}
-
-																	{/* <div className="group-hover:hidden flex flex-shrink-0 flex-col -space-y-4 overflow-hidden mx-1 my-[18px] items-center justify-center">
-																		{images.slice(0, 4).map((image, index) => (
-																			<div
-																				key={index}
-																				className="w-8 h-5 rounded-[1px]"
-																				style={{
-																					border:
-																						"0.2px solid rgba(0, 0, 0, 0.40)",
-																					background: `url(${image})`,
-																					backgroundSize: "cover",
-																					backgroundRepeat: "no-repeat",
-																				}}
-																			/>
-																		))}
-																	</div> */}
 
 																	<span className="flex flex-wrap text-sm">
 																		{scene.segments.map(
@@ -258,8 +225,8 @@ const SceneEditorView = ({
 																					}}
 																					className={cn(
 																						"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
-																						segment.videoStatus ===
-																							StoryStatus.PENDING &&
+																						segment.videoStatus !==
+																							StoryStatus.COMPLETE &&
 																							"text-purple-800"
 																					)}
 																					onClick={() => {
@@ -277,7 +244,7 @@ const SceneEditorView = ({
 																			)
 																		)}
 																	</span>
-																	<div className="invisible flex group-hover:visible gap-x-1 p-2">
+																	<div className="visible flex gap-x-1 p-2">
 																		<span
 																			className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
 																			onClick={() =>
@@ -346,19 +313,8 @@ const SceneEditorView = ({
 						</div>
 					</div>
 
-					<Separator className="w-[35%] ml-9" />
-					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2">
-						<Button
-							className="w-[190px] text-xs flex gap-2 text-white hover:text-background bg-purple-700 px-3 py-2"
-							onClick={handleRegenerateAllVideos}
-							disabled={RegenerateAllVideos.isPending}
-						>
-							<Sparkle fill="white" className="w-4 h-4" />
-							{RegenerateAllVideos.isPending
-								? "Regenerating"
-								: "Regenerate All Scenes"}
-						</Button>
-						{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
+					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2" />
+					{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
 							Use 25 credits to regenerate ·{" "}
 							<Link className="text-purple-600" href="#">
 								See plans
@@ -373,7 +329,6 @@ const SceneEditorView = ({
 								Or, Save Without Regenerating
 							</Button>
 						</div> */}
-					</div>
 				</div>
 			</div>
 
