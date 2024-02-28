@@ -349,6 +349,10 @@ const config = {
 					start: "hsl(var(--button-start))",
 					end: "hsl(var(--button-end))",
 				},
+				loader: {
+					start: "hsl(var(--loader-start))",
+					end: "hsl(var(--loader-end))"
+				}
 			},
 			borderRadius: {
 				lg: "var(--radius)",

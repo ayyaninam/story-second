@@ -90,7 +90,7 @@ const SceneEditSegmentModal = ({
 										segment: updatedSegment,
 									});
 								}}
-								showAdvancedSettings={false}
+								displayResolution={story.displayResolution}
 							/>
 						))}
 					</div>
