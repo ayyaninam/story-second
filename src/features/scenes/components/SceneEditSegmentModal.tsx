@@ -90,7 +90,6 @@ const SceneEditSegmentModal = ({
 										segment: updatedSegment,
 									});
 								}}
-								showAdvancedSettings={false}
 							/>
 						))}
 					</div>
