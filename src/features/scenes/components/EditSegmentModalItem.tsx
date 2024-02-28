@@ -42,6 +42,7 @@ import createSeed from "@/utils/create-seed";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api";
+import { getImageCost } from "@/utils/credit-cost";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -216,8 +217,8 @@ export default function EditSegmentModalItem({
 									<Plus width={"18px"} height={"18px"} className="stroke-1" />
 								</Button> */}
 								<Button
-									className="flex py-1 gap-1 bg-muted h-fit  border-border border-[1px] rounded-md items-center"
-									variant="outline"
+									className="flex py-1 gap-1 text-white h-fit  border-border border-[1px] rounded-md items-center"
+									variant="default"
 									onClick={() => {
 										setImageRegenerationSegmentId(segment.id);
 										setRegeneratingImage(true);
@@ -235,6 +236,9 @@ export default function EditSegmentModalItem({
 										"Regenerate"}
 									{segment.alternateImagesStatus === StoryStatus.PENDING &&
 										"Regenerating"}
+									<p className="text-slate-400">
+										{"(" + getImageCost(1) + " Credit)"}
+									</p>
 								</Button>
 							</div>
 						</div>
