@@ -12,15 +12,20 @@ import editStoryReducer, {
 	EditStoryDraft,
 } from "@/features/scenes/reducers/edit-reducer";
 import {
+	GenerateSceneDiff,
 	GenerateStoryDiff,
 	WebstoryToStoryDraft,
 } from "@/features/scenes/utils/storydraft";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";
 import Routes from "@/routes";
-import { SegmentModificationData } from "@/types";
+import { SceneModificationData, SegmentModificationData } from "@/types";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
-import { SegmentModifications, StoryOutputTypes } from "@/utils/enums";
+import {
+	SceneModifications,
+	SegmentModifications,
+	StoryOutputTypes,
+} from "@/utils/enums";
 import {
 	getAccessToken,
 	getSession,
@@ -75,6 +80,50 @@ const EditorPage = ({
 		mutationFn: api.video.editSegment,
 	});
 
+	const handleSubmitEditScenesAndSegments = async () => {
+		const sceneDiff = GenerateSceneDiff(
+			WebstoryToStoryDraft(Webstory.data),
+			story
+		);
+
+		const segmentDiff = GenerateStoryDiff(
+			WebstoryToStoryDraft(Webstory.data),
+			story
+		);
+		// return { sceneDiff, segmentDiff };
+
+		const sceneEdits: SceneModificationData[] = sceneDiff.edits.map((el) => {
+			return {
+				details: {
+					Ind: el.index,
+					SceneDescription: el.description,
+				},
+				operation: SceneModifications.Edit,
+			};
+		});
+		const sceneAdditions: SceneModificationData[] = sceneDiff.additions.map(
+			(el) => {
+				return {
+					details: {
+						Ind: el.index,
+						SceneDescription: el.description,
+					},
+					operation: SegmentModifications.Edit,
+				};
+			}
+		);
+		await api.video.editScenes({
+			story_id: Webstory.data?.id as string,
+			story_type: Webstory.data?.storyType,
+			edits: [{}],
+		});
+
+		// Generate new scenes
+
+		// Create a map between oldscenes and newscenes
+		// Iterate through all addition segments and replace sceneId with mapped sceneId
+	};
+
 	const handleSubmitEditSegments = async () => {
 		const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory.data), story);
 		console.log(diff);
@@ -103,9 +152,10 @@ const EditorPage = ({
 				operation: SegmentModifications.Delete,
 			})
 		);
+		return { diff };
+		return;
 		if (!additions.length && !edits.length && !deletions.length) {
 			console.log("No edits found");
-			return;
 		}
 
 		const editedResponse = await EditSegment.mutateAsync({
@@ -127,11 +177,13 @@ const EditorPage = ({
 	};
 
 	useEffect(() => {
-		console.log(story);
+		// handleSubmitEditSegments();
+		// console.log(WebstoryToStoryDraft(Webstory.data), story);
+		console.log(handleSubmitEditScenesAndSegments());
+		// console.log(GenerateSceneDiff(WebstoryToStoryDraft(Webstory.data), story));
 	}, [story]);
 
 	useEffect(() => {
-		console.log("resetting >>", Webstory.data);
 		dispatch({
 			type: "reset",
 			draft: WebstoryToStoryDraft(Webstory.data),

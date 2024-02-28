@@ -36,24 +36,25 @@ const video = {
 
 		return data.data;
 	},
-	editScene: async (
-		params: mlSchema["EditSceneRequest"],
-		accessToken?: string
-	): Promise<Object> => {
-		const data: string = await mlFetcher(accessToken ?? getJwt())
-			.get(`edit-scene`, {
-				body: JSON.stringify(params),
-			})
-			.json();
 
-		return data;
-	},
 	editSegment: async (
 		params: mlSchema["EditSegmentRequest"],
 		accessToken?: string
 	) => {
 		const data: string = await mlFetcher(accessToken ?? getJwt())
 			.put(`edit-segments`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		return data;
+	},
+	editScenes: async (
+		params: mlSchema["EditSceneRequest"],
+		accessToken?: string
+	) => {
+		const data: string = await mlFetcher(accessToken ?? getJwt())
+			.put(`edit-scenes`, {
 				body: JSON.stringify(params),
 			})
 			.json();

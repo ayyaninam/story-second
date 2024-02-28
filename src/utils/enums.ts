@@ -91,6 +91,11 @@ export enum SegmentModifications {
 	Add,
 	Delete,
 }
+export enum SceneModifications {
+	Edit,
+	Add,
+	Delete,
+}
 export enum SceneEdits {
 	Edit,
 	Add,

@@ -1,6 +1,7 @@
 import { mainSchema } from "@/api/schema";
 import {
 	EditStoryDraft,
+	Scene,
 	Segment,
 	StoryStatus,
 	TextStatus,
@@ -36,6 +37,7 @@ export const WebstoryToStoryDraft = (
 		scenes:
 			Webstory.scenes?.map((scene) => ({
 				id: scene.id!,
+				index: scene.index!,
 				segments:
 					scene.videoSegments?.map((segment) => {
 						let imageStatus = StoryStatus.READY;
@@ -88,6 +90,12 @@ type SegmentWithIndices = Segment & {
 	sceneIndex: number;
 	segmentIndex: number;
 	sceneId: string;
+};
+
+type StoryDiff = {
+	edits: SegmentWithIndices[];
+	additions: SegmentWithIndices[][];
+	subtractions: SegmentWithIndices[];
 };
 
 export const GenerateStoryDiff = (
@@ -162,6 +170,54 @@ export const GenerateStoryDiff = (
 	});
 
 	return { edits, additions, subtractions };
+};
+
+export const GenerateSceneDiff = (
+	previous: EditStoryDraft,
+	current: EditStoryDraft
+) => {
+	let additions: Scene[] = [];
+	let edits: Scene[] = [];
+	let subtractions: Scene[] = [];
+	const previousMap = new Map<string, Scene[]>();
+	const currentMap = new Map<string, Scene[]>();
+
+	previous.scenes.forEach((el) => {
+		if (previousMap.has(el.id)) {
+			previousMap.get(el.id)?.push(el);
+		} else {
+			previousMap.set(el.id, [el]);
+		}
+	});
+
+	current.scenes.forEach((el) => {
+		if (currentMap.has(el.id)) {
+			currentMap.get(el.id)?.push(el);
+		} else {
+			currentMap.set(el.id, [el]);
+		}
+	});
+
+	const mapArray = Array.from(
+		new Set([...previousMap.keys(), ...currentMap.keys()])
+	);
+
+	mapArray.forEach((el) => {
+		if (previousMap.has(el) && currentMap.has(el)) {
+			const initialScene = previousMap.get(el)?.[0];
+			const newScenes = currentMap.get(el);
+			if (newScenes?.length && newScenes.length) {
+				const firstNewScene = newScenes[0]!;
+				if (initialScene?.description !== firstNewScene?.description)
+					edits.push(firstNewScene);
+				if (newScenes?.length > 1) additions.push(...newScenes?.slice(1));
+			}
+		} else if (previousMap.has(el) && !currentMap.has(el)) {
+			const initialScene = previousMap.get(el)?.[0];
+			if (initialScene) subtractions.push(initialScene);
+		}
+	});
+	return { edits, subtractions, additions };
 };
 
 export function recursivelyUpdateOverlappingKeys<T extends object>(
