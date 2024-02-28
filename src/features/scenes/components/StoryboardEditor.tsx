@@ -91,7 +91,6 @@ export default function StoryboardEditor({
 
 	const handleSubmitEditSegments = async () => {
 		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-		console.log(diff, "updating diffing");
 		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
 			details: { Ind: segment.id, Text: segment.textContent },
 			operation: SegmentModifications.Edit,
@@ -242,13 +241,13 @@ export default function StoryboardEditor({
 														className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
 													>
 														<div
-															className={cn("gap-4 flex max-w-1/2 flex-wrap")}
+															className={cn("gap-4 flex max-w-[45%] flex-wrap")}
 														>
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
 																	<div
 																		className={cn("flex gap-1 items-center")}
-																		key={`${segment.id}${scene.id}${segmentIndex}`}
+																		key={segmentIndex}
 																	>
 																		<SegmentImage
 																			segment={segment}

@@ -40,13 +40,6 @@ function SegmentImage({
 	handleSubmitEditSegments: () => void;
 }) {
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
-	if (segment.id === 2) {
-		console.log(
-			"testing123 segment",
-			segment,
-			`imageStatus${segment.imageStatus}`
-		);
-	}
 	return (
 		<ImageRegenerationPopoverHOC
 			segment={segment}

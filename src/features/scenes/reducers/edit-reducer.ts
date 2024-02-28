@@ -187,7 +187,6 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			 I needed some of the data at reducer level to not update with the poling data
 			 because not everything is present in the data from backend. Eg alternateImageKeys, alternateImagesStatus etc.
 			 and recursively because there are nested objects and array in that */
-			console.log("testing123 recursive update", action.draft);
 			recursivelyUpdateOverlappingKeys(draft, action.draft);
 			return draft;
 		}

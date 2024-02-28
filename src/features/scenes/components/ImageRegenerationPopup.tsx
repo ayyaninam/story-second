@@ -176,6 +176,8 @@ function ImageRegenerationPopup({
 }) {
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
 	const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
+	const [regenerateImage, setRegenerateImages] = useState(false);
+
 	const loading =
 		segment.alternateImagesStatus === StoryStatus.PENDING ||
 		isRegeneratingImages;
@@ -187,8 +189,12 @@ function ImageRegenerationPopup({
 		[segment.alternateImageKeys]
 	);
 
-	const generateAlternateImageOptions = useCallback(async () => {
+	const triggerRegenerationOfImages = useCallback(async () => {
+		setRegenerateImages(true);
 		await handleSubmitEditSegments();
+	}, [handleSubmitEditSegments]);
+
+	const generateAlternateImageOptions = useCallback(async () => {
 		const prevImageStatus = segment.imageStatus;
 		dispatch({
 			type: "edit_segment",
@@ -251,6 +257,7 @@ function ImageRegenerationPopup({
 					...segment,
 					imageKey: selectedImageKey!,
 					alternateImageKeys: [],
+					imageStatus: StoryStatus.COMPLETE,
 				},
 			});
 		} catch (error) {
@@ -268,11 +275,20 @@ function ImageRegenerationPopup({
 		onClose,
 	]);
 
+	// To trigger regeneration when the popup is opened and regenerateOnOpen is true
 	useEffect(() => {
 		if (open && regenerateOnOpen && !loading) {
-			generateAlternateImageOptions();
+			triggerRegenerationOfImages();
 		}
 	}, [open]);
+
+	// To trigger regeneration after saving the segments
+	useEffect(() => {
+		if (regenerateImage) {
+			setRegenerateImages(false);
+			generateAlternateImageOptions();
+		}
+	}, [regenerateImage]);
 
 	if (loading || alternateImageKeys.length > 0) {
 		return (
@@ -387,7 +403,7 @@ function ImageRegenerationPopup({
 				<RegenerateButton
 					text="Regenerate Choices"
 					onClick={() => {
-						generateAlternateImageOptions();
+						triggerRegenerationOfImages();
 					}}
 					loading={loading}
 				/>
@@ -473,7 +489,7 @@ function ImageRegenerationPopup({
 			<RegenerateButton
 				text="Regenerate"
 				onClick={() => {
-					generateAlternateImageOptions();
+					triggerRegenerationOfImages();
 				}}
 				loading={false}
 			/>

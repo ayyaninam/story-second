@@ -32,14 +32,6 @@ function ImageRegenerationPopoverHOC({
 	triggerButtonClassName?: string;
 	handleSubmitEditSegments: () => void;
 }) {
-	if (segment.id === 2) {
-		console.log(
-			"testing123 segment",
-			segment,
-			`imageStatus${segment.imageStatus}`,
-			segment.alternateImageKeys
-		);
-	}
 	return (
 		<Popover open={open}>
 			<PopoverTrigger className={triggerButtonClassName}>
