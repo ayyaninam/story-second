@@ -359,9 +359,9 @@ const config = {
 				},
 			},
 			backgroundImage: {
-				"purple-button":
+				"accent-button":
 					"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, var(--accent-color-700), var(--accent-color-700))",
-				"purple-button-hover":
+				"accent-button-hover":
 					"linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, var(--accent-color-800), var(--accent-color-800))",
 			},
 			borderRadius: {

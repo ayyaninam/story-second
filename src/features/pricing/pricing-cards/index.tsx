@@ -75,7 +75,7 @@ const PricingCards = () => {
 			>
 				<Button
 					variant="outline"
-					className="w-full transition-none group-hover:bg-purple-button group-hover:text-primary-foreground"
+					className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 					size="sm"
 				>
 					Sign Up for Enterprise
@@ -206,7 +206,7 @@ const PricingCards = () => {
 							>
 								<Button
 									variant="outline"
-									className="w-full transition-none group-hover:bg-purple-button group-hover:text-primary-foreground"
+									className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
 								>
 									Sign Up For Starter
@@ -243,7 +243,7 @@ const PricingCards = () => {
 							>
 								<Button
 									variant="outline"
-									className="w-full transition-none group-hover:bg-purple-button group-hover:text-primary-foreground"
+									className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
 								>
 									Sign Up For Creator
@@ -284,7 +284,7 @@ const PricingCards = () => {
 							>
 								<Button
 									variant="outline"
-									className="px-4 transition-none group-hover:bg-purple-button group-hover:text-primary-foreground"
+									className="px-4 transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
 								>
 									Sign Up for Enterprise
