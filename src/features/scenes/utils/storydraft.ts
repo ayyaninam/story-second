@@ -176,7 +176,7 @@ export const GenerateSceneDiff = (
 	previous: EditStoryDraft,
 	current: EditStoryDraft
 ) => {
-	let additions: Scene[] = [];
+	let additions: Scene[][] = [];
 	let edits: Scene[] = [];
 	let subtractions: Scene[] = [];
 	const previousMap = new Map<string, Scene[]>();
@@ -210,7 +210,7 @@ export const GenerateSceneDiff = (
 				const firstNewScene = newScenes[0]!;
 				if (initialScene?.description !== firstNewScene?.description)
 					edits.push(firstNewScene);
-				if (newScenes?.length > 1) additions.push(...newScenes?.slice(1));
+				if (newScenes?.length > 1) additions.push(newScenes?.slice(1));
 			}
 		} else if (previousMap.has(el) && !currentMap.has(el)) {
 			const initialScene = previousMap.get(el)?.[0];

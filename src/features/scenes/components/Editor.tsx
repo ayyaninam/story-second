@@ -212,8 +212,8 @@ const Editor = ({
 		segmentIndex: number
 	) => {
 		// If the segment is the last segment in the scene, create a new scene
-		// if (segmentIndex === scene.segments.length - 1) {
-		if (false) {
+		if (segmentIndex === scene.segments.length - 1) {
+			// if (false) {
 			// TODO: uncomment this when scene editor support is added
 			dispatch({
 				type: "create_scene",
@@ -234,6 +234,7 @@ const Editor = ({
 					description: "",
 					status: StoryStatus.READY,
 					id: scene.id,
+					index: scene.index,
 				},
 
 				index: sceneIndex,

@@ -80,7 +80,7 @@ const EditorPage = ({
 		mutationFn: api.video.editSegment,
 	});
 
-	const handleSubmitEditScenesAndSegments = async () => {
+	const handleSubmitEditScenesAndSegments = () => {
 		const sceneDiff = GenerateSceneDiff(
 			WebstoryToStoryDraft(Webstory.data),
 			story
@@ -91,7 +91,8 @@ const EditorPage = ({
 			story
 		);
 		// return { sceneDiff, segmentDiff };
-
+		console.log(story);
+		console.log(sceneDiff.additions);
 		const sceneEdits: SceneModificationData[] = sceneDiff.edits.map((el) => {
 			return {
 				details: {
@@ -105,18 +106,29 @@ const EditorPage = ({
 			(el) => {
 				return {
 					details: {
-						Ind: el.index,
-						SceneDescriptions: el.descriptions,
+						Ind: el[0]?.index!,
+						SceneDescriptions: el.map((scene) => scene.description),
 					},
-					operation: SegmentModifications.Add,
+					operation: SceneModifications.Add,
 				};
 			}
 		);
-		await api.video.editScenes({
-			story_id: Webstory.data?.id as string,
-			story_type: Webstory.data?.storyType,
-			edits: [{}],
-		});
+		const sceneDeletions: SceneModificationData[] = sceneDiff.subtractions.map(
+			(el) => {
+				return {
+					details: {
+						Ind: el.index,
+					},
+					operation: SceneModifications.Delete,
+				};
+			}
+		);
+		return { sceneAdditions, sceneDeletions, sceneEdits };
+		// await api.video.editScenes({
+		// 	story_id: Webstory.data?.id as string,
+		// 	story_type: Webstory.data?.storyType,
+		// 	edits: [{}],
+		// });
 
 		// Generate new scenes
 
