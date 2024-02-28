@@ -63,7 +63,7 @@ const SceneEditSegmentModal = ({
 					!open && onClose();
 				}}
 			>
-				<DialogContent className="max-w-[1000px]">
+				<DialogContent className="max-w-[1100px] w-2/3">
 					<DialogTitle className="m-0 font-semibold px-3 text-md">
 						<div className="flex gap-2 items-center">
 							<Settings2 width={16} height={16} />
