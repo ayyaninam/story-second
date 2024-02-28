@@ -32,7 +32,6 @@ const mainHeaderContainer: {
 		boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
 	},
 };
-
 const createNewButton: CSSProperties = {
 	background:
 		"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-accent-700, #157A6E)",
@@ -155,6 +154,7 @@ export const LibraryHeader = ({
 					{!isMobile && (<Button
 						className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 						variant="default"
+						style={createNewButton}
 						onClick={() => {
 							// TODO: Implement
 							toast.success("Coming soon!")

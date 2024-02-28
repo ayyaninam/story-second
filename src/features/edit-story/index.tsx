@@ -45,7 +45,7 @@ export default function EditStory() {
 
 	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
 		editStoryReducer,
-		WebstoryToStoryDraft(Webstory.data!)
+		WebstoryToStoryDraft(Webstory.data!, true)
 	);
 
 	useEffect(() => {

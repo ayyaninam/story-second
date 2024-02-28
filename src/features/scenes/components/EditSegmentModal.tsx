@@ -25,9 +25,10 @@ const EditSegmentModal = ({
 	scene,
 	sceneId,
 	onSceneEdit,
+	sceneIndex,
 	dispatch,
 	story,
-	handleRegenerateImage,
+	handleRegenerateSceneImages,
 }: {
 	open?: boolean;
 	onClose: () => void;
@@ -35,18 +36,17 @@ const EditSegmentModal = ({
 	sceneId?: number;
 	onSceneEdit: (scene: Scene, index: number) => void;
 	dispatch: React.Dispatch<EditStoryAction>;
+	handleRegenerateSceneImages: (sceneIndex: number) => Promise<void>;
 	story: EditStoryDraft;
-	handleRegenerateImage: (
-		segment: Segment,
-		sceneIndex: number,
-		segmentIndex: number,
-		saveBeforeRegenerating?: boolean
-	) => Promise<void>;
+	sceneIndex: number;
 }) => {
 	const [webstory] = useWebstoryContext();
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
+	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
+		number | null
+	>(null);
 
 	if (scene && sceneId !== undefined) {
 		return (
@@ -57,8 +57,8 @@ const EditSegmentModal = ({
 					!open && onClose();
 				}}
 			>
-				<DialogContent className="max-w-[1000px]">
-					<DialogTitle className="m-0 font-semibold text-[#121113] px-3 text-md">
+				<DialogContent className="max-w-[1100px] w-2/3 bg-background">
+					<DialogTitle className="m-0 font-semibold text-foreground px-3 text-md">
 						<div className="flex gap-2 items-center">
 							<Settings2 width={16} height={16} />
 							<p>Edit Segments</p>
@@ -75,10 +75,7 @@ const EditSegmentModal = ({
 								key={index}
 								story={story}
 								segment={segment}
-								onRegenerateImage={() => {
-									handleRegenerateImage(segment, sceneId, index, true);
-								}}
-								regeneratingImage={regeratingImages[index]}
+								dispatch={dispatch}
 								onSegmentEdit={(updatedSegment) => {
 									dispatch({
 										type: "edit_segment",
@@ -86,7 +83,6 @@ const EditSegmentModal = ({
 										segmentIndex: index,
 										segment: updatedSegment,
 									});
-									// setEditedScene(updatedScene);
 								}}
 								onSegmentDelete={() => {
 									dispatch({
@@ -95,6 +91,10 @@ const EditSegmentModal = ({
 										segmentIndex: index,
 									});
 								}}
+								segmentIndex={index}
+								imageRegenerationSegmentId={imageRegenerationSegmentId}
+								setImageRegenerationSegmentId={setImageRegenerationSegmentId}
+								sceneIndex={sceneIndex}
 							/>
 						))}
 					</div>
@@ -102,10 +102,10 @@ const EditSegmentModal = ({
 						<Button
 							className="w-[50%] p-2 flex gap-1 text-accent-600 items-center"
 							variant="outline"
-							onClick={onClose}
+							onClick={() => handleRegenerateSceneImages(sceneId)}
 						>
 							<RefreshCw width={16} height={16} />
-							<p className="text-sm text-slate-950 font-semibold">
+							<p className="text-sm text-foreground font-semibold">
 								Regenerate All Images
 							</p>
 							<p className="text-sm">(5 Credits)</p>
@@ -116,7 +116,7 @@ const EditSegmentModal = ({
 								variant="default"
 							>
 								<Check width={16} height={16} />
-								<p className="text-sm">Done</p>
+								<p className="text-sm font-semibold">Done</p>
 							</Button>
 						</DialogClose>
 					</div>

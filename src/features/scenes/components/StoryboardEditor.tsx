@@ -1,19 +1,10 @@
 import {
-	AspectRatios,
 	DisplayAspectRatios,
 	SegmentModifications,
 	StoryImageStyles,
-	StoryboardViewType,
 } from "@/utils/enums";
+import { ChevronRight, LayoutList, Plus, Settings2 } from "lucide-react";
 import {
-	ChevronDown,
-	ChevronRight,
-	LayoutList,
-	Plus,
-	SparkleIcon,
-} from "lucide-react";
-import { useImmerReducer } from "use-immer";
-import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
 	Scene,
@@ -23,7 +14,7 @@ import editStoryReducer, {
 } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import EditSegmentModal from "./EditSegmentModal";
@@ -39,8 +30,9 @@ import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { Button } from "@/components/ui/button";
+import SegmentImage from "./SegmentImage";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -70,6 +62,9 @@ export default function StoryboardEditor({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
+	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
+		number | null
+	>(null);
 
 	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
 		open?: boolean;
@@ -77,17 +72,12 @@ export default function StoryboardEditor({
 		sceneId?: number;
 		dispatch: React.Dispatch<EditStoryAction>;
 		story: EditStoryDraft;
+		sceneIndex?: number;
 	}>();
 
 	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
 		WebstoryToStoryDraft(WebstoryData!)
 	);
-
-	// useEffect(() => {
-	// 	console.log(
-	// 		story.scenes.flatMap((el) => el.segments.map((seg) => seg.videoKey))
-	// 	);
-	// }, [story]);
 
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
@@ -99,7 +89,7 @@ export default function StoryboardEditor({
 
 	const handleSubmitEditSegments = async () => {
 		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-		console.log(diff);
+		console.log(diff, "updating diffing");
 		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
 			details: { Ind: segment.id, Text: segment.textContent },
 			operation: SegmentModifications.Edit,
@@ -148,66 +138,35 @@ export default function StoryboardEditor({
 		return newStory;
 	};
 
-	const handleRegenerateImage = async (
-		segment: Segment,
-		sceneIndex: number,
-		segmentIndex: number,
-		saveBeforeRegenerating: boolean = false
-	) => {
-		dispatch({
-			type: "edit_segment",
-			sceneIndex,
-			segmentIndex: segmentIndex,
-			segment: { ...segment, imageStatus: StoryStatus.PENDING },
-		});
+	const handleRegenerateSceneImages = async (sceneIndex: number) => {
+		const scene = story.scenes[sceneIndex];
+		if (!scene) return;
+		// dispatch({
+		// 	type: "update_segment_statuses",
+		// 	key: "imageStatus",
+		// 	segmentIndices:
+		// 		scene.segments?.map((el, segmentIndex) => ({
+		// 			segmentIndex,
+		// 			sceneIndex,
+		// 		})) ?? [],
+		// 	status: StoryStatus.PENDING,
+		// });
 
-		let newSegment = null;
-		if (saveBeforeRegenerating) {
-			const newStory = await handleSubmitEditSegments();
-			newSegment = newStory?.scenes?.[sceneIndex]?.videoSegments?.find(
-				(el) => el.textContent === segment.textContent
-			);
-		}
+		const newStory = await handleSubmitEditSegments();
 
-		const regeneratedImages = await api.video.regenerateImage({
-			// @ts-ignore
-			image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
-			prompt: segment.settings?.prompt ?? segment.textContent,
-			segment_idx: newSegment?.index ?? segment.id,
+		const regeneratedImages = await api.video.regenerateAllImages({
+			// @ts-expect-error
+			image_style: scene.settings?.style ?? StoryImageStyles.Realistic,
 			story_id: story.id,
-			story_type: WebstoryData?.storyType!,
-			cfg_scale: segment.settings?.denoising ?? 2,
-			sampling_steps: segment.settings?.samplingSteps ?? 8,
-			seed: segment.settings?.seed ?? 3121472823,
+			story_type: story.type,
+			scene_id: scene.id,
 		});
-
-		if (regeneratedImages.target_paths.length === 1) {
-			dispatch({
-				type: "edit_segment",
-				sceneIndex,
-				segmentIndex: segmentIndex,
-				segment: {
-					...segment,
-					imageStatus: StoryStatus.COMPLETE,
-					imageKey: regeneratedImages.image_key,
-				},
-			});
-		}
 	};
 
 	return (
 		<>
-			<div
-				className="relative w-4/5 h-4/5 m-auto overflow-hidden"
-				style={{
-					borderRadius: "8px",
-					background: "#FEFEFF",
-					boxShadow:
-						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-					backdropFilter: "blur(5px)",
-				}}
-			>
-				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
+			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
+				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 						<p>Storyboard View</p>
@@ -230,7 +189,7 @@ export default function StoryboardEditor({
 						</Button> */}
 					</div>
 				</div>
-				<div className="relative  px-6 pt-6 pb-2 bg-[#FEFEFF]">
+				<div className="relative  px-6 pt-6 pb-2">
 					<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
 						{Format.Title(WebstoryData?.storyTitle)}
 					</p>
@@ -278,56 +237,42 @@ export default function StoryboardEditor({
 												{story.scenes.map((scene, sceneIndex) => (
 													<div
 														key={sceneIndex}
-														className="pt-2 flex flex-row justify-between w-full rounded-md hover:bg-slate-50 group items-center"
+														className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
 													>
-														<div className="flex items-center space-y-1 flex-wrap">
+														<div
+															className={cn("gap-4 flex max-w-1/2 flex-wrap")}
+														>
 															{scene.segments.map((segment, segmentIndex) => {
 																return (
-																	<React.Fragment key={segmentIndex}>
-																		{segment.imageStatus ===
-																			StoryStatus.COMPLETE && (
-																			<>
-																				<div
-																					className="relative h-40"
-																					style={{
-																						aspectRatio: GetImageRatio(
-																							story.resolution
-																						).ratio,
-																					}}
-																				>
-																					<Image
-																						alt={segment.textContent}
-																						src={Format.GetImageUrl(
-																							segment.imageKey
-																						)}
-																						className="rounded-sm"
-																						layout="fill"
-																						objectFit="cover" // Or use 'cover' depending on the desired effect
-																						style={{ objectFit: "contain" }}
-																					/>
-																				</div>
-																			</>
-																		)}
-																		{segment.imageStatus ===
-																			StoryStatus.PENDING && (
-																			<div
-																				className="relative h-40"
-																				style={{
-																					aspectRatio: GetImageRatio(
-																						story.resolution
-																					).ratio,
-																				}}
-																			>
-																				<Skeleton className="w-full h-full" />
-																			</div>
+																	<div
+																		className={cn("flex gap-1 items-center")}
+																		key={segmentIndex}
+																	>
+																		{(segment.imageStatus ===
+																			StoryStatus.COMPLETE ||
+																			segment.imageStatus ===
+																				StoryStatus.PENDING) && (
+																			<SegmentImage
+																				segment={segment}
+																				story={story}
+																				imageRegenerationSegmentId={
+																					imageRegenerationSegmentId
+																				}
+																				setImageRegenerationSegmentId={
+																					setImageRegenerationSegmentId
+																				}
+																				dispatch={dispatch}
+																				segmentIndex={segmentIndex}
+																				sceneIndex={sceneIndex}
+																			/>
 																		)}
 																		{segment.imageStatus ===
 																			StoryStatus.READY && (
 																			<div
-																				className="relative h-40"
+																				className="relative max-w-full h-40"
 																				style={{
-																					aspectRatio: GetImageRatio(
-																						story.resolution
+																					aspectRatio: GetDisplayImageRatio(
+																						story.displayResolution
 																					).ratio,
 																				}}
 																			>
@@ -344,13 +289,15 @@ export default function StoryboardEditor({
 																		)}
 																		{segmentIndex !==
 																			scene.segments.length - 1 && (
-																			<ChevronRight
-																				width={16}
-																				height={16}
-																				className="text-slate-500 stroke-1"
-																			/>
+																			<div className="min-w-4 min-h-4">
+																				<ChevronRight
+																					width={16}
+																					height={16}
+																					className="text-slate-500 stroke-1 min-w-4 min-h-4"
+																				/>
+																			</div>
 																		)}
-																	</React.Fragment>
+																	</div>
 																);
 															})}
 														</div>
@@ -382,7 +329,7 @@ export default function StoryboardEditor({
 																			}}
 																			name={segmentIndex.toString()}
 																			inputClassName={cn(
-																				"active:outline-none bg-transparent focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
+																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:text-slate-950 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
 																				segment.textStatus ===
 																					TextStatus.EDITED && "text-slate-500"
 																			)}
@@ -411,8 +358,9 @@ export default function StoryboardEditor({
 																	</span>
 																))}
 															</div>
-															<div className="hidden group-hover:block ">
-																<OptionsButton
+															<div className="flex gap-x-1 p-2">
+																<span
+																	className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
 																	onClick={() =>
 																		setEditSegmentsModalState({
 																			open: true,
@@ -420,9 +368,12 @@ export default function StoryboardEditor({
 																			scene: scene,
 																			sceneId: sceneIndex,
 																			story: story,
+																			sceneIndex: sceneIndex,
 																		})
 																	}
-																/>
+																>
+																	<Settings2 className="w-4 h-4 stroke-slate-500" />
+																</span>
 															</div>
 														</div>
 													</div>
@@ -445,7 +396,7 @@ export default function StoryboardEditor({
 							editSegmentsModalState.sceneId !== undefined
 						}
 						onClose={() => setEditSegmentsModalState(undefined)}
-						handleRegenerateImage={handleRegenerateImage}
+						handleRegenerateSceneImages={handleRegenerateSceneImages}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
 						dispatch={dispatch}
@@ -457,6 +408,7 @@ export default function StoryboardEditor({
 								index: index,
 							});
 						}}
+						sceneIndex={editSegmentsModalState?.sceneIndex!}
 					/>
 				)}
 		</>

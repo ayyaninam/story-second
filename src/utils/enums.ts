@@ -1,12 +1,12 @@
 export enum StoryImageStyles {
-	Realistic,
-	Auto,
-	Cartoon,
-	Sketch,
-	WaterColor,
-	SciFi,
-	Anime,
-	Horror,
+	Realistic = 0,
+	Auto = 1,
+	Cartoon = 2,
+	Sketch = 3,
+	WaterColor = 4,
+	SciFi = 5,
+	Anime = 6,
+	Horror = 7,
 }
 
 export enum StoryLanguages {

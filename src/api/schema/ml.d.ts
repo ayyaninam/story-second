@@ -180,6 +180,16 @@ export interface components {
       story_id: string;
       story_type: components["schemas"]["OutputTypeEnum"];
       image_style: components["schemas"]["ImageStyleEnum"];
+      /** Scene Id */
+      scene_id?: string;
+    };
+    /** RegenerateAllVideosRequest */
+    RegenerateAllVideosRequest: {
+      /** Story Id */
+      story_id: string;
+      story_type: components["schemas"]["OutputTypeEnum"];
+      /** Scene Id */
+      scene_id?: string;
     };
     /** RegenerateImageRequest */
     RegenerateImageRequest: {
@@ -203,7 +213,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 93194800
+       * @default 55428216
        */
       seed?: number;
       /**
@@ -449,7 +459,7 @@ export interface operations {
   regenerate_all_videos_regenerate_all_videos_post: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["RegenerateVideoRequest"];
+        "application/json": components["schemas"]["RegenerateAllVideosRequest"];
       };
     };
     responses: {

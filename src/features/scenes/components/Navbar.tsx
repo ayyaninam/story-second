@@ -28,13 +28,13 @@ export default function Navbar({
 			<div className="flex gap-x-2.5 items-center">
 				<GenerateIcon />
 				<div className="items-center">
-					<div className="flex items-center gap-x-2 text-slate-500">
-						<p className="text-sm rounded-sm font-bold text-slate-950">
+					<div className="flex items-center gap-x-2">
+						<p className="text-sm rounded-sm font-bold text-muted-foreground">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
 					</div>
 					<div className="flex items-center gap-x-2 text-slate-500">
-						<span className="flex gap-x-1.5 rounded-sm bg-slate-100 p-1 items-center">
+						<span className="flex gap-x-1.5 rounded-sm bg-muted p-1 items-center">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="19"
@@ -47,11 +47,11 @@ export default function Navbar({
 									stroke="#94ABB8"
 								/>
 							</svg>
-							<p className="text-xs">
+							<p className="text-xs text-muted-foreground">
 								{ImageRatio.width}:{ImageRatio.height}
 							</p>
 						</span>
-						<p className="text-xs rounded-sm bg-slate-100 p-1">
+						<p className="text-xs text-muted-foreground rounded-sm bg-muted p-1">
 							{Format.Title(WebstoryData?.topLevelCategory)}
 						</p>
 					</div>
@@ -59,7 +59,7 @@ export default function Navbar({
 			</div>
 			<div className="hidden md:block text-muted-foreground space-x-2 items-center">
 				{/*<Button className="p-2" variant="ghost">*/}
-				{/*	<PlayCircle className="mr-2 h-4 w-4 text-accent-600" /> Tutorial*/}
+				{/*	<PlayCircle className="mr-2 h-4 w-4 text-accent-700" /> Tutorial*/}
 				{/*</Button>*/}
 				<Button
 					className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}

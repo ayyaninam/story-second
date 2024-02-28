@@ -7,11 +7,13 @@ import {
 	ScrollText,
 	Unlock,
 	RefreshCcw,
+	Shuffle,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import {
+	EditStoryAction,
 	EditStoryDraft,
 	Segment,
 	Settings,
@@ -20,10 +22,9 @@ import {
 import { StoryImageStyles } from "@/utils/enums";
 import { keys } from "@/utils/enumKeys";
 import Format from "@/utils/format";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
-import { GetImageRatio } from "@/utils/image-ratio";
+import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { MAX_SEGMENT_LENGTH } from "@/constants/constants";
 import {
 	Select,
@@ -36,45 +37,100 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
-import { cn } from "@/utils";
+import ImageRegenerationPopoverHOC from "./ImageRegenerationPopoverHOC";
 import createSeed from "@/utils/create-seed";
+import ImageRegenerationLoader from "./ImageRegenerationLoader";
+import { useMutation } from "@tanstack/react-query";
+import api from "@/api";
 
 export default function EditSegmentModalItem({
 	segment,
 	story,
 	onSegmentEdit,
+	segmentIndex,
 	onSegmentDelete,
-	onRegenerateImage,
-	regeneratingImage,
+	imageRegenerationSegmentId,
+	setImageRegenerationSegmentId,
+	dispatch,
+	sceneIndex,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
 	onSegmentEdit: (updatedSegment: Segment) => void;
-	onSegmentDelete: () => void;
-	onRegenerateImage: () => void;
-	regeneratingImage: boolean;
+	dispatch: React.Dispatch<EditStoryAction>;
+	segmentIndex: number;
+	onSegmentDelete: (segmentIndex: number) => void;
+	imageRegenerationSegmentId: number | null;
+	setImageRegenerationSegmentId: React.Dispatch<
+		React.SetStateAction<number | null>
+	>;
+	sceneIndex: number;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
+	const [imageStatus, setImageStatus] = useState(segment.imageStatus);
+
+	const UploadImage = useMutation({ mutationFn: api.video.uploadSegmentImage });
+
+	useEffect(() => {
+		// The idea cycle should be READY -> PENDING -> COMPLETE
+		if (
+			imageStatus === StoryStatus.PENDING &&
+			segment.imageStatus === StoryStatus.READY
+		)
+			return;
+		setImageStatus(segment.imageStatus);
+	}, [segment.imageStatus]);
+
+	const [regeneratingImage, setRegeneratingImage] = useState(false);
 	return (
-		<div className="flex bg-slate-50 rounded-md border-border border-[1px] p-2 m-2 gap-2">
-			<div className="w-full text-slate-950 space-y-2">
+		<div className="flex bg-primary-foreground rounded-md border-border border-[1px] p-2 m-2 gap-2">
+			<div className="w-full text-foreground space-y-2">
 				<div className="flex flex-row space-x-2">
 					<div
-						className="relative h-56"
-						style={{ aspectRatio: GetImageRatio(story.resolution).ratio }}
+						className="h-56"
+						style={{
+							aspectRatio: GetDisplayImageRatio(story.displayResolution).ratio,
+						}}
 					>
-						{segment.imageStatus !== StoryStatus.COMPLETE ? (
-							<Skeleton className="w-full h-full" />
-						) : (
-							<Image
-								alt={segment.textContent}
-								src={Format.GetImageUrl(segment.imageKey)}
-								className="rounded-sm"
-								layout="fill"
-								objectFit="cover" // Or use 'cover' depending on the desired effect
-								style={{ objectFit: "contain" }}
-							/>
-						)}
+						<ImageRegenerationPopoverHOC
+							segment={segment}
+							story={story}
+							open={imageRegenerationSegmentId === segment.id}
+							onClose={() => {
+								setImageRegenerationSegmentId((prevSegmentId) => {
+									if (prevSegmentId === segment.id) return null;
+									return prevSegmentId;
+								});
+							}}
+							dispatch={dispatch}
+							segmentIndex={segmentIndex}
+							sceneIndex={sceneIndex}
+							regenerateOnOpen={regeneratingImage}
+							triggerButtonClassName="w-full h-full"
+						>
+							<div className="relative w-full h-full">
+								{segment.imageStatus !== StoryStatus.COMPLETE ? (
+									<ImageRegenerationLoader
+										arcSize={42}
+										starSize={16}
+										circleSize={48}
+									/>
+								) : (
+									<Image
+										onClick={() => {
+											setImageRegenerationSegmentId(segment.id);
+											setRegeneratingImage(false);
+										}}
+										alt={segment.textContent}
+										src={Format.GetImageUrl(segment.imageKey)}
+										className="rounded-sm"
+										layout="fill"
+										objectFit="cover" // Or use 'cover' depending on the desired effect
+										style={{ objectFit: "contain" }}
+									/>
+								)}
+							</div>
+						</ImageRegenerationPopoverHOC>
 					</div>
 					<div className="w-full h-full flex flex-col space-y-3">
 						<div>
@@ -110,9 +166,45 @@ export default function EditSegmentModalItem({
 									Advanced Editing
 								</Label>
 							</div>
-							<div className="flex items-center space-x-1 ">
+							<div className="flex items-center space-x-1 text-muted-foreground">
+								<label className="flex py-[4px] w-36 justify-center gap-1 h-fit bg-muted border-border border-[1px] pl-3 pr-2 rounded-md items-center cursor-pointer hover:text-slate-700 transition-colors ease-in-out font-medium text-sm">
+									<Input
+										onChange={(e) => {
+											if (e.target.files?.[0]) {
+												UploadImage.mutateAsync({
+													id: story.id,
+													image: e.target.files[0],
+													index: segmentIndex,
+												});
+											}
+										}}
+										disabled={UploadImage.isPending}
+										type="file"
+										accept="image/*"
+										className="hidden" // Hide the actual input but keep it functional
+										// onChange={/* your file change handler here */}
+									/>
+									{UploadImage.isPending ? (
+										<RefreshCcw
+											width={"18px"}
+											height={"18px"}
+											className="stroke-1 animate-spin"
+											style={{ animationDirection: "reverse" }}
+										/>
+									) : (
+										<ImagePlus
+											width={"18px"}
+											height={"18px"}
+											className="stroke-1"
+										/>
+									)}
+
+									{UploadImage.isPending ? "Uploading" : "Image"}
+									<Plus width={"18px"} height={"18px"} className="stroke-1" />
+								</label>
+								{/*
 								<Button
-									className="flex  py-1 gap-1 h-fit bg-slate-50 text-slate-500 border-border border-[1px] rounded-md items-center"
+									className="flex  py-1 gap-1 h-fit bg-muted border-border border-[1px] rounded-md items-center"
 									variant="outline"
 								>
 									<ImagePlus
@@ -122,23 +214,27 @@ export default function EditSegmentModalItem({
 									/>
 									Image
 									<Plus width={"18px"} height={"18px"} className="stroke-1" />
-								</Button>
+								</Button> */}
 								<Button
-									className="flex py-1 gap-1 bg-slate-50 h-fit text-slate-500 border-border border-[1px] rounded-md items-center"
+									className="flex py-1 gap-1 bg-muted h-fit  border-border border-[1px] rounded-md items-center"
 									variant="outline"
-									onClick={onRegenerateImage}
-									disabled={segment.imageStatus === StoryStatus.PENDING}
+									onClick={() => {
+										setImageRegenerationSegmentId(segment.id);
+										setRegeneratingImage(true);
+									}}
+									disabled={
+										segment.alternateImagesStatus === StoryStatus.PENDING
+									}
 								>
 									<RefreshCcw
 										className="stroke-1"
 										width={"18px"}
 										height={"18px"}
 									/>
-									{segment.imageStatus === StoryStatus.COMPLETE && "Regenerate"}
-									{segment.imageStatus === StoryStatus.PENDING &&
+									{segment.alternateImagesStatus !== StoryStatus.PENDING &&
+										"Regenerate"}
+									{segment.alternateImagesStatus === StoryStatus.PENDING &&
 										"Regenerating"}
-									{segment.imageStatus === StoryStatus.READY &&
-										"Save & Generate"}
 								</Button>
 							</div>
 						</div>
@@ -172,7 +268,6 @@ function AdvancedEditingOptions({
 			<div
 				className="border-[1px] rounded-md p-5 text-sm"
 				style={{
-					background: "linear-gradient(180deg, #FFF 0%, #F8FAFC 100%)",
 					boxShadow: "0px 0px 6px 0px #D7CBE1",
 					border: "0.5px solid #BB55F7",
 				}}
@@ -193,19 +288,10 @@ function AdvancedEditingOptions({
 					placeholder="Write your image animation prompt here"
 					value={settings?.prompt ?? ""}
 					onChange={(e) => {
-						if (settings)
-							onSettingsChange({
-								...settings,
-								prompt: e.target.value,
-							});
-						else
-							onSettingsChange({
-								denoising: 2,
-								prompt: e.target.value,
-								samplingSteps: 8,
-								style: StoryImageStyles.Realistic,
-								voice: "",
-							});
+						onSettingsChange({
+							...settings,
+							prompt: e.target.value,
+						});
 					}}
 				/>
 
@@ -253,30 +339,33 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<Input
-							id="seed"
-							type="number"
-							// min={0}
-							// max={2e16 - 1}
-							className="w-full border-[1px] rounded-md m-1 p-2"
-							placeholder="2"
-							value={settings?.seed ?? 1}
-							onChange={(e) => {
-								if (settings)
+
+						<div className="relative">
+							<Input
+								id="seed"
+								type="number"
+								min={-1}
+								max={2e16 - 1}
+								className="w-full border-[1px] rounded-md m-1 p-2"
+								placeholder="2"
+								value={settings?.seed ?? -1}
+								onChange={(e) => {
 									onSettingsChange({
 										...settings,
 										seed: parseInt(e.target.value),
 									});
-								else
+								}}
+							/>
+							<Shuffle
+								className="h-8 w-8 absolute right-0 top-1 p-1 rounded-sm shadow-sm hover:cursor-pointer border-border border-[1px]"
+								onClick={() => {
 									onSettingsChange({
-										denoising: 2,
-										prompt: "",
-										samplingSteps: 8,
-										style: StoryImageStyles.Realistic,
-										seed: parseInt(e.target.value),
+										...settings,
+										seed: createSeed(),
 									});
-							}}
-						/>
+								}}
+							/>
+						</div>
 					</div>
 				</div>
 				<div className="flex gap-6">
@@ -290,13 +379,7 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<div
-							className="flex w-full gap-1 px-1 rounded-sm"
-							style={{
-								background:
-									"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
-							}}
-						>
+						<div className="flex w-full gap-1 px-1 rounded-sm bg-gradient-to-l from-blue-200 via-white to-transparent">
 							<Input
 								id="denoising-factor"
 								className="w-16"
@@ -307,20 +390,10 @@ function AdvancedEditingOptions({
 								placeholder="2"
 								value={settings?.denoising ?? 2}
 								onChange={(e) => {
-									if (settings)
-										onSettingsChange({
-											...settings,
-											denoising: parseInt(e.target.value),
-										});
-									else
-										onSettingsChange({
-											denoising: parseInt(e.target.value),
-											prompt: "",
-											samplingSteps: 8,
-											style: StoryImageStyles.Realistic,
-											seed: 1,
-											voice: "",
-										});
+									onSettingsChange({
+										...settings,
+										denoising: parseInt(e.target.value),
+									});
 								}}
 							/>
 							<Slider
@@ -331,20 +404,10 @@ function AdvancedEditingOptions({
 								trackBorderColor="border-indigo-600"
 								step={0.5}
 								onValueChange={(value) => {
-									if (settings)
-										onSettingsChange({
-											...settings,
-											denoising: value[0],
-										});
-									else
-										onSettingsChange({
-											denoising: value[0],
-											prompt: "",
-											samplingSteps: 8,
-											style: StoryImageStyles.Realistic,
-											seed: createSeed(),
-											voice: "",
-										});
+									onSettingsChange({
+										...settings,
+										denoising: value[0],
+									});
 								}}
 							/>
 						</div>
@@ -359,13 +422,7 @@ function AdvancedEditingOptions({
 								<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 							</TooltipComponent>
 						</label>
-						<div
-							className="flex w-full gap-1 px-1 rounded-sm"
-							style={{
-								background:
-									"linear-gradient(270deg, #E0E7FF 8.49%, rgba(224, 231, 255, 0.00) 88.35%)",
-							}}
-						>
+						<div className="flex w-full gap-1 px-1 rounded-sm bg-gradient-to-l from-blue-200 via-white to-transparent">
 							<Input
 								id="sampling-steps"
 								type="number"
@@ -375,19 +432,10 @@ function AdvancedEditingOptions({
 								placeholder="2"
 								value={settings?.samplingSteps ?? 8}
 								onChange={(e) => {
-									if (settings)
-										onSettingsChange({
-											...settings,
-											samplingSteps: parseInt(e.target.value),
-										});
-									else
-										onSettingsChange({
-											denoising: 0,
-											prompt: "",
-											samplingSteps: parseInt(e.target.value),
-											style: StoryImageStyles.Realistic,
-											seed: createSeed(),
-										});
+									onSettingsChange({
+										...settings,
+										samplingSteps: parseInt(e.target.value),
+									});
 								}}
 							/>
 							<Slider
@@ -398,19 +446,10 @@ function AdvancedEditingOptions({
 								trackBgColor="bg-indigo-600"
 								trackBorderColor="border-indigo-600"
 								onValueChange={(value) => {
-									if (settings)
-										onSettingsChange({
-											...settings,
-											samplingSteps: value[0],
-										});
-									else
-										onSettingsChange({
-											denoising: 0,
-											prompt: "",
-											samplingSteps: value[0],
-											style: StoryImageStyles.Realistic,
-											seed: createSeed(),
-										});
+									onSettingsChange({
+										...settings,
+										samplingSteps: value[0],
+									});
 								}}
 							/>
 						</div>

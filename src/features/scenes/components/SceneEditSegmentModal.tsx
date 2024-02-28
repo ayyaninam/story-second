@@ -63,8 +63,8 @@ const SceneEditSegmentModal = ({
 					!open && onClose();
 				}}
 			>
-				<DialogContent className="max-w-[1000px]">
-					<DialogTitle className="m-0 font-semibold text-[#121113] px-3 text-md">
+				<DialogContent className="max-w-[1100px] w-2/3">
+					<DialogTitle className="m-0 font-semibold px-3 text-md">
 						<div className="flex gap-2 items-center">
 							<Settings2 width={16} height={16} />
 							<p>Edit Segments</p>
@@ -98,7 +98,11 @@ const SceneEditSegmentModal = ({
 						{/* <Button className="p-2" variant="outline" onClick={onClose}>
 									Close
 								</Button> */}
-						<Button className="p-2" variant="outline" onClick={onClose}>
+						<Button
+							className="p-2 bg-muted text-muted-foreground"
+							variant="outline"
+							onClick={onClose}
+						>
 							Close
 						</Button>
 					</div>
