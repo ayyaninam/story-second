@@ -17,7 +17,8 @@ import UncheckedCheckBox from "@/components/icons/scene-editor/unchecked-check-b
 import CheckedCheckBox from "@/components/icons/scene-editor/checked-check-box";
 import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-image-icon";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
-import { Lock, ScrollText, Sparkle, X } from "lucide-react";
+import { CheckIcon, Lock, ScrollText, Sparkle, X } from "lucide-react";
+import { getImageCost } from "@/utils/credit-cost";
 
 function RegenerationPopupHeader({
 	title,
@@ -29,14 +30,14 @@ function RegenerationPopupHeader({
 	return (
 		<div className="flex w-full gap-1 items-center">
 			<Sparkle fill="#A734EA" stroke="transparent" width={18} height={18} />
-			<div className="text-[#06070F] text-sm font-medium grow">{title}</div>
+			<div className="text-foreground text-sm font-medium grow">{title}</div>
 			<div
-				className="p-1 cursor-pointer rounded-full bg-[#F1F6F9] w-6 h-6 overflow-hidden flex items-center justify-center"
+				className="p-1 cursor-pointer rounded-full bg-muted w-6 h-6 overflow-hidden flex items-center justify-center"
 				onClick={() => {
 					onClose();
 				}}
 			>
-				<X stroke="#0F1324" fill="#0F1324" strokeWidth={2} width={16} />
+				<X className="text-foreground" strokeWidth={2} width={16} />
 			</div>
 		</div>
 	);
@@ -44,12 +45,12 @@ function RegenerationPopupHeader({
 
 function RegenerationPopupScriptContent({ text }: { text: string }) {
 	return (
-		<div className="py-1 px-2 items-center bg-slate-100 rounded-sm border border-input w-full flex gap-2 overflow-hidden">
-			<ScrollText stroke="#94ABB8" className="min-w-4 min-h-4" />
+		<div className="py-1 px-2 items-center bg-muted rounded-sm border border-input w-full flex gap-2 overflow-hidden">
+			<ScrollText className="min-w-4 min-h-4 text-muted-foreground" />
 			<div className="text-xs grow whitespace-nowrap text-ellipsis overflow-hidden">
 				{text}
 			</div>
-			<Lock stroke="#94ABB8" className="min-w-4 min-h-4" />
+			<Lock className="min-w-4 min-h-4 text-muted-foreground" />
 		</div>
 	);
 }
@@ -84,12 +85,12 @@ const ImageContainer = ({
 			onClick={() => {
 				imageKey && onSelection(imageKey);
 			}}
-			style={{
-				boxShadow:
-					active && !loading
-						? "0px 0px 3.468px 0.991px #924FE8, 0px 0px 0px 0.991px #924FE8, 0px 0px 0px 0.495px #FFF inset"
-						: "none",
-			}}
+			// style={{
+			// 	boxShadow:
+			// 		active && !loading
+			// 			? "0px 0px 3.468px 0.991px #924FE8, 0px 0px 0px 0.991px #924FE8, 0px 0px 0px 0.495px #FFF inset"
+			// 			: "none",
+			// }}
 		>
 			<div
 				className="relative w-full"
@@ -129,10 +130,7 @@ function RegenerateButton({
 }) {
 	return (
 		<Button
-			className="flex px-2 py-1 w-full h-fit justify-center items-center gap-1 grow h-fit-content rounded-sm border border-[#DEE0E3] bg-[#FFF]"
-			style={{
-				boxShadow: "0px 1px 2px 0px rgba(20, 21, 26, 0.05)",
-			}}
+			className="flex px-2 py-1 w-full h-fit justify-center items-center gap-1 grow h-fit-content rounded-sm border border-border bg-background shadow-sm"
 			variant={"outline"}
 			onClick={onClick}
 			disabled={loading}
@@ -145,9 +143,13 @@ function RegenerateButton({
 			>
 				<RegenerateImageIcon />
 			</div>
-			<div className="text-xs font-medium">
+			<div className="text-xs font-medium text-foreground">
 				{loading ? "Generating..." : text}{" "}
-				{!loading && <span className="text-purple-600">(4 Credits)</span>}
+				{!loading && (
+					<span className="text-purple-600">
+						{`(${getImageCost(4)} ${Format.Pluralize("Credit", getImageCost(4))})`}
+					</span>
+				)}
 			</div>
 		</Button>
 	);
@@ -282,15 +284,11 @@ function ImageRegenerationPopup({
 					}
 				}}
 				className={cn(
-					"rounded-[10px] bg-white p-3 flex flex-col gap-2 items-start backdrop-blur-[5px]",
+					"rounded-[10px] bg-background p-3 flex flex-col gap-2 items-start backdrop-blur-[5px] shadow-md",
 					story.resolution === AspectRatios["1024x576"]
 						? "w-[436px]"
 						: "w-[276px]"
 				)}
-				style={{
-					boxShadow:
-						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-				}}
 			>
 				<RegenerationPopupHeader
 					title="Generate & Select New Image"
@@ -353,7 +351,7 @@ function ImageRegenerationPopup({
 										</div>
 									))}
 							</div>
-							<div className="bg-gray min-h-full gap-1.5 w-full grid grid-col-5 grid-flow-col">
+							<div className="min-h-full gap-1.5 w-full grid grid-col-5 grid-flow-col">
 								{Array(4)
 									.fill(0)
 									.map((_, index) => (
@@ -389,31 +387,13 @@ function ImageRegenerationPopup({
 				/>
 				<Button
 					className={cn(
-						"flex gap-0.5 items-center justify-center w-full h-fit rounded-sm bg-[#8F22CE] text-white text-sm font-medium py-1.5 px-2 grow hover:bg-[#5f1586]",
-						loading ? "bg-slate-100 text-slate-400 border-slate-400" : ""
+						"flex gap-0.5 items-center justify-center w-full h-fit rounded-sm bg-[#8F22CE] text-white text-sm font-medium py-1.5 px-2 grow hover:bg-[#5f1586] shadow-sm",
+						loading ? "bg-muted text-muted-foreground border-border" : ""
 					)}
-					style={{
-						boxShadow: !loading
-							? "0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #8F22CE"
-							: "none",
-					}}
 					disabled={!selectedImageKey || loading}
 					onClick={insertImage}
 				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						viewBox="0 0 16 16"
-						fill="none"
-					>
-						<path
-							fill-rule="evenodd"
-							clip-rule="evenodd"
-							d="M12.2306 3.97533C12.5387 4.17683 12.6252 4.58999 12.4238 4.89815L7.89041 11.8315C7.78357 11.9949 7.61048 12.1032 7.41684 12.1279C7.22319 12.1527 7.02843 12.0912 6.88398 11.9599L3.95064 9.29328C3.6782 9.04561 3.65813 8.62397 3.9058 8.35154C4.15347 8.0791 4.5751 8.05901 4.84754 8.30669L7.20233 10.4474L11.3078 4.16849C11.5093 3.86033 11.9224 3.77385 12.2306 3.97533Z"
-							fill="currentColor"
-						/>
-					</svg>
+					<CheckIcon className="h-4 w-4" />
 					Insert Selected
 				</Button>
 			</PopoverContent>
@@ -427,15 +407,11 @@ function ImageRegenerationPopup({
 				onClose();
 			}}
 			className={cn(
-				"rounded-[10px] bg-white p-3 flex flex-col gap-2 items-start backdrop-blur-[5px]",
+				"rounded-[10px] bg-background p-3 flex flex-col gap-2 items-start backdrop-blur-[5px] shadow-sm",
 				story.resolution === AspectRatios["1024x576"]
 					? "w-[340px]"
 					: "w-[208px]"
 			)}
-			style={{
-				boxShadow:
-					"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-			}}
 		>
 			<RegenerationPopupHeader title="Generated Image" onClose={onClose} />
 			<div
