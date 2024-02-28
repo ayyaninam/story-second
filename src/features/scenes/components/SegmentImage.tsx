@@ -11,6 +11,8 @@ import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import ImageRegenerationPopoverHOC from "./ImageRegenerationPopoverHOC";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { Plus } from "lucide-react";
+import { cn } from "@/utils";
+import { DisplayAspectRatios } from "@/utils/enums";
 
 function SegmentImage({
 	segment,
@@ -66,7 +68,12 @@ function SegmentImage({
 			handleSubmitEditSegments={handleSubmitEditSegments}
 		>
 			<div
-				className="relative max-w-full h-40 flex justify-center items-center"
+				className={cn(
+					"relative max-w-full flex justify-center items-center",
+					story.displayResolution === DisplayAspectRatios["1024x576"]
+						? "w-40"
+						: "h-40"
+				)}
 				style={{
 					aspectRatio: imageAspectRatio,
 				}}
@@ -92,7 +99,12 @@ function SegmentImage({
 					</div>
 				) : segment.imageStatus === StoryStatus.READY ? (
 					<div
-						className="relative max-w-full h-40"
+						className={cn(
+							"relative max-w-full",
+							story.displayResolution === DisplayAspectRatios["1024x576"]
+								? "w-40"
+								: "h-40"
+						)}
 						style={{
 							aspectRatio: GetDisplayImageRatio(story.displayResolution).ratio,
 						}}
