@@ -485,6 +485,7 @@ const Footer = ({
 	};
 
 	const FooterRightButtons = View[view];
+	const areImagesActive = view === "script" || view === "storyboard";
 	return (
 		<div className="sticky bottom-0  bg-background border-border border-t-[1px] p-3 pt-1.5 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
 			<div className="flex gap-1 py-2">
@@ -543,18 +544,19 @@ const Footer = ({
 														width={64}
 														height={48}
 														className={clsx(
-															"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
+															`w-16 h-12 rounded-lg transition-opacity ease-in-out ${areImagesActive || generationStyle === Number(key) ? "hover:opacity-80" : "opacity-40"}`,
 															{
 																["ring-purple-600 ring-[1.5px] ring-offset-1"]:
 																	generationStyle === Number(key),
 															}
 														)}
 														role="button"
-														onClick={() =>
-															updateImageStyle(
-																Number(key) as unknown as StoryImageStyles
-															)
-														}
+														onClick={() => {
+															if (areImagesActive)
+																updateImageStyle(
+																	Number(key) as unknown as StoryImageStyles
+																);
+														}}
 														style={{ objectFit: "cover" }}
 													/>
 												</TooltipComponent>
