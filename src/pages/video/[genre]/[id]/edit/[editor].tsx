@@ -106,9 +106,9 @@ const EditorPage = ({
 				return {
 					details: {
 						Ind: el.index,
-						SceneDescription: el.description,
+						SceneDescriptions: el.descriptions,
 					},
-					operation: SegmentModifications.Edit,
+					operation: SegmentModifications.Add,
 				};
 			}
 		);
