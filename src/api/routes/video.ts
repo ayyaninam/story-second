@@ -60,6 +60,27 @@ const video = {
 
 		return data;
 	},
+	uploadSegmentImage: async (params: {
+		id: string;
+		image: File;
+		index: number;
+		accessToken?: string;
+	}) => {
+		const body = new FormData();
+		body.append("Image", params.image);
+		body.append("Index", params.index.toString());
+		const data: string = await authFetcher(params.accessToken ?? getJwt())
+			.post(`api/WebStory/SaveStorySegmentImage/${params.id}`, {
+				body,
+
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			})
+			.json();
+
+		return data;
+	},
 	regenerateImage: async (
 		params: mlSchema["RegenerateImageRequest"],
 		accessToken?: string
@@ -71,6 +92,18 @@ const video = {
 			.json();
 
 		return data as RegenerateVideoSegments;
+	},
+	saveImage: async (
+		params: mlSchema["SaveImageRequest"],
+		accessToken?: string
+	): Promise<unknown> => {
+		const data = await mlFetcher(accessToken ?? getJwt())
+			.put(`save-image`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		return data;
 	},
 	regenerateVideo: async (
 		params: mlSchema["RegenerateVideoRequest"],
@@ -97,7 +130,7 @@ const video = {
 		return data;
 	},
 	regenerateAllVideos: async (
-		params: mlSchema["RegenerateVideoRequest"],
+		params: mlSchema["RegenerateAllVideosRequest"],
 		accessToken?: string
 	): Promise<unknown> => {
 		const data = await mlFetcher(accessToken ?? getJwt())

@@ -4,7 +4,7 @@ import {
 	SegmentModifications,
 	StoryboardViewType,
 } from "@/utils/enums";
-import { ChevronDown, LayoutList, SparkleIcon } from "lucide-react";
+import { ChevronDown, LayoutList, RefreshCw, SparkleIcon } from "lucide-react";
 import { useImmerReducer } from "use-immer";
 import editStoryReducer, {
 	EditStoryAction,
@@ -137,17 +137,8 @@ export default function ScriptEditor({
 	return (
 		<>
 			<TooltipProvider>
-				<div
-					className="relative w-4/5 h-4/5 m-auto"
-					style={{
-						borderRadius: "8px",
-						background: "#FEFEFF",
-						boxShadow:
-							"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-						backdropFilter: "blur(5px)",
-					}}
-				>
-					<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
+				<div className="relative w-4/5 h-4/5 m-auto bg-background rounded-lg shadow-lg">
+					<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 						<div className="flex items-center gap-1">
 							<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 							<p>Script View</p>
@@ -168,7 +159,7 @@ export default function ScriptEditor({
 						</div> */}
 						</div>
 					</div>
-					<div className="relative px-6 pt-6 pb-2 bg-[#FEFEFF]">
+					<div className="relative px-6 pt-6 pb-2">
 						<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
@@ -212,10 +203,10 @@ export default function ScriptEditor({
 													{story.scenes.map((scene, sceneIndex) => (
 														<div
 															key={sceneIndex}
-															className="flex flex-wrap flex-col  w-full"
+															className="flex flex-wrap flex-col  w-fit"
 														>
 															<TooltipComponent label="You can edit scenes in the storyboard">
-																<div className="bg-slate-50 font-normal text-slate-600 text-sm w-fit my-2 px-1">
+																<div className="bg-muted font-normal text-muted-foreground rounded-sm text-sm w-fit my-2 px-1">
 																	{`Scene ${sceneIndex + 1}: `}
 																	{scene.description}
 																</div>
@@ -229,6 +220,8 @@ export default function ScriptEditor({
 																		className={cn(`flex flex-wrap `)}
 																	>
 																		<AutosizeInput
+																			autoComplete="false"
+																			disabled={!WebstoryData?.storyDone}
 																			onKeyDown={(e) => {
 																				if (e.key === "Enter") {
 																					handleEnter(
@@ -241,9 +234,9 @@ export default function ScriptEditor({
 																			}}
 																			name={segmentIndex.toString()}
 																			inputClassName={cn(
-																				"active:outline-none bg-transparent focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 focus:outline-none",
+																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 focus:outline-none",
 																				segment.textStatus ===
-																					TextStatus.EDITED && "text-accent-500"
+																					TextStatus.EDITED && "text-purple-500"
 																			)}
 																			inputStyle={{
 																				outline: "none",
@@ -272,6 +265,12 @@ export default function ScriptEditor({
 															</div>
 														</div>
 													))}
+													{!WebstoryData?.storyDone && (
+														<div className="flex w-full justify-center items-center border-t-2 p-2 gap-1">
+															<RefreshCw className="animate-spin stroke-purple-600" />
+															<p>Generating your story</p>
+														</div>
+													)}
 												</div>
 											);
 										}}

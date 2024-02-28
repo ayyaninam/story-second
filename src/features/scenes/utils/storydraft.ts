@@ -163,3 +163,59 @@ export const GenerateStoryDiff = (
 
 	return { edits, additions, subtractions };
 };
+
+export function recursivelyUpdateOverlappingKeys<T extends object>(
+	oldObject: T,
+	newObject: Partial<T>
+): T {
+	Object.keys(newObject).forEach((key) => {
+		const newKeyValue = newObject[key as keyof typeof newObject];
+		if (key in oldObject) {
+			if (
+				Array.isArray(oldObject[key as keyof T]) &&
+				Array.isArray(newKeyValue)
+			) {
+				oldObject[key as keyof T] = updateArray(
+					oldObject[key as keyof T] as unknown as any[],
+					newKeyValue as unknown as any[]
+				) as unknown as T[keyof T];
+			} else if (
+				typeof oldObject[key as keyof T] === "object" &&
+				typeof newKeyValue === "object" &&
+				oldObject[key as keyof T] !== null &&
+				newKeyValue !== null
+			) {
+				oldObject[key as keyof T] = recursivelyUpdateOverlappingKeys(
+					oldObject[key as keyof T] as unknown as object,
+					newKeyValue as unknown as Partial<object>
+				) as T[keyof T];
+			} else {
+				oldObject[key as keyof T] = newKeyValue as T[keyof T];
+			}
+		} else {
+			oldObject[key as keyof T] = newKeyValue as T[keyof T];
+		}
+	});
+
+	return oldObject;
+}
+
+export function updateArray(oldArray: any[], newArray: any[]): any[] {
+	// Trim or expand the oldArray to match the length of newArray
+	oldArray.length = newArray.length;
+	for (let i = 0; i < newArray.length; i++) {
+		if (
+			typeof oldArray[i] === "object" &&
+			typeof newArray[i] === "object" &&
+			oldArray[i] !== null &&
+			newArray[i] !== null
+		) {
+			// Recursively update objects within arrays
+			oldArray[i] = recursivelyUpdateOverlappingKeys(oldArray[i], newArray[i]);
+		} else {
+			// Directly update with new value
+			oldArray[i] = newArray[i];
+		}
+	}
+	return oldArray;
+}

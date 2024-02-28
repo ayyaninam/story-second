@@ -1,23 +1,13 @@
+import { LayoutList, RefreshCcw, Settings2, Sparkle } from "lucide-react";
 import {
-	ChevronDown,
-	LayoutList,
-	MoreHorizontal,
-	RefreshCcw,
-	Settings2,
-	Sparkle,
-} from "lucide-react";
-import { useImmerReducer } from "use-immer";
-import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
 	Scene,
 	Segment,
-	TextStatus,
 	StoryStatus,
 } from "../reducers/edit-reducer";
-import { WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
@@ -28,15 +18,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import VideoPlayer, {
 	VideoPlayerHandler,
 } from "@/features/edit-story/components/video-player";
-import { AspectRatios, DisplayAspectRatios } from "@/utils/enums";
+import { DisplayAspectRatios } from "@/utils/enums";
 import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
 import { Separator } from "@/components/ui/separator";
+import { useMutation } from "@tanstack/react-query";
 
 // Circular loader as per the designs. Removed for now as we can't determine the progress
 const Loader = ({
@@ -137,6 +127,17 @@ const SceneEditorView = ({
 		el.segments.map((el) => el.videoStatus)
 	);
 
+	const RegenerateAllVideos = useMutation({
+		mutationFn: api.video.regenerateAllVideos,
+	});
+
+	const handleRegenerateAllVideos = async () => {
+		await RegenerateAllVideos.mutateAsync({
+			story_id: story.id,
+			story_type: story.type,
+		});
+	};
+
 	const handleRegenerateVideo = async (
 		segment: Segment,
 		sceneIndex: number,
@@ -157,39 +158,21 @@ const SceneEditorView = ({
 
 	return (
 		<>
-			<div
-				className="relative w-4/5 h-4/5 m-auto overflow-hidden"
-				style={{
-					borderRadius: "8px",
-					background: "#FEFEFF",
-					boxShadow:
-						"0px 0px 0px 1px rgba(18, 55, 105, 0.08), 0px 1px 2px 0px #E1EAEF, 0px 24px 32px -12px rgba(54, 57, 74, 0.24)",
-					backdropFilter: "blur(5px)",
-				}}
-			>
+			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 						<p>Scene Editor</p>
-						{/* <StoryboardViewTypes type={StoryboardViewType.Outline} /> */}
 					</div>
 					<div className="flex gap-1 items-center">
 						<p className="px-1 text-accent-900">
 							Pro Tip — You can individually regenerate video subsegments.
-							{/* <a href="#">
-								<u>Learn how</u>
-							</a> */}
 						</p>
-						{/* <div className="flex gap-1 items-center text-accent-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
-							<SparkleIcon width={"18px"} height={"18px"} />
-							<p className="text-xs">Regenerate</p>
-							<ChevronDown width={"18px"} height={"18px"} />
-						</div> */}
 					</div>
 				</div>
 
 				<div className="w-full h-full flex flex-col">
-					<div className=" mb-4 w-full mt-6 mx-9 bg-[#FEFEFF]">
+					<div className=" mb-4 w-full mt-6 mx-9">
 						<p className="text-2xl font-bold -tracking-[-0.6px]">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
@@ -222,39 +205,15 @@ const SceneEditorView = ({
 																<div
 																	key={sceneIndex}
 																	className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
-																	// onMouseEnter={() =>
-																	// 	setHoveredThumbnails(() => ({
-																	// 		index: sceneIndex,
-																	// 		thumbs: [...images],
-																	// 	}))
-																	// }
-																	// onMouseLeave={() =>
-																	// 	setHoveredThumbnails(undefined)
-																	// }
 																>
 																	{scene.status === StoryStatus.PENDING && (
-																		<RefreshCcw className="stroke-2 w-4 h-4 text-accent-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}]" />
-																		// <Loader
-																		// 	percentage={20}
-																		// 	index={sceneIndex}
-																		// />
+																		<RefreshCcw
+																			className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s"
+																			style={{
+																				animationDirection: "reverse",
+																			}}
+																		/>
 																	)}
-
-																	{/* <div className="group-hover:hidden flex flex-shrink-0 flex-col -space-y-4 overflow-hidden mx-1 my-[18px] items-center justify-center">
-																		{images.slice(0, 4).map((image, index) => (
-																			<div
-																				key={index}
-																				className="w-8 h-5 rounded-[1px]"
-																				style={{
-																					border:
-																						"0.2px solid rgba(0, 0, 0, 0.40)",
-																					background: `url(${image})`,
-																					backgroundSize: "cover",
-																					backgroundRepeat: "no-repeat",
-																				}}
-																			/>
-																		))}
-																	</div> */}
 
 																	<span className="flex flex-wrap text-sm">
 																		{scene.segments.map(
@@ -265,9 +224,9 @@ const SceneEditorView = ({
 																						backgroundColor: "transparent",
 																					}}
 																					className={cn(
-																						"flex max-w-sm focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 cursor-pointer",
-																						segment.videoStatus ===
-																							StoryStatus.PENDING &&
+																						"flex max-w-sm focus:!bg-accent-200 hover:!bg-accent-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
+																						segment.videoStatus !==
+																							StoryStatus.COMPLETE &&
 																							"text-accent-800"
 																					)}
 																					onClick={() => {
@@ -285,7 +244,7 @@ const SceneEditorView = ({
 																			)
 																		)}
 																	</span>
-																	<div className="invisible flex group-hover:visible gap-x-1 p-2">
+																	<div className="visible flex gap-x-1 p-2">
 																		<span
 																			className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
 																			onClick={() =>
@@ -354,13 +313,8 @@ const SceneEditorView = ({
 						</div>
 					</div>
 
-					<Separator className="w-[35%] ml-9" />
-					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2">
-						<Button className="w-[190px] text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
-							<Sparkle fill="white" className="w-4 h-4" />
-							Regenerate All Scenes
-						</Button>
-						{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
+					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2" />
+					{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
 							Use 25 credits to regenerate ·{" "}
 							<Link className="text-accent-600" href="#">
 								See plans
@@ -375,7 +329,6 @@ const SceneEditorView = ({
 								Or, Save Without Regenerating
 							</Button>
 						</div> */}
-					</div>
 				</div>
 			</div>
 

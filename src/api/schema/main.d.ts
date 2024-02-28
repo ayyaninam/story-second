@@ -4135,6 +4135,11 @@ export interface components {
        */
       name?: string | null;
       /**
+       * LastName
+       * @description The user's Last Name.
+       */
+      lastName?: string | null;
+      /**
        * Email
        * Format: email
        * @description The user's email address.

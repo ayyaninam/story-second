@@ -1,4 +1,3 @@
-import { mainSchema } from "@/api/schema";
 import {
 	AspectRatios,
 	DisplayAspectRatios,
@@ -6,6 +5,7 @@ import {
 	StoryOutputTypes,
 } from "@/utils/enums";
 import { nanoid } from "nanoid";
+import { recursivelyUpdateOverlappingKeys } from "../utils/storydraft";
 
 export enum StoryStatus {
 	READY,
@@ -32,7 +32,6 @@ export type Settings = {
 export type Segment = {
 	id: number;
 	settings?: Settings;
-
 	textContent: string;
 	imageKey: string;
 	videoKey: string;
@@ -41,7 +40,10 @@ export type Segment = {
 	imageStatus: StoryStatus;
 	videoStatus: StoryStatus;
 	audioStatus: StoryStatus;
+	alternateImageKeys?: string[];
+	alternateImagesStatus?: StoryStatus;
 };
+
 export type Scene = {
 	id: string;
 	status: StoryStatus;
@@ -180,7 +182,12 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			break;
 		}
 		case "reset": {
-			draft = action.draft;
+			/* Only update the keys that are present in the new draft,
+			 facing issues with direct update because there are few keys that are not present in the new draft.
+			 I needed some of the data at reducer level to not update with the poling data
+			 because not everything is present in the data from backend. Eg alternateImageKeys, alternateImagesStatus etc.
+			 and recursively because there are nested objects and array in that */
+			recursivelyUpdateOverlappingKeys(draft, action.draft);
 			return draft;
 		}
 		case "update_segment_statuses": {

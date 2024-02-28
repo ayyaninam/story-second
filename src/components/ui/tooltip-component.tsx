@@ -7,19 +7,17 @@ import {
 // To be used inside a TooltipProvider
 export default function TooltipComponent({
 	label,
+	align,
 	children,
 }: {
 	children: React.ReactNode;
+	align?: "center" | "end" | "start" | undefined;
 	label: string;
 }) {
 	return (
-		<Tooltip>
-			<TooltipTrigger>{children}</TooltipTrigger>
-			<TooltipContent
-				align="start"
-				{...{ "[data-state]": "instant-open" }}
-				className=""
-			>
+		<Tooltip delayDuration={100}>
+			<TooltipTrigger tabIndex={-1}>{children}</TooltipTrigger>
+			<TooltipContent align="start" className="">
 				<p>{label}</p>
 			</TooltipContent>
 		</Tooltip>

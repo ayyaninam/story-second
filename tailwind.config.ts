@@ -316,7 +316,13 @@ const config = {
 			},
 		},
 		extend: {
+			backgroundColor: (theme) => ({
+				"button-default-gradient":
+					"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), #8F22CE",
+			}),
 			colors: {
+				"button-primary-gradient":
+					"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), #8F22CE",
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
 				ring: "hsl(var(--ring))",
@@ -355,7 +361,7 @@ const config = {
 				button: {
 					start: "hsl(var(--button-start))",
 					end: "hsl(var(--button-end))",
-				}
+				},
 			},
 			borderRadius: {
 				lg: "var(--radius)",
@@ -379,7 +385,7 @@ const config = {
 			fontFamily: {
 				sans: ["var(--font-rand)", ...defaultTheme.fontFamily.sans],
 				mono: ["var(--font-rand-mono)", ...defaultTheme.fontFamily.sans],
-			}
+			},
 		},
 	},
 	plugins: [require("tailwindcss-animate")],
