@@ -236,9 +236,7 @@ export default function EditSegmentModalItem({
 										"Regenerate"}
 									{segment.alternateImagesStatus === StoryStatus.PENDING &&
 										"Regenerating"}
-									<p className="text-slate-400">
-										{"(" + getImageCost(1) + " Credit)"}
-									</p>
+									<p>{`(${getImageCost(1)} ${Format.Pluralize("Credit", getImageCost(1))})`}</p>
 								</Button>
 							</div>
 						</div>

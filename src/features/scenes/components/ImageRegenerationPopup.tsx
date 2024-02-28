@@ -18,6 +18,7 @@ import CheckedCheckBox from "@/components/icons/scene-editor/checked-check-box";
 import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-image-icon";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { CheckIcon, Lock, ScrollText, Sparkle, X } from "lucide-react";
+import { getImageCost } from "@/utils/credit-cost";
 
 function RegenerationPopupHeader({
 	title,
@@ -144,7 +145,11 @@ function RegenerateButton({
 			</div>
 			<div className="text-xs font-medium text-foreground">
 				{loading ? "Generating..." : text}{" "}
-				{!loading && <span className="text-purple-600">(4 Credits)</span>}
+				{!loading && (
+					<span className="text-purple-600">
+						{`(${getImageCost(4)} ${Format.Pluralize("Credit", getImageCost(4))})`}
+					</span>
+				)}
 			</div>
 		</Button>
 	);
