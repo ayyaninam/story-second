@@ -339,8 +339,7 @@ export default function StoryboardEditor({
 																			}}
 																			// @ts-ignore
 																			ref={(el) =>
-																				// @ts-ignore
-																				(refs.current[sceneIndex][
+																				(refs.current[sceneIndex]![
 																					segmentIndex
 																				] = el)
 																			}

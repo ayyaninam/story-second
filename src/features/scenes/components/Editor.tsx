@@ -63,7 +63,7 @@ const Editor = ({
 	onEditScene?: (scene: Scene, sceneIndex: number) => void;
 	onDeleteScene?: (scene: Scene, sceneIndex: number) => void;
 	children: (props: {
-		refs: React.MutableRefObject<HTMLInputElement[][]>;
+		refs: React.MutableRefObject<(HTMLInputElement | null)[][]>;
 		handleNavigation: ({
 			event,
 			totalScenes,
@@ -169,7 +169,9 @@ const Editor = ({
 				segmentIndex: segmentIndex,
 			});
 			onCreateScene?.(scene, sceneIndex);
-			refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
+			setTimeout(() => {
+				refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
+			}, 0);
 		} else if (
 			segment.textContent.length > 0 &&
 			e.target.value.length === 0 &&
@@ -258,7 +260,21 @@ const Editor = ({
 				},
 				segmentIndex: segmentIndex,
 			});
-			refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
+			setTimeout(() => {
+				refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
+			}, 0);
+		}
+	};
+
+	const focusInput = (autoSizeInput?: HTMLInputElement, atStart = false) => {
+		autoSizeInput?.focus();
+		if (atStart) {
+			autoSizeInput?.setSelectionRange(0, 0);
+		} else {
+			autoSizeInput?.setSelectionRange(
+				autoSizeInput?.value.length ?? 0,
+				autoSizeInput?.value.length ?? 0
+			);
 		}
 	};
 
@@ -277,22 +293,42 @@ const Editor = ({
 		currentSegment: number;
 		segmentContentLength: number;
 	}) => {
-		// Segment Navigation
 		if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
 			if (
 				event.key === "ArrowRight" &&
 				event.currentTarget.selectionStart !== null &&
 				event.currentTarget.selectionStart === segmentContentLength
 			) {
-				const segmentIndex = (currentSegment + 1) % totalSegments;
-				refs.current[currentScene]?.[segmentIndex]?.focus();
+				const nextSceneIndex =
+					currentSegment === totalSegments - 1
+						? (currentScene + 1) % totalScenes
+						: currentScene;
+				const nextSegmentIndex =
+					currentSegment === totalSegments - 1 ? 0 : currentSegment + 1;
+				focusInput(
+					// @ts-ignore
+					refs.current[nextSceneIndex]?.[nextSegmentIndex]?.input,
+					true
+				);
+				event.preventDefault();
 			} else if (
 				event.key === "ArrowLeft" &&
 				event.currentTarget.selectionStart !== null &&
 				event.currentTarget.selectionStart === 0
 			) {
-				const segmentIndex = (currentSegment - 1) % totalSegments;
-				refs.current[currentScene]?.[segmentIndex]?.focus();
+				const nextSceneIndex =
+					currentSegment === 0
+						? (currentScene - 1) % totalScenes
+						: currentScene;
+				const nextSegmentIndex =
+					currentSegment === 0
+						? (story?.scenes?.[nextSceneIndex]?.segments.length || 1) - 1
+						: currentSegment - 1;
+				focusInput(
+					// @ts-ignore
+					refs.current[nextSceneIndex]?.[nextSegmentIndex]?.input
+				);
+				event.preventDefault();
 			}
 		}
 
@@ -304,10 +340,16 @@ const Editor = ({
 						? // Loop back last element if up arrow is pressed on first element
 							totalScenes - 1
 						: currentScene - 1) % totalScenes;
-				refs.current[sceneIndex]?.[0]?.focus();
+				focusInput(
+					// @ts-ignore
+					refs.current[sceneIndex]?.[currentSegment]?.input
+				);
 			} else if (event.key === "ArrowDown") {
 				const sceneIndex = (currentScene + 1) % totalScenes;
-				refs.current[sceneIndex]?.[0]?.focus();
+				focusInput(
+					// @ts-ignore
+					refs.current[sceneIndex]?.[currentSegment]?.input
+				);
 			}
 		}
 	};
