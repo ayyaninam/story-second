@@ -55,7 +55,6 @@ const PricingCards = () => {
 	const [frequency, setFrequency] = useState<PricingTierFrequency>(
 		frequencies[1]
 	);
-	const [isHoveredLargeCard, setIsHoveredLargeCard] = useState(false);
 
 	const enterpriseProps: PricingCardProps = {
 		variant: "Paid",
@@ -64,7 +63,7 @@ const PricingCards = () => {
 			"Maximum power and flexibility for large-scale content generation needs.",
 		priceLabel: frequency.label === "Monthly" ? "$999.99" : "$799.99",
 		priceSuffix: frequency.priceSuffix,
-		button: (isHovered) => (
+		button: (
 			<CheckoutDialog
 				variant="subscription"
 				plan={SubscriptionPlan.Premium}
@@ -75,8 +74,8 @@ const PricingCards = () => {
 				}
 			>
 				<Button
-					variant={isHovered ? "purple" : "outline"}
-					className="transition-none w-full"
+					variant="outline"
+					className="w-full transition-none group-hover:bg-purple-button group-hover:text-primary-foreground"
 					size="sm"
 				>
 					Sign Up for Enterprise
@@ -164,20 +163,17 @@ const PricingCards = () => {
 						}
 						priceLabel="$0"
 						priceSuffix={frequency.priceSuffix}
-						button={(isHovered) => (
+						button={
 							<Link href="/generate" className="w-full">
 								<Button
 									variant="outline"
-									className={cn(
-										"w-full transition-none",
-										isHovered ? "border-2" : undefined
-									)}
+									className="w-full transition-none group-hover:border-2"
 									size="sm"
 								>
 									Get Started For Free
 								</Button>
 							</Link>
-						)}
+						}
 						items={[
 							"1 video generation",
 							"1 story generation",
@@ -198,7 +194,7 @@ const PricingCards = () => {
 						}
 						priceLabel={frequency.label === "Monthly" ? "$11.99" : "$9.99"}
 						priceSuffix={frequency.priceSuffix}
-						button={(isHovered) => (
+						button={
 							<CheckoutDialog
 								variant="subscription"
 								plan={SubscriptionPlan.Basic}
@@ -209,14 +205,14 @@ const PricingCards = () => {
 								}
 							>
 								<Button
-									variant={isHovered ? "purple" : "outline"}
-									className="w-full transition-none"
+									variant="outline"
+									className="w-full transition-none group-hover:bg-purple-button group-hover:text-primary-foreground"
 									size="sm"
 								>
 									Sign Up For Starter
 								</Button>
 							</CheckoutDialog>
-						)}
+						}
 						items={[
 							"2 videos / month",
 							"5 stories / month",
@@ -235,7 +231,7 @@ const PricingCards = () => {
 						description="More videos. More stories. Faster generation times."
 						priceLabel={frequency.label === "Monthly" ? "$79.99" : "$59.99"}
 						priceSuffix={frequency.priceSuffix}
-						button={(isHovered) => (
+						button={
 							<CheckoutDialog
 								variant="subscription"
 								plan={SubscriptionPlan.Pro}
@@ -246,14 +242,14 @@ const PricingCards = () => {
 								}
 							>
 								<Button
-									variant={isHovered ? "purple" : "outline"}
-									className="w-full transition-none"
+									variant="outline"
+									className="w-full transition-none group-hover:bg-purple-button group-hover:text-primary-foreground"
 									size="sm"
 								>
 									Sign Up For Creator
 								</Button>
 							</CheckoutDialog>
-						)}
+						}
 						items={[
 							"12 videos / month",
 							"25 stories / month",
@@ -272,11 +268,7 @@ const PricingCards = () => {
 				</div>
 
 				<div className="hidden lg:block w-full">
-					<div
-						className="gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-background rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_var(--accent-color-500),0px_24px_32px_-12px_#36394a3d] transition-shadow"
-						onMouseEnter={() => setIsHoveredLargeCard(true)}
-						onMouseLeave={() => setIsHoveredLargeCard(false)}
-					>
+					<div className="group gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-background rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_var(--accent-color-500),0px_24px_32px_-12px_#36394a3d] transition-shadow">
 						<div className="flex justify-between pt-0 pb-[0.25px] px-0 self-stretch w-full items-start relative flex-[0_0_auto]">
 							<div className="relative w-fit mt-[-1.00px] font-medium text-theme-variables-text-colors-text-base text-[26px] tracking-[0] leading-[39px] whitespace-nowrap">
 								{enterpriseProps.title}
@@ -291,8 +283,8 @@ const PricingCards = () => {
 								}
 							>
 								<Button
-									variant={isHoveredLargeCard ? "purple" : "outline"}
-									className="px-4 transition-none"
+									variant="outline"
+									className="px-4 transition-none group-hover:bg-purple-button group-hover:text-primary-foreground"
 									size="sm"
 								>
 									Sign Up for Enterprise
