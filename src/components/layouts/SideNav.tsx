@@ -6,7 +6,7 @@ import GenerateIcon from "@/components/icons/side-nav/GenerateIcon";
 import LibraryIcon from "@/components/icons/side-nav/LibraryIcon";
 import FreeCreditsIcon from "@/components/icons/side-nav/FreeCreditsIcon";
 import ChallengesIcon from "@/components/icons/side-nav/ChallengesIcon";
-import { Command } from "lucide-react";
+import {CircleUserRoundIcon, Command} from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
@@ -58,16 +58,26 @@ export const menuItems = [
 			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
 	},
+	// {
+	// 	icon: <FreeCreditsIcon />,
+	// 	text: "Free Credits",
+	// 	shortcut: "F",
+	// 	redirectUrl: "/credits",
+	// 	cssVars: {
+	// 		"--hover-border-color": "rgba(148, 171, 184, 0.50)",
+	// 		"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+	// 	}
+	// },
 	{
-		icon: <FreeCreditsIcon />,
-		text: "Free Credits",
-		shortcut: "F",
-		redirectUrl: "/credits",
+		icon: <CircleUserRoundIcon />,
+		text: "Account",
+		shortcut: "S",
+		redirectUrl: "/account",
 		cssVars: {
 			"--hover-border-color": "rgba(148, 171, 184, 0.50)",
 			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
-	},
+	}
 ];
 
 export default function SideNav({ pageIndex, userDetails }: { pageIndex: number; userDetails?: any }) {
