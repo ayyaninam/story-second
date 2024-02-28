@@ -29,6 +29,7 @@ const EditSegmentModal = ({
 	dispatch,
 	story,
 	handleRegenerateSceneImages,
+	handleSubmitEditSegments,
 }: {
 	open?: boolean;
 	onClose: () => void;
@@ -39,14 +40,14 @@ const EditSegmentModal = ({
 	handleRegenerateSceneImages: (sceneIndex: number) => Promise<void>;
 	story: EditStoryDraft;
 	sceneIndex: number;
+	handleSubmitEditSegments: () => void;
 }) => {
 	const [webstory] = useWebstoryContext();
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
-	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
-		number | null
-	>(null);
+	const [imageRegenerationSegmentDetails, setImageRegenerationSegmentDetails] =
+		useState<{ sceneIndex: number; segmentIndex: number } | null>(null);
 
 	if (scene && sceneId !== undefined) {
 		return (
@@ -92,9 +93,14 @@ const EditSegmentModal = ({
 									});
 								}}
 								segmentIndex={index}
-								imageRegenerationSegmentId={imageRegenerationSegmentId}
-								setImageRegenerationSegmentId={setImageRegenerationSegmentId}
+								imageRegenerationSegmentDetails={
+									imageRegenerationSegmentDetails
+								}
+								setImageRegenerationSegmentDetails={
+									setImageRegenerationSegmentDetails
+								}
 								sceneIndex={sceneIndex}
+								handleSubmitEditSegments={handleSubmitEditSegments}
 							/>
 						))}
 					</div>

@@ -18,6 +18,7 @@ function ImageRegenerationPopoverHOC({
 	children,
 	regenerateOnOpen,
 	triggerButtonClassName,
+	handleSubmitEditSegments,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
@@ -29,7 +30,16 @@ function ImageRegenerationPopoverHOC({
 	children: React.ReactNode;
 	regenerateOnOpen?: boolean;
 	triggerButtonClassName?: string;
+	handleSubmitEditSegments: () => void;
 }) {
+	if (segment.id === 2) {
+		console.log(
+			"testing123 segment",
+			segment,
+			`imageStatus${segment.imageStatus}`,
+			segment.alternateImageKeys
+		);
+	}
 	return (
 		<Popover open={open}>
 			<PopoverTrigger className={triggerButtonClassName}>
@@ -44,6 +54,7 @@ function ImageRegenerationPopoverHOC({
 				sceneIndex={sceneIndex}
 				regenerateOnOpen={regenerateOnOpen}
 				open={open}
+				handleSubmitEditSegments={handleSubmitEditSegments}
 			/>
 		</Popover>
 	);

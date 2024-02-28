@@ -17,7 +17,7 @@ import UncheckedCheckBox from "@/components/icons/scene-editor/unchecked-check-b
 import CheckedCheckBox from "@/components/icons/scene-editor/checked-check-box";
 import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-image-icon";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
-import { Lock, ScrollText, Sparkle, X } from "lucide-react";
+import { Lock, Plus, ScrollText, Sparkle, X } from "lucide-react";
 
 function RegenerationPopupHeader({
 	title,
@@ -162,6 +162,7 @@ function ImageRegenerationPopup({
 	sceneIndex,
 	regenerateOnOpen,
 	open,
+	handleSubmitEditSegments,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
@@ -171,6 +172,7 @@ function ImageRegenerationPopup({
 	sceneIndex: number;
 	regenerateOnOpen?: boolean;
 	open: boolean;
+	handleSubmitEditSegments: () => void;
 }) {
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
 	const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
@@ -186,6 +188,8 @@ function ImageRegenerationPopup({
 	);
 
 	const generateAlternateImageOptions = useCallback(async () => {
+		await handleSubmitEditSegments();
+		const prevImageStatus = segment.imageStatus;
 		dispatch({
 			type: "edit_segment",
 			sceneIndex,
@@ -217,7 +221,7 @@ function ImageRegenerationPopup({
 				segmentIndex: segmentIndex,
 				segment: {
 					...segment,
-					imageStatus: StoryStatus.COMPLETE,
+					imageStatus: prevImageStatus,
 					alternateImagesStatus: StoryStatus.COMPLETE,
 					alternateImageKeys: regeneratedImages.target_paths,
 				},
@@ -444,14 +448,26 @@ function ImageRegenerationPopup({
 					aspectRatio: imageAspectRatio,
 				}}
 			>
-				<Image
-					alt={segment.textContent}
-					src={Format.GetImageUrl(segment.imageKey)}
-					className="rounded-sm"
-					layout="fill"
-					objectFit="cover" // Or use 'cover' depending on the desired effect
-					style={{ objectFit: "contain" }}
-				/>
+				{segment.imageStatus === StoryStatus.READY ? (
+					<div className="w-full h-full bg-slate-100 rounded-sm border border-slate-300 flex items-center justify-center border-dashed">
+						<div className="rounded-full w-6 h-6 bg-slate-200 flex items-center justify-center">
+							<Plus
+								className="text-slate-500 stroke-2"
+								width={12}
+								height={12}
+							/>
+						</div>
+					</div>
+				) : (
+					<Image
+						alt={segment.textContent}
+						src={Format.GetImageUrl(segment.imageKey)}
+						className="rounded-sm"
+						layout="fill"
+						objectFit="cover" // Or use 'cover' depending on the desired effect
+						style={{ objectFit: "contain" }}
+					/>
+				)}
 			</div>
 			<RegenerationPopupScriptContent text={segment.textContent} />
 			<RegenerateButton

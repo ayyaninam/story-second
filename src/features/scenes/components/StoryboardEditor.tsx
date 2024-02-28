@@ -62,9 +62,11 @@ export default function StoryboardEditor({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
-	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
-		number | null
-	>(null);
+	const [imageRegenerationSegmentDetails, setImageRegenerationSegmentDetails] =
+		useState<{
+			sceneIndex: number;
+			segmentIndex: number;
+		} | null>(null);
 
 	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
 		open?: boolean;
@@ -246,47 +248,24 @@ export default function StoryboardEditor({
 																return (
 																	<div
 																		className={cn("flex gap-1 items-center")}
-																		key={segmentIndex}
+																		key={`${segment.id}${scene.id}${segmentIndex}`}
 																	>
-																		{(segment.imageStatus ===
-																			StoryStatus.COMPLETE ||
-																			segment.imageStatus ===
-																				StoryStatus.PENDING) && (
-																			<SegmentImage
-																				segment={segment}
-																				story={story}
-																				imageRegenerationSegmentId={
-																					imageRegenerationSegmentId
-																				}
-																				setImageRegenerationSegmentId={
-																					setImageRegenerationSegmentId
-																				}
-																				dispatch={dispatch}
-																				segmentIndex={segmentIndex}
-																				sceneIndex={sceneIndex}
-																			/>
-																		)}
-																		{segment.imageStatus ===
-																			StoryStatus.READY && (
-																			<div
-																				className="relative max-w-full h-40"
-																				style={{
-																					aspectRatio: GetDisplayImageRatio(
-																						story.displayResolution
-																					).ratio,
-																				}}
-																			>
-																				<div className="w-full h-full bg-slate-100 rounded-sm border border-slate-300 flex items-center justify-center border-dashed">
-																					<div className="rounded-full w-6 h-6 bg-slate-200 flex items-center justify-center">
-																						<Plus
-																							className="text-slate-500 stroke-2"
-																							width={12}
-																							height={12}
-																						/>
-																					</div>
-																				</div>
-																			</div>
-																		)}
+																		<SegmentImage
+																			segment={segment}
+																			story={story}
+																			imageRegenerationSegmentDetails={
+																				imageRegenerationSegmentDetails
+																			}
+																			setImageRegenerationSegmentDetails={
+																				setImageRegenerationSegmentDetails
+																			}
+																			dispatch={dispatch}
+																			segmentIndex={segmentIndex}
+																			sceneIndex={sceneIndex}
+																			handleSubmitEditSegments={
+																				handleSubmitEditSegments
+																			}
+																		/>
 																		{segmentIndex !==
 																			scene.segments.length - 1 && (
 																			<div className="min-w-4 min-h-4">
@@ -409,6 +388,7 @@ export default function StoryboardEditor({
 							});
 						}}
 						sceneIndex={editSegmentsModalState?.sceneIndex!}
+						handleSubmitEditSegments={handleSubmitEditSegments}
 					/>
 				)}
 		</>
