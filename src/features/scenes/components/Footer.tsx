@@ -46,6 +46,8 @@ import Routes from "@/routes";
 import { getImageCost, getVideoCost } from "@/utils/credit-cost";
 import Format from "@/utils/format";
 import { cn } from "@/utils";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import TooltipComponent from "@/components/ui/tooltip-component";
 const images = [
 	{
 		key: StoryImageStyles.Auto,
@@ -530,31 +532,35 @@ const Footer = ({
 								className="flex 2xl:overflow-x-visible overflow-x-hidden "
 							>
 								<div className="flex gap-x-1 py-1">
-									{images.map(({ key, label, src }, index) => (
-										<>
-											<Image
-												src={src}
-												alt={label}
-												key={index}
-												width={64}
-												height={48}
-												className={clsx(
-													"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
-													{
-														["ring-purple-600 ring-[1.5px] ring-offset-1"]:
-															generationStyle === Number(key),
-													}
-												)}
-												role="button"
-												onClick={() =>
-													updateImageStyle(
-														Number(key) as unknown as StoryImageStyles
-													)
-												}
-												style={{ objectFit: "cover" }}
-											/>
-										</>
-									))}
+									<TooltipProvider>
+										{images.map(({ key, label, src }, index) => (
+											<>
+												<TooltipComponent label={label} align="center">
+													<Image
+														src={src}
+														alt={label}
+														key={index}
+														width={64}
+														height={48}
+														className={clsx(
+															"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
+															{
+																["ring-purple-600 ring-[1.5px] ring-offset-1"]:
+																	generationStyle === Number(key),
+															}
+														)}
+														role="button"
+														onClick={() =>
+															updateImageStyle(
+																Number(key) as unknown as StoryImageStyles
+															)
+														}
+														style={{ objectFit: "cover" }}
+													/>
+												</TooltipComponent>
+											</>
+										))}
+									</TooltipProvider>
 								</div>
 							</div>
 							<ChevronRight
