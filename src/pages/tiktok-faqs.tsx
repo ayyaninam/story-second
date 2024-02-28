@@ -8,7 +8,7 @@ import {
 import {NextSeo} from "next-seo";
 import Link from "next/link";
 
-export const TikTokFAQs = () => {
+export const TrendsFAQs = () => {
   return (
     <>
       <NextSeo
@@ -46,4 +46,4 @@ export const TikTokFAQs = () => {
   );
 };
 
-export default TikTokFAQs;
+export default TrendsFAQs;

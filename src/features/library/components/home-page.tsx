@@ -101,7 +101,7 @@ function LibraryHomePage({
 		]),
 	});
 
-	const tikTokVideosList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>(
+	const trendsVideosList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>(
 		{
 			queryFn: () =>
 				api.library.getVideos({
@@ -138,7 +138,7 @@ function LibraryHomePage({
 				storyBooksList.data?.items || []
 			),
 			[VIDEO_ORIENTATIONS.TIK_TOK.id]: getGalleryThumbnails(
-				tikTokVideosList.data?.items || []
+				trendsVideosList.data?.items || []
 			),
 		};
 		return segregatedStories;
@@ -165,7 +165,7 @@ function LibraryHomePage({
 								wideVideoList,
 								verticalVideoList,
 								storyBooksList,
-								tikTokVideosList,
+								trendsVideosList,
 							].some((query) => query.isLoading)}
 						/>
 					) : null

@@ -96,7 +96,7 @@ function ExploreHomePage({
 		]),
 	});
 
-	const tikTokVideosList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>(
+	const trendsVideosList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>(
 		{
 			queryFn: () =>
 				api.explore.getVideos({
@@ -132,7 +132,7 @@ function ExploreHomePage({
 				storyBooksList.data?.items || []
 			),
 			[VIDEO_ORIENTATIONS.TIK_TOK.id]: getGalleryThumbnails(
-				tikTokVideosList.data?.items || []
+				trendsVideosList.data?.items || []
 			),
 		};
 		return segregatedStories;
@@ -159,7 +159,7 @@ function ExploreHomePage({
 								wideVideoList,
 								verticalVideoList,
 								storyBooksList,
-								tikTokVideosList,
+								trendsVideosList,
 							].some((query) => query.isLoading)}
 						/>
 					) : null

@@ -3,6 +3,7 @@ import BookOrientationIcon from "@/components/icons/book-orientation";
 import VerticalOrientationIcon from "@/components/icons/vertical-orientation";
 import WideOrientationIcon from "@/components/icons/wide-orientation";
 import {GalleryData} from "@/types";
+import TrendsOrientation from "@/components/icons/trends-orientation";
 
 export const SORTING_OPTIONS = {
   DESCENDING: {
@@ -37,9 +38,9 @@ export const VIDEO_ORIENTATIONS = {
     icon: <BookOrientationIcon />,
   },
   TIK_TOK: {
-    value: "TikTok",
+    value: "Trends",
     id: "tik-tok",
-    icon: <VerticalOrientationIcon />,
+    icon: <TrendsOrientation />,
   },
 };
 
@@ -79,14 +80,14 @@ export const EXPLORE_HOME_GALLERY_DATA: GalleryData = {
     },
   },
   [VIDEO_ORIENTATIONS.TIK_TOK.id]: {
-    title: "TikTok",
+    title: "Trends",
     orientation: "tik-tok",
-    icon: <BookOrientationIcon />,
+    icon: <TrendsOrientation />,
     aspectRatio: "9:16",
     header: {
-      title: "Most Recent TikTok Videos",
+      title: "Most Recent Trends",
       subtitle: "Upload yourself & generate",
-      buttonText: "See all TikTok videos",
+      buttonText: "See all Trends",
     },
   },
 };
