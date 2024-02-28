@@ -184,7 +184,6 @@ function ImageRegenerationPopup({
 		() => segment.alternateImageKeys ?? [],
 		[segment.alternateImageKeys]
 	);
-	console.log("ImageRegenerationPopup", alternateImageKeys);
 
 	const generateAlternateImageOptions = useCallback(async () => {
 		dispatch({

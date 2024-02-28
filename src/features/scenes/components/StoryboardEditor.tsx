@@ -245,7 +245,7 @@ export default function StoryboardEditor({
 																story.displayResolution ===
 																	DisplayAspectRatios["1024x576"]
 																	? "grid-cols-2"
-																	: "grid-cols-4"
+																	: "grid-cols-4 xl:grid-cols-6"
 															)}
 														>
 															{scene.segments.map((segment, segmentIndex) => {
