@@ -8,7 +8,7 @@ import {
 	TextStatus,
 } from "../reducers/edit-reducer";
 import { cn } from "@/utils";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { mainSchema } from "@/api/schema";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { MAX_SEGMENT_LENGTH, MAX_SEGMENT_WORD_LENGTH } from "@/constants";
@@ -64,6 +64,21 @@ const Editor = ({
 	onDeleteScene?: (scene: Scene, sceneIndex: number) => void;
 	children: (props: {
 		refs: React.MutableRefObject<HTMLInputElement[][]>;
+		handleNavigation: ({
+			event,
+			totalScenes,
+			totalSegments,
+			currentScene,
+			currentSegment,
+			segmentContentLength,
+		}: {
+			event: React.KeyboardEvent<HTMLInputElement>;
+			totalScenes: number;
+			totalSegments: number;
+			currentScene: number;
+			currentSegment: number;
+			segmentContentLength: number;
+		}) => void;
 		handleEnter: (
 			scene: Scene,
 			sceneIndex: number,
@@ -247,9 +262,60 @@ const Editor = ({
 		}
 	};
 
+	const handleNavigation = ({
+		event,
+		totalScenes,
+		totalSegments,
+		currentScene,
+		currentSegment,
+		segmentContentLength,
+	}: {
+		event: React.KeyboardEvent<HTMLInputElement>;
+		totalScenes: number;
+		totalSegments: number;
+		currentScene: number;
+		currentSegment: number;
+		segmentContentLength: number;
+	}) => {
+		// Segment Navigation
+		if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+			if (
+				event.key === "ArrowRight" &&
+				event.currentTarget.selectionStart !== null &&
+				event.currentTarget.selectionStart === segmentContentLength
+			) {
+				const segmentIndex = (currentSegment + 1) % totalSegments;
+				refs.current[currentScene]?.[segmentIndex]?.focus();
+			} else if (
+				event.key === "ArrowLeft" &&
+				event.currentTarget.selectionStart !== null &&
+				event.currentTarget.selectionStart === 0
+			) {
+				const segmentIndex = (currentSegment - 1) % totalSegments;
+				refs.current[currentScene]?.[segmentIndex]?.focus();
+			}
+		}
+
+		//  Scene Navigation
+		else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+			if (event.key === "ArrowUp") {
+				const sceneIndex =
+					(currentScene - 1 < 0
+						? // Loop back last element if up arrow is pressed on first element
+							totalScenes - 1
+						: currentScene - 1) % totalScenes;
+				refs.current[sceneIndex]?.[0]?.focus();
+			} else if (event.key === "ArrowDown") {
+				const sceneIndex = (currentScene + 1) % totalScenes;
+				refs.current[sceneIndex]?.[0]?.focus();
+			}
+		}
+	};
+
 	return children({
-		handleEnter: handleEnter,
-		handleInput: handleInput,
+		handleEnter,
+		handleInput,
+		handleNavigation,
 		refs: refs,
 	});
 };
