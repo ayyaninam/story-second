@@ -25,7 +25,7 @@ import Format from "@/utils/format";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
-import { MAX_SEGMENT_LENGTH } from "@/constants";
+import { MAX_SEGMENT_LENGTH } from "@/constants/constants";
 import {
 	Select,
 	SelectContent,

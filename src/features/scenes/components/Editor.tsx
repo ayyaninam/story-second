@@ -11,7 +11,10 @@ import { cn } from "@/utils";
 import React, { useEffect, useRef } from "react";
 import { mainSchema } from "@/api/schema";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
-import { MAX_SEGMENT_LENGTH, MAX_SEGMENT_WORD_LENGTH } from "@/constants";
+import {
+	MAX_SEGMENT_LENGTH,
+	MAX_SEGMENT_WORD_LENGTH,
+} from "@/constants/constants";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 
 enum InputStatus {
@@ -275,7 +278,9 @@ const Editor = ({
 
 				index: sceneIndex,
 			});
-			refs.current[sceneIndex + 1]?.[0]?.focus();
+			setTimeout(() => {
+				refs.current[sceneIndex + 1]?.[0]?.focus();
+			}, 0);
 		}
 		// Else, create a new segment
 		else {

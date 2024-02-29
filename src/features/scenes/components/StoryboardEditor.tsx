@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/select";
 import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
 import CategorySelect from "@/components/ui/CategorySelect";
+import { useUpdateCategory } from "../mutations/UpdateCategory";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -172,6 +173,8 @@ export default function StoryboardEditor({
 		});
 	};
 
+	const UpdateCategory = useUpdateCategory();
+
 	return (
 		<>
 			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
@@ -212,7 +215,10 @@ export default function StoryboardEditor({
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div> */}
-						<CategorySelect />
+						<CategorySelect
+							value={WebstoryData?.topLevelCategory!}
+							onChange={(category) => UpdateCategory.mutate({ category })}
+						/>
 						<p className="ms-1">by {WebstoryData?.user?.name}</p>
 					</div>
 				</div>

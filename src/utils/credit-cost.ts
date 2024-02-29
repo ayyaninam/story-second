@@ -1,4 +1,4 @@
-import { IMAGE_COST, VIDEO_COST } from "@/constants";
+import { IMAGE_COST, VIDEO_COST } from "@/constants/constants";
 
 export const getImageCost = (numImages: number) => {
 	return numImages * IMAGE_COST;

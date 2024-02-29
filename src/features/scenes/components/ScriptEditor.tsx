@@ -29,7 +29,6 @@ import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import EditorWithScenes from "./EditorWithScenes";
 import {
 	Select,
 	SelectContent,
@@ -39,6 +38,7 @@ import {
 } from "@/components/ui/select";
 import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
 import CategorySelect from "@/components/ui/CategorySelect";
+import { useUpdateCategory } from "../mutations/UpdateCategory";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -93,6 +93,8 @@ export default function ScriptEditor({
 		return WebstoryData?.user?.name;
 	}, [WebstoryData?.user?.name]);
 
+	const UpdateCategory = useUpdateCategory();
+
 	return (
 		<>
 			<TooltipProvider>
@@ -128,7 +130,10 @@ export default function ScriptEditor({
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div> */}
-							<CategorySelect />
+							<CategorySelect
+								value={WebstoryData?.topLevelCategory!}
+								onChange={(category) => UpdateCategory.mutate({ category })}
+							/>
 							<p className="ms-1">by {userName}</p>
 						</div>
 					</div>
