@@ -13,6 +13,7 @@ import {ImageRatios} from "@/utils/image-ratio";
 import Routes from "@/routes";
 import {LanguageSelect, VideoLengthSelect, VideoRatioSelect} from "@/features/generate/components/selection-constants";
 import FileUpload from "@/features/tiktok/components/file-upload";
+import Router from "next/router";
 
 export default function MobileGeneratePage() {
   const [value, setValue] = useState<TabType>(TabType.Video);
@@ -50,7 +51,7 @@ export default function MobileGeneratePage() {
       params["image_resolution"] = ImageRatios["9x8"].enumValue;
     }
     const response = Routes.CreateStoryFromRoute(params);
-    // Router.push(response);
+    Router.push(response);
     setIsLoading(false);
   };
 

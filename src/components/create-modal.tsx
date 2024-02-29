@@ -65,7 +65,7 @@ const GenerateModalContent: FC = () => {
       params["image_resolution"] = ImageRatios["9x8"].enumValue;
     }
     const response = Routes.CreateStoryFromRoute(params);
-    // Router.push(response);
+    Router.push(response);
     setIsLoading(false);
   };
 
