@@ -8,7 +8,7 @@ const container: CSSProperties = {
 };
 
 const videoContainer: CSSProperties = {
-  top: "50%",
+	top: "50%",
 };
 
 const videoStyles: CSSProperties = {
