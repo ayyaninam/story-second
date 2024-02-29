@@ -385,7 +385,7 @@ function AdvancedEditingOptions({
 								}}
 							/>
 							<Shuffle
-								className="h-8 w-8 absolute right-0 top-1 p-1 rounded-sm shadow-sm hover:cursor-pointer border-border border-[1px]"
+								className="h-8 w-8 absolute stroke-1 right-0 top-1 p-1 rounded-sm shadow-sm hover:cursor-pointer border-border border-[1px]"
 								onClick={() => {
 									onSettingsChange({
 										...settings,
