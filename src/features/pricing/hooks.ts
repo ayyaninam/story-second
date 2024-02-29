@@ -56,7 +56,7 @@ export const useStripeSetup = () => {
 		}
 	};
 
-	return { setupStripe, confirmPayment, onAddCard };
+	return { setupStripe, confirmPayment, onAddCard, confirmSetup };
 };
 
 export const useUser = () => {

@@ -28,6 +28,11 @@ const getCost = {
 		[AllowanceType.StoryBooks]: 1.5,
 		[AllowanceType.Credits]: -1, // to be defined
 	},
+	[SubscriptionPlan.Premium]: {
+		[AllowanceType.Videos]: 5,
+		[AllowanceType.StoryBooks]: 1,
+		[AllowanceType.Credits]: -1, // to be defined
+	},
 };
 
 const allowanceStructure = {
