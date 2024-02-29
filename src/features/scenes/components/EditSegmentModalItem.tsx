@@ -284,7 +284,13 @@ function AdvancedEditingOptions({
 					<TooltipComponent label="The Image Prompt">
 						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 					</TooltipComponent>
+					<p className="text-gray-500">
+						{settings?.prompt
+							? "Prompt is used, text is ignored"
+							: "Prompt is generated based on text"}
+					</p>
 				</label>
+
 				<Textarea
 					id="image-animation-prompt"
 					rows={3}
