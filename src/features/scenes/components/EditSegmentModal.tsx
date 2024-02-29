@@ -18,6 +18,8 @@ import {
 	DialogDescription,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { getImageCost } from "@/utils/credit-cost";
+import Format from "@/utils/format";
 
 const EditSegmentModal = ({
 	open,
@@ -108,7 +110,7 @@ const EditSegmentModal = ({
 							<p className="text-sm text-foreground font-semibold">
 								Regenerate All Images
 							</p>
-							<p className="text-sm">(5 Credits)</p>
+							<p className="text-sm">{`(${getImageCost(scene.segments.length)} ${Format.Pluralize("Credit", getImageCost(scene.segments.length))})`}</p>
 						</Button>
 						<DialogClose asChild>
 							<Button

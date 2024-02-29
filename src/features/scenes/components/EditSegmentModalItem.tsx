@@ -43,6 +43,7 @@ import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api";
 import { getImageCost } from "@/utils/credit-cost";
+import { cn } from "@/utils";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -86,7 +87,7 @@ export default function EditSegmentModalItem({
 	return (
 		<div className="flex bg-primary-foreground rounded-md border-border border-[1px] p-2 m-2 gap-2">
 			<div className="w-full text-foreground space-y-2">
-				<div className="flex flex-row space-x-2">
+				<div className="flex flex-row space-x-2 items-center">
 					<div
 						className="h-56"
 						style={{
@@ -133,7 +134,7 @@ export default function EditSegmentModalItem({
 							</div>
 						</ImageRegenerationPopoverHOC>
 					</div>
-					<div className="w-full h-full flex flex-col space-y-3">
+					<div className="w-full h-full self-start flex flex-col space-y-3">
 						<div>
 							<div className="relative w-full h-fit">
 								<ScrollText className="h-6 w-6 stroke-slate-400 stroke-1 p-1 absolute top-[calc(50%-0.75rem)] left-1 " />
@@ -242,17 +243,16 @@ export default function EditSegmentModalItem({
 								</Button>
 							</div>
 						</div>
-						{isChecked && (
-							<AdvancedEditingOptions
-								settings={segment.settings}
-								onSettingsChange={(settings) => {
-									onSegmentEdit({
-										...segment,
-										settings: settings,
-									});
-								}}
-							/>
-						)}
+						<AdvancedEditingOptions
+							show={isChecked}
+							settings={segment.settings}
+							onSettingsChange={(settings) => {
+								onSegmentEdit({
+									...segment,
+									settings: settings,
+								});
+							}}
+						/>
 					</div>
 				</div>
 			</div>
@@ -263,17 +263,35 @@ export default function EditSegmentModalItem({
 function AdvancedEditingOptions({
 	settings,
 	onSettingsChange,
+	show,
 }: {
 	settings?: Settings;
 	onSettingsChange: (settings: Settings) => void;
+	show: boolean;
 }) {
 	return (
 		<TooltipProvider>
-			<div
-				className="border-[1px] rounded-md p-5 text-sm"
+			{/* <div
+				className={cn(
+					"border-[1px] rounded-md p-5 text-sm hidden transition transform ease-in-out duration-10000",
+					show && "block"
+				)}
 				style={{
 					boxShadow: "0px 0px 6px 0px #D7CBE1",
 					border: "0.5px solid #BB55F7",
+				}}
+			> */}
+			<div
+				className={cn(
+					"border-[1px] rounded-md p-5 text-sm transition-transform ease-in-out duration-200 overflow-hidden transform",
+					show ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 max-h-0"
+				)}
+				style={{
+					boxShadow: "0px 0px 6px 0px #D7CBE1",
+					border: "0.5px solid #BB55F7",
+					transition: "transform 200ms ease-in-out, opacity 200ms ease-in-out",
+					// Ensuring transform origin is top to scale from top to bottom
+					transformOrigin: "top",
 				}}
 			>
 				<label
