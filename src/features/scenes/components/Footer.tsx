@@ -48,6 +48,7 @@ import Format from "@/utils/format";
 import { cn } from "@/utils";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
+import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 const images = [
 	{
 		key: StoryImageStyles.Auto,
@@ -159,48 +160,49 @@ const Footer = ({
 		mutationFn: api.video.editSegment,
 	});
 
-	const saveEdits = useCallback(async () => {
-		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-		console.log(diff);
-		// console.log(WebstoryToStoryDraft(WebstoryData!), story);
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions.map(
-			(segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			})
-		);
+	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
+	// const saveEdits = useCallback(async () => {
+	// 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
+	// 	console.log(diff);
+	// 	// console.log(WebstoryToStoryDraft(WebstoryData!), story);
+	// 	const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
+	// 		details: { Ind: segment.id, Text: segment.textContent },
+	// 		operation: SegmentModifications.Edit,
+	// 	}));
+	// 	const additions: SegmentModificationData[] = diff.additions.map(
+	// 		(segmentSet) => ({
+	// 			details: {
+	// 				// @ts-ignore should be defined though??
+	// 				Ind: segmentSet[0].id + 1,
+	// 				segments: segmentSet.map((el) => ({
+	// 					Text: el.textContent,
+	// 					SceneId: el.sceneId,
+	// 				})),
+	// 			},
+	// 			operation: SegmentModifications.Add,
+	// 		})
+	// 	);
 
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-		if (additions.length || edits.length || deletions.length) {
-			const editedResponse = await EditSegment.mutateAsync({
-				story_id: WebstoryData?.id as string,
-				story_type: WebstoryData?.storyType,
-				edits: [...edits, ...additions, ...deletions],
-			});
-		}
-	}, [WebstoryData, story, EditSegment]);
+	// 	const deletions: SegmentModificationData[] = diff.subtractions.map(
+	// 		(segment) => ({
+	// 			details: {
+	// 				Ind: segment.id,
+	// 			},
+	// 			operation: SegmentModifications.Delete,
+	// 		})
+	// 	);
+	// 	if (additions.length || edits.length || deletions.length) {
+	// 		const editedResponse = await EditSegment.mutateAsync({
+	// 			story_id: WebstoryData?.id as string,
+	// 			story_type: WebstoryData?.storyType,
+	// 			edits: [...edits, ...additions, ...deletions],
+	// 		});
+	// 	}
+	// }, [WebstoryData, story, EditSegment]);
 
 	const GenerateImagesMutation = useMutation({
 		mutationFn: async () => {
-			await saveEdits();
+			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
 			const newStory = await api.video.get(
 				story.topLevelCategory,
 				story.slug,
@@ -242,7 +244,7 @@ const Footer = ({
 
 	const GenerateStoryboardMutation = useMutation({
 		mutationFn: async () => {
-			await saveEdits();
+			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
 			router.push(
 				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
 			);
@@ -251,7 +253,7 @@ const Footer = ({
 
 	const RegenerateAllImagesMutation = useMutation({
 		mutationFn: async () => {
-			await saveEdits();
+			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
 			dispatch({
 				type: "update_segment_statuses",
 				key: "imageStatus",
@@ -274,7 +276,7 @@ const Footer = ({
 
 	const GenerateVideoScenesMutation = useMutation({
 		mutationFn: async () => {
-			await saveEdits();
+			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
 			const newStory = await api.video.get(
 				story.topLevelCategory,
 				story.slug,
@@ -305,7 +307,7 @@ const Footer = ({
 
 	const RegenerateAllScenesMutation = useMutation({
 		mutationFn: async () => {
-			await saveEdits();
+			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
 			dispatch({
 				type: "update_segment_statuses",
 				key: "videoStatus",

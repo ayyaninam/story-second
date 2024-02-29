@@ -73,57 +73,6 @@ export default function ScriptEditor({
 	);
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
-	const diff = GenerateStoryDiff(previousStory, story);
-
-	const EditSegment = useMutation({
-		mutationFn: api.video.editSegment,
-	});
-
-	const handleSubmitEditSegments = async () => {
-		const diff = GenerateStoryDiff(previousStory, story);
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions
-			.filter((segmentSet) => segmentSet.length > 0)
-			.map((segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			}));
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-
-		const editedResponse = await EditSegment.mutateAsync({
-			story_id: WebstoryData?.id as string,
-			story_type: WebstoryData?.storyType,
-			edits: [...edits, ...additions, ...deletions],
-		});
-		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
-
-		const newStory = await api.video.get(
-			WebstoryData?.topLevelCategory!,
-			WebstoryData?.slug!,
-			WebstoryData?.storyType!
-		);
-
-		setPreviousStory(WebstoryToStoryDraft(newStory));
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
-	};
-
 	useEffect(() => {
 		if (selectedSegment) {
 			console.log();
@@ -193,7 +142,7 @@ export default function ScriptEditor({
 									// 	setShowActionItems({});
 									// }}
 								>
-									<EditorWithScenes
+									<Editor
 										Webstory={WebstoryData!}
 										dispatch={dispatch}
 										story={story}
@@ -336,7 +285,7 @@ export default function ScriptEditor({
 												</div>
 											);
 										}}
-									</EditorWithScenes>
+									</Editor>
 								</div>
 							</div>
 						</div>

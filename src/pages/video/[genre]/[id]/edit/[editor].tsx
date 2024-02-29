@@ -1,12 +1,12 @@
 import api from "@/api";
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
-import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import StoryScenes from "@/features/scenes/ScenesLayout";
 import ScriptLayout from "@/features/scenes/ScriptLayout";
 import EditScript from "@/features/scenes/StoryboardLayout";
 import ScenesLayout from "@/features/scenes/components/Layout";
+import { useSubmitEditScenesAndSegments } from "@/features/scenes/mutations/SaveScenesAndSegments";
 import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
@@ -34,6 +34,7 @@ import {
 	withPageAuthRequired,
 } from "@auth0/nextjs-auth0";
 import {
+	DefinedUseQueryResult,
 	QueryClient,
 	dehydrate,
 	useMutation,
@@ -82,117 +83,59 @@ const EditorPage = ({
 		mutationFn: api.video.editSegment,
 	});
 
-	const handleSubmitEditScenesAndSegments = async () => {
-		const currentStory = story;
+	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
 
-		const sceneDiff = GenerateSceneDiff(
-			WebstoryToStoryDraft(Webstory.data),
-			story
-		);
-		const {
-			additions: sceneAdditions,
-			deletions: sceneDeletions,
-			edits: sceneEdits,
-		} = GenerateSceneDiffDto(sceneDiff);
+	// const handleSubmitEditSegments = async () => {
+	// 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory.data), story);
+	// 	console.log(diff);
+	// 	const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
+	// 		details: { Ind: segment.id, Text: segment.textContent },
+	// 		operation: SegmentModifications.Edit,
+	// 	}));
+	// 	const additions: SegmentModificationData[] = diff.additions
+	// 		.filter((segmentSet) => segmentSet.length > 0)
+	// 		.map((segmentSet) => ({
+	// 			details: {
+	// 				// @ts-ignore should be defined though??
+	// 				Ind: segmentSet[0].id + 1,
+	// 				segments: segmentSet.map((el) => ({
+	// 					Text: el.textContent,
+	// 					SceneId: el.sceneId,
+	// 				})),
+	// 			},
+	// 			operation: SegmentModifications.Add,
+	// 		}));
+	// 	const deletions: SegmentModificationData[] = diff.subtractions.map(
+	// 		(segment) => ({
+	// 			details: {
+	// 				Ind: segment.id,
+	// 			},
+	// 			operation: SegmentModifications.Delete,
+	// 		})
+	// 	);
+	// 	// return { diff };
+	// 	// return;
+	// 	if (!additions.length && !edits.length && !deletions.length) {
+	// 		console.log("No edits found");
+	// 	}
 
-		await api.video.editScenes({
-			story_id: Webstory.data?.id as string,
-			story_type: Webstory.data?.storyType,
-			edits: [...sceneEdits, ...sceneAdditions, ...sceneDeletions],
-		});
+	// 	const editedResponse = await EditSegment.mutateAsync({
+	// 		story_id: Webstory.data?.id as string,
+	// 		story_type: Webstory.data?.storyType,
+	// 		edits: [...edits, ...additions, ...deletions],
+	// 	});
+	// 	queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
 
-		const newVideo = await api.video.get(
-			story.topLevelCategory,
-			story.slug,
-			story.type
-		);
-		const newStoryDraft = WebstoryToStoryDraft(newVideo);
-		const newStory: EditStoryDraft = {
-			...newStoryDraft,
-			scenes:
-				newStoryDraft.scenes?.map((scene, index) => ({
-					...scene,
-					segments: currentStory.scenes[index]?.segments!,
-				})) ?? [],
-		};
-		// return { sceneAdditions, sceneDeletions, sceneEdits };
+	// 	const newStory = await api.video.get(
+	// 		Webstory.data?.topLevelCategory!,
+	// 		Webstory.data?.slug!,
+	// 		Webstory.data?.storyType!
+	// 	);
 
-		const diff = GenerateStoryDiff(newStoryDraft, newStory);
-		const { edits, additions, deletions } = GenerateStoryDiffDto(diff);
-		// return;
-		if (!additions.length && !edits.length && !deletions.length) {
-			console.log("No edits found");
-		}
-
-		const editedResponse = await EditSegment.mutateAsync({
-			story_id: Webstory.data?.id as string,
-			story_type: Webstory.data?.storyType,
-			edits: [...edits, ...additions, ...deletions],
-		});
-		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
-
-		const newStory2 = await api.video.get(
-			Webstory.data?.topLevelCategory!,
-			Webstory.data?.slug!,
-			Webstory.data?.storyType!
-		);
-
-		// setPreviousStory(WebstoryToStoryDraft(newStory));
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory2) });
-		return newStory2;
-	};
-
-	const handleSubmitEditSegments = async () => {
-		const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory.data), story);
-		console.log(diff);
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions
-			.filter((segmentSet) => segmentSet.length > 0)
-			.map((segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			}));
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-		// return { diff };
-		// return;
-		if (!additions.length && !edits.length && !deletions.length) {
-			console.log("No edits found");
-		}
-
-		const editedResponse = await EditSegment.mutateAsync({
-			story_id: Webstory.data?.id as string,
-			story_type: Webstory.data?.storyType,
-			edits: [...edits, ...additions, ...deletions],
-		});
-		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
-
-		const newStory = await api.video.get(
-			Webstory.data?.topLevelCategory!,
-			Webstory.data?.slug!,
-			Webstory.data?.storyType!
-		);
-
-		// setPreviousStory(WebstoryToStoryDraft(newStory));
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
-		return newStory;
-	};
+	// 	// setPreviousStory(WebstoryToStoryDraft(newStory));
+	// 	dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
+	// 	return newStory;
+	// };
 
 	useEffect(() => {
 		dispatch({
@@ -206,7 +149,7 @@ const EditorPage = ({
 			if ((event.ctrlKey || event.metaKey) && event.key === "s") {
 				// Prevent default browser behavior (saving the page)
 				event.preventDefault();
-				await handleSubmitEditScenesAndSegments();
+				await SaveEdits.mutateAsync({ story, Webstory: Webstory.data });
 				// const newStory = await handleSubmitEditSegments();
 				// console.log("Story saved:", newStory?.slug);
 			}
@@ -217,14 +160,11 @@ const EditorPage = ({
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, []);
+	}, [story, Webstory]);
 
 	if (router.query.editor === "script") {
 		return (
 			<WebStoryProvider initialValue={storyData}>
-				<button onClick={() => handleSubmitEditScenesAndSegments()}>
-					Save
-				</button>
 				<ScriptLayout {...{ story, dispatch }} />
 			</WebStoryProvider>
 		);
