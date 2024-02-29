@@ -79,6 +79,17 @@ const Editor = ({
 			currentSegment: number;
 			segmentContentLength: number;
 		}) => void;
+		handleDelete: ({
+			event,
+			totalScenes,
+			currentScene,
+			currentSegment,
+		}: {
+			event: React.KeyboardEvent<HTMLInputElement>;
+			totalScenes: number;
+			currentScene: number;
+			currentSegment: number;
+		}) => void;
 		handleEnter: (
 			scene: Scene,
 			sceneIndex: number,
@@ -354,10 +365,46 @@ const Editor = ({
 		}
 	};
 
+	const handleDelete = ({
+		event,
+		totalScenes,
+		currentScene,
+		currentSegment,
+	}: {
+		event: React.KeyboardEvent<HTMLInputElement>;
+		totalScenes: number;
+		currentScene: number;
+		currentSegment: number;
+	}) => {
+		if (
+			event.key === "Backspace" &&
+			event.currentTarget.selectionStart !== null &&
+			event.currentTarget.selectionStart === 0
+		) {
+			const sceneIndex = currentScene;
+			const segmentIndex = currentSegment;
+			if (segmentIndex === 0 && sceneIndex === 0) {
+				return;
+			}
+			const nextSceneIndex =
+				currentSegment === 0 ? (currentScene - 1) % totalScenes : currentScene;
+			const nextSegmentIndex =
+				currentSegment === 0
+					? (story?.scenes?.[nextSceneIndex]?.segments.length || 1) - 1
+					: currentSegment - 1;
+			focusInput(
+				// @ts-ignore
+				refs.current[nextSceneIndex]?.[nextSegmentIndex]?.input
+			);
+			event.preventDefault();
+		}
+	};
+
 	return children({
 		handleEnter,
 		handleInput,
 		handleNavigation,
+		handleDelete,
 		refs: refs,
 	});
 };
