@@ -11,7 +11,7 @@ import {
 	ScanEye,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const activeStyles =
 	"border border-purple-500 bg-purple-100 text-purple-900 stepper-box-shadow";
@@ -21,6 +21,25 @@ export default function Stepper({ step }: { step: StepperStep }) {
 	const router = useRouter();
 	const [WebstoryData] = useWebstoryContext();
 	const [currentHover, setCurrentHover] = useState<StepperStep>(step);
+	const [disableNavToScenes, setDisableNavToScenes] = useState(true);
+	const [disableNavToPreview, setDisableNavToPreview] = useState(true);
+
+	useEffect(() => {
+		let allNull = true;
+
+		WebstoryData.scenes?.forEach((scene) => {
+			scene.storySegments?.forEach((segment) => {
+				if (segment.imageKey || segment.videoKey) {
+					allNull = false;
+					return;
+				}
+			});
+		});
+
+		setDisableNavToPreview(!allNull);
+		setDisableNavToScenes(!allNull);
+	}, [WebstoryData.scenes]);
+
 	return (
 		<div className="w-full bg-background border-border border-[1px] py-2 min-h-8 flex items-center justify-center">
 			<Badge
@@ -79,23 +98,25 @@ export default function Stepper({ step }: { step: StepperStep }) {
 			<Badge
 				variant="outline"
 				onMouseEnter={() => {
-					setCurrentHover(StepperStep.Scenes);
+					if (!disableNavToScenes) setCurrentHover(StepperStep.Scenes);
 				}}
 				onMouseLeave={() => {
-					setCurrentHover(step);
+					if (!disableNavToScenes) setCurrentHover(step);
 				}}
-				onClick={() =>
-					router.push(
-						Routes.EditScenes(
-							WebstoryData.storyType,
-							WebstoryData.topLevelCategory!,
-							WebstoryData.slug!
-						)
-					)
-				}
+				onClick={() => {
+					if (!disableNavToScenes)
+						router.push(
+							Routes.EditScenes(
+								WebstoryData.storyType,
+								WebstoryData.topLevelCategory!,
+								WebstoryData.slug!
+							)
+						);
+				}}
 				className={clsx(baseStyles, {
 					[activeStyles]:
 						step === StepperStep.Scenes || currentHover === StepperStep.Scenes,
+					"opacity-60": disableNavToScenes,
 				})}
 			>
 				<Film className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -105,24 +126,26 @@ export default function Stepper({ step }: { step: StepperStep }) {
 			<Badge
 				variant="outline"
 				onMouseEnter={() => {
-					setCurrentHover(StepperStep.Preview);
+					if (!disableNavToPreview) setCurrentHover(StepperStep.Preview);
 				}}
 				onMouseLeave={() => {
-					setCurrentHover(step);
+					if (!disableNavToPreview) setCurrentHover(step);
 				}}
-				onClick={() =>
-					router.push(
-						Routes.EditStory(
-							WebstoryData.storyType,
-							WebstoryData.topLevelCategory!,
-							WebstoryData.slug!
-						)
-					)
-				}
+				onClick={() => {
+					if (!disableNavToPreview)
+						router.push(
+							Routes.EditStory(
+								WebstoryData.storyType,
+								WebstoryData.topLevelCategory!,
+								WebstoryData.slug!
+							)
+						);
+				}}
 				className={clsx(baseStyles, {
 					[activeStyles]:
 						step === StepperStep.Preview ||
 						currentHover === StepperStep.Preview,
+					"opacity-60": disableNavToPreview,
 				})}
 			>
 				<ScanEye className="stroke-purple-600 mr-1 h-4 w-4" />
