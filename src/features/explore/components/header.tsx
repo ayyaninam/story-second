@@ -16,6 +16,7 @@ import { genreOptions, SORTING_OPTIONS, VIDEO_ORIENTATIONS} from "@/constants/fe
 import toast from "react-hot-toast";
 import {MobileSelector} from "@/components/ui/mobile-selector";
 import {Plus} from "lucide-react";
+import Routes from "@/routes";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -144,8 +145,7 @@ export const ExploreHeader = ({
 						className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 						variant="default"
 						onClick={() => {
-							// TODO: Implement
-							toast.success("Coming soon!")
+							router.push(Routes.Generate());
 						}}
 					>
 						<Plus className="h-4 w-4" /> Create New

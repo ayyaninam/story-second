@@ -115,7 +115,7 @@ export interface components {
      * DisplayResolutionEnum
      * @enum {integer}
      */
-    DisplayResolutionEnum: 0 | 1;
+    DisplayResolutionEnum: 0 | 1 | 2;
     /** EditSceneOperation */
     EditSceneOperation: {
       operation: components["schemas"]["EditType"];

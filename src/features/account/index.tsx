@@ -14,7 +14,7 @@ import { pick } from "lodash";
 import { parseISO, subDays } from "date-fns";
 import {NextSeo} from "next-seo";
 import user from "@/api/routes/user";
-import Navbar from "@/features/account/NavBar";
+import {AccountsHeader} from "@/features/account/components/header";
 
 const profileSchema = z.object({
   profileName: z
@@ -58,7 +58,7 @@ const preferenceSchema = z.object({
 
 type Account = z.infer<typeof profileSchema>;
 
-const AccountOptions = ({accessToken}: {accessToken: string}) => {
+const AccountsPage = ({accessToken}: {accessToken: string}) => {
   const router = useRouter();
   const { step = "profile" } = router.query ?? {};
 
@@ -138,14 +138,14 @@ const AccountOptions = ({accessToken}: {accessToken: string}) => {
         title="Profile Settings"
         description="Manage your account settings and set e-mail preferences."
       />
-      <Navbar user={data?.data} />
+      <AccountsHeader user={data?.data} />
       <div className="flex flex-grow">
-      <div className="w-full h-full bg-background p-14">
+      <div className="w-full h-full bg-background p-8 lg:p-14">
         <p className="text-3xl font-bold">Settings</p>
         <p className="text-base font-extralight text-muted-foreground">
           Manage your account settings and set e-mail preferences.
         </p>
-        <hr className="mt-8" />
+        <hr className="mt-2 lg:mt-8" />
         <div className="flex flex-col sm:flex-row">
           {/* Toggle Group: Adjust for mobile and larger screens */}
           <div className="w-full sm:w-2/12">
@@ -179,15 +179,17 @@ const AccountOptions = ({accessToken}: {accessToken: string}) => {
           {isPending ? (
             <p className="ml-28 mt-10">Loading...</p>
           ) : (
-            <div id="tab-section" className="mt-10 sm:mt-0 sm:ml-28 w-full sm:w-4/6">
-              <div className="py-8">
+            <div id="tab-section" className="mt-8 sm:mt-0 sm:ml-28 w-full sm:w-4/6">
+              <div className="lg:py-8">
                 {step === "profile" && (
                   <>
-                    <p className="text-2xl font-bold">Profile</p>
-                    <p className="text-base font-extralight text-muted-foreground">
-                      This is how others will see you on the site.
-                    </p>
-                    <Separator className="my-8" />
+                    <div className="hidden lg:block">
+                      <p className="text-2xl font-bold">Profile</p>
+                      <p className="text-base font-extralight text-muted-foreground">
+                        This is how others will see you on the site.
+                      </p>
+                      <Separator className="my-8" />
+                    </div>
                     <AccountForm<Account> form={form} refetch={refetch} accessToken={accessToken}/>
                   </>
                 )}
@@ -213,4 +215,4 @@ const AccountOptions = ({accessToken}: {accessToken: string}) => {
   );
 };
 
-export default AccountOptions;
+export default AccountsPage;

@@ -8,6 +8,8 @@ import { useState } from "react";
 
 import GenerateIcon from "@/components/icons/dashboard/generate-icon";
 import toast from "react-hot-toast";
+import Router from "next/router";
+import Routes from "@/routes";
 
 export default function Navbar({
 	ImageRatio,
@@ -65,8 +67,7 @@ export default function Navbar({
 					className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 					variant="default"
 					onClick={() => {
-						// TODO: Implement
-						toast.success("Coming soon!")
+						Router.push(Routes.Generate());
 					}}
 				>
 					<Plus className="mr-2 h-4 w-4" /> Create New

@@ -49,16 +49,16 @@ export const menuItems = [
 			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(48, 149, 136, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		}
 	},
-	{
-		icon: <ChallengesIcon />,
-		text: "Challenges",
-		shortcut: "C",
-		redirectUrl: "/challenges",
-		cssVars: {
-			"--hover-border-color": "rgba(152, 230, 55, 0.50)",
-			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
-		}
-	},
+	// {
+	// 	icon: <ChallengesIcon />,
+	// 	text: "Challenges",
+	// 	shortcut: "C",
+	// 	redirectUrl: "/challenges",
+	// 	cssVars: {
+	// 		"--hover-border-color": "rgba(152, 230, 55, 0.50)",
+	// 		"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+	// 	}
+	// },
 	// {
 	// 	icon: <FreeCreditsIcon />,
 	// 	text: "Free Credits",
@@ -229,15 +229,16 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 					</div>
 
 					<div className="flex gap-x-2.5 items-center">
-						<Switch
-							style={{
-								border: "1px solid #50071D",
-								color: "#FF3370",
-								backgroundColor: "#50071D",
-								boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
-							}}
-						/>
-						<p className="text-xs">Generate In Turbo Mode</p>
+						{/*# TODO: enable if plans have turbo mode*/}
+						{/*<Switch*/}
+						{/*	style={{*/}
+						{/*		border: "1px solid #50071D",*/}
+						{/*		color: "#FF3370",*/}
+						{/*		backgroundColor: "#50071D",*/}
+						{/*		boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",*/}
+						{/*	}}*/}
+						{/*/>*/}
+						{/*<p className="text-xs">Generate In Turbo Mode</p>*/}
 					</div>
 				</div>
 
