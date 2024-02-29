@@ -232,6 +232,7 @@ const EditorWithScenes = ({
 					description: "",
 					status: StoryStatus.READY,
 					id: scene.id,
+					index: scene.index,
 				},
 
 				index: sceneIndex,
