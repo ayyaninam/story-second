@@ -197,7 +197,13 @@ export default function ScriptEditor({
 										dispatch={dispatch}
 										story={story}
 									>
-										{({ handleEnter, handleInput, handleNavigation, refs }) => {
+										{({
+											handleEnter,
+											handleInput,
+											handleNavigation,
+											handleDelete,
+											refs,
+										}) => {
 											return (
 												<div className={cn("w-full")}>
 													{story.scenes.map((scene, sceneIndex) => (
@@ -276,6 +282,15 @@ export default function ScriptEditor({
 																						segment,
 																						segmentIndex
 																					);
+																				}
+
+																				if (e.key === "Backspace") {
+																					handleDelete({
+																						event: e,
+																						totalScenes: story.scenes.length,
+																						currentScene: sceneIndex,
+																						currentSegment: segmentIndex,
+																					});
 																				}
 																			}}
 																			name={segmentIndex.toString()}
