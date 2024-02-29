@@ -16,7 +16,7 @@ import editStoryReducer, {
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import { SegmentModificationData } from "@/types";
 import { QueryKeys } from "@/lib/queryKeys";
@@ -29,6 +29,16 @@ import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
+import CategorySelect from "@/components/ui/CategorySelect";
+import { useUpdateCategory } from "../mutations/UpdateCategory";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -72,57 +82,6 @@ export default function ScriptEditor({
 	);
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
-	const diff = GenerateStoryDiff(previousStory, story);
-
-	const EditSegment = useMutation({
-		mutationFn: api.video.editSegment,
-	});
-
-	const handleSubmitEditSegments = async () => {
-		const diff = GenerateStoryDiff(previousStory, story);
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions
-			.filter((segmentSet) => segmentSet.length > 0)
-			.map((segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			}));
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-
-		const editedResponse = await EditSegment.mutateAsync({
-			story_id: WebstoryData?.id as string,
-			story_type: WebstoryData?.storyType,
-			edits: [...edits, ...additions, ...deletions],
-		});
-		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
-
-		const newStory = await api.video.get(
-			WebstoryData?.topLevelCategory!,
-			WebstoryData?.slug!,
-			WebstoryData?.storyType!
-		);
-
-		setPreviousStory(WebstoryToStoryDraft(newStory));
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
-	};
-
 	useEffect(() => {
 		if (selectedSegment) {
 			console.log();
@@ -133,6 +92,8 @@ export default function ScriptEditor({
 	const userName = useMemo(() => {
 		return WebstoryData?.user?.name;
 	}, [WebstoryData?.user?.name]);
+
+	const UpdateCategory = useUpdateCategory();
 
 	return (
 		<>
@@ -165,14 +126,14 @@ export default function ScriptEditor({
 						</p>
 
 						<div className="w-full inline-flex text-slate-400 text-xs py-1">
-							{/* <div className="flex">
-							Storyboard for a <u>60 Second</u>{" "}
-							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
-							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div>
+							{/* 
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div> */}
+							<CategorySelect
+								value={WebstoryData?.topLevelCategory!}
+								onChange={(category) => UpdateCategory.mutate({ category })}
+							/>
 							<p className="ms-1">by {userName}</p>
 						</div>
 					</div>
@@ -197,7 +158,13 @@ export default function ScriptEditor({
 										dispatch={dispatch}
 										story={story}
 									>
-										{({ handleEnter, handleInput, refs }) => {
+										{({
+											handleEnter,
+											handleInput,
+											handleNavigation,
+											handleDelete,
+											refs,
+										}) => {
 											return (
 												<div className={cn("w-full")}>
 													{story.scenes.map((scene, sceneIndex) => (
@@ -226,6 +193,49 @@ export default function ScriptEditor({
 																			autoComplete="false"
 																			disabled={!WebstoryData?.storyDone}
 																			onKeyDown={(e) => {
+																				// ! DEBT: Couldn't focus all elements at once
+																				// const selectedText = window
+																				// 	.getSelection()
+																				// 	?.toString();
+
+																				// console.log(
+																				// 	">>> selectObj",
+																				// 	selectedText
+																				// );
+																				// if (
+																				// 	(e.ctrlKey || e.metaKey) &&
+																				// 	e.key === "a"
+																				// ) {
+																				// 	console.log(
+																				// 		">>> selectObj2",
+																				// 		selectedText
+																				// 	);
+
+																				// 	if (
+																				// 		selectedText === segment.textContent
+																				// 	) {
+																				// 		// @ts-ignore
+																				// 		// refs.current?.[1][2]?.focus();
+																				// 		refs.current[sceneIndex]?.map(
+																				// 			(sgmtRef) => {
+																				// 				sgmtRef?.focus();
+																				// 			}
+																				// 		);
+																				// 	}
+																				// }
+																				if (e.key.startsWith("Arrow")) {
+																					handleNavigation({
+																						event: e,
+																						totalScenes: story.scenes.length,
+																						totalSegments:
+																							scene.segments.length,
+																						currentScene: sceneIndex,
+																						currentSegment: segmentIndex,
+																						segmentContentLength:
+																							segment.textContent.length,
+																					});
+																				}
+
 																				if (e.key === "Enter") {
 																					handleEnter(
 																						scene,
@@ -233,6 +243,15 @@ export default function ScriptEditor({
 																						segment,
 																						segmentIndex
 																					);
+																				}
+
+																				if (e.key === "Backspace") {
+																					handleDelete({
+																						event: e,
+																						totalScenes: story.scenes.length,
+																						currentScene: sceneIndex,
+																						currentSegment: segmentIndex,
+																					});
 																				}
 																			}}
 																			name={segmentIndex.toString()}

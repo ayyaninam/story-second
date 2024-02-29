@@ -19,6 +19,8 @@ import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-imag
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { CheckIcon, Lock, ScrollText, Sparkle, X, Plus } from "lucide-react";
 import { getImageCost } from "@/utils/credit-cost";
+import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
+import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
 
 function RegenerationPopupHeader({
 	title,

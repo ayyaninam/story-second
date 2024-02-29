@@ -1,13 +1,21 @@
 import { mainSchema } from "@/api/schema";
 import {
 	EditStoryDraft,
+	Scene,
 	Segment,
 	StoryStatus,
 	TextStatus,
 } from "../reducers/edit-reducer";
 import React from "react";
 import { nanoid } from "nanoid";
-import { AspectRatios, StoryImageStyles, VoiceType } from "@/utils/enums";
+import {
+	AspectRatios,
+	SceneModifications,
+	SegmentModifications,
+	StoryImageStyles,
+	VoiceType,
+} from "@/utils/enums";
+import { SceneModificationData, SegmentModificationData } from "@/types";
 
 // samplingSteps?: number; // 2-10
 // 	denoising?: number; // 0-1,
@@ -36,6 +44,7 @@ export const WebstoryToStoryDraft = (
 		scenes:
 			Webstory.scenes?.map((scene) => ({
 				id: scene.id!,
+				index: scene.index!,
 				segments:
 					scene.videoSegments?.map((segment) => {
 						let imageStatus = StoryStatus.READY;
@@ -88,6 +97,12 @@ type SegmentWithIndices = Segment & {
 	sceneIndex: number;
 	segmentIndex: number;
 	sceneId: string;
+};
+
+type StoryDiff = {
+	edits: SegmentWithIndices[];
+	additions: SegmentWithIndices[][];
+	subtractions: SegmentWithIndices[];
 };
 
 export const GenerateStoryDiff = (
@@ -162,6 +177,116 @@ export const GenerateStoryDiff = (
 	});
 
 	return { edits, additions, subtractions };
+};
+export const GenerateStoryDiffDto = (diff: StoryDiff) => {
+	const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
+		details: { Ind: segment.id, Text: segment.textContent },
+		operation: SegmentModifications.Edit,
+	}));
+	const additions: SegmentModificationData[] = diff.additions
+		.filter((segmentSet) => segmentSet.length > 0)
+		.map((segmentSet) => ({
+			details: {
+				// @ts-ignore should be defined though??
+				Ind: segmentSet[0].id + 1,
+				segments: segmentSet.map((el) => ({
+					Text: el.textContent,
+					SceneId: el.sceneId,
+				})),
+			},
+			operation: SegmentModifications.Add,
+		}));
+	const deletions: SegmentModificationData[] = diff.subtractions.map(
+		(segment) => ({
+			details: {
+				Ind: segment.id,
+			},
+			operation: SegmentModifications.Delete,
+		})
+	);
+	return { edits, additions, deletions };
+};
+
+export const GenerateSceneDiff = (
+	previous: EditStoryDraft,
+	current: EditStoryDraft
+) => {
+	let additions: Scene[][] = [];
+	let edits: Scene[] = [];
+	let subtractions: Scene[] = [];
+	const previousMap = new Map<string, Scene[]>();
+	const currentMap = new Map<string, Scene[]>();
+
+	previous.scenes.forEach((el) => {
+		if (previousMap.has(el.id)) {
+			previousMap.get(el.id)?.push(el);
+		} else {
+			previousMap.set(el.id, [el]);
+		}
+	});
+
+	current.scenes.forEach((el) => {
+		if (currentMap.has(el.id)) {
+			currentMap.get(el.id)?.push(el);
+		} else {
+			currentMap.set(el.id, [el]);
+		}
+	});
+
+	const mapArray = Array.from(
+		new Set([...previousMap.keys(), ...currentMap.keys()])
+	);
+
+	mapArray.forEach((el) => {
+		if (previousMap.has(el) && currentMap.has(el)) {
+			const initialScene = previousMap.get(el)?.[0];
+			const newScenes = currentMap.get(el);
+			if (newScenes?.length && newScenes.length) {
+				const firstNewScene = newScenes[0]!;
+				if (initialScene?.description !== firstNewScene?.description)
+					edits.push(firstNewScene);
+				if (newScenes?.length > 1) additions.push(newScenes?.slice(1));
+			}
+		} else if (previousMap.has(el) && !currentMap.has(el)) {
+			const initialScene = previousMap.get(el)?.[0];
+			if (initialScene) subtractions.push(initialScene);
+		}
+	});
+	return { edits, subtractions, additions };
+};
+
+export const GenerateSceneDiffDto = (diff: {
+	edits: Scene[];
+	subtractions: Scene[];
+	additions: Scene[][];
+}) => {
+	const edits: SceneModificationData[] = diff.edits.map((el) => {
+		return {
+			details: {
+				Ind: el.index,
+				SceneDescription: el.description,
+			},
+			operation: SceneModifications.Edit,
+		};
+	});
+	const additions: SceneModificationData[] = diff.additions.map((el) => {
+		return {
+			details: {
+				Ind: el[0]?.index! + 1,
+				SceneDescriptions: el.map((scene) => scene.description),
+			},
+			operation: SceneModifications.Add,
+		};
+	});
+	const deletions: SceneModificationData[] = diff.subtractions.map((el) => {
+		return {
+			details: {
+				Ind: el.index,
+			},
+			operation: SceneModifications.Delete,
+		};
+	});
+	return { edits, additions, deletions };
 };
 
 export function recursivelyUpdateOverlappingKeys<T extends object>(

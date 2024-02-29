@@ -3,6 +3,7 @@ import {
 	DisplayAspectRatios,
 	StoryOutputTypes,
 	SegmentModifications,
+	SceneModifications,
 } from "./utils/enums";
 import { CallbackListener } from "@remotion/player";
 import { VIDEO_ORIENTATIONS } from "./features/library/constants";
@@ -47,6 +48,20 @@ export type SegmentModificationData =
 	| {
 			operation: SegmentModifications.Delete;
 			details: mlSchema["SegmentDelete"];
+	  };
+
+export type SceneModificationData =
+	| {
+			operation: SceneModifications.Add;
+			details: mlSchema["SceneAdd"];
+	  }
+	| {
+			operation: SceneModifications.Edit;
+			details: mlSchema["SceneEdit"];
+	  }
+	| {
+			operation: SceneModifications.Delete;
+			details: mlSchema["SceneDelete"];
 	  };
 
 const VIDEO_ORIENTATION_IDS = Object.values(VIDEO_ORIENTATIONS).map(

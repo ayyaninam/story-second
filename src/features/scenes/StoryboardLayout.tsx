@@ -52,7 +52,7 @@ export default function EditScript({
 			<Navbar ImageRatio={ImageRatio} WebstoryData={Webstory.data} />
 
 			{/* Stepper */}
-			<Stepper step={StepperStep.Storyboard} />
+			<Stepper step={StepperStep.Storyboard} WebstoryData={Webstory.data} />
 
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>

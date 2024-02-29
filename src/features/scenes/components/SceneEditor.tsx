@@ -27,6 +27,8 @@ import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
 import { Separator } from "@/components/ui/separator";
 import { useMutation } from "@tanstack/react-query";
+import CategorySelect from "@/components/ui/CategorySelect";
+import { useUpdateCategory } from "../mutations/UpdateCategory";
 
 // Circular loader as per the designs. Removed for now as we can't determine the progress
 const Loader = ({
@@ -130,7 +132,7 @@ const SceneEditorView = ({
 	const RegenerateAllVideos = useMutation({
 		mutationFn: api.video.regenerateAllVideos,
 	});
-
+	const UpdateCategory = useUpdateCategory();
 	const handleRegenerateAllVideos = async () => {
 		await RegenerateAllVideos.mutateAsync({
 			story_id: story.id,
@@ -178,6 +180,10 @@ const SceneEditorView = ({
 						</p>
 
 						<div className="flex gap-1 text-slate-400 text-xs py-1">
+							<CategorySelect
+								value={WebstoryData?.topLevelCategory!}
+								onChange={(category) => UpdateCategory.mutate({ category })}
+							/>
 							<p>by {WebstoryData?.user?.name}</p>
 						</div>
 						<Separator className="w-[35%]" />
@@ -190,7 +196,7 @@ const SceneEditorView = ({
 					>
 						<div className="h-full flex-grow ml-2  flex flex-col justify-between overflow-y-auto">
 							<div className="flex flex-col my-3 md:flex-row items-center w-full">
-								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
+								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row">
 									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
 										<Editor
 											Webstory={WebstoryData!}
@@ -273,7 +279,7 @@ const SceneEditorView = ({
 						</div>
 
 						<div className="relative h-full w-full px-4 flex items-center justify-center ">
-							<div
+							{/* <div
 								className="h-[95%] blur-sm overflow-visible"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
@@ -285,7 +291,7 @@ const SceneEditorView = ({
 									isPlaying={isPlaying}
 									seekedFrame={seekedFrame}
 								/>
-							</div>
+							</div> */}
 							<div
 								className="absolute h-[95%]"
 								style={{ aspectRatio: ImageRatio.ratio }}
