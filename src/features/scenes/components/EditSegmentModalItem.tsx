@@ -170,12 +170,14 @@ export default function EditSegmentModalItem({
 							<div className="flex items-center space-x-1 text-muted-foreground">
 								<label className="flex py-[4px] w-36 justify-center gap-1 h-fit bg-muted border-border border-[1px] pl-3 pr-2 rounded-md items-center cursor-pointer hover:text-slate-700 transition-colors ease-in-out font-medium text-sm">
 									<Input
-										onChange={(e) => {
-											if (e.target.files?.[0]) {
-												UploadImage.mutateAsync({
+										onChange={async (e) => {
+											const fileElement = e.target as HTMLInputElement;
+											if (fileElement.files && fileElement.files.length > 0) {
+												const file = fileElement.files[0]!;
+												await UploadImage.mutateAsync({
 													id: story.id,
-													image: e.target.files[0],
-													index: segmentIndex,
+													image: file,
+													index: segment.id,
 												});
 											}
 										}}

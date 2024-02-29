@@ -10,7 +10,6 @@ const baseFetcher = ky.create({ timeout: false, cache: "no-cache" });
  */
 export const publicFetcher = baseFetcher.extend({
 	prefixUrl: env.NEXT_PUBLIC_API_URL,
-	headers: { "Content-Type": "application/json" },
 });
 
 /**
