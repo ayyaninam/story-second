@@ -101,7 +101,7 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 		<div className="hidden w-[18rem] lg:flex lg:flex-col lg:justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
-					{!isLoading && (
+					{!isLoading && user && (
 						<>
 							<Avatar className="h-8 w-8 border-[1px] border-gray-200">
 								<AvatarImage src={user?.picture || ""} />

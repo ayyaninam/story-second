@@ -1,24 +1,15 @@
 import { FC, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {Button} from "@/components/ui/button";
-import Image from "next/image";
 import {
   Sparkles,
-} from "lucide-react"; // Assuming these icons are correctly imported
+} from "lucide-react";
 import {
   languages,
   TabType,
   tabs,
-  videoLengths,
   videoRatios,
 } from "@/features/generate/constants";
 import Router from "next/router";
