@@ -29,6 +29,7 @@ import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import EditorWithScenes from "./EditorWithScenes";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -192,7 +193,7 @@ export default function ScriptEditor({
 									// 	setShowActionItems({});
 									// }}
 								>
-									<Editor
+									<EditorWithScenes
 										Webstory={WebstoryData!}
 										dispatch={dispatch}
 										story={story}
@@ -335,7 +336,7 @@ export default function ScriptEditor({
 												</div>
 											);
 										}}
-									</Editor>
+									</EditorWithScenes>
 								</div>
 							</div>
 						</div>

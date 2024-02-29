@@ -20,7 +20,7 @@ enum InputStatus {
 	DELETED,
 }
 
-const Editor = ({
+const EditorWithScenes = ({
 	Webstory,
 	story,
 	dispatch,
@@ -63,7 +63,7 @@ const Editor = ({
 	onEditScene?: (scene: Scene, sceneIndex: number) => void;
 	onDeleteScene?: (scene: Scene, sceneIndex: number) => void;
 	children: (props: {
-		refs: React.MutableRefObject<(HTMLInputElement | null)[][]>;
+		refs: React.MutableRefObject<HTMLInputElement[][]>;
 		handleNavigation: ({
 			event,
 			totalScenes,
@@ -78,17 +78,6 @@ const Editor = ({
 			currentScene: number;
 			currentSegment: number;
 			segmentContentLength: number;
-		}) => void;
-		handleDelete: ({
-			event,
-			totalScenes,
-			currentScene,
-			currentSegment,
-		}: {
-			event: React.KeyboardEvent<HTMLInputElement>;
-			totalScenes: number;
-			currentScene: number;
-			currentSegment: number;
 		}) => void;
 		handleEnter: (
 			scene: Scene,
@@ -180,9 +169,7 @@ const Editor = ({
 				segmentIndex: segmentIndex,
 			});
 			onCreateScene?.(scene, sceneIndex);
-			setTimeout(() => {
-				refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
-			}, 0);
+			refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
 		} else if (
 			segment.textContent.length > 0 &&
 			e.target.value.length === 0 &&
@@ -226,8 +213,6 @@ const Editor = ({
 	) => {
 		// If the segment is the last segment in the scene, create a new scene
 		if (segmentIndex === scene.segments.length - 1) {
-			// if (false) {
-			// TODO: uncomment this when scene editor support is added
 			dispatch({
 				type: "create_scene",
 				scene: {
@@ -272,21 +257,7 @@ const Editor = ({
 				},
 				segmentIndex: segmentIndex,
 			});
-			setTimeout(() => {
-				refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
-			}, 0);
-		}
-	};
-
-	const focusInput = (autoSizeInput?: HTMLInputElement, atStart = false) => {
-		autoSizeInput?.focus();
-		if (atStart) {
-			autoSizeInput?.setSelectionRange(0, 0);
-		} else {
-			autoSizeInput?.setSelectionRange(
-				autoSizeInput?.value.length ?? 0,
-				autoSizeInput?.value.length ?? 0
-			);
+			refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
 		}
 	};
 
@@ -305,42 +276,22 @@ const Editor = ({
 		currentSegment: number;
 		segmentContentLength: number;
 	}) => {
+		// Segment Navigation
 		if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
 			if (
 				event.key === "ArrowRight" &&
 				event.currentTarget.selectionStart !== null &&
 				event.currentTarget.selectionStart === segmentContentLength
 			) {
-				const nextSceneIndex =
-					currentSegment === totalSegments - 1
-						? (currentScene + 1) % totalScenes
-						: currentScene;
-				const nextSegmentIndex =
-					currentSegment === totalSegments - 1 ? 0 : currentSegment + 1;
-				focusInput(
-					// @ts-ignore
-					refs.current[nextSceneIndex]?.[nextSegmentIndex]?.input,
-					true
-				);
-				event.preventDefault();
+				const segmentIndex = (currentSegment + 1) % totalSegments;
+				refs.current[currentScene]?.[segmentIndex]?.focus();
 			} else if (
 				event.key === "ArrowLeft" &&
 				event.currentTarget.selectionStart !== null &&
 				event.currentTarget.selectionStart === 0
 			) {
-				const nextSceneIndex =
-					currentSegment === 0
-						? (currentScene - 1) % totalScenes
-						: currentScene;
-				const nextSegmentIndex =
-					currentSegment === 0
-						? (story?.scenes?.[nextSceneIndex]?.segments.length || 1) - 1
-						: currentSegment - 1;
-				focusInput(
-					// @ts-ignore
-					refs.current[nextSceneIndex]?.[nextSegmentIndex]?.input
-				);
-				event.preventDefault();
+				const segmentIndex = (currentSegment - 1) % totalSegments;
+				refs.current[currentScene]?.[segmentIndex]?.focus();
 			}
 		}
 
@@ -352,52 +303,11 @@ const Editor = ({
 						? // Loop back last element if up arrow is pressed on first element
 							totalScenes - 1
 						: currentScene - 1) % totalScenes;
-				focusInput(
-					// @ts-ignore
-					refs.current[sceneIndex]?.[currentSegment]?.input
-				);
+				refs.current[sceneIndex]?.[0]?.focus();
 			} else if (event.key === "ArrowDown") {
 				const sceneIndex = (currentScene + 1) % totalScenes;
-				focusInput(
-					// @ts-ignore
-					refs.current[sceneIndex]?.[currentSegment]?.input
-				);
+				refs.current[sceneIndex]?.[0]?.focus();
 			}
-		}
-	};
-
-	const handleDelete = ({
-		event,
-		totalScenes,
-		currentScene,
-		currentSegment,
-	}: {
-		event: React.KeyboardEvent<HTMLInputElement>;
-		totalScenes: number;
-		currentScene: number;
-		currentSegment: number;
-	}) => {
-		if (
-			event.key === "Backspace" &&
-			event.currentTarget.selectionStart !== null &&
-			event.currentTarget.selectionStart === 0
-		) {
-			const sceneIndex = currentScene;
-			const segmentIndex = currentSegment;
-			if (segmentIndex === 0 && sceneIndex === 0) {
-				return;
-			}
-			const nextSceneIndex =
-				currentSegment === 0 ? (currentScene - 1) % totalScenes : currentScene;
-			const nextSegmentIndex =
-				currentSegment === 0
-					? (story?.scenes?.[nextSceneIndex]?.segments.length || 1) - 1
-					: currentSegment - 1;
-			focusInput(
-				// @ts-ignore
-				refs.current[nextSceneIndex]?.[nextSegmentIndex]?.input
-			);
-			event.preventDefault();
 		}
 	};
 
@@ -405,9 +315,8 @@ const Editor = ({
 		handleEnter,
 		handleInput,
 		handleNavigation,
-		handleDelete,
 		refs: refs,
 	});
 };
 
-export default Editor;
+export default EditorWithScenes;

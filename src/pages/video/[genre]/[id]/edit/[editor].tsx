@@ -12,15 +12,22 @@ import editStoryReducer, {
 	EditStoryDraft,
 } from "@/features/scenes/reducers/edit-reducer";
 import {
+	GenerateSceneDiff,
+	GenerateSceneDiffDto,
 	GenerateStoryDiff,
+	GenerateStoryDiffDto,
 	WebstoryToStoryDraft,
 } from "@/features/scenes/utils/storydraft";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";
 import Routes from "@/routes";
-import { SegmentModificationData } from "@/types";
+import { SceneModificationData, SegmentModificationData } from "@/types";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
-import { SegmentModifications, StoryOutputTypes } from "@/utils/enums";
+import {
+	SceneModifications,
+	SegmentModifications,
+	StoryOutputTypes,
+} from "@/utils/enums";
 import {
 	getAccessToken,
 	getSession,
@@ -75,6 +82,66 @@ const EditorPage = ({
 		mutationFn: api.video.editSegment,
 	});
 
+	const handleSubmitEditScenesAndSegments = async () => {
+		const currentStory = story;
+
+		const sceneDiff = GenerateSceneDiff(
+			WebstoryToStoryDraft(Webstory.data),
+			story
+		);
+		const {
+			additions: sceneAdditions,
+			deletions: sceneDeletions,
+			edits: sceneEdits,
+		} = GenerateSceneDiffDto(sceneDiff);
+
+		await api.video.editScenes({
+			story_id: Webstory.data?.id as string,
+			story_type: Webstory.data?.storyType,
+			edits: [...sceneEdits, ...sceneAdditions, ...sceneDeletions],
+		});
+
+		const newVideo = await api.video.get(
+			story.topLevelCategory,
+			story.slug,
+			story.type
+		);
+		const newStoryDraft = WebstoryToStoryDraft(newVideo);
+		const newStory: EditStoryDraft = {
+			...newStoryDraft,
+			scenes:
+				newStoryDraft.scenes?.map((scene, index) => ({
+					...scene,
+					segments: currentStory.scenes[index]?.segments!,
+				})) ?? [],
+		};
+		// return { sceneAdditions, sceneDeletions, sceneEdits };
+
+		const diff = GenerateStoryDiff(newStoryDraft, newStory);
+		const { edits, additions, deletions } = GenerateStoryDiffDto(diff);
+		// return;
+		if (!additions.length && !edits.length && !deletions.length) {
+			console.log("No edits found");
+		}
+
+		const editedResponse = await EditSegment.mutateAsync({
+			story_id: Webstory.data?.id as string,
+			story_type: Webstory.data?.storyType,
+			edits: [...edits, ...additions, ...deletions],
+		});
+		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
+
+		const newStory2 = await api.video.get(
+			Webstory.data?.topLevelCategory!,
+			Webstory.data?.slug!,
+			Webstory.data?.storyType!
+		);
+
+		// setPreviousStory(WebstoryToStoryDraft(newStory));
+		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory2) });
+		return newStory2;
+	};
+
 	const handleSubmitEditSegments = async () => {
 		const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory.data), story);
 		console.log(diff);
@@ -103,9 +170,10 @@ const EditorPage = ({
 				operation: SegmentModifications.Delete,
 			})
 		);
+		// return { diff };
+		// return;
 		if (!additions.length && !edits.length && !deletions.length) {
 			console.log("No edits found");
-			return;
 		}
 
 		const editedResponse = await EditSegment.mutateAsync({
@@ -127,11 +195,6 @@ const EditorPage = ({
 	};
 
 	useEffect(() => {
-		console.log(story);
-	}, [story]);
-
-	useEffect(() => {
-		console.log("resetting >>", Webstory.data);
 		dispatch({
 			type: "reset",
 			draft: WebstoryToStoryDraft(Webstory.data),
@@ -143,9 +206,9 @@ const EditorPage = ({
 			if ((event.ctrlKey || event.metaKey) && event.key === "s") {
 				// Prevent default browser behavior (saving the page)
 				event.preventDefault();
-
-				const newStory = await handleSubmitEditSegments();
-				console.log("Story saved:", newStory?.slug);
+				await handleSubmitEditScenesAndSegments();
+				// const newStory = await handleSubmitEditSegments();
+				// console.log("Story saved:", newStory?.slug);
 			}
 		};
 
@@ -159,6 +222,9 @@ const EditorPage = ({
 	if (router.query.editor === "script") {
 		return (
 			<WebStoryProvider initialValue={storyData}>
+				<button onClick={() => handleSubmitEditScenesAndSegments()}>
+					Save
+				</button>
 				<ScriptLayout {...{ story, dispatch }} />
 			</WebStoryProvider>
 		);
