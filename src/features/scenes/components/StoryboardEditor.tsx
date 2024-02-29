@@ -152,7 +152,7 @@ export default function StoryboardEditor({
 
 	return (
 		<>
-			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
+			<div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -225,149 +225,156 @@ export default function StoryboardEditor({
 													"w-full  divide-y divide-dashed space-y-2"
 												)}
 											>
-												{story.scenes.map((scene, sceneIndex) => (
-													<div
-														key={sceneIndex}
-														className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
-													>
+												{story.scenes
+													.filter((el) => el.segments.length > 0)
+													.map((scene, sceneIndex) => (
 														<div
-															className={cn("gap-4 flex max-w-1/2 flex-wrap")}
+															key={sceneIndex}
+															className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
 														>
-															{scene.segments.map((segment, segmentIndex) => {
-																return (
-																	<div
-																		className={cn("flex gap-1 items-center")}
-																		key={segmentIndex}
-																	>
-																		{(segment.imageStatus ===
-																			StoryStatus.COMPLETE ||
-																			segment.imageStatus ===
-																				StoryStatus.PENDING) && (
-																			<SegmentImage
-																				segment={segment}
-																				story={story}
-																				imageRegenerationSegmentId={
-																					imageRegenerationSegmentId
-																				}
-																				setImageRegenerationSegmentId={
-																					setImageRegenerationSegmentId
-																				}
-																				dispatch={dispatch}
-																				segmentIndex={segmentIndex}
-																				sceneIndex={sceneIndex}
-																			/>
-																		)}
-																		{segment.imageStatus ===
-																			StoryStatus.READY && (
-																			<div
-																				className="relative max-w-full h-40"
-																				style={{
-																					aspectRatio: GetDisplayImageRatio(
-																						story.displayResolution
-																					).ratio,
-																				}}
-																			>
-																				<div className="w-full h-full bg-slate-100 rounded-sm border border-slate-300 flex items-center justify-center border-dashed">
-																					<div className="rounded-full w-6 h-6 bg-slate-200 flex items-center justify-center">
-																						<Plus
-																							className="text-slate-500 stroke-2"
-																							width={12}
-																							height={12}
-																						/>
+															<div
+																className={cn("gap-4 flex max-w-1/2 flex-wrap")}
+															>
+																{scene.segments.map((segment, segmentIndex) => {
+																	return (
+																		<div
+																			className={cn("flex gap-1 items-center")}
+																			key={segmentIndex}
+																		>
+																			{(segment.imageStatus ===
+																				StoryStatus.COMPLETE ||
+																				segment.imageStatus ===
+																					StoryStatus.PENDING) && (
+																				<SegmentImage
+																					segment={segment}
+																					story={story}
+																					imageRegenerationSegmentId={
+																						imageRegenerationSegmentId
+																					}
+																					setImageRegenerationSegmentId={
+																						setImageRegenerationSegmentId
+																					}
+																					dispatch={dispatch}
+																					segmentIndex={segmentIndex}
+																					sceneIndex={sceneIndex}
+																				/>
+																			)}
+																			{segment.imageStatus ===
+																				StoryStatus.READY && (
+																				<div
+																					className="relative max-w-full h-40"
+																					style={{
+																						aspectRatio: GetDisplayImageRatio(
+																							story.displayResolution
+																						).ratio,
+																					}}
+																				>
+																					<div className="w-full h-full bg-slate-100 rounded-sm border border-slate-300 flex items-center justify-center border-dashed">
+																						<div className="rounded-full w-6 h-6 bg-slate-200 flex items-center justify-center">
+																							<Plus
+																								className="text-slate-500 stroke-2"
+																								width={12}
+																								height={12}
+																							/>
+																						</div>
 																					</div>
 																				</div>
-																			</div>
-																		)}
-																		{segmentIndex !==
-																			scene.segments.length - 1 && (
-																			<div className="min-w-4 min-h-4">
-																				<ChevronRight
-																					width={16}
-																					height={16}
-																					className="text-slate-500 stroke-1 min-w-4 min-h-4"
-																				/>
-																			</div>
-																		)}
-																	</div>
-																);
-															})}
-														</div>
-														<div className="w-[55%] min-w-[55%] flex justify-between items-center p-2 ">
-															<div className="flex flex-wrap flex-row ">
-																{scene.segments.map((segment, segmentIndex) => (
-																	<span
-																		key={segmentIndex}
-																		style={{ backgroundColor: "transparent" }}
-																		className={cn(`flex flex-wrap w-full`)}
-																		onClick={() => {
-																			// handleRegenerateImage(
-																			// 	segment,
-																			// 	sceneIndex,
-																			// 	segmentIndex
-																			// );
-																		}}
-																	>
-																		<AutosizeInput
-																			onKeyDown={(e) => {
-																				if (e.key === "Enter") {
-																					handleEnter(
-																						scene,
-																						sceneIndex,
-																						segment,
-																						segmentIndex
-																					);
-																				}
-																			}}
-																			name={segmentIndex.toString()}
-																			inputClassName={cn(
-																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-purple-200 hover:text-slate-950 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
-																				segment.textStatus ===
-																					TextStatus.EDITED && "text-slate-500"
 																			)}
-																			inputStyle={{
-																				outline: "none",
-																				backgroundColor: "inherit",
-																			}}
-																			// @ts-ignore
-																			ref={(el) =>
-																				(refs.current[sceneIndex]![
-																					segmentIndex
-																				] = el)
-																			}
-																			value={segment.textContent}
-																			onChange={(e) => {
-																				handleInput(
-																					e,
-																					scene,
-																					sceneIndex,
-																					segment,
-																					segmentIndex
-																				);
-																			}}
-																		/>
-																	</span>
-																))}
+																			{segmentIndex !==
+																				scene.segments.length - 1 && (
+																				<div className="min-w-4 min-h-4">
+																					<ChevronRight
+																						width={16}
+																						height={16}
+																						className="text-slate-500 stroke-1 min-w-4 min-h-4"
+																					/>
+																				</div>
+																			)}
+																		</div>
+																	);
+																})}
 															</div>
-															<div className="flex gap-x-1 p-2">
-																<span
-																	className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
-																	onClick={() =>
-																		setEditSegmentsModalState({
-																			open: true,
-																			dispatch: dispatch,
-																			scene: scene,
-																			sceneId: sceneIndex,
-																			story: story,
-																			sceneIndex: sceneIndex,
-																		})
-																	}
-																>
-																	<Settings2 className="w-4 h-4 stroke-slate-500" />
-																</span>
+															<div className="w-[55%] min-w-[55%] flex justify-between items-center p-2 ">
+																<div className="flex flex-wrap flex-row ">
+																	{scene.segments.map(
+																		(segment, segmentIndex) => (
+																			<span
+																				key={segmentIndex}
+																				style={{
+																					backgroundColor: "transparent",
+																				}}
+																				className={cn(`flex flex-wrap w-full`)}
+																				onClick={() => {
+																					// handleRegenerateImage(
+																					// 	segment,
+																					// 	sceneIndex,
+																					// 	segmentIndex
+																					// );
+																				}}
+																			>
+																				<AutosizeInput
+																					onKeyDown={(e) => {
+																						if (e.key === "Enter") {
+																							handleEnter(
+																								scene,
+																								sceneIndex,
+																								segment,
+																								segmentIndex
+																							);
+																						}
+																					}}
+																					name={segmentIndex.toString()}
+																					inputClassName={cn(
+																						"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-purple-200 hover:text-slate-950 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
+																						segment.textStatus ===
+																							TextStatus.EDITED &&
+																							"text-slate-500"
+																					)}
+																					inputStyle={{
+																						outline: "none",
+																						backgroundColor: "inherit",
+																					}}
+																					// @ts-ignore
+																					ref={(el) =>
+																						(refs.current[sceneIndex]![
+																							segmentIndex
+																						] = el)
+																					}
+																					value={segment.textContent}
+																					onChange={(e) => {
+																						handleInput(
+																							e,
+																							scene,
+																							sceneIndex,
+																							segment,
+																							segmentIndex
+																						);
+																					}}
+																				/>
+																			</span>
+																		)
+																	)}
+																</div>
+																<div className="flex gap-x-1 p-2">
+																	<span
+																		className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
+																		onClick={() =>
+																			setEditSegmentsModalState({
+																				open: true,
+																				dispatch: dispatch,
+																				scene: scene,
+																				sceneId: sceneIndex,
+																				story: story,
+																				sceneIndex: sceneIndex,
+																			})
+																		}
+																	>
+																		<Settings2 className="w-4 h-4 stroke-slate-500" />
+																	</span>
+																</div>
 															</div>
 														</div>
-													</div>
-												))}
+													))}
 											</div>
 										);
 									}}

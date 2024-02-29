@@ -160,7 +160,7 @@ const SceneEditorView = ({
 
 	return (
 		<>
-			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
+			<div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -206,69 +206,71 @@ const SceneEditorView = ({
 											{({ handleEnter, handleInput, refs }) => {
 												return (
 													<>
-														{story.scenes.map((scene, sceneIndex) => (
-															<>
-																<div
-																	key={sceneIndex}
-																	className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
-																>
-																	{scene.status === StoryStatus.PENDING && (
-																		<RefreshCcw
-																			className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s"
-																			style={{
-																				animationDirection: "reverse",
-																			}}
-																		/>
-																	)}
-
-																	<span className="flex flex-wrap text-sm">
-																		{scene.segments.map(
-																			(segment, segmentIndex) => (
-																				<span
-																					key={segmentIndex}
-																					style={{
-																						backgroundColor: "transparent",
-																					}}
-																					className={cn(
-																						"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
-																						segment.videoStatus !==
-																							StoryStatus.COMPLETE &&
-																							"text-purple-800"
-																					)}
-																					onClick={() => {
-																						videoPlayerRef.current?.seekToSegment(
-																							{
-																								...segment,
-																								sceneId: scene.id,
-																								index: segment.id,
-																							}
-																						);
-																					}}
-																				>
-																					{segment.textContent}
-																				</span>
-																			)
+														{story.scenes
+															.filter((el) => el.segments.length > 0)
+															.map((scene, sceneIndex) => (
+																<>
+																	<div
+																		key={sceneIndex}
+																		className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
+																	>
+																		{scene.status === StoryStatus.PENDING && (
+																			<RefreshCcw
+																				className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s"
+																				style={{
+																					animationDirection: "reverse",
+																				}}
+																			/>
 																		)}
-																	</span>
-																	<div className="visible flex gap-x-1 p-2">
-																		<span
-																			className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
-																			onClick={() =>
-																				setEditSegmentsModalState({
-																					open: true,
-																					scene: scene,
-																					sceneId: sceneIndex,
-																					dispatch,
-																					story,
-																				})
-																			}
-																		>
-																			<Settings2 className="w-4 h-4 stroke-slate-500" />
+
+																		<span className="flex flex-wrap text-sm">
+																			{scene.segments.map(
+																				(segment, segmentIndex) => (
+																					<span
+																						key={segmentIndex}
+																						style={{
+																							backgroundColor: "transparent",
+																						}}
+																						className={cn(
+																							"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
+																							segment.videoStatus !==
+																								StoryStatus.COMPLETE &&
+																								"text-purple-800"
+																						)}
+																						onClick={() => {
+																							videoPlayerRef.current?.seekToSegment(
+																								{
+																									...segment,
+																									sceneId: scene.id,
+																									index: segment.id,
+																								}
+																							);
+																						}}
+																					>
+																						{segment.textContent}
+																					</span>
+																				)
+																			)}
 																		</span>
+																		<div className="visible flex gap-x-1 p-2">
+																			<span
+																				className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
+																				onClick={() =>
+																					setEditSegmentsModalState({
+																						open: true,
+																						scene: scene,
+																						sceneId: sceneIndex,
+																						dispatch,
+																						story,
+																					})
+																				}
+																			>
+																				<Settings2 className="w-4 h-4 stroke-slate-500" />
+																			</span>
+																		</div>
 																	</div>
-																</div>
-															</>
-														))}
+																</>
+															))}
 													</>
 												);
 											}}

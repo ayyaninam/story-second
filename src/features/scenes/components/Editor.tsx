@@ -16,6 +16,7 @@ import {
 	MAX_SEGMENT_WORD_LENGTH,
 } from "@/constants/constants";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
+import toast from "react-hot-toast";
 
 enum InputStatus {
 	UNEDITED,
@@ -150,10 +151,23 @@ const Editor = ({
 				// Prevent default browser behavior (saving the page)
 				event.preventDefault();
 				if (!SaveEdits.isPending)
-					await SaveEdits.mutateAsync({
-						prevStory: Webstory,
-						updatedStory: story,
-					});
+					await toast.promise(
+						SaveEdits.mutateAsync({
+							prevStory: Webstory,
+							updatedStory: story,
+						}),
+						{
+							error: "Error saving your changes",
+							loading: "Saving...",
+							success: "Changes saved!",
+						},
+						{
+							style: {
+								minWidth: "250px",
+								marginLeft: "250px", //Equal to the width of the sidebar
+							},
+						}
+					);
 			}
 		};
 
