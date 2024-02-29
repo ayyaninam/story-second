@@ -194,8 +194,9 @@ function ImageRegenerationPopup({
 	);
 
 	const triggerRegenerationOfImages = useCallback(async () => {
-		setRegenerateImages(true);
+		setIsRegeneratingImages(true);
 		await handleSubmitEditSegments();
+		setRegenerateImages(true);
 	}, [handleSubmitEditSegments]);
 
 	const generateAlternateImageOptions = useCallback(async () => {
@@ -251,6 +252,12 @@ function ImageRegenerationPopup({
 				segment_idx: segment.id,
 				story_id: story.id,
 				story_type: story.type,
+				image_prompt: segment.settings?.prompt || segment.textContent,
+				image_cfg_scale: segment.settings?.denoising ?? 7,
+				image_resolution: story.resolution,
+				image_sampling_steps: segment.settings?.samplingSteps ?? 8,
+				image_seed: segment.settings?.seed ?? 3121472823,
+				image_alt_text: segment.textContent,
 			});
 
 			dispatch({

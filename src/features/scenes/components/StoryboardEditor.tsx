@@ -43,6 +43,7 @@ import {
 import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
 import CategorySelect from "@/components/ui/CategorySelect";
 import { useUpdateCategory } from "../mutations/UpdateCategory";
+import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -87,65 +88,13 @@ export default function StoryboardEditor({
 		sceneIndex?: number;
 	}>();
 
-	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
-		WebstoryToStoryDraft(WebstoryData!)
-	);
-
-	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
-
-	const diff = GenerateStoryDiff(previousStory, story);
-
-	const EditSegment = useMutation({
-		mutationFn: api.video.editSegment,
-	});
+	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
 
 	const handleSubmitEditSegments = async () => {
-		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions
-			.filter((segmentSet) => segmentSet.length > 0)
-			.map((segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			}));
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-		if (!additions.length && !edits.length && !deletions.length) {
-			console.log("No edits found");
-			return;
-		}
-
-		const editedResponse = await EditSegment.mutateAsync({
-			story_id: WebstoryData?.id as string,
-			story_type: WebstoryData?.storyType,
-			edits: [...edits, ...additions, ...deletions],
+		const newStory = await SaveEdits.mutateAsync({
+			prevStory: WebstoryData!,
+			updatedStory: story,
 		});
-		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
-
-		const newStory = await api.video.get(
-			WebstoryData?.topLevelCategory!,
-			WebstoryData?.slug!,
-			WebstoryData?.storyType!
-		);
-
-		setPreviousStory(WebstoryToStoryDraft(newStory));
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
 		return newStory;
 	};
 
