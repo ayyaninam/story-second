@@ -214,7 +214,7 @@ function ImageRegenerationPopup({
 			const regeneratedImages = await api.video.regenerateImage({
 				// @ts-ignore
 				image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
-				prompt: segment.settings?.prompt ?? segment.textContent,
+				prompt: segment.settings?.prompt || segment.textContent,
 				segment_idx: segment.id,
 				story_id: story.id,
 				story_type: story.type,
