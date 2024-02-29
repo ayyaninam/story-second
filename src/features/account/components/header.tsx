@@ -5,13 +5,16 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import {Plus} from "lucide-react";
 import Routes from "@/routes";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import Format from "@/utils/format";
+import {useUser} from "@auth0/nextjs-auth0/client";
 
 const mainHeaderContainer: {
   [key: string]: CSSProperties;
 } = {
   light: {
     background:
-      "radial-gradient(10.83% 5455.25% at 0% 50%, rgba(240, 214, 255, 0.5) 0%, rgba(240, 214, 255, 0) 100%),linear-gradient(0deg, #FFFFFF, #FFFFFF)",
+      "radial-gradient(10.83% 5455.25% at 0% 50%, rgba(225, 234, 239, 0.5) 0%, rgba(225, 234, 239, 0) 100%),linear-gradient(0deg, #FFFFFF, #FFFFFF)",
     boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
   },
   // TODO: Dark variant
@@ -27,12 +30,12 @@ const subHeaderContainer: CSSProperties = {
   background: "var(--base-white, #FFF)",
 };
 
-export const GenerateHeader = ({
-                              }: {
-}) => {
+export function AccountsHeader({ user }: { user: any }) {
   const { theme } = useTheme();
   const [isMobile, setIsMobile] = React.useState(true);
   const router = useRouter();
+
+  const { user:authUser} = useUser();
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -55,16 +58,22 @@ export const GenerateHeader = ({
         className="flex justify-between items-center px-[20px] py-[14px] w-full"
         style={theme ? mainHeaderContainer[theme] : mainHeaderContainer.light}
       >
-        <div className="flex items-start w-[250px]">
-          <Image
-            src="/images/nav-icons/generate-icon.png"
-            alt="Generate"
-            width={40}
-            height={40}
-          />
-          <div className="pl-[12px] flex flex-col items-start">
-            <span className="text-slate-950 text-base font-bold">Generate</span>
-            <span className="text-accent-700 text-sm font-normal">17 Videos</span>
+        <div className="flex gap-x-2.5 items-center">
+          <Avatar className="h-10 w-10 border-[1px] border-gray-200 text-accent-700">
+            <AvatarImage src={Format.GetImageUrl(user?.profilePicture) || authUser?.picture || ""} />
+            <AvatarFallback>
+              {Format.AvatarName(user?.name || "S", user?.lastName)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="items-center">
+            <div className="flex items-center gap-x-2">
+              <p className="text-lg rounded-sm font-bold text-muted-foreground text-slate-800">
+                {user?.name + " " + user?.lastName}
+              </p>
+            </div>
+            <div className="flex items-center gap-x-2 text-slate-500 text-sm">
+              @{user?.profileName}
+            </div>
           </div>
         </div>
 

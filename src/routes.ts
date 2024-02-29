@@ -23,6 +23,11 @@ class Routes {
 	static Explore() {
 		return "/explore";
 	}
+
+	static Generate() {
+		return "/generate";
+	}
+
 	static CreateStoryFromRoute(params: CreateInitialStoryQueryParams) {
 		// @ts-ignore
 		const urlParams = this.CreateSearchParams(params);

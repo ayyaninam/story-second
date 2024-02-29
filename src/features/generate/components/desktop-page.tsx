@@ -3,9 +3,9 @@ import GenerateModalContent from "@/components/create-modal";
 
 export default function DesktopGeneratePage() {
   return (
-    <div className="h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
+    <div className="hidden lg:block h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
       <GenerateHeader />
-      <GenerateModalContent isMobile={false}/>
+      <GenerateModalContent />
     </div>
   );
 }

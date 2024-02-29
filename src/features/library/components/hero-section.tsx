@@ -5,6 +5,8 @@ import RightArrow from "@/features/library/components/svgs/right-arrow";
 import BookScroll from "@/features/library/components/svgs/book-scroll";
 import {cn} from "@/utils";
 import toast from "react-hot-toast";
+import Router from "next/router";
+import Routes from "@/routes";
 
 const heroSectionContainer: CSSProperties = {
 	borderRadius: "var(--radius-3xl, 24px)",
@@ -20,7 +22,7 @@ function LibraryHeroSection( { randomThumbnail = "" } : { randomThumbnail?: stri
 				className="flex w-full max-w-[1440px] justify-center items-center overflow-hidden"
 				style={heroSectionContainer}
 			>
-				<div className="pt-8 pb-16 flex pr-6 pl-10 gap-8 flex-col items-start w-full">
+				<div className="pt-8 pb-16 flex p-10 gap-8 flex-col items-start w-full">
 					<span className="flex py-1 px-2 bg-accent-50 rounded-[350px] text-accent-600 font-normal tracking-tighter text-sm">
 						Hi There
 					</span>
@@ -36,32 +38,31 @@ function LibraryHeroSection( { randomThumbnail = "" } : { randomThumbnail?: stri
 							</span>
 						</p>
 					</div>
-					<div className="flex gap-4 flex-col sm:flex-row">
+					<div className="flex gap-4 flex-col sm:flex-row w-full">
 						<Button
 							variant="secondary"
 							size="sm"
 							className="bg-accent-600 hover:bg-accent-700 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-accent-700 text-background"
 							onClick={() => {
-								// TODO: Integrate this with prompt box
-								toast.success("Coming soon!")
+								Router.push(Routes.Generate());
 							}}
 						>
 							<AiStar />
 							Generate a new script to edit
 							<RightArrow fill="white" fill_opacity="1" />
 						</Button>
-						<Button
-							size="sm"
-							className="bg-white hover:bg-gray-100 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-[#DEE0E3] text-primary"
-							onClick={() => {
-								// TODO: Integrate this with prompt box
-								toast.success("Coming soon!")
-							}}
-						>
-							<BookScroll />
-							New, blank script
-							<RightArrow fill="#0F1324" fill_opacity="0.6" />
-						</Button>
+						{/*<Button*/}
+						{/*	size="sm"*/}
+						{/*	className="bg-white hover:bg-gray-100 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-[#DEE0E3] text-primary"*/}
+						{/*	onClick={() => {*/}
+						{/*		// TODO: Integrate this with prompt box*/}
+						{/*		toast.success("Coming soon!")*/}
+						{/*	}}*/}
+						{/*>*/}
+						{/*	<BookScroll />*/}
+						{/*	New, blank script*/}
+						{/*	<RightArrow fill="#0F1324" fill_opacity="0.6" />*/}
+						{/*</Button>*/}
 					</div>
 				</div>
 				<div className="hidden lg:block w-full min-h-full bg-accent-700 self-stretch">

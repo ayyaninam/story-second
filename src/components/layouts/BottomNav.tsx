@@ -57,7 +57,7 @@ const BottomNav = ({ pageIndex }: { pageIndex: number }) => {
           {/*// # TODO: replace with userDetails from backend*/}
           {!isLoading ? (
             <Link
-              href={"#"}
+              href={"/account"}
               // href={"/" + user?.nickname || ""}
             >
               <div className="flex flex-col items-center justify-around gap-1 text-sm">
@@ -67,7 +67,7 @@ const BottomNav = ({ pageIndex }: { pageIndex: number }) => {
                   {Format.AvatarName(user?.name?.split(" ")[0] || "S", user?.name?.split(" ")[1])}
                 </AvatarFallback>
               </Avatar>
-              Profile
+              Account
               </div>
             </Link>
           ): <Skeleton className="h-6 w-6 rounded-full" />}

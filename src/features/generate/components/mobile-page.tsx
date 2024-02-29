@@ -7,14 +7,56 @@ import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
 import {ChevronLeft, Sparkles} from "lucide-react";
 import React, {useState} from "react";
+import {CreateInitialStoryQueryParams} from "@/types";
+import {DisplayAspectRatios, StoryInputTypes, StoryLanguages, StoryLengths, StoryOutputTypes} from "@/utils/enums";
+import {ImageRatios} from "@/utils/image-ratio";
+import Routes from "@/routes";
+import {LanguageSelect, VideoLengthSelect, VideoRatioSelect} from "@/features/generate/components/selection-constants";
+import FileUpload from "@/features/tiktok/components/file-upload";
 
 export default function MobileGeneratePage() {
   const [value, setValue] = useState<TabType>(TabType.Video);
   const [input, setInput] = useState("");
+  const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
+
+  const [selectedVideoRatio, setSelectedVideoRatio] = useState(videoRatios[0]?.value.toString() || "");
+  const [selectedVideoLength, setSelectedVideoLength] = useState(StoryLengths.Short);
+  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]?.value || "English");
+  const [videoFileId, setVideoFileId] = useState<string | null>(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
+
+  const onSubmit = async () => {
+    console.log(input, selectedLanguage, selectedVideoLength, selectedVideoRatio, videoFileId, tabIndex, tabs[tabIndex]?.enumValue);
+    const videoRatio = tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
+    setIsLoading(true);
+    const params: CreateInitialStoryQueryParams = {
+      input_type: StoryInputTypes.Text,
+      output_type: tabs.find((tab) => tab.text.toLowerCase() === value)?.enumValue as StoryOutputTypes,
+      prompt: input,
+
+      length: selectedVideoLength,
+      language: StoryLanguages[selectedLanguage as keyof typeof StoryLanguages],
+      image_resolution: ImageRatios[videoRatio.replace(":", "x") as keyof typeof ImageRatios].enumValue,
+      video_key: "",
+      display_resolution: videoRatios.find((ratio) => ratio.value === videoRatio)?.enumValue || DisplayAspectRatios["1024x576"],
+    };
+
+    if (videoFileId) {
+      params["input_type"] = StoryInputTypes.Video;
+      params["output_type"] = StoryOutputTypes.SplitScreen;
+      params["video_key"] = videoFileId;
+      params["image_resolution"] = ImageRatios["9x8"].enumValue;
+    }
+    const response = Routes.CreateStoryFromRoute(params);
+    // Router.push(response);
+    setIsLoading(false);
+  };
 
   return (
     <div
-      className="h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow"
+      className="lg:hidden h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow"
       style={{
         background: "linear-gradient(180deg, #A734EA 86.59%, #020817 100%)",
       }}
@@ -69,8 +111,8 @@ export default function MobileGeneratePage() {
               type="single"
               className="grid grid-cols-3 bg-slate-100 p-0.5 rounded-md w-full lg:w-fit"
               value={value}
-              onValueChange={(value) => {
-                if (value) setValue(value as TabType);
+              onValueChange={(newValue) => {
+                if (newValue) setValue(newValue as TabType);
               }}
             >
               {tabs.map((tab, index) => {
@@ -105,66 +147,43 @@ export default function MobileGeneratePage() {
 
           <div className="flex lg:hidden gap-1 flex-col items-center">
             {tabs.find((tab) => tab.text.toLowerCase() === value)?.description}
-            <div className="w-full flex rounded-md gap-x-0.5">
-              <Select>
-                <SelectTrigger className="w-full h-fit focus:ring-0 focus:ring-offset-0 px-2">
-                  <SelectValue placeholder="English" />
-                </SelectTrigger>
-                <SelectContent>
-                  {languages.map((lang, index) => (
-                    <SelectItem key={index} value={lang.value.toLowerCase()}>
-                      <div className="flex gap-2">
-                        <Image
-                          width={16}
-                          height={16}
-                          alt={`logo-${index}`}
-                          src={lang.icon}
-                          className="rounded-full"
-                        />
-                        {lang.value}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="w-full flex flex-col lg:flex-row items-start lg:items-center lg:px-2 gap-1">
+              {/* Conditionally display LanguageSelect if not in the Image tab */}
+              {tabIndex !== 1 && (
+                <LanguageSelect
+                  selectedLanguage={selectedLanguage}
+                  setSelectedLanguage={setSelectedLanguage}
+                />
+              )}
 
-              <Select>
-                <SelectTrigger className="w-full h-fit focus:ring-0 focus:ring-offset-0 px-2">
-                  <SelectValue placeholder="Short 15-30s" />
-                </SelectTrigger>
-                <SelectContent>
-                  {videoLengths.map((len, index) => (
-                    <SelectItem
-                      key={index}
-                      value={len.value.replace(" ", "_").toLowerCase()}
-                    >
-                      {len.value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Conditionally display FileUpload if in the Video tab */}
+              {tabIndex === 1 && (
+                <div className="flex items-center flex-col w-full">
+                <FileUpload setVideoFileId={setVideoFileId} videoFileId={videoFileId} /></div>
+              )}
 
-              <Select>
-                <SelectTrigger className="w-full h-fit focus:ring-0 focus:ring-offset-0 px-2">
-                  <SelectValue placeholder="Vertical 9:16" />
-                </SelectTrigger>
-                <SelectContent>
-                  {videoRatios.map((ratio, index) => (
-                    <SelectItem
-                      key={index}
-                      value={ratio.value.replace(" ", "_").toLowerCase()}
-                    >
-                      {ratio.value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Display VideoLengthSelect for tabs other than Image tab */}
+              {/*{tabIndex !== 1 && (*/}
+              {/*  <VideoLengthSelect*/}
+              {/*    selectedVideoLength={selectedVideoLength}*/}
+              {/*    setSelectedVideoLength={setSelectedVideoLength}*/}
+              {/*  />*/}
+              {/*)}*/}
+
+              {/* Display VideoRatioSelect for the Video tab */}
+              {tabIndex === 0 && (
+                <VideoRatioSelect
+                  selectedVideoRatio={selectedVideoRatio}
+                  setSelectedVideoRatio={setSelectedVideoRatio}
+                />
+              )}
             </div>
+
           </div>
           <Textarea
             autoFocus
             maxLength={1000}
-            className="min-h-full h-auto border-border focus:border-0"
+            className="h-full border-border focus:border-0"
             onChange={(e) => setInput(e.target.value)}
           />
           <div className="flex justify-between text-xs text-slate-600">
@@ -173,26 +192,22 @@ export default function MobileGeneratePage() {
           </div>
         </div>
       </div>
-      <div className="px-4 py-1 flex gap-x-2 w-full justify-between">
+      <div className="px-4 py-1 flex w-full justify-between gap-2">
+
         <Button
-          variant="outline"
-          className="w-fit text-purple-200 opacity-60 font-normal rounded-md bg-[rgba(187, 85, 247, 0.00)] focus:text-purple-200"
-        >
-          <ChevronLeft className="w-5 h-5" />
-          Back
-        </Button>
-        <Button
+          disabled={isSubmitDisabled}
           type="button"
           className="w-full gap-x-1 rounded-md py-2 font-normal text-white px-4 focus:text-white"
           style={{
             background:
-              "linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), #A734EA							",
+              "linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), #A734EA",
             boxShadow:
-              "0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 8px 20px -2px #3E095D, 0px 0px 0px 1px #CE7AFF;",
+              "0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 8px 20px -2px #3E095D, 0px 0px 0px 1px #CE7AFF",
           }}
+          onClick={onSubmit}
         >
           <Sparkles className="w-4 h-4 fill-white" />
-          Generate Script From Prompt
+          {isLoading ? "Generating Your Experience" : "Generate Script From Prompt"}
         </Button>
       </div>
     </div>

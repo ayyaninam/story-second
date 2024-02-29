@@ -67,7 +67,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 		// Redirect to home if any of the required query params are missing
 		if (
-			!image_style ||
 			!language ||
 			!length ||
 			!(prompt || video_key) ||
@@ -93,10 +92,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		const story = await api.webstory
 			.create(
 				{
-					image_style: convertAndValidateStoryQueryParams(
-						"image_style",
-						image_style
-					),
 					language: convertAndValidateStoryQueryParams("language", language),
 					length: convertAndValidateStoryQueryParams("length", length),
 					prompt: convertAndValidateStoryQueryParams("prompt", prompt),
