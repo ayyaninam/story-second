@@ -85,12 +85,18 @@ export const toRemotionSegment = async ({
 		audioURL,
 		durationInFrames,
 		contentDuration,
+		playbackRate: 1,
 		seekId,
 	};
 
 	if (videoURL) {
 		pageSegment = {
 			...pageSegment,
+			playbackRate: Math.min(
+				1,
+				((await getVideoMetadata(videoURL)).durationInSeconds * VIDEO_FPS) /
+				contentDuration
+			),
 			visual: {
 				format: "video",
 				videoURL,
@@ -119,12 +125,14 @@ export const toRemotionSegment = async ({
 				videoURL: interpolationURL,
 			},
 			durationInFrames: 17,
+			playbackRate: 1,
 		};
 	} else {
 		transitionSegment = {
 			type: "transition",
 			id: uuidv4(),
 			durationInFrames: VIDEO_FPS,
+			playbackRate: 1,
 		};
 	}
 

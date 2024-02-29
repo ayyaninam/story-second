@@ -123,7 +123,11 @@ export const SegmentSplitPage = ({
 		<AbsoluteFill style={{ ...container, zIndex, opacity }}>
 			<AbsoluteFill>
 				{segment.visual?.format === "video" ? (
-					<OffthreadVideo src={segment.visual.videoURL} style={imageStyles} />
+					<OffthreadVideo
+						src={segment.visual.videoURL}
+						style={imageStyles}
+						playbackRate={segment.playbackRate}
+					/>
 				) : segment.visual?.format === "image" ? (
 					<Img src={segment.visual.imageURL} />
 				) : null}

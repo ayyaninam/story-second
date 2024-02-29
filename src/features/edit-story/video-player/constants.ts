@@ -19,6 +19,7 @@ const PageSegment = z.object({
 	audioURL: z.string().nullish(),
 	durationInFrames: z.number(),
 	contentDuration: z.number(),
+	playbackRate: z.number(),
 	seekId: z.string(),
 });
 const InterpolationSegment = z.object({
@@ -27,11 +28,13 @@ const InterpolationSegment = z.object({
 	index: z.number(),
 	visual: VideoVisual,
 	durationInFrames: z.number(),
+	playbackRate: z.number(),
 });
 const TransitionSegment = z.object({
 	type: z.literal("transition"),
 	id: z.string(),
 	durationInFrames: z.number(),
+	playbackRate: z.number(),
 });
 const Segment = z.discriminatedUnion("type", [
 	PageSegment,
