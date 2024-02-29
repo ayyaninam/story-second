@@ -7,6 +7,7 @@ const config = {
 	prefix: "",
 	theme: {
 		colors: {
+			black: "#000",
 			white: "#FFF",
 			slate: {
 				50: "#F8FAFC",
@@ -295,18 +296,18 @@ const config = {
 				950: "#4C0519",
 			},
 			accent: {
-				50: 'var(--accent-color-50)',
-				100: 'var(--accent-color-100)',
-				200: 'var(--accent-color-200)',
-				300: 'var(--accent-color-300)',
-				400: 'var(--accent-color-400)',
-				500: 'var(--accent-color-500)',
-				600: 'var(--accent-color-600)',
-				700: 'var(--accent-color-700)',
-				800: 'var(--accent-color-800)',
-				900: 'var(--accent-color-900)',
-				950: 'var(--accent-color-950)',
-			}
+				50: "var(--accent-color-50)",
+				100: "var(--accent-color-100)",
+				200: "var(--accent-color-200)",
+				300: "var(--accent-color-300)",
+				400: "var(--accent-color-400)",
+				500: "var(--accent-color-500)",
+				600: "var(--accent-color-600)",
+				700: "var(--accent-color-700)",
+				800: "var(--accent-color-800)",
+				900: "var(--accent-color-900)",
+				950: "var(--accent-color-950)",
+			},
 		},
 		container: {
 			center: true,
@@ -362,6 +363,12 @@ const config = {
 					start: "hsl(var(--button-start))",
 					end: "hsl(var(--button-end))",
 				},
+			},
+			backgroundImage: {
+				"accent-button":
+					"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, var(--accent-color-700), var(--accent-color-700))",
+				"accent-button-hover":
+					"linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(0deg, var(--accent-color-800), var(--accent-color-800))",
 			},
 			borderRadius: {
 				lg: "var(--radius)",

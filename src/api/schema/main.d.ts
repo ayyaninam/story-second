@@ -5783,13 +5783,13 @@ export interface components {
        * Format: int32
        * @description The number of stories the user has.
        */
-      storyCount: number;
+      storyCount?: number;
       /**
        * VideoCount
        * Format: int32
        * @description The number of videos the user has.
        */
-      videoCount: number;
+      videoCount?: number;
       /**
        * Created
        * Format: date-time
@@ -6914,9 +6914,9 @@ export interface components {
       voiceRecordingName?: string | null;
       defaultPublic?: boolean;
       /** Format: int32 */
-      storyCount: number | null;
+      storyCount?: number;
       /** Format: int32 */
-      videoCount: number | null;
+      videoCount?: number;
       subscriptions?: components["schemas"]["UserSubscription"][] | null;
       allowance?: components["schemas"]["UserAllowance"];
       amazonBook?: components["schemas"]["AmazonBook"][] | null;
@@ -7003,13 +7003,13 @@ export interface components {
        * Format: int32
        * @description The number of stories the user has.
        */
-      storyCount: number;
+      storyCount?: number;
       /**
        * VideoCount
        * Format: int32
        * @description The number of videos the user has.
        */
-      videoCount: number;
+      videoCount?: number;
       /**
        * CardBrand
        * @description The brand of the user's card.
@@ -7216,6 +7216,7 @@ export interface components {
       storyDone?: boolean;
       videosDone?: boolean;
       imagesDone?: boolean;
+      isRendering?: boolean | null;
       isPublic?: boolean;
       pluginGenerated?: boolean | null;
       deleted?: boolean;

@@ -108,6 +108,12 @@ export enum SubscriptionPeriod {
 	Annual,
 }
 
+export enum AllowanceType {
+	StoryBooks,
+	Videos,
+	Credits,
+}
+
 export enum StoryboardViewType {
 	Outline,
 	Slides,
