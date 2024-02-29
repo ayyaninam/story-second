@@ -275,7 +275,7 @@ const SceneEditorView = ({
 						</div>
 
 						<div className="relative h-full w-full px-4 flex items-center justify-center ">
-							<div
+							{/* <div
 								className="h-[95%] blur-sm overflow-visible"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
@@ -287,7 +287,7 @@ const SceneEditorView = ({
 									isPlaying={isPlaying}
 									seekedFrame={seekedFrame}
 								/>
-							</div>
+							</div> */}
 							<div
 								className="absolute h-[95%]"
 								style={{ aspectRatio: ImageRatio.ratio }}

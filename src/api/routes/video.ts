@@ -68,14 +68,13 @@ const video = {
 		accessToken?: string;
 	}) => {
 		const body = new FormData();
-		body.append("Image", params.image);
-		body.append("Index", params.index.toString());
+		body.append("image", params.image);
+		body.append("index", params.index.toString());
 		const data: string = await authFetcher(params.accessToken ?? getJwt())
 			.post(`api/WebStory/SaveStorySegmentImage/${params.id}`, {
-				body,
-
+				body: body,
 				headers: {
-					"Content-Type": "multipart/form-data",
+					Authorization: "Bearer " + (params.accessToken ?? getJwt()),
 				},
 			})
 			.json();
