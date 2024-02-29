@@ -292,6 +292,7 @@ function AdvancedEditingOptions({
 	onSettingsChange: (settings: Settings) => void;
 	show: boolean;
 }) {
+	const [seed, setSeed] = useState(`${settings?.seed ?? -1}`);
 	return (
 		<TooltipProvider>
 			{/* <div
@@ -399,12 +400,21 @@ function AdvancedEditingOptions({
 								max={2e16 - 1}
 								className="w-full border-[1px] rounded-md m-1 p-2"
 								placeholder="2"
-								value={settings?.seed ?? -1}
+								value={seed}
 								onChange={(e) => {
+									const parsedSeed = parseInt(e.target.value);
+									if (isNaN(parsedSeed)) return setSeed(e.target.value);
+									const newSeed =
+										parsedSeed < -1
+											? -1
+											: parsedSeed > 2e16 - 1
+												? 2e16 - 1
+												: parsedSeed;
 									onSettingsChange({
 										...settings,
-										seed: parseInt(e.target.value),
+										seed: newSeed,
 									});
+									setSeed(newSeed.toString());
 								}}
 							/>
 							<Shuffle
