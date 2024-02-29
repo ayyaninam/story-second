@@ -1,3 +1,4 @@
+import { mainSchema } from "@/api/schema";
 import { Badge } from "@/components/ui/badge";
 import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
 import Routes from "@/routes";
@@ -17,27 +18,45 @@ const activeStyles =
 	"border border-purple-500 bg-purple-100 text-purple-900 stepper-box-shadow";
 const baseStyles = `bg-primary-foreground font-normal text-sm cursor-pointer transition-all ease-in-out duration-300`;
 
-export default function Stepper({ step }: { step: StepperStep }) {
+export default function Stepper({
+	step,
+	WebstoryData,
+}: {
+	step: StepperStep;
+	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
+}) {
 	const router = useRouter();
-	const [WebstoryData] = useWebstoryContext();
 	const [currentHover, setCurrentHover] = useState<StepperStep>(step);
 	const [disableNavToScenes, setDisableNavToScenes] = useState(true);
 	const [disableNavToPreview, setDisableNavToPreview] = useState(true);
 
 	useEffect(() => {
-		let allNull = true;
+		// let allNull = true;
 
-		WebstoryData.scenes?.forEach((scene) => {
-			scene.storySegments?.forEach((segment) => {
-				if (segment.imageKey || segment.videoKey) {
-					allNull = false;
-					return;
-				}
-			});
-		});
+		// WebstoryData.scenes?.forEach((scene) => {
+		// 	scene.storySegments?.forEach((segment) => {
+		// 		if (segment.imageKey || segment.videoKey) {
+		// 			allNull = false;
+		// 			return;
+		// 		}
+		// 	});
+		// });
 
-		setDisableNavToPreview(!allNull);
-		setDisableNavToScenes(!allNull);
+		const allNull = WebstoryData.scenes
+			?.flatMap((scene) =>
+				scene.videoSegments?.map((segment) => ({
+					videoKey: segment.videoKey,
+					videoRegenerating: segment.videoRegenerating,
+					imageKey: segment.imageKey,
+					imageRegenerating: segment.videoRegenerating,
+				}))
+			)
+			.every(
+				(segment) => segment?.videoKey === null || segment?.imageKey === null
+			);
+
+		setDisableNavToPreview(!!allNull);
+		setDisableNavToScenes(!!allNull);
 	}, [WebstoryData.scenes]);
 
 	return (
