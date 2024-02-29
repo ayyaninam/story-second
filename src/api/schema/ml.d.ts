@@ -199,7 +199,7 @@ export interface components {
       segment_idx: number;
       story_type: components["schemas"]["OutputTypeEnum"];
       /** Prompt */
-      prompt: string;
+      prompt?: string;
       image_style: components["schemas"]["ImageStyleEnum"];
       /**
        * Batch Size
@@ -213,7 +213,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 55428216
+       * @default 12469585
        */
       seed?: number;
       /**
