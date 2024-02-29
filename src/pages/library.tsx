@@ -101,6 +101,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 				},
 			};
 		}
+		// accessToken.isValidJWT()
 		const queryClient = new QueryClient();
 		const {
 			genre: queryGenre,

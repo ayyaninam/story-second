@@ -22,7 +22,7 @@ const PricingCard = ({
 	items,
 	icon,
 }: PricingCardProps) => (
-	<div className="group flex flex-col w-[312px] items-start gap-[20px] pt-[24px] pb-[40px] px-[24px] relative self-stretch bg-background rounded-[10px] overflow-hidden border-[0.5px] border-solid border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_var(--accent-color-500),0px_24px_32px_-12px_#36394a3d] transition-shadow">
+	<div className="group flex flex-col w-[312px] items-start gap-[20px] pt-[24px] pb-[40px] px-[24px] relative self-stretch bg-background rounded-[10px] overflow-hidden border-[0.5px] border-solid border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_var(--accent-color-500),0px_24px_32px_-12px_#36394a3d]">
 		<div className="inline-flex flex-col pl-0 pr-[124.3px] pt-0 pb-[0.25px] items-start relative flex-[0_0_auto]">
 			<div className="relative w-fit mt-[-1.00px] font-medium text-theme-variables-text-colors-text-base text-[26px] tracking-[0] leading-[39px] whitespace-nowrap">
 				{title}

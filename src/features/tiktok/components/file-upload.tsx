@@ -108,6 +108,7 @@ export default function FileUpload({
 					margin: "auto",
 					display: "flex",
 					alignItems: "center",
+					fontSize: "14px",
 				}}
 			>
 				<Icon />

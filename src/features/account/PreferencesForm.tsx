@@ -54,11 +54,6 @@ export const PreferencesForm = ({ form }: { form: UseFormReturn<any> }) => {
 	}, []);
 	return (
 		<>
-			<p className="text-2xl font-bold">Preferences</p>
-			{/* <p className="text-base font-extralight text-muted-foreground">
-				Save your preferences of notifications
-			</p> */}
-			<Separator className="my-8" />
 			<FormProvider {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
 					<PreferenceInput

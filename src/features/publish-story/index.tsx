@@ -31,6 +31,7 @@ import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
 import useWebstoryContext from "../edit-story/providers/WebstoryContext";
 import toast from "react-hot-toast";
 import StoryLogo from "../../../public/auth-prompt/story-logo";
+import Link from "next/link";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -179,10 +180,15 @@ export default function PublishedStory({
 					className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm lg:rounded-br-sm lg:rounded-tr-sm lg:rounded-tl-sm lg:rounded-bl-sm`}
 				>
 					<div className="flex items-center gap-x-2 py-3">
-						<StoryLogo
-							size={20}
-							fill="#657D8B"
-						/>
+
+						<Link
+							href={Routes.Explore()}
+						>
+							<StoryLogo
+								size={20}
+								fill="#657D8B"
+							/>
+						</Link>
 
 						{/*<svg*/}
 						{/*	width="16"*/}
@@ -455,8 +461,9 @@ export default function PublishedStory({
 										<Skeleton className="w-[168px] h-[44px] rounded-lg" />
 									) : (
 										<span className="flex flex-col">
-											<span>{"Storybird"} </span>
 											{Webstory.data.user && (
+												<>
+												<span>{Webstory.data.user.name} {Webstory.data.user?.lastName}</span>
 												<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
 													<>
 														{Webstory.data.user.videoCount > 0 && (
@@ -474,6 +481,7 @@ export default function PublishedStory({
 														)}
 													</>
 												</span>
+												</>
 											)}
 										</span>
 									)}
@@ -498,7 +506,7 @@ export default function PublishedStory({
 						<span
 							className="rounded-full text-xs text-purple-100 bg-purple-500 p-1.5 hover:cursor-pointer hover:bg-purple-400 transition-colors duration-200  ease-in-out"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-							onClick={() => router.push(Routes.Landing())}
+							onClick={() => router.push(Routes.Generate())}
 						>
 							<div className={`flex gap-x-2.5 px-3 items-center`}>
 								<Video className="mr-1 h-3 w-3" /> Make a video like this
@@ -507,7 +515,7 @@ export default function PublishedStory({
 						<span className="rounded-full text-xs text-muted-foreground">
 							<div
 								className={`flex text-sm gap-x-2.5 px-3 items-center hover:cursor-pointer hover:text-gray-600 transition-colors duration-200  ease-in-out`}
-								onClick={() => router.push(Routes.Landing())}
+								onClick={() => router.push(Routes.Generate())}
 							>
 								Try It Free
 							</div>
