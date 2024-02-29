@@ -148,31 +148,6 @@ export default function StoryboardEditor({
 		return newStory;
 	};
 
-	const handleRegenerateSceneImages = async (sceneIndex: number) => {
-		const scene = story.scenes[sceneIndex];
-		if (!scene) return;
-		// dispatch({
-		// 	type: "update_segment_statuses",
-		// 	key: "imageStatus",
-		// 	segmentIndices:
-		// 		scene.segments?.map((el, segmentIndex) => ({
-		// 			segmentIndex,
-		// 			sceneIndex,
-		// 		})) ?? [],
-		// 	status: StoryStatus.PENDING,
-		// });
-
-		const newStory = await handleSubmitEditSegments();
-
-		const regeneratedImages = await api.video.regenerateAllImages({
-			// @ts-expect-error
-			image_style: scene.settings?.style ?? StoryImageStyles.Realistic,
-			story_id: story.id,
-			story_type: story.type,
-			scene_id: scene.id,
-		});
-	};
-
 	const UpdateCategory = useUpdateCategory();
 
 	return (
@@ -317,7 +292,7 @@ export default function StoryboardEditor({
 																);
 															})}
 														</div>
-														<div className="w-[55%] flex justify-between items-center p-2 ">
+														<div className="w-[55%] min-w-[55%] flex justify-between items-center p-2 ">
 															<div className="flex flex-wrap flex-row ">
 																{scene.segments.map((segment, segmentIndex) => (
 																	<span
@@ -411,9 +386,9 @@ export default function StoryboardEditor({
 							editSegmentsModalState.sceneId !== undefined
 						}
 						onClose={() => setEditSegmentsModalState(undefined)}
-						handleRegenerateSceneImages={handleRegenerateSceneImages}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
+						WebstoryData={WebstoryData!}
 						dispatch={dispatch}
 						story={story}
 						onSceneEdit={(scene, index) => {

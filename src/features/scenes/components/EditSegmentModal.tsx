@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Check, RefreshCw, Settings2, Sparkle } from "lucide-react";
+import { Check, RefreshCw, Save, Settings2, Sparkle } from "lucide-react";
 import EditSegmentModalItem from "./EditSegmentModalItem";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,11 @@ import {
 } from "@/components/ui/dialog";
 import { getImageCost } from "@/utils/credit-cost";
 import Format from "@/utils/format";
+import { useMutation } from "@tanstack/react-query";
+import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
+import { mainSchema } from "@/api/schema";
+import { cn } from "@/utils";
+import { StoryImageStyles } from "@/utils/enums";
 
 const EditSegmentModal = ({
 	open,
@@ -30,7 +35,7 @@ const EditSegmentModal = ({
 	sceneIndex,
 	dispatch,
 	story,
-	handleRegenerateSceneImages,
+	WebstoryData,
 }: {
 	open?: boolean;
 	onClose: () => void;
@@ -38,9 +43,9 @@ const EditSegmentModal = ({
 	sceneId?: number;
 	onSceneEdit: (scene: Scene, index: number) => void;
 	dispatch: React.Dispatch<EditStoryAction>;
-	handleRegenerateSceneImages: (sceneIndex: number) => Promise<void>;
 	story: EditStoryDraft;
 	sceneIndex: number;
+	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
 }) => {
 	const [webstory] = useWebstoryContext();
 	const [regeratingImages, setRegeneratingImages] = useState(
@@ -49,6 +54,26 @@ const EditSegmentModal = ({
 	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
 		number | null
 	>(null);
+
+	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
+	const RegenerateSceneImages = useMutation({
+		mutationFn: async (scene: Scene) => {
+			if (!scene) return;
+
+			const newStory = await SaveEdits.mutateAsync({
+				prevStory: WebstoryData,
+				updatedStory: story,
+			});
+
+			const regeneratedImages = await api.video.regenerateAllImages({
+				// @ts-expect-error
+				image_style: scene.settings?.style ?? StoryImageStyles.Realistic,
+				story_id: story.id,
+				story_type: story.type,
+				scene_id: scene.id,
+			});
+		},
+	});
 
 	if (scene && sceneId !== undefined) {
 		return (
@@ -104,13 +129,31 @@ const EditSegmentModal = ({
 						<Button
 							className="w-[50%] p-2 flex gap-1 text-purple-600 items-center"
 							variant="outline"
-							onClick={() => handleRegenerateSceneImages(sceneId)}
+							disabled={RegenerateSceneImages.isPending}
+							onClick={() =>
+								RegenerateSceneImages.mutateAsync(story.scenes?.[sceneId]!)
+							}
 						>
-							<RefreshCw width={16} height={16} />
-							<p className="text-sm text-foreground font-semibold">
-								Regenerate All Images
-							</p>
-							<p className="text-sm">{`(${getImageCost(scene.segments.length)} ${Format.Pluralize("Credit", getImageCost(scene.segments.length))})`}</p>
+							<RefreshCw
+								width={16}
+								height={16}
+								className={cn(
+									RegenerateSceneImages.isPending && "animate-spin"
+								)}
+								style={{ animationDirection: "reverse" }}
+							/>
+							{RegenerateSceneImages.isPending ? (
+								<p className="text-sm text-foreground font-semibold">
+									Regenerating Images
+								</p>
+							) : (
+								<>
+									<p className="text-sm text-foreground font-semibold">
+										Regenerate All Images
+									</p>
+									<p className="text-sm">{`(${getImageCost(scene.segments.length)} ${Format.Pluralize("Credit", getImageCost(scene.segments.length))})`}</p>
+								</>
+							)}
 						</Button>
 						<DialogClose asChild>
 							<Button
