@@ -14,8 +14,8 @@ import {
 } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import EditSegmentModal from "./EditSegmentModal";
 import { SegmentModificationData } from "@/types";
@@ -33,6 +33,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { Button } from "@/components/ui/button";
 import SegmentImage from "./SegmentImage";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
+import CategorySelect from "@/components/ui/CategorySelect";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -203,6 +212,7 @@ export default function StoryboardEditor({
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div> */}
+						<CategorySelect />
 						<p className="ms-1">by {WebstoryData?.user?.name}</p>
 					</div>
 				</div>

@@ -16,7 +16,7 @@ import editStoryReducer, {
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import { SegmentModificationData } from "@/types";
 import { QueryKeys } from "@/lib/queryKeys";
@@ -30,6 +30,15 @@ import AutosizeInput from "react-input-autosize";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import EditorWithScenes from "./EditorWithScenes";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
+import CategorySelect from "@/components/ui/CategorySelect";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -115,14 +124,11 @@ export default function ScriptEditor({
 						</p>
 
 						<div className="w-full inline-flex text-slate-400 text-xs py-1">
-							{/* <div className="flex">
-							Storyboard for a <u>60 Second</u>{" "}
-							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
-							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div>
+							{/* 
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div> */}
+							<CategorySelect />
 							<p className="ms-1">by {userName}</p>
 						</div>
 					</div>

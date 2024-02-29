@@ -27,6 +27,7 @@ import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
 import { Separator } from "@/components/ui/separator";
 import { useMutation } from "@tanstack/react-query";
+import CategorySelect from "@/components/ui/CategorySelect";
 
 // Circular loader as per the designs. Removed for now as we can't determine the progress
 const Loader = ({
@@ -178,6 +179,7 @@ const SceneEditorView = ({
 						</p>
 
 						<div className="flex gap-1 text-slate-400 text-xs py-1">
+							<CategorySelect />
 							<p>by {WebstoryData?.user?.name}</p>
 						</div>
 						<Separator className="w-[35%]" />

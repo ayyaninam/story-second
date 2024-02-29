@@ -19,17 +19,20 @@ export const useSubmitEditScenesAndSegments = (
 	dispatch: React.Dispatch<EditStoryAction>
 ) => {
 	const queryClient = useQueryClient();
+	const EditSegment = useMutation({
+		mutationFn: api.video.editSegment,
+	});
 	return useMutation({
 		mutationFn: async ({
-			story,
-			Webstory,
+			prevStory,
+			updatedStory,
 		}: {
-			story: EditStoryDraft;
-			Webstory: mainSchema["ReturnVideoStoryDTO"];
+			updatedStory: EditStoryDraft;
+			prevStory: mainSchema["ReturnVideoStoryDTO"];
 		}) => {
 			const sceneDiff = GenerateSceneDiff(
-				WebstoryToStoryDraft(Webstory),
-				story
+				WebstoryToStoryDraft(prevStory),
+				updatedStory
 			);
 			const {
 				additions: sceneAdditions,
@@ -37,16 +40,17 @@ export const useSubmitEditScenesAndSegments = (
 				edits: sceneEdits,
 			} = GenerateSceneDiffDto(sceneDiff);
 
-			await api.video.editScenes({
-				story_id: Webstory?.id as string,
-				story_type: Webstory?.storyType,
-				edits: [...sceneEdits, ...sceneAdditions, ...sceneDeletions],
-			});
+			if (sceneEdits.length || sceneAdditions.length || sceneDeletions.length)
+				await api.video.editScenes({
+					story_id: prevStory?.id as string,
+					story_type: prevStory?.storyType,
+					edits: [...sceneEdits, ...sceneAdditions, ...sceneDeletions],
+				});
 
 			const newVideo = await api.video.get(
-				story.topLevelCategory,
-				story.slug,
-				story.type
+				updatedStory.topLevelCategory,
+				updatedStory.slug,
+				updatedStory.type
 			);
 			const newStoryDraft = WebstoryToStoryDraft(newVideo);
 			const newStory: EditStoryDraft = {
@@ -54,7 +58,7 @@ export const useSubmitEditScenesAndSegments = (
 				scenes:
 					newStoryDraft.scenes?.map((scene, index) => ({
 						...scene,
-						segments: story.scenes[index]?.segments!,
+						segments: updatedStory.scenes[index]?.segments!,
 					})) ?? [],
 			};
 
@@ -65,17 +69,17 @@ export const useSubmitEditScenesAndSegments = (
 				console.log("No edits found");
 			}
 
-			const editedResponse = await api.video.editSegment({
-				story_id: Webstory?.id as string,
-				story_type: Webstory?.storyType,
+			const editedResponse = await EditSegment.mutateAsync({
+				story_id: prevStory?.id as string,
+				story_type: prevStory?.storyType,
 				edits: [...edits, ...additions, ...deletions],
 			});
-			queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
+			await queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
 
 			const newStory2 = await api.video.get(
-				Webstory?.topLevelCategory!,
-				Webstory?.slug!,
-				Webstory?.storyType!
+				prevStory?.topLevelCategory!,
+				prevStory?.slug!,
+				prevStory?.storyType!
 			);
 
 			dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory2) });

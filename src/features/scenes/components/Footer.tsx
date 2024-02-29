@@ -202,7 +202,10 @@ const Footer = ({
 
 	const GenerateImagesMutation = useMutation({
 		mutationFn: async () => {
-			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
 			const newStory = await api.video.get(
 				story.topLevelCategory,
 				story.slug,
@@ -244,7 +247,10 @@ const Footer = ({
 
 	const GenerateStoryboardMutation = useMutation({
 		mutationFn: async () => {
-			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
 			router.push(
 				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
 			);
@@ -253,7 +259,10 @@ const Footer = ({
 
 	const RegenerateAllImagesMutation = useMutation({
 		mutationFn: async () => {
-			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
 			dispatch({
 				type: "update_segment_statuses",
 				key: "imageStatus",
@@ -276,7 +285,10 @@ const Footer = ({
 
 	const GenerateVideoScenesMutation = useMutation({
 		mutationFn: async () => {
-			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
 			const newStory = await api.video.get(
 				story.topLevelCategory,
 				story.slug,
@@ -307,7 +319,10 @@ const Footer = ({
 
 	const RegenerateAllScenesMutation = useMutation({
 		mutationFn: async () => {
-			await SaveEdits.mutateAsync({ story, Webstory: WebstoryData });
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
 			dispatch({
 				type: "update_segment_statuses",
 				key: "videoStatus",

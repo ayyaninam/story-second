@@ -12,6 +12,7 @@ import React, { useEffect, useRef } from "react";
 import { mainSchema } from "@/api/schema";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { MAX_SEGMENT_LENGTH, MAX_SEGMENT_WORD_LENGTH } from "@/constants";
+import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 
 enum InputStatus {
 	UNEDITED,
@@ -137,6 +138,28 @@ const Editor = ({
 			return InputStatus.DELETED;
 		} else return InputStatus.UNEDITED;
 	};
+
+	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
+
+	useEffect(() => {
+		const handleKeyDown = async (event: KeyboardEvent) => {
+			if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+				// Prevent default browser behavior (saving the page)
+				event.preventDefault();
+				if (!SaveEdits.isPending)
+					await SaveEdits.mutateAsync({
+						prevStory: Webstory,
+						updatedStory: story,
+					});
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	});
 
 	const handleInput = (
 		e: React.ChangeEvent<HTMLInputElement>,
