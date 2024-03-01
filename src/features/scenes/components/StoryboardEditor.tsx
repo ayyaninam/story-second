@@ -1,51 +1,24 @@
-import {
-	DisplayAspectRatios,
-	SegmentModifications,
-	StoryImageStyles,
-} from "@/utils/enums";
+import { DisplayAspectRatios } from "@/utils/enums";
 import { ChevronRight, LayoutList, Plus, Settings2 } from "lucide-react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
 	Scene,
-	Segment,
 	StoryStatus,
 	TextStatus,
 } from "../reducers/edit-reducer";
-import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useMemo, useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import api from "@/api";
+import React, { useState } from "react";
 import EditSegmentModal from "./EditSegmentModal";
-import { SegmentModificationData } from "@/types";
-import { QueryKeys } from "@/lib/queryKeys";
-import { useRouter } from "next/router";
-import { VideoPlayerHandler } from "@/features/edit-story/components/video-player";
-// import ScriptEditorView from "./ScriptEditorView";
-// import StoryboardView from "./StoryboardViewTypesComponent";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
-import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
-import { Button } from "@/components/ui/button";
 import SegmentImage from "./SegmentImage";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
 import CategorySelect from "@/components/ui/CategorySelect";
 import { useUpdateCategory } from "../mutations/UpdateCategory";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
-
-const MAX_SUMMARY_LENGTH = 251;
 
 export default function StoryboardEditor({
 	WebstoryData,
@@ -67,12 +40,6 @@ export default function StoryboardEditor({
 	story: EditStoryDraft;
 	dispatch: React.Dispatch<EditStoryAction>;
 }) {
-	const router = useRouter();
-	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
-	const queryClient = useQueryClient();
-	const [showFullDescription, setShowFullDescription] = useState(false);
-	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
-	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
 	const [imageRegenerationSegmentDetails, setImageRegenerationSegmentDetails] =
 		useState<{
 			sceneIndex: number;

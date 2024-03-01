@@ -1,4 +1,3 @@
-import BrandShortLogo from "@/components/icons/brand-short-logo";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -17,22 +16,20 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
 	StoryStatus,
 } from "../reducers/edit-reducer";
-import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import {
-	SegmentModifications,
+	ScenesGenButtonType,
 	StoryImageStyles,
 	VoiceType,
 } from "@/utils/enums";
 import clsx from "clsx";
 import api from "@/api";
-import { SegmentModificationData } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import AutoImg from "/public/images/editor/auto.png";
 import RealisticImg from "/public/images/editor/realistic.png";
@@ -143,6 +140,8 @@ const Footer = ({
 
 	const regenAllVideosCreditCost = getVideoCost(numImages.length);
 
+	const regenRemVideosCreditCost = getVideoCost(ungeneratedVideos.length);
+
 	const updateImageStyle = useCallback(
 		(style: StoryImageStyles) => {
 			dispatch({ type: "update_image_style", style: style });
@@ -157,49 +156,7 @@ const Footer = ({
 		[dispatch]
 	);
 
-	const EditSegment = useMutation({
-		mutationFn: api.video.editSegment,
-	});
-
 	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
-	// const saveEdits = useCallback(async () => {
-	// 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-	// 	console.log(diff);
-	// 	// console.log(WebstoryToStoryDraft(WebstoryData!), story);
-	// 	const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-	// 		details: { Ind: segment.id, Text: segment.textContent },
-	// 		operation: SegmentModifications.Edit,
-	// 	}));
-	// 	const additions: SegmentModificationData[] = diff.additions.map(
-	// 		(segmentSet) => ({
-	// 			details: {
-	// 				// @ts-ignore should be defined though??
-	// 				Ind: segmentSet[0].id + 1,
-	// 				segments: segmentSet.map((el) => ({
-	// 					Text: el.textContent,
-	// 					SceneId: el.sceneId,
-	// 				})),
-	// 			},
-	// 			operation: SegmentModifications.Add,
-	// 		})
-	// 	);
-
-	// 	const deletions: SegmentModificationData[] = diff.subtractions.map(
-	// 		(segment) => ({
-	// 			details: {
-	// 				Ind: segment.id,
-	// 			},
-	// 			operation: SegmentModifications.Delete,
-	// 		})
-	// 	);
-	// 	if (additions.length || edits.length || deletions.length) {
-	// 		const editedResponse = await EditSegment.mutateAsync({
-	// 			story_id: WebstoryData?.id as string,
-	// 			story_type: WebstoryData?.storyType,
-	// 			edits: [...edits, ...additions, ...deletions],
-	// 		});
-	// 	}
-	// }, [WebstoryData, story, EditSegment]);
 
 	const GenerateImagesMutation = useMutation({
 		mutationFn: async () => {
@@ -310,6 +267,36 @@ const Footer = ({
 		},
 	});
 
+	const RegenerateRemainingScenesMutation = useMutation({
+		mutationFn: async () => {
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
+			const newStory = await api.video.get(
+				story.topLevelCategory,
+				story.slug,
+				story.type
+			);
+			const ungeneratedVideos = newStory.scenes?.flatMap((scene) =>
+				scene.videoSegments
+					?.map((el, index) => ({ ...el, sceneId: scene.id }))
+					?.filter((segment) => !segment.videoKey && !segment.videoRegenerating)
+			);
+
+			if (ungeneratedVideos && ungeneratedVideos?.length > 0) {
+				const Promises = ungeneratedVideos?.map(async (video) => {
+					return await api.video.regenerateVideo({
+						segment_idx: video?.index!,
+						story_id: story.id,
+						story_type: story.type,
+					});
+				});
+				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
+			}
+		},
+	});
+
 	const RegenerateAllScenesMutation = useMutation({
 		mutationFn: async () => {
 			await SaveEdits.mutateAsync({
@@ -336,33 +323,82 @@ const Footer = ({
 		},
 	});
 
+	const scenesGenerationButtonOptions = {
+		["all"]: {
+			name: "Regenerate All Scenes",
+			mutation: RegenerateAllScenesMutation,
+			isPending: RegenerateAllScenesMutation.isPending,
+		},
+		["remaining"]: {
+			name: "Regenerate Remaining Scenes",
+			mutation: RegenerateRemainingScenesMutation,
+			isPending: RegenerateRemainingScenesMutation.isPending,
+		},
+	};
+
+	const imagesGenerationButtonOptions = {
+		["all"]: {
+			name: "Regenerate All Images",
+			mutation: RegenerateAllImagesMutation,
+			isPending: RegenerateAllImagesMutation.isPending,
+		},
+		["remaining"]: {
+			name: "Generate Remaining Images",
+			mutation: GenerateImagesMutation,
+			isPending: GenerateImagesMutation.isPending,
+		},
+	};
+
+	const [selectedScenesGenButton, setSelectedScenesGenButton] =
+		useState<ScenesGenButtonType>(ScenesGenButtonType.all);
+
+	const [selectedImagesGenButton, setSelectedImagesGenButton] =
+		useState<ScenesGenButtonType>(ScenesGenButtonType.all);
+
 	const View = {
 		script: () => (
 			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div>
-					<Button
-						variant="outline"
-						onClick={async () => {
-							await GenerateImagesMutation.mutateAsync();
+					<Select
+						value={selectedImagesGenButton}
+						onValueChange={async (value) => {
+							setSelectedImagesGenButton(value as ScenesGenButtonType);
+							await imagesGenerationButtonOptions[
+								value as ScenesGenButtonType
+							].mutation.mutateAsync();
 						}}
-						className={cn(
-							"stroke-muted text-muted-foreground",
-							regenUngeneratedImagesCost === 0 && "hidden"
-						)}
-						disabled={GenerateImagesMutation.isPending}
 					>
-						<LayoutGrid strokeWidth={1} className="mr-2" />
-						{GenerateImagesMutation.isPending ? (
-							<>Generating..... </>
-						) : (
-							<>Generate Image </>
-						)}
-
-						<span className="ml-1">
-							({regenUngeneratedImagesCost}{" "}
-							{Format.Pluralize("Credit", regenUngeneratedImagesCost)})
-						</span>
-					</Button>
+						<SelectTrigger
+							className={`py-1.5 px-3 justify-between relative ${selectedImagesGenButton === ScenesGenButtonType.all ? "w-[225px]" : "w-[325px]"}`}
+						>
+							<LayoutGrid strokeWidth={1} />
+							{selectedImagesGenButton &&
+							imagesGenerationButtonOptions[selectedImagesGenButton]
+								.isPending ? (
+								<>Generating..... </>
+							) : (
+								<>
+									{imagesGenerationButtonOptions[selectedImagesGenButton].name}
+								</>
+							)}
+						</SelectTrigger>
+						<SelectContent>
+							{Object.entries(imagesGenerationButtonOptions).map(
+								([key, type]) => {
+									return (
+										<SelectItem key={key} value={key} className="gap-1">
+											{type.name}
+											<span>
+												{key === ScenesGenButtonType.all
+													? ` (${regenAllImagesCreditCost} ${Format.Pluralize("Credit", regenAllImagesCreditCost)})`
+													: ` (${regenUngeneratedImagesCost} ${Format.Pluralize("Credit", regenUngeneratedImagesCost)})`}
+											</span>
+										</SelectItem>
+									);
+								}
+							)}
+						</SelectContent>
+					</Select>
 				</div>
 				<div className="flex flex-col">
 					<Button
@@ -429,26 +465,47 @@ const Footer = ({
 		scene: () => (
 			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div>
-					<Button
-						variant="outline"
-						onClick={async () => {
-							await RegenerateAllScenesMutation.mutateAsync();
+					<Select
+						disabled={!WebstoryData.storyDone}
+						value={selectedScenesGenButton}
+						onValueChange={async (value) => {
+							setSelectedScenesGenButton(value as ScenesGenButtonType);
+							await scenesGenerationButtonOptions[
+								value as ScenesGenButtonType
+							].mutation.mutateAsync();
 						}}
-						className={cn("stroke-muted text-muted-foreground")}
-						disabled={RegenerateAllScenesMutation.isPending}
 					>
-						<LayoutGrid strokeWidth={1} className="mr-2" />
-						{RegenerateAllScenesMutation.isPending ? (
-							<>Regenerating..... </>
-						) : (
-							<>Regenerate All Scenes </>
-						)}
-
-						<span className="ml-1">
-							({regenAllVideosCreditCost}{" "}
-							{Format.Pluralize("Credit", regenAllVideosCreditCost)})
-						</span>
-					</Button>
+						<SelectTrigger
+							className={`py-1.5 px-3 justify-between relative ${selectedScenesGenButton === ScenesGenButtonType.all ? "w-[225px]" : "w-[325px]"}`}
+						>
+							<LayoutGrid strokeWidth={1} />
+							{selectedScenesGenButton &&
+							scenesGenerationButtonOptions[selectedScenesGenButton]
+								.isPending ? (
+								<>Regenerating..... </>
+							) : (
+								<>
+									{scenesGenerationButtonOptions[selectedScenesGenButton].name}
+								</>
+							)}
+						</SelectTrigger>
+						<SelectContent>
+							{Object.entries(scenesGenerationButtonOptions).map(
+								([key, type]) => {
+									return (
+										<SelectItem key={key} value={key}>
+											{type.name}
+											<span>
+												{key === ScenesGenButtonType.all
+													? ` (${regenAllVideosCreditCost} ${Format.Pluralize("Credit", regenAllVideosCreditCost)})`
+													: ` (${regenRemVideosCreditCost} ${Format.Pluralize("Credit", regenRemVideosCreditCost)})`}
+											</span>
+										</SelectItem>
+									);
+								}
+							)}
+						</SelectContent>
+					</Select>
 				</div>
 				<div>
 					<Button
