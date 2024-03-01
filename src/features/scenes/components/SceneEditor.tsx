@@ -3,7 +3,6 @@ import {
 	EditStoryAction,
 	EditStoryDraft,
 	Scene,
-	Segment,
 	StoryStatus,
 } from "../reducers/edit-reducer";
 import { mainSchema } from "@/api/schema";
@@ -11,17 +10,7 @@ import React, { useRef, useState } from "react";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import VideoPlayer, {
-	VideoPlayerHandler,
-} from "@/features/edit-story/components/video-player";
+import { VideoPlayerHandler } from "@/features/edit-story/components/video-player";
 import { DisplayAspectRatios } from "@/utils/enums";
 import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
@@ -30,43 +19,6 @@ import { useMutation } from "@tanstack/react-query";
 import CategorySelect from "@/components/ui/CategorySelect";
 import { useUpdateCategory } from "../mutations/UpdateCategory";
 import StoryScreen from "@/features/edit-story/story-screen";
-
-// Circular loader as per the designs. Removed for now as we can't determine the progress
-const Loader = ({
-	percentage,
-	index,
-}: {
-	percentage: number;
-	index: number;
-}) => {
-	const withOffset = `${60 + percentage}deg`;
-	return (
-		<span className={`absolute -left-[1.5rem] -top-[${index + 1 / 4}]`}>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="19"
-				height="19"
-				viewBox="0 0 19 19"
-				fill="none"
-				style={{ transform: `rotate(${withOffset})` }}
-			>
-				<rect
-					x="0.5"
-					y="0.5"
-					width="18"
-					height="18"
-					rx="9"
-					fill="white"
-					stroke="#CE7AFF"
-				/>
-				<path
-					d="M3.87083 6.25C3.1554 7.48917 2.86884 8.92979 3.05561 10.3484C3.24237 11.7671 3.89203 13.0844 4.90381 14.0962C5.91559 15.108 7.23295 15.7576 8.65158 15.9444C10.0702 16.1312 11.5108 15.8446 12.75 15.1292C13.9892 14.4137 14.9576 13.3094 15.5052 11.9874C16.0528 10.6655 16.1489 9.19979 15.7785 7.81768C15.4082 6.43556 14.5921 5.21426 13.4569 4.3432C12.3218 3.47214 10.9309 3 9.5 3L9.5 9.5L3.87083 6.25Z"
-					fill="#BB55F7"
-				/>
-			</svg>
-		</span>
-	);
-};
 
 type HoveredThumbs = {
 	thumbs: string[];
@@ -112,7 +64,6 @@ const SceneEditorView = ({
 	isError?: boolean;
 }) => {
 	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
-	const blurredVideoPlayerRef = useRef<VideoPlayerHandler | null>(null);
 
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
@@ -126,38 +77,10 @@ const SceneEditorView = ({
 		story?: EditStoryDraft;
 	}>();
 
-	const statuses = story.scenes.flatMap((el) =>
-		el.segments.map((el) => el.videoStatus)
-	);
-
 	const RegenerateAllVideos = useMutation({
 		mutationFn: api.video.regenerateAllVideos,
 	});
 	const UpdateCategory = useUpdateCategory();
-	const handleRegenerateAllVideos = async () => {
-		await RegenerateAllVideos.mutateAsync({
-			story_id: story.id,
-			story_type: story.type,
-		});
-	};
-
-	const handleRegenerateVideo = async (
-		segment: Segment,
-		sceneIndex: number,
-		segmentIndex: number
-	) => {
-		dispatch({
-			type: "edit_segment",
-			sceneIndex,
-			segmentIndex: segmentIndex,
-			segment: { ...segment, videoStatus: StoryStatus.PENDING },
-		});
-		await api.video.regenerateVideo({
-			story_id: WebstoryData?.id!,
-			segment_idx: segment.id,
-			story_type: WebstoryData?.storyType,
-		});
-	};
 
 	return (
 		<>
@@ -204,7 +127,7 @@ const SceneEditorView = ({
 											dispatch={dispatch}
 											story={story}
 										>
-											{({ handleEnter, handleInput, refs }) => {
+											{() => {
 												return (
 													<>
 														{story.scenes
@@ -282,19 +205,6 @@ const SceneEditorView = ({
 						</div>
 
 						<div className="relative h-full w-[50%] px-4 flex items-center justify-center ">
-							{/* <div
-								className="h-[95%] blur-sm overflow-visible"
-								style={{ aspectRatio: ImageRatio.ratio }}
-							>
-								<VideoPlayer
-									playerClassName="rounded-lg"
-									ref={blurredVideoPlayerRef}
-									Webstory={WebstoryData}
-									isError={isError}
-									isPlaying={isPlaying}
-									seekedFrame={seekedFrame}
-								/>
-							</div> */}
 							<div
 								className="absolute max-w-[95%] h-[95%]"
 								style={{ aspectRatio: ImageRatio.ratio }}
@@ -349,3 +259,40 @@ const SceneEditorView = ({
 };
 
 export default SceneEditorView;
+
+// [REMOVED] Circular loader as per the designs. Removed for now as we can't determine the progress
+const Loader = ({
+	percentage,
+	index,
+}: {
+	percentage: number;
+	index: number;
+}) => {
+	const withOffset = `${60 + percentage}deg`;
+	return (
+		<span className={`absolute -left-[1.5rem] -top-[${index + 1 / 4}]`}>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="19"
+				height="19"
+				viewBox="0 0 19 19"
+				fill="none"
+				style={{ transform: `rotate(${withOffset})` }}
+			>
+				<rect
+					x="0.5"
+					y="0.5"
+					width="18"
+					height="18"
+					rx="9"
+					fill="white"
+					stroke="#CE7AFF"
+				/>
+				<path
+					d="M3.87083 6.25C3.1554 7.48917 2.86884 8.92979 3.05561 10.3484C3.24237 11.7671 3.89203 13.0844 4.90381 14.0962C5.91559 15.108 7.23295 15.7576 8.65158 15.9444C10.0702 16.1312 11.5108 15.8446 12.75 15.1292C13.9892 14.4137 14.9576 13.3094 15.5052 11.9874C16.0528 10.6655 16.1489 9.19979 15.7785 7.81768C15.4082 6.43556 14.5921 5.21426 13.4569 4.3432C12.3218 3.47214 10.9309 3 9.5 3L9.5 9.5L3.87083 6.25Z"
+					fill="#BB55F7"
+				/>
+			</svg>
+		</span>
+	);
+};

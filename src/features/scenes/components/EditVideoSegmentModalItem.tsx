@@ -9,22 +9,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { DisplayAspectRatios } from "@/utils/enums";
 
-type SelectItemProps = {
-	value: string;
-	disabled?: boolean;
-};
-
-const SelectItem = ({
-	children,
-	...props
-}: PropsWithChildren<SelectItemProps>) => {
-	return (
-		<Select.Item {...props}>
-			<Select.ItemText>{children}</Select.ItemText>
-		</Select.Item>
-	);
-};
-
 function RegenerateSegmentBar({
 	segment,
 	onTextContentChange,

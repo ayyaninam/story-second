@@ -1,4 +1,3 @@
-import AutosizeInput from "react-input-autosize";
 import {
 	EditStoryAction,
 	EditStoryDraft,
@@ -7,7 +6,6 @@ import {
 	StoryStatus,
 	TextStatus,
 } from "../reducers/edit-reducer";
-import { cn } from "@/utils";
 import React, { useEffect, useRef } from "react";
 import { mainSchema } from "@/api/schema";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
@@ -17,13 +15,6 @@ import {
 } from "@/constants/constants";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import toast from "react-hot-toast";
-
-enum InputStatus {
-	UNEDITED,
-	EDITED,
-	ADDED,
-	DELETED,
-}
 
 const Editor = ({
 	Webstory,
@@ -116,32 +107,6 @@ const Editor = ({
 	);
 
 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory), story);
-
-	const getSegmentStatus = (sceneIndex: number, segmentIndex: number) => {
-		if (
-			diff.edits.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
-		) {
-			return InputStatus.EDITED;
-		} else if (
-			diff.additions
-				.flat()
-				.find(
-					(el) =>
-						el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-				)
-		) {
-			return InputStatus.ADDED;
-		} else if (
-			diff.subtractions.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
-		) {
-			// Deletions not yet implemented
-			return InputStatus.DELETED;
-		} else return InputStatus.UNEDITED;
-	};
 
 	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
 

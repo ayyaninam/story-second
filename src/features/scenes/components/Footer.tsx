@@ -1,4 +1,3 @@
-import BrandShortLogo from "@/components/icons/brand-short-logo";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -17,23 +16,20 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
 	StoryStatus,
 } from "../reducers/edit-reducer";
-import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import {
 	ScenesGenButtonType,
-	SegmentModifications,
 	StoryImageStyles,
 	VoiceType,
 } from "@/utils/enums";
 import clsx from "clsx";
 import api from "@/api";
-import { SegmentModificationData } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import AutoImg from "/public/images/editor/auto.png";
 import RealisticImg from "/public/images/editor/realistic.png";
@@ -457,8 +453,6 @@ const Footer = ({
 						) : (
 							<>Regenerate All Images </>
 						)}
-
-						{/* Regenerate Remaining Images (Implemented) */}
 
 						<span className="ml-1">
 							({regenAllImagesCreditCost}{" "}
