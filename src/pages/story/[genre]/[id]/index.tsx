@@ -49,7 +49,7 @@ const StoryBookPage = () => {
 						<span onClick={() => handleBack()}>Go Back</span>
 					</div>
 
-					<div className={cn("mt-40", !isDesktop && "w-[80vw]")}>
+					<div className={cn("mt-40", isDesktop ? "w-[1000px]" : "w-[80vw]")}>
 						{story && <Book story={story} />}
 					</div>
 
