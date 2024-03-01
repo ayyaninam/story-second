@@ -4,19 +4,17 @@ import { AvatarImage } from "@radix-ui/react-avatar";
 import ExploreIcon from "@/components/icons/side-nav/ExploreIcon";
 import GenerateIcon from "@/components/icons/side-nav/GenerateIcon";
 import LibraryIcon from "@/components/icons/side-nav/LibraryIcon";
-import FreeCreditsIcon from "@/components/icons/side-nav/FreeCreditsIcon";
-import ChallengesIcon from "@/components/icons/side-nav/ChallengesIcon";
 import {CircleUserRoundIcon, Command} from "lucide-react";
-import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import RightPlay from "@/components/icons/right-play";
 import Format from "@/utils/format";
-import {getSession} from "@auth0/nextjs-auth0";
-import api from "@/api";
 import StoryLogoFullWhite from "@/components/brand-logos/primary-white";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import {Skeleton} from "@/components/ui/skeleton";
+import {useQuery} from "@tanstack/react-query";
+import {QueryKeys} from "@/lib/queryKeys";
+import api from "@/api";
+import {useEffect, useState} from "react";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
@@ -82,7 +80,7 @@ export const menuItems = [
 	}
 ];
 
-export default function SideNav({ pageIndex, userDetails }: { pageIndex: number; userDetails?: any }) {
+export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	const selectedStyle = {
 		border: "0.5px solid rgba(255, 255, 255, 0.08)",
 		background: "linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.00) 100%)",
@@ -96,34 +94,46 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset"
 	}
 
-	const { user, isLoading } = useUser();
+	// const { user, isLoading } = useUser();
+
+	const { data, isPending, refetch } = useQuery({
+		queryKey: [QueryKeys.USER],
+		queryFn: () => api.user.get(),
+	});
+
+	console.log(data)
+
+	const [userName, setUserName] = useState("Story.com");
+	useEffect(() => {
+		setUserName(data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName || "Story.com");
+	}, [data]);
 
 	return (
 		<div className="hidden w-[18rem] lg:flex lg:flex-col lg:justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
-					{(!isLoading && user) ? (
+					{(!isPending && data?.data) ? (
 						<>
 							<Avatar className="h-8 w-8 border-[1px] border-gray-200">
-								<AvatarImage src={user?.picture || ""} />
+								<AvatarImage src={data?.data?.profilePicture || ""} />
 								<AvatarFallback>
-									 {Format.AvatarName(user?.name?.split(" ")[0] || "S", user?.name?.split(" ")[1])}
+									 {Format.AvatarName(data?.data?.name?.split(" ")[0] || "S", data?.data?.lastName)}
 								</AvatarFallback>
 							</Avatar>
-								{/*// # TODO: enable profile pages when ready*/}
-								{/*// # TODO: replace with userDetails*/}
+								{/*# TODO: enable profile pages when ready*/}
+								{/*# TODO: replace with userDetails*/}
 							<Link
 								href={"#"}
 								// href={"/" + user?.nickname || ""}
 							>
 								<span className="flex flex-col text-white gap-y-1">
-									<span>{user?.name || "Story.com"}</span>
+									<span>{userName}</span>
 									<span
 										className="flex gap-x-2 items-center text-sm text-white p-0.25 px-2"
 										style={userHandlerStyle}
 									>
 										<RightPlay size={6} />
-										<span>{(user?.nickname?.length || 0) > 7 ? "/"+user?.nickname : "story.com/"+user?.nickname}</span>
+										<span>{(data?.data?.profileName?.length || 0) > 7 ? "/"+data?.data?.profileName : "story.com/"+data?.data?.profileName}</span>
 									</span>
 								</span>
 							</Link>
@@ -271,25 +281,4 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 			</div>
 		</div>
 	);
-}
-
-//getServerSideProps
-
-export async function getServerSideProps() {
-	const session = await getSession();
-	if (!session) {
-		return {
-			props: {},
-		};
-	}
-	const accessToken = session.accessToken || "";
-	if (!accessToken) {
-		return {
-			props: {},
-		};
-	}
-	const userDetail = api.user.get(accessToken);
-	return {
-		props: { userDetail },
-	};
 }
