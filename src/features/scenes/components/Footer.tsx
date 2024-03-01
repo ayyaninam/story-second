@@ -362,7 +362,7 @@ const Footer = ({
 
   const View = {
     script: () => (
-      <div className="flex gap-2 mt-6 w-full justify-end">
+      <div className="flex gap-2 mt-6 w-full justify-end ">
         <div>
           <Select
             disabled={!WebstoryData.storyDone}
@@ -378,7 +378,7 @@ const Footer = ({
             }}
           >
             <SelectTrigger
-              className={`py-1.5 px-3 justify-between relative ${!selectedImagesGenButton || selectedImagesGenButton === ScenesGenButtonType.all ? "w-[225px]" : "w-[280px]"}`}
+              className={`py-1.5 px-3 justify-between relative font-medium stroke-muted text-muted-foreground ${!selectedImagesGenButton || selectedImagesGenButton === ScenesGenButtonType.all ? "w-[225px]" : "w-[280px]"}`}
             >
               <LayoutGrid strokeWidth={1} />
               {selectedImagesGenButton &&
@@ -492,7 +492,7 @@ const Footer = ({
             }}
           >
             <SelectTrigger
-              className={`py-1.5 px-3 justify-between relative ${!selectedScenesGenButton || selectedScenesGenButton === ScenesGenButtonType.all ? "w-[225px]" : "w-[325px]"}`}
+              className={`py-1.5 px-3 justify-between font-medium stroke-muted text-muted-foreground relative ${!selectedScenesGenButton || selectedScenesGenButton === ScenesGenButtonType.all ? "w-[225px]" : "w-[325px]"}`}
             >
               <LayoutGrid strokeWidth={1} />
               {selectedScenesGenButton &&
@@ -543,14 +543,14 @@ const Footer = ({
         <div className="flex flex-col">
           <Button
             disabled={
-              !ungeneratedVideos.length ||
-              !ungeneratedImages.length ||
+              !!ungeneratedVideos.length ||
+              !!ungeneratedImages.length ||
               !WebstoryData.storyDone
             }
             onClick={() => {
-              if (ungeneratedVideos.length && ungeneratedImages.length) {
+              if (!ungeneratedVideos.length && !ungeneratedImages.length) {
                 router.push(
-                  Routes.EditStory(
+                  Routes.ViewStory(
                     story.type,
                     story.topLevelCategory,
                     story.slug
