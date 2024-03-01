@@ -126,38 +126,7 @@ const SceneEditorView = ({
 		story?: EditStoryDraft;
 	}>();
 
-	const statuses = story.scenes.flatMap((el) =>
-		el.segments.map((el) => el.videoStatus)
-	);
-
-	const RegenerateAllVideos = useMutation({
-		mutationFn: api.video.regenerateAllVideos,
-	});
 	const UpdateCategory = useUpdateCategory();
-	const handleRegenerateAllVideos = async () => {
-		await RegenerateAllVideos.mutateAsync({
-			story_id: story.id,
-			story_type: story.type,
-		});
-	};
-
-	const handleRegenerateVideo = async (
-		segment: Segment,
-		sceneIndex: number,
-		segmentIndex: number
-	) => {
-		dispatch({
-			type: "edit_segment",
-			sceneIndex,
-			segmentIndex: segmentIndex,
-			segment: { ...segment, videoStatus: StoryStatus.PENDING },
-		});
-		await api.video.regenerateVideo({
-			story_id: WebstoryData?.id!,
-			segment_idx: segment.id,
-			story_type: WebstoryData?.storyType,
-		});
-	};
 
 	return (
 		<>

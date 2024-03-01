@@ -31,17 +31,6 @@ export default function Stepper({
 	const [disableNavToPreview, setDisableNavToPreview] = useState(true);
 
 	useEffect(() => {
-		// let allNull = true;
-
-		// WebstoryData.scenes?.forEach((scene) => {
-		// 	scene.storySegments?.forEach((segment) => {
-		// 		if (segment.imageKey || segment.videoKey) {
-		// 			allNull = false;
-		// 			return;
-		// 		}
-		// 	});
-		// });
-
 		const allNull = WebstoryData.scenes
 			?.flatMap((scene) =>
 				scene.videoSegments?.map((segment) => ({

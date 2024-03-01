@@ -112,13 +112,6 @@ const EditSegmentModal = ({
 										segment: updatedSegment,
 									});
 								}}
-								onSegmentDelete={() => {
-									dispatch({
-										type: "delete_segment",
-										sceneIndex: sceneId,
-										segmentIndex: index,
-									});
-								}}
 								segmentIndex={index}
 								imageRegenerationSegmentDetails={
 									imageRegenerationSegmentDetails

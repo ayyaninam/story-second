@@ -62,33 +62,6 @@ export default function ScriptEditor({
 	story: EditStoryDraft;
 	dispatch: React.Dispatch<EditStoryAction>;
 }) {
-	const router = useRouter();
-	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
-	const queryClient = useQueryClient();
-	const [showFullDescription, setShowFullDescription] = useState(false);
-	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
-	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
-
-	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
-		open?: boolean;
-		scene?: Scene;
-		sceneId?: number;
-		dispatch?: React.Dispatch<EditStoryAction>;
-		story?: EditStoryDraft;
-	}>();
-
-	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
-		WebstoryToStoryDraft(WebstoryData!)
-	);
-	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
-
-	useEffect(() => {
-		if (selectedSegment) {
-			console.log();
-			videoPlayerRef.current?.seekToSegment(selectedSegment);
-		}
-	}, [selectedSegment]);
-
 	const userName = useMemo(() => {
 		return WebstoryData?.user?.name;
 	}, [WebstoryData?.user?.name]);

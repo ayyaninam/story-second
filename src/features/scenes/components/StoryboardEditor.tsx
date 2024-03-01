@@ -67,12 +67,6 @@ export default function StoryboardEditor({
 	story: EditStoryDraft;
 	dispatch: React.Dispatch<EditStoryAction>;
 }) {
-	const router = useRouter();
-	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
-	const queryClient = useQueryClient();
-	const [showFullDescription, setShowFullDescription] = useState(false);
-	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
-	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
 	const [imageRegenerationSegmentDetails, setImageRegenerationSegmentDetails] =
 		useState<{
 			sceneIndex: number;
@@ -203,13 +197,6 @@ export default function StoryboardEditor({
 																			backgroundColor: "transparent",
 																		}}
 																		className={cn(`flex flex-wrap w-full`)}
-																		onClick={() => {
-																			// handleRegenerateImage(
-																			// 	segment,
-																			// 	sceneIndex,
-																			// 	segmentIndex
-																			// );
-																		}}
 																	>
 																		<AutosizeInput
 																			onKeyDown={(e) => {

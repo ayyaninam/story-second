@@ -112,7 +112,7 @@ const Editor = ({
 }) => {
 	const refs = useRef<HTMLInputElement[][]>(
 		// Putting an absurdly high number of scenes to make things simpler
-		Array.from({ length: 100 ?? 0 }, () => [])
+		Array.from({ length: 100 }, () => [])
 	);
 
 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory), story);

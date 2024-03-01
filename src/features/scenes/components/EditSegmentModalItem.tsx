@@ -50,7 +50,6 @@ export default function EditSegmentModalItem({
 	story,
 	onSegmentEdit,
 	segmentIndex,
-	onSegmentDelete,
 	imageRegenerationSegmentDetails,
 	setImageRegenerationSegmentDetails,
 	dispatch,
@@ -62,7 +61,6 @@ export default function EditSegmentModalItem({
 	onSegmentEdit: (updatedSegment: Segment) => void;
 	dispatch: React.Dispatch<EditStoryAction>;
 	segmentIndex: number;
-	onSegmentDelete: (segmentIndex: number) => void;
 	imageRegenerationSegmentDetails: {
 		sceneIndex: number;
 		segmentIndex: number;
@@ -77,19 +75,8 @@ export default function EditSegmentModalItem({
 	handleSubmitEditSegments: () => void;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
-	const [imageStatus, setImageStatus] = useState(segment.imageStatus);
 
 	const UploadImage = useMutation({ mutationFn: api.video.uploadSegmentImage });
-
-	useEffect(() => {
-		// The idea cycle should be READY -> PENDING -> COMPLETE
-		if (
-			imageStatus === StoryStatus.PENDING &&
-			segment.imageStatus === StoryStatus.READY
-		)
-			return;
-		setImageStatus(segment.imageStatus);
-	}, [segment.imageStatus]);
 
 	const [regeneratingImage, setRegeneratingImage] = useState(false);
 	return (
@@ -206,7 +193,6 @@ export default function EditSegmentModalItem({
 										type="file"
 										accept="image/*"
 										className="hidden" // Hide the actual input but keep it functional
-										// onChange={/* your file change handler here */}
 									/>
 									{UploadImage.isPending ? (
 										<RefreshCcw
@@ -384,6 +370,7 @@ function AdvancedEditingOptions({
 								placeholder="2"
 								value={seed}
 								onChange={(e) => {
+									// This logic is required to allow -1 without breaking things
 									const parsedSeed = parseInt(e.target.value);
 									if (isNaN(parsedSeed)) return setSeed(e.target.value);
 									const newSeed =
