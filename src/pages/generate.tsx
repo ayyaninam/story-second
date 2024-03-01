@@ -1,29 +1,30 @@
 import GeneratePage from "@/features/generate";
 import React, { ReactElement } from "react";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+
 import { HydrationBoundary } from "@tanstack/react-query";
 import PageLayout from "@/components/layouts/PageLayout";
-
 import { NextSeo } from "next-seo";
 
 function Generate() {
-  return (
-    <HydrationBoundary>
-      <NextSeo
-        title="Generate"
-        description="Generate new Video, Trends and Storybooks"
-        openGraph={{
-          images: [
-            {
-              url: "/og-assets/og-story.png",
-              width: 1200,
-              height: 630,
-              alt: "Generate with Story.com",
-            },
-          ],
-        }}
-      />
-      {/* declare css variables */}
-      <style jsx global>{`
+	return (
+		<HydrationBoundary>
+			<NextSeo
+				title="Generate"
+				description="Generate new Video, Trends and Storybooks"
+				openGraph={{
+					images: [
+						{
+							url: "/og-assets/og-story.png",
+							width: 1200,
+							height: 630,
+							alt: "Generate with Story.com",
+						},
+					],
+				}}
+			/>
+			{/* declare css variables */}
+			<style jsx global>{`
 				:root {
 					--menu-item-border-color: rgba(206, 122, 255, 0.3);
 					--menu-item-selected-background-color: radial-gradient(
@@ -46,13 +47,15 @@ function Generate() {
 					--accent-color-950: #3b0764;
 				}
 			`}</style>
-      <GeneratePage />
-    </HydrationBoundary>
-  );
+			<GeneratePage />
+		</HydrationBoundary>
+	);
 }
 
 Generate.getLayout = function getLayout(page: ReactElement) {
-  return <PageLayout pageIndex={1}>{page}</PageLayout>;
+	return <PageLayout pageIndex={1}>{page}</PageLayout>;
 };
 
 export default Generate;
+
+export const getServerSideProps = withPageAuthRequired();
