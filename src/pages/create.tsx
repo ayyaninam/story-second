@@ -1,24 +1,16 @@
 import api from "@/api";
-import { env } from "@/env.mjs";
 import Routes from "@/routes";
 import { CreateInitialStoryQueryParams } from "@/types";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
 import {
-	AspectRatios,
 	DisplayAspectRatios,
 	StoryOutputTypes,
 } from "@/utils/enums";
-import {
-	getAccessToken,
-	getSession,
-	withPageAuthRequired,
-} from "@auth0/nextjs-auth0";
-import { access } from "fs";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps } from "next";
 
 const redirectToHomepage = {
 	redirect: {
-		destination: "/",
+		destination: "/generate",
 		permanent: false,
 	},
 };
@@ -94,28 +86,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			})
 		);
 
-		await api.user.get(session.accessToken).catch(async (e) => {
-			// TODO: modify to only run when there is a 400 error code
-			await api.user
-				.register(
-					// @ts-ignore
-					{
-						email: session.user.email,
-						name: session.user.nickname,
-						verificationRequired: session.user.email_verified,
-						profilePicture: session.user?.picture ?? null,
-					},
-					session.accessToken as string
-				)
-				.catch((e) => {
-					console.log("There was an error creating the user:", e);
-					throw new AuthError(
-						Routes.defaultRedirect,
-						Routes.Landing("There was an error getting the user")
-					);
-				});
-		});
-		console.log("Got user");
+		if (!session) {
+			return redirectToHomepage;
+		}
+
 		const story = await api.webstory
 			.create(
 				{

@@ -121,8 +121,12 @@ const StoryScreen: FC<
 				?.flatMap((el) => el.videoSegments)
 				?.filter((seg) => !!seg?.imageKey)?.length ?? 0) < 2;
 
-		const originalTikTokVideoKey = Webstory?.originalMediaKey;
-		const hasOriginalTikTokVideoKey = Boolean(originalTikTokVideoKey);
+		const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
+
+		console.log(Webstory?.scenes);
+
+		const originalTrendsVideoKey = Webstory?.originalMediaKey;
+		const hasOriginalTrendsVideoKey = Boolean(originalTrendsVideoKey);
 
 		const isStoryLoading =
 			!Webstory ||
@@ -131,10 +135,14 @@ const StoryScreen: FC<
 			// Using large vidArray length to ensure that all videos are fetched
 			fetchedVideos.length < (videoArray?.length ?? 1000) ||
 			fetchedAudios.length < (videoArray?.length ?? 1000) ||
-			(hasOriginalTikTokVideoKey &&
-				!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
+			(hasOriginalTrendsVideoKey &&
+				!fetchedVideos.includes(Format.GetVideoUrl(originalTrendsVideoKey!)));
 
-		const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
+		const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
+
+		const seekToSegment = (segment: mainSchema["ReturnVideoSegmentDTO"]) => {
+			videoPlayerRef.current?.seekToSegment(segment);
+		};
 
 		console.log(Webstory?.scenes);
 
@@ -151,6 +159,23 @@ const StoryScreen: FC<
 				</div>
 			);
 		else if (areImagesLoading) {
+			return (
+				<div
+					className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
+					style={{ aspectRatio: ImageRatio.ratio }}
+				>
+					<div
+						className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
+						style={{ aspectRatio: ImageRatio.ratio }}
+					>
+						<p className="text-xl">
+							There was an error loading your story, please try again or contact
+							support.
+						</p>
+					</div>
+				</div>
+			);
+		} else if (areImagesLoading) {
 			return (
 				<div
 					className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"

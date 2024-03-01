@@ -128,7 +128,7 @@ export default function PreviewEditor({
 								src={WebstoryData?.user?.profilePicture ?? undefined}
 							/>
 							<AvatarFallback>
-								{Format.AvatarName(WebstoryData?.user?.name)}
+								{Format.AvatarName(WebstoryData?.user?.name, WebstoryData?.user?.lastName)}
 							</AvatarFallback>
 						</Avatar>
 					)}

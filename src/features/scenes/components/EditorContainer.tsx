@@ -17,44 +17,44 @@ const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 			return {
 				top: {
 					text: "Edit Your Script",
-					icon: <ScrollText className="stroke-purple-600 mr-1 h-4 w-4" />,
+					icon: <ScrollText className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 				bottom: {
 					text: "Next — Select Options & Generate Storyboard",
-					icon: <Film className="stroke-purple-600 mr-1 h-4 w-4" />,
+					icon: <Film className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 			};
 		case "story":
 			return {
 				top: {
 					text: "Edit Your Storyboard",
-					icon: <LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />,
+					icon: <LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 				bottom: {
 					text: "Next — Produce Animated Video Scenes",
-					icon: <Film className="stroke-purple-600 mr-1 h-4 w-4" />,
+					icon: <Film className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 			};
 		case "scene":
 			return {
 				top: {
 					text: "Generate & Edit Your Scenes",
-					icon: <Film className="stroke-purple-600 mr-1 h-4 w-4" />,
+					icon: <Film className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 				bottom: {
 					text: "View & Share The Final Cut",
-					icon: <Video className="stroke-purple-600 mr-1 h-4 w-4" />,
+					icon: <Video className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 			};
 		case "preview":
 			return {
 				top: {
 					text: "Review Your Final Version",
-					icon: <Video className="stroke-purple-600 mr-1 h-4 w-4" />,
+					icon: <Video className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 				bottom: {
 					text: "Publish Your Masterpiece",
-					icon: <Upload className="stroke-purple-600 mr-1 h-4 w-4" />,
+					icon: <Upload className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 			};
 	}
@@ -101,7 +101,7 @@ const EditorContainer: FC<{
 					<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
 				</span>
 			</div>
-			<div className="absolute w-[1px] h-screen bg-purple-300 z-[-1] mix-blend-multiply" />
+			<div className="absolute w-[1px] h-screen bg-accent-300 z-[-1] mix-blend-multiply" />
 		</div>
 	);
 };

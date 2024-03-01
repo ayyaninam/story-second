@@ -133,7 +133,7 @@ const EditSegmentModal = ({
 					</div>
 					<div className="flex mt-2 gap-1 mx-4 justify-end text-sm">
 						<Button
-							className="w-[50%] p-2 flex gap-1 text-purple-600 items-center"
+							className="w-[50%] p-2 flex gap-1 text-accent-600 items-center"
 							variant="outline"
 							disabled={RegenerateSceneImages.isPending}
 							onClick={() =>
@@ -163,7 +163,7 @@ const EditSegmentModal = ({
 						</Button>
 						<DialogClose asChild>
 							<Button
-								className="w-[50%] p-2 flex gap-1 items-center text-white bg-purple-600"
+								className="w-[50%] p-2 flex gap-1 items-center text-white bg-accent-600"
 								variant="default"
 							>
 								<Check width={16} height={16} />

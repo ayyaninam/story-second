@@ -3,7 +3,7 @@ import { AbsoluteFill, Img, staticFile } from "remotion";
 
 const logoWatermarkContainer: CSSProperties = {
 	position: "absolute",
-	bottom: 20,
+	top: 20,
 	right: 20,
 };
 
@@ -16,7 +16,7 @@ export const LogoWatermark = () => (
 	<AbsoluteFill>
 		<div style={logoWatermarkContainer}>
 			<Img
-				src={staticFile("remotion/logo-watermark.svg")}
+				src={staticFile("remotion/logo-watermark-story.svg")}
 				style={logoWatermark}
 			/>
 		</div>

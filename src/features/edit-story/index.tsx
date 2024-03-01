@@ -66,7 +66,7 @@ export default function EditStory() {
 	const ImageRatio = GetDisplayImageRatio(Webstory.data.resolution);
 
 	return (
-		<div className=" w-full mr-2 rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
+		<div className=" w-full rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
 			{/* Navbar */}
 			<Navbar ImageRatio={ImageRatio} WebstoryData={Webstory.data} />
 

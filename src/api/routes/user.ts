@@ -1,6 +1,7 @@
 import { authFetcher } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
 import { getJwt } from "@/utils/jwt";
+import { toFromData } from "@/utils/request";
 
 const user = {
 	register: async (
@@ -18,13 +19,25 @@ const user = {
 			.get(`api/User`)
 			.json();
 	},
-	updateDetails: async (
-		params: { test: string },
-		token?: string
-	): Promise<mainSchema["StringApiResponse"]> => {
+	updateDetails: async <T>(data: T & Record<string, any>, token?: string) => {
 		return await authFetcher(token || getJwt())
-			.patch(`api/User/Details`, { body: JSON.stringify(params) })
-			.json();
+			.patch("api/User/Details", {
+				body: toFromData(data),
+			})
+			.json<mainSchema["StringApiResponse"]>();
+	},
+	toggleStoryPrivacy: async (token?: string) => {
+		return await authFetcher(token || getJwt())
+			.put("api/User/ToggleDefaultStoryPrivacy")
+			.json<mainSchema["StringApiResponse"]>();
+	},
+	updateEmailNotificationPreferences: async (
+		data: mainSchema["EmailNotificationPreferencesDTO"],
+		token?: string
+	) => {
+		return await authFetcher(token || getJwt())
+			.put("api/User/EmailNotificationPreferences", { json: data })
+			.json<mainSchema["StringApiResponse"]>();
 	},
 };
 

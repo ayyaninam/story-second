@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import LibraryGalleryComponent from "./gallery-component";
 import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { LIBRARY_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
@@ -14,22 +14,15 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
 import { useDebounce } from "usehooks-ts";
 import { getGalleryThumbnails } from "../utils";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
+import GenericPagination from "@/components/ui/generic-pagination";
+import {getJwt} from "@/utils/jwt";
 
 function LibraryGalleryPage({
 	orientation = "wide",
-	searchTerm,
+	accessToken,
 }: {
 	orientation: VideoOrientation;
-	searchTerm: string;
+	accessToken: string;
 }) {
 	const router = useRouter();
 	const galleryDetails = LIBRARY_HOME_GALLERY_DATA[orientation];
@@ -39,12 +32,13 @@ function LibraryGalleryPage({
 	const filterOptions = useDebounce(
 		useMemo<LibraryPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
+			const sort = router.query.sort as string || "desc"
 			return {
 				CurrentPage: parseInt(page),
-				topLevelCategory: router.query.genre as string,
-				searchTerm,
+				topLevelCategory: router.query.genre as string || "all",
+				isDescending: sort === "desc",
 			};
-		}, [router.query.page, router.query.genre, searchTerm]),
+		}, [router.query.page, router.query.genre, router.query.sort]),
 		500
 	);
 	const storiesList = useQuery<
@@ -54,6 +48,7 @@ function LibraryGalleryPage({
 		queryFn: () => {
 			if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
 				return api.library.getStoryBooks({
+					accessToken,
 					params: {
 						PageSize: 50,
 						...filterOptions,
@@ -62,14 +57,17 @@ function LibraryGalleryPage({
 			}
 			if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
 				return api.library.getVideos({
+					accessToken,
 					params: {
 						PageSize: 50,
 						storyType: StoryOutputTypes.SplitScreen,
+						resolution: DisplayAspectRatios["576x1024"],
 						...filterOptions,
 					},
 				});
 			}
 			return api.library.getVideos({
+				accessToken,
 				params: {
 					PageSize: 50,
 					storyType: StoryOutputTypes.Video,
@@ -82,7 +80,7 @@ function LibraryGalleryPage({
 			});
 		},
 		staleTime: 3000,
-		queryKey: [QueryKeys.GALLERY, filterOptions, orientation],
+		queryKey: [QueryKeys.GALLERY, filterOptions, orientation, accessToken],
 		initialData: queryClient.getQueryData([
 			QueryKeys.GALLERY,
 			filterOptions,
@@ -116,121 +114,7 @@ function LibraryGalleryPage({
 				thumbnails={galleryThumbnails}
 				areThumbnailsLoading={storiesList.isPending || storiesList.isFetching}
 			/>
-			<Pagination>
-				<PaginationContent>
-					{currentPage > 1 && (
-						<PaginationItem>
-							<PaginationPrevious
-								onClick={() => {
-									router.push({
-										query: {
-											...router.query,
-											page: currentPage - 1,
-										},
-									});
-								}}
-							/>
-						</PaginationItem>
-					)}
-					{/* useEllipses when too many pages between */}
-					{currentPage > 2 ? (
-						<>
-							<PaginationItem>
-								<PaginationLink
-									onClick={() => {
-										router.push({
-											query: {
-												...router.query,
-												page: 1,
-											},
-										});
-									}}
-								>
-									1
-								</PaginationLink>
-							</PaginationItem>
-							{currentPage !== 3 && (
-								<PaginationItem>
-									<PaginationEllipsis />
-								</PaginationItem>
-							)}
-						</>
-					) : null}
-					{Array.from({ length: 3 }, (_, i) => {
-						const pageNumber = currentPage - 1 + i;
-						if (
-							pageNumber >= 1 &&
-							pageNumber <= (storiesList.data?.totalPages || 0)
-						) {
-							return (
-								<PaginationItem key={pageNumber}>
-									<PaginationLink
-										onClick={() => {
-											router.push(
-												{
-													query: {
-														...router.query,
-														page: pageNumber,
-													},
-												},
-												undefined,
-												{ shallow: true }
-											);
-										}}
-									>
-										{pageNumber}
-									</PaginationLink>
-								</PaginationItem>
-							);
-						}
-					})}
-					{currentPage < (storiesList.data?.totalPages || 0) - 1 ? (
-						<>
-							{currentPage !== (storiesList.data?.totalPages || 0) - 2 && (
-								<PaginationItem>
-									<PaginationEllipsis />
-								</PaginationItem>
-							)}
-							<PaginationItem>
-								<PaginationLink
-									onClick={() => {
-										router.push(
-											{
-												query: {
-													...router.query,
-													page: storiesList.data?.totalPages,
-												},
-											},
-											undefined,
-											{ shallow: true }
-										);
-									}}
-								>
-									{storiesList.data?.totalPages}
-								</PaginationLink>
-							</PaginationItem>
-						</>
-					) : null}
-					{currentPage < (storiesList.data?.totalPages || 0) && (
-						<PaginationItem>
-							<PaginationNext
-								onClick={() => {
-									router.push(
-										{
-											query: {
-												...router.query,
-												page: currentPage + 1,
-											},
-										},
-										undefined,
-										{ shallow: true }
-									);
-								}}
-							/>
-						</PaginationItem>
-					)}
-				</PaginationContent>
-			</Pagination>
+			<GenericPagination currentPage={currentPage} totalPages={storiesList.data?.totalPages || 0} />
 		</div>
 	);
 }

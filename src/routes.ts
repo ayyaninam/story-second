@@ -2,7 +2,7 @@ import { CreateInitialStoryQueryParams } from "./types";
 import { StoryOutputTypes } from "./utils/enums";
 
 class Routes {
-	public static defaultRedirect = "/";
+	public static defaultRedirect = "/explore";
 	public static authpage = "/auth/login";
 	static ViewStory(type: StoryOutputTypes, genre: string, id: string) {
 		return `/${this.StoryTypeToPath(type)}/${genre}/${id}`;
@@ -17,12 +17,18 @@ class Routes {
 		}
 		return res;
 	}
+	static Library() {
+		return "/library";
+	}
+	static Explore() {
+		return "/explore";
+	}
 	static CreateStoryFromRoute(params: CreateInitialStoryQueryParams) {
 		// @ts-ignore
 		const urlParams = this.CreateSearchParams(params);
 		return `/create?${urlParams}`;
 	}
-	static ToAuthPage(returnTo = "/", params?: Record<string, any>) {
+	static ToAuthPage(returnTo = "/explore", params?: Record<string, any>) {
 		let returnUrl = returnTo;
 
 		if (params && Object.keys(params).length > 0) {
@@ -31,13 +37,13 @@ class Routes {
 		}
 		return `${this.authpage}?returnTo=${encodeURIComponent(returnUrl)}`;
 	}
-	static Logout(returnTo = "/") {
+	static Logout(returnTo = "/explore") {
 		return `/auth/logout?returnTo=${returnTo}`;
 	}
-	static Login(returnTo = "/") {
+	static Login(returnTo = "/explore") {
 		return `/api/auth/login?returnTo=${encodeURIComponent(returnTo)}`;
 	}
-	static Signup(returnTo = "/") {
+	static Signup(returnTo = "/explore") {
 		return `/api/auth/signup?returnTo=${encodeURIComponent(returnTo)}`;
 	}
 	static EditScript(type: StoryOutputTypes, genre: string, id: string) {

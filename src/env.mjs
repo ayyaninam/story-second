@@ -13,6 +13,7 @@ export const env = createEnv({
 	 * 💡 You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
 	 */
 	client: {
+		NEXT_PUBLIC_BASE_URL: z.string().min(1),
 		NEXT_PUBLIC_API_URL: z.string().min(1),
 		NEXT_PUBLIC_S3_BUCKET_PUBLIC: z.string().min(1),
 		NEXT_PUBLIC_AWS_REGION: z.string().min(1),
@@ -36,6 +37,7 @@ export const env = createEnv({
 	 * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
 	 */
 	runtimeEnv: {
+		NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
 		NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 		NEXT_PUBLIC_S3_BUCKET_PUBLIC: process.env.NEXT_PUBLIC_S3_BUCKET_PUBLIC,
 		NEXT_PUBLIC_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION,

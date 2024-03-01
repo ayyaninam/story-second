@@ -43,6 +43,7 @@ import AnimeImg from "/public/images/editor/anime.png";
 import HorrorImg from "/public/images/editor/horror.png";
 import SciFiImg from "/public/images/editor/scifi.png";
 import Routes from "@/routes";
+import StoryLogo from "../../../../public/auth-prompt/story-logo";
 import { getImageCost, getVideoCost } from "@/utils/credit-cost";
 import Format from "@/utils/format";
 import { cn } from "@/utils";
@@ -376,7 +377,7 @@ const Footer = ({
 						onClick={async () => {
 							await GenerateStoryboardMutation.mutateAsync();
 						}}
-						className="space-x-1.5"
+						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={GenerateStoryboardMutation.isPending}
 					>
 						<BrandShortLogo />
@@ -419,7 +420,7 @@ const Footer = ({
 						onClick={async () => {
 							await GenerateVideoScenesMutation.mutateAsync();
 						}}
-						className="bg-purple-700 space-x-1.5"
+						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={GenerateVideoScenesMutation.isPending}
 					>
 						<BrandShortLogo />
@@ -465,9 +466,9 @@ const Footer = ({
 								Routes.EditStory(story.type, story.topLevelCategory, story.slug)
 							);
 						}}
-						className="space-x-1.5"
+						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 					>
-						<BrandShortLogo />
+						<StoryLogo />
 						<p className="font-bold text-slate-50">Preview Your Video</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
@@ -490,10 +491,10 @@ const Footer = ({
 								);
 							}
 						}}
-						className="bg-purple-700 space-x-1.5"
+						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 					>
-						<BrandShortLogo />
-						<p className="font-bold text-slate-50">Share & Export Video</p>
+						<StoryLogo size={24} />
+						<p className="font-bold">Share & Export Video</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>
@@ -611,7 +612,7 @@ const Footer = ({
 					<label className="text-sm text-slate-600 font-normal text-right">
 						~30s to Generate Storyboard
 					</label>
-					<Button onClick={onGenerate} className="bg-purple-700 space-x-1.5">
+					<Button onClick={onGenerate} className="bg-accent-700 space-x-1.5">
 						<BrandShortLogo />
 						<p className="font-bold text-slate-50">Generate Storyboard</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />

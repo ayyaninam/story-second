@@ -168,7 +168,7 @@ export default function EditSegmentModalItem({
 												textContent: e.target.value,
 											});
 									}}
-									className="pl-10 h-7 focus-visible:ring-purple-300 focus-visible:ring-1 text-slate-900"
+									className="pl-10 h-7 active:outline-none active:border-none focus-visible:ring-accent-300 focus-visible:ring-1 text-slate-900"
 								/>
 							</div>
 							{segment.textContent.length >= MAX_SEGMENT_LENGTH - 1 && (
@@ -226,7 +226,7 @@ export default function EditSegmentModalItem({
 									{UploadImage.isPending ? "Uploading" : "Image"}
 									<Plus width={"18px"} height={"18px"} className="stroke-1" />
 								</label>
-								{/* 
+								{/*
 								<Button
 									className="flex  py-1 gap-1 h-fit bg-muted border-border border-[1px] rounded-md items-center"
 									variant="outline"
