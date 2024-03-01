@@ -63,6 +63,7 @@
 		"react-hook-form": "^7.50.1",
 		"react-hot-toast": "^2.4.1",
 		"react-input-autosize": "^3.0.0",
+		"react-share": "^5.1.0",
 		"remotion": "4.0.106",
 		"sharp": "^0.33.2",
 		"stripe": "^14.17.0",

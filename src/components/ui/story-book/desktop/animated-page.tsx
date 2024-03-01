@@ -1,13 +1,25 @@
 import React, { FC } from "react";
 import { cn } from "@/utils";
 import { PageView } from "@/components/ui/story-book/desktop/pageView/page-view";
-import { TurnDirection, Page, PAGE_TURN_DURATION } from "../constants";
+import {
+	TurnDirection,
+	Page,
+	PAGE_TURN_DURATION,
+	WebStory,
+} from "../constants";
 import styles from "./animated-page.module.css";
 
-export const AnimatedPage: FC<{
+interface AnimatedPageProps {
+	story: WebStory;
 	pages: [Page, Page];
 	turnDirection: TurnDirection;
-}> = ({ pages, turnDirection }) => (
+}
+
+export const AnimatedPage = ({
+	story,
+	pages,
+	turnDirection,
+}: AnimatedPageProps) => (
 	<div
 		style={
 			{
@@ -23,7 +35,7 @@ export const AnimatedPage: FC<{
 		)}
 	>
 		<div className={cn("absolute inset-0 flex")}>
-			<PageView page={pages[0]} />
+			<PageView story={story} page={pages[0]} />
 		</div>
 		<div
 			className={cn(
@@ -32,7 +44,7 @@ export const AnimatedPage: FC<{
 				styles.flipVertically
 			)}
 		>
-			<PageView page={pages[1]} />
+			<PageView story={story} page={pages[1]} />
 		</div>
 	</div>
 );
