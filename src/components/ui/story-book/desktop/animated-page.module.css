@@ -1,0 +1,49 @@
+.animatePageForward {
+    animation: page-turn-forward var(--timing) cubic-bezier(.51, .01, .69, 1) forwards;
+    transform-origin: left;
+    right: 0;
+}
+
+.animatePageBackward {
+    animation: page-turn-backward var(--timing) cubic-bezier(.51, .01, .69, 1) forwards;
+    transform-origin: right;
+    left: 0;
+}
+
+.flipVertically {
+    transform: rotateY(180deg);
+}
+
+.backfaceHidden {
+    backface-visibility: hidden;
+}
+
+.frontFaceHidden {
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+}
+
+.preserve3d {
+    transform-style: preserve-3d;
+}
+
+
+@keyframes page-turn-forward {
+    from {
+        transform: rotateY(0deg);
+    }
+
+    to {
+        transform: rotateY(-180deg);
+    }
+}
+
+@keyframes page-turn-backward {
+    from {
+        transform: rotateY(0deg);
+    }
+
+    to {
+        transform: rotateY(180deg);
+    }
+}
