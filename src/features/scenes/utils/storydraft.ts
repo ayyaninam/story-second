@@ -6,8 +6,6 @@ import {
 	StoryStatus,
 	TextStatus,
 } from "../reducers/edit-reducer";
-import React from "react";
-import { nanoid } from "nanoid";
 import {
 	AspectRatios,
 	SceneModifications,
@@ -16,12 +14,6 @@ import {
 	VoiceType,
 } from "@/utils/enums";
 import { SceneModificationData, SegmentModificationData } from "@/types";
-
-// samplingSteps?: number; // 2-10
-// 	denoising?: number; // 0-1,
-// 	prompt?: string;
-// 	style?: StoryImageStyles;
-// 	voice?: string;
 
 export const WebstoryToStoryDraft = (
 	Webstory: mainSchema["ReturnWebStoryDTO"]

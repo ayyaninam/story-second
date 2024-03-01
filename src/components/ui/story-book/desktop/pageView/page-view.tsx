@@ -1,15 +1,16 @@
 import React from "react";
 import ImageView from "./image-view";
 import TextView from "./text-view";
-import { Page } from "../../constants";
+import { Page, WebStory } from "../../constants";
 import { TheEndLeftView, TheEndRightView } from "./the-end-view";
 
 interface PageViewProps {
+	story: WebStory;
 	page: Page;
 	changePage?: () => void;
 }
 
-export const PageView = ({ page, changePage }: PageViewProps) => {
+export const PageView = ({ story, page, changePage }: PageViewProps) => {
 	const canChangePage =
 		page.pageNumber > 1 &&
 		(page.variant === "image" ||
@@ -31,7 +32,7 @@ export const PageView = ({ page, changePage }: PageViewProps) => {
 			) : page.variant === "the-end-left" ? (
 				<TheEndLeftView />
 			) : page.variant === "the-end-right" ? (
-				<TheEndRightView />
+				<TheEndRightView story={story} />
 			) : null}
 
 			{page.pageNumber && page.variant !== "the-end-right" ? (

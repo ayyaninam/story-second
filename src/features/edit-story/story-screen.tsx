@@ -7,7 +7,7 @@ import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { VideoPlayerProps } from "@/types";
 import { mainSchema } from "@/api/schema";
 
-const loadingTexts = [
+export const loadingTexts = [
 	"Starting your story",
 	"Building the characters",
 	"Creating the narration",
@@ -34,6 +34,8 @@ const StoryScreen: FC<
 			isPlaying,
 			isMuted,
 			defaultLoadingText,
+			roundedClassName,
+			playerClassName,
 		},
 		ref
 	) => {
@@ -152,7 +154,7 @@ const StoryScreen: FC<
 		if (isError)
 			return (
 				<div
-					className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
+					className={`bg-slate-300 rounded-t-lg ${roundedClassName ? roundedClassName : "lg:rounded-tr-none lg:rounded-bl-lg"} flex justify-center items-center`}
 					style={{ aspectRatio: ImageRatio.ratio }}
 				>
 					<p className="text-xl">
@@ -164,7 +166,7 @@ const StoryScreen: FC<
 		else if (areImagesLoading) {
 			return (
 				<div
-					className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
+					className={`bg-slate-300 rounded-t-lg ${roundedClassName ? roundedClassName : "lg:rounded-tr-none lg:rounded-bl-lg"} flex justify-center items-end`}
 					style={{ aspectRatio: ImageRatio.ratio }}
 				>
 					<div
@@ -184,6 +186,7 @@ const StoryScreen: FC<
 		} else if (isStoryLoading) {
 			return (
 				<ImageLoader
+					roundedClassName={roundedClassName}
 					imageData={generatedImages!}
 					defaultLoadingText={defaultLoadingText}
 				/>
@@ -191,7 +194,7 @@ const StoryScreen: FC<
 		} else {
 			return (
 				<VideoPlayer
-					playerClassName="rounded-tl-lg rounded-bl-lg"
+					playerClassName={playerClassName}
 					ref={ref}
 					Webstory={Webstory}
 					onPlay={onPlay}

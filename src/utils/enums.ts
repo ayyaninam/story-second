@@ -136,3 +136,8 @@ export enum InputStatus {
 	ADDED,
 	DELETED,
 }
+
+export enum ScenesGenButtonType {
+	all = "all",
+	remaining = "remaining",
+}
