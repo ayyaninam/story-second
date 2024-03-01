@@ -1,9 +1,16 @@
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { mainSchema } from "@/api/schema";
 import api from "@/api";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { useUser } from "@/features/pricing/hooks";
 
 const getCardNumberString = (last4?: string) => {
 	if (!last4) return "No saved card";
@@ -25,13 +32,15 @@ const getCardExpiryDate = ({
 		.format(format || "MM/YYYY");
 };
 
-export const getUserHasCard = (user: mainSchema["UserInfoDTO"] | undefined) => {
+export const getUserHasCard = (
+	user: mainSchema["UserInfoDTO"] | undefined
+): boolean => {
 	if (!user) return false;
-	return (
+	return Boolean(
 		user.cardBrand &&
-		user.cardLast4 &&
-		user.cardExpiryMonth != null &&
-		user.cardExpiryYear != null
+			user.cardLast4 &&
+			user.cardExpiryMonth != null &&
+			user.cardExpiryYear != null
 	);
 };
 
@@ -44,38 +53,25 @@ export default function PaymentCard({
 	onEdit: () => void;
 	onRemove: () => void;
 }) {
-	// todo: refactor into something like "const [user] = useGetUser();"
-	const [user, setUser] = useState<mainSchema["UserInfoDTO"] | null>(null);
-
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	useEffect(() => {
-		(async () => {
-			const user = await api.user.get();
-			if (user.data) {
-				setUser(user.data);
-			}
-		})();
-	}, []);
-
-	const toggleModal = () => {
-		setIsModalOpen(!isModalOpen);
-	};
+	const { user } = useUser();
+	const [dialogOpen, setDialogOpen] = useState(false);
 
 	const handleRemoveCard = async () => {
 		try {
 			await api.payment.removeCard();
-			toggleModal();
+			toast.success("Remove card successfully");
+			setDialogOpen(false);
 			onRemove();
 		} catch (error) {
 			console.error("Failed to remove card:", error);
+			toast.error("Failed to remove card");
 		}
 	};
 
 	if (!user || !getUserHasCard(user)) return null;
 
 	return (
-		<div className="flex p-5 gap-2 justify-between items-center min-w-max w-full max-w-sm bg-[#EDD8B1] rounded-2xl">
+		<div className="flex p-5 gap-2 justify-between items-center min-w-max w-full bg-background border-2 rounded-2xl">
 			<div className="flex flex-col">
 				<div className="flex items-center gap-4">
 					<p className="font-semibold text-xl capitalize">
@@ -95,36 +91,33 @@ export default function PaymentCard({
 			{editable ? (
 				<div className="flex gap-2">
 					<button onClick={() => onEdit()}>✏️</button>
-					<button onClick={() => toggleModal()}>X</button>
+					<button onClick={() => setDialogOpen(true)}>X</button>
 				</div>
 			) : null}
 
-			{isModalOpen && (
-				<div className="fixed grid place-items-center overflow-y-auto p-4 inset-0 z-40">
-					<div
-						className="fixed flex-grow inset-0 bg-black opacity-60 h-full transition-opacity duration-300"
-						onClick={toggleModal}
-					></div>
-					<div className="flex flex-col bg-background rounded-2xl transform transition-opacity duration-300 p-8 opacity-1 translate-y-0">
-						<h4>Confirm Removal</h4>
-						<p>Are you sure you want to remove this card?</p>
-						<div className="flex justify-between mt-5">
+			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Confirm Removal</DialogTitle>
+						<DialogDescription>
+							<p>Are you sure you want to remove this card?</p>
+
 							<button
-								className="bg-[#ccc] text-[#333] py-2 px-4 border-none rounded-md cursor-pointer transition-colors duration-200"
-								onClick={toggleModal}
+								className="bg-[#ccc] text-[#333] mt-4 py-2 px-4 border-none rounded-md cursor-pointer transition-colors duration-200"
+								onClick={() => setDialogOpen(false)}
 							>
 								Cancel
 							</button>
 							<button
-								className="bg-[#e74c3c] text-[#fff] py-2 px-4 border-none rounded-md cursor-pointer transition-colors duration-200"
+								className="bg-[#e74c3c] text-[#fff] ml-2 py-2 px-4 border-none rounded-md cursor-pointer transition-colors duration-200"
 								onClick={handleRemoveCard}
 							>
 								Confirm
 							</button>
-						</div>
-					</div>
-				</div>
-			)}
+						</DialogDescription>
+					</DialogHeader>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

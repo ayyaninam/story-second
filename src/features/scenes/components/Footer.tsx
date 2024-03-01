@@ -380,7 +380,7 @@ const Footer = ({
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={GenerateStoryboardMutation.isPending}
 					>
-						<BrandShortLogo />
+						<StoryLogo />
 						<p className="font-bold text-slate-50">
 							{GenerateStoryboardMutation.isPending
 								? "Generating...."
@@ -423,13 +423,13 @@ const Footer = ({
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={GenerateVideoScenesMutation.isPending}
 					>
-						<BrandShortLogo />
+
+						<StoryLogo />
 						{GenerateVideoScenesMutation.isPending ? (
 							<p className="font-bold text-slate-50">Generating.....</p>
 						) : (
 							<p className="font-bold text-slate-50">Generate Video Scenes</p>
 						)}
-
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>
@@ -564,7 +564,7 @@ const Footer = ({
 														className={clsx(
 															`w-16 h-12 rounded-lg transition-opacity ease-in-out ${areImagesActive || generationStyle === Number(key) ? "hover:opacity-80" : "opacity-40"}`,
 															{
-																["ring-purple-600 ring-[1.5px] ring-offset-1"]:
+																["ring-accent-600 ring-[1.5px] ring-offset-1"]:
 																	generationStyle === Number(key),
 															}
 														)}

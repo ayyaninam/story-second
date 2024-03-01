@@ -296,6 +296,7 @@ function AdvancedEditingOptions({
 	useEffect(() => {
 		setSeed(`${settings?.seed ?? -1}`);
 	}, [settings?.seed]);
+
 	return (
 		<TooltipProvider>
 			{/* <div

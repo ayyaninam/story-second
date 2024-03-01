@@ -6,13 +6,13 @@ import {AuthError} from "@/utils/auth";
 import Routes from "@/routes";
 import React, {ReactElement} from "react";
 import PageLayout from "@/components/layouts/PageLayout";
-import AccountOptions from "@/features/account/AccountOptions";
+import AccountsPage from "@/features/account";
 
 
 export default function ProfilePage({ accessToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<>
-			<AccountOptions accessToken={accessToken} />
+			<AccountsPage accessToken={accessToken} />
 		</>
 	);
 }

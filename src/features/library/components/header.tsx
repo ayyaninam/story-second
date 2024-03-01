@@ -17,6 +17,7 @@ import { genreOptions, SORTING_OPTIONS, VIDEO_ORIENTATIONS } from "@/constants/f
 import toast from "react-hot-toast";
 import {MobileSelector} from "@/components/ui/mobile-selector";
 import {Plus} from "lucide-react";
+import Routes from "@/routes";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -156,8 +157,7 @@ export const LibraryHeader = ({
 						variant="default"
 						style={createNewButton}
 						onClick={() => {
-							// TODO: Implement
-							toast.success("Coming soon!")
+							router.push(Routes.Generate());
 						}}
 					>
 						<Plus className="h-4 w-4" /> Create New

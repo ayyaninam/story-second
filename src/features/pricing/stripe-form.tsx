@@ -12,65 +12,63 @@ import { useStripeSetup } from "@/features/pricing/hooks";
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
-const StripeAppearance: Appearance = {
-	theme: "stripe",
-	labels: "above",
+const appearance: Appearance = {
+	theme: "flat",
 	variables: {
-		fontFamily: "system-ui",
-		colorBackground: "#F2E6D4",
-		colorTextPlaceholder: "#A1B8B3",
-		borderRadius: "12px",
+		colorPrimary: "#6681FF",
+		colorBackground: "white", // todo: implement dark mode
+		colorTextPlaceholder: "#485E6A",
+		borderRadius: "8px",
 	},
 	rules: {
 		".Input": {
-			border: "2px solid #002E23",
-		},
-		".Input:focus": {
-			border: "2px solid #D57D5A",
-			outline: "2px solid white",
+			border: "1px solid #CBD9E1",
 		},
 		".Label": {
-			fontWeight: "600",
-			marginLeft: "1rem",
-			fontSize: "14px",
+			fontWeight: "500",
+			fontFamily: "var(--font-rand)",
+			fontSize: "1rem",
+			color: "#021017",
 		},
 	},
 };
 
-type SetupStripe = ReturnType<typeof useStripeSetup>["setupStripe"];
+export type SetupStripe = ReturnType<typeof useStripeSetup>["setupStripe"];
 
 const StripeElement = ({
 	setupStripe,
 	onFormReady,
-	clientSecret,
 }: {
 	setupStripe: SetupStripe;
 	onFormReady: () => void;
-	clientSecret: string;
 }) => {
 	const stripe = useStripe();
 	const elements = useElements();
 
 	useEffect(() => {
-		if (stripe && elements && clientSecret) {
-			setupStripe(stripe, elements, clientSecret);
+		if (stripe && elements) {
+			setupStripe(stripe, elements);
 		}
-	}, [stripe, elements, clientSecret]);
+		// eslint-disable-next-line
+	}, [stripe, elements]);
 
 	return (
 		<PaymentElement className="w-full" onLoaderStart={() => onFormReady()} />
 	);
 };
 
-const LoadingIndicator = () => <div>Loading...</div>;
+const LoadingIndicator = () => <div></div>;
 
 export default function StripeForm({
 	setupStripe,
+	onLoadStripe,
 }: {
 	setupStripe: SetupStripe;
+	onLoadStripe?: () => void;
 }) {
 	const [clientSecret, setClientSecret] = useState("");
-	const [stripeFormReady, setStripeFormReady] = useState(false);
+	const [ready, setReady] = useState(false);
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
 		if (clientSecret) return;
@@ -79,31 +77,35 @@ export default function StripeForm({
 			try {
 				setClientSecret((await api.payment.addCard()).data!);
 			} catch (e: any) {
-				// TODO: Handle no client secret error.
 				console.error(e);
+				setError(true);
 			}
 		})();
 	}, [clientSecret]);
 
+	useEffect(() => {
+		if (ready) {
+			onLoadStripe?.();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ready]);
+
 	return (
 		<div className="flex w-full flex-col relative min-h-[280px]">
 			{clientSecret ? (
-				<Elements
-					stripe={stripePromise}
-					options={{ appearance: StripeAppearance, clientSecret }}
-				>
+				<Elements stripe={stripePromise} options={{ appearance, clientSecret }}>
 					<StripeElement
 						setupStripe={setupStripe}
-						onFormReady={() => setStripeFormReady(true)}
-						clientSecret={clientSecret}
+						onFormReady={() => setReady(true)}
 					/>
 				</Elements>
 			) : null}
-			{stripeFormReady ? null : (
+			{!ready && (
 				<div className="absolute flex z-[1] inset-0">
 					<LoadingIndicator />
 				</div>
 			)}
+			{error && <div>Error Loading Stripe</div>}
 		</div>
 	);
 }

@@ -77,6 +77,7 @@ export enum AspectRatios {
 export enum DisplayAspectRatios {
 	"1024x576",
 	"576x1024",
+	"1024x1024",
 }
 
 export enum StepperStep {
@@ -111,6 +112,12 @@ export enum SubscriptionPlan {
 export enum SubscriptionPeriod {
 	Monthly,
 	Annual,
+}
+
+export enum AllowanceType {
+	StoryBooks,
+	Videos,
+	Credits,
 }
 
 export enum StoryboardViewType {

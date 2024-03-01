@@ -1,6 +1,7 @@
 "use client";
 import api from "@/api";
 import cn from "@/utils/cn";
+import toast from "react-hot-toast";
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import StripeForm from "@/features/pricing/stripe-form";
@@ -72,10 +73,15 @@ export default function PricingPage() {
 			const { error } = (await confirmSetup(`${base_url}/pricing`)) || {};
 			if (error) {
 				console.error("Confirm Setup failed: ", error);
+				toast.error("Confirm Setup failed");
 				return;
 			}
 
+			toast.success("Added card successfully");
 			updateUserDataAfter1Second();
+		} catch (e: any) {
+			console.error("Error Adding Card: ", e.message);
+			toast.error("Error Adding Card");
 		} finally {
 			setSubmitting(false);
 		}
@@ -88,39 +94,78 @@ export default function PricingPage() {
 		setSubmitting(true);
 
 		try {
-			const { error } = (await confirmSetup(`${base_url}/pricing`)) || {};
-			if (error) {
-				console.error("Confirm Setup failed: ", error);
-				return;
-			}
-
-			const { succeeded } = await api.payment.createSubscription({
+			const { succeeded, data } = await api.payment.createSubscription({
 				subscriptionPlan,
 				subscriptionPeriod,
 			});
 			if (!succeeded) {
 				console.error("Create Subscription backend failed: ");
+				toast.error("Create Subscription backend failed");
 				return;
 			}
 
-			updateUserDataAfter1Second();
-
-			const { error: stripeError } = await confirmPayment();
-			if (stripeError) {
-				console.error("Stripe failed confirming payment: ", stripeError);
+			if (!data) {
+				toast.error("Purchase failed.");
 				return;
+			}
+
+			if (data.nextAction?.type !== "use_stripe_sdk") {
+				if (data.succeeded && !data.requiresAction) {
+					toast.success("Subscription successful!");
+					updateUserDataAfter1Second();
+				} else {
+					toast.error("Purchase failed.");
+				}
+			} else {
+				toast.loading("Waiting for card authentication...");
+				const { paymentIntent, error } = await confirmPayment(
+					data.clientSecret!
+				);
+				toast.dismiss();
+
+				if (error) {
+					console.error("Stripe Error: ", error);
+					toast.error(`Purchase failed: ${error.message}`);
+					return;
+				}
+
+				if (paymentIntent?.status !== "succeeded") {
+					toast.error("Purchase failed.");
+					return;
+				}
+
+				const { succeeded: confirmSucceeded } =
+					await api.payment.confirmSubscription({
+						paymentIntentId: paymentIntent.id,
+						subscriptionId: data.subscriptionId,
+						subscriptionPlan,
+						subscriptionPeriod,
+					});
+
+				if (confirmSucceeded) {
+					toast.success("Subscription successful!");
+					updateUserDataAfter1Second();
+				} else {
+					toast.error("Internal Server Error: please contact support.");
+				}
 			}
 		} catch (e: any) {
 			console.error("Error Paying Subscription: ", e.message);
+			toast.error("Error Paying Subscription");
 		} finally {
 			setSubmitting(false);
 		}
 	};
 
 	const cancelSubscription = () => {
-		api.payment.cancelSubscription().then();
+		try {
+			api.payment.cancelSubscription().then();
 
-		updateUserDataAfter1Second();
+			updateUserDataAfter1Second();
+		} catch (e: any) {
+			console.error("Error Canceling Subscription: ", e.message);
+			toast.error("Error Canceling Subscription");
+		}
 	};
 
 	if (subscriptionPlan === null || subscriptionPeriod === null || !user) {
@@ -168,6 +213,10 @@ export default function PricingPage() {
 						</div>
 					) : (
 						<div>
+							<div className="hidden">
+								{/* setupStripe must run, this is the reason for this trick */}
+								<StripeForm setupStripe={setupStripe} />
+							</div>
 							<PaymentCard
 								editable
 								onEdit={() => setUserWantsToChangePayment(true)}

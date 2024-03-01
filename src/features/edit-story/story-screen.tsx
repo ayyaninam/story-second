@@ -82,6 +82,7 @@ const StoryScreen: FC<
 				!fetchedVideos.includes(originalTikTokVideoKey)
 			) {
 				const url = Format.GetVideoUrl(originalTikTokVideoKey);
+
 				prefetch(url, {
 					method: "blob-url",
 				})
@@ -112,6 +113,7 @@ const StoryScreen: FC<
 
 		const generatedImages = Webstory?.scenes
 			?.flatMap((el) => el.videoSegments)
+
 			?.filter((seg) => !!seg?.imageKey)
 			.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg?.imageKey!) }));
 
@@ -144,6 +146,7 @@ const StoryScreen: FC<
 			videoPlayerRef.current?.seekToSegment(segment);
 		};
 
+
 		console.log(Webstory?.scenes);
 
 		if (isError)
@@ -159,23 +162,6 @@ const StoryScreen: FC<
 				</div>
 			);
 		else if (areImagesLoading) {
-			return (
-				<div
-					className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
-					style={{ aspectRatio: ImageRatio.ratio }}
-				>
-					<div
-						className="bg-slate-300 rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg flex justify-center items-center"
-						style={{ aspectRatio: ImageRatio.ratio }}
-					>
-						<p className="text-xl">
-							There was an error loading your story, please try again or contact
-							support.
-						</p>
-					</div>
-				</div>
-			);
-		} else if (areImagesLoading) {
 			return (
 				<div
 					className="bg-slate-300 rounded-t-lg lg:rounded-tr-none  lg:rounded-bl-lg flex justify-center items-end"
