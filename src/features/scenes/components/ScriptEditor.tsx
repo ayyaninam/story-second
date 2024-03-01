@@ -126,9 +126,9 @@ export default function ScriptEditor({
 						</p>
 
 						<div className="w-full inline-flex text-slate-400 text-xs py-1">
-						<div className="flex">
-							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div> */}
+							{/* <div className="flex">
+								<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
+							</div> */}
 							<CategorySelect
 								value={WebstoryData?.topLevelCategory!}
 								onChange={(category) => UpdateCategory.mutate({ category })}

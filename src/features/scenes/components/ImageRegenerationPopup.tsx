@@ -231,6 +231,7 @@ function ImageRegenerationPopup({
 		setIsRegeneratingImages(true);
 
 		try {
+			console.log(segment.settings);
 			const regeneratedImages = await api.video.regenerateImage({
 				// @ts-ignore
 				image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
@@ -275,6 +276,7 @@ function ImageRegenerationPopup({
 				image_sampling_steps: segment.settings?.samplingSteps ?? 8,
 				image_seed: segment.settings?.seed ?? 3121472823,
 				image_alt_text: segment.textContent,
+				// @ts-ignore
 				image_style: story.settings?.style ?? StoryImageStyles.Realistic,
 			});
 
