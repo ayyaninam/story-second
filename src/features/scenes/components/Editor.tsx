@@ -1,3 +1,40 @@
+/**
+ * Editor Component
+ *
+ * This component provides functionality for editing scenes and segments of a story.
+ * It allows users to input and edit text content, create, edit, and delete segments and scenes,
+ * and navigate through the segments and scenes using keyboard shortcuts.
+ *
+ * Props:
+ * - Webstory: The mainSchema ReturnVideoStoryDTO object representing the story fetched from the API.
+ * - story: The EditStoryDraft object representing the current state of the story being edited.
+ * - dispatch: React.Dispatch<EditStoryAction> function to dispatch edit actions.
+ * - onInputChange: Function to handle input change event.
+ * - onCreateSegment: Function to handle creation of a new segment.
+ * - onEditSegment: Function to handle editing of a segment.
+ * - onDeleteSegment: Function to handle deletion of a segment.
+ * - onCreateScene: Function to handle creation of a new scene.
+ * - onEditScene: Function to handle editing of a scene.
+ * - onDeleteScene: Function to handle deletion of a scene.
+ * - children: Function that returns JSX for rendering children components.
+ *
+ * Use:
+ * <Editor {...props}>
+ * 	{({
+ * 		handleEnter,
+ * 		handleInput,
+ * 		handleNavigation,
+ * 		handleDelete,
+ * 		refs
+ * 	}) => {
+ * 		return (
+ * 			// The components you want to render inside the Editor Wrapper
+ * 		)
+ * 	}}
+ * </Editor>
+ *
+ */
+
 import {
 	EditStoryAction,
 	EditStoryDraft,
