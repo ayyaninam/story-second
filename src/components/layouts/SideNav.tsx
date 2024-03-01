@@ -16,6 +16,7 @@ import {getSession} from "@auth0/nextjs-auth0";
 import api from "@/api";
 import StoryLogoFullWhite from "@/components/brand-logos/primary-white";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
+import {Skeleton} from "@/components/ui/skeleton";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
@@ -101,7 +102,7 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 		<div className="hidden w-[18rem] lg:flex lg:flex-col lg:justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
-					{!isLoading && user && (
+					{(!isLoading && user) ? (
 						<>
 							<Avatar className="h-8 w-8 border-[1px] border-gray-200">
 								<AvatarImage src={user?.picture || ""} />
@@ -125,6 +126,22 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 										<span>{(user?.nickname?.length || 0) > 7 ? "/"+user?.nickname : "story.com/"+user?.nickname}</span>
 									</span>
 								</span>
+							</Link>
+						</>
+					) : (
+						<>
+							<Skeleton className="h-8 w-8 rounded-full" />
+							<Link
+								href={"/auth/login"}
+								className={"flex flex-col gap-y-1"}
+							>
+								<Button
+									variant="outline"
+									className="text-white font-normal hover:text-accent-600"
+									style={userHandlerStyle}
+								>
+									Create an account
+								</Button>
 							</Link>
 						</>
 					)}
