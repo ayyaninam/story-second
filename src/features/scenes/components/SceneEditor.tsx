@@ -29,6 +29,7 @@ import { Separator } from "@/components/ui/separator";
 import { useMutation } from "@tanstack/react-query";
 import CategorySelect from "@/components/ui/CategorySelect";
 import { useUpdateCategory } from "../mutations/UpdateCategory";
+import StoryScreen from "@/features/edit-story/story-screen";
 
 // Circular loader as per the designs. Removed for now as we can't determine the progress
 const Loader = ({
@@ -296,11 +297,10 @@ const SceneEditorView = ({
 								className="absolute h-[95%]"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
-								<VideoPlayer
-									playerClassName="rounded-lg"
-									ref={videoPlayerRef}
+								<StoryScreen
 									Webstory={WebstoryData}
 									isError={isError}
+									ref={videoPlayerRef}
 									onPlay={() => {
 										setIsPlaying(true);
 									}}

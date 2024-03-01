@@ -65,6 +65,7 @@ const ImageContainer = ({
 	onSelection,
 	loading,
 	active,
+	onHover,
 }: {
 	segment: Segment;
 	imageAspectRatio: number;
@@ -73,6 +74,7 @@ const ImageContainer = ({
 	onSelection: (imageKey: string) => void;
 	loading?: boolean;
 	active?: boolean;
+	onHover?: (imageKey: string) => void;
 }) => {
 	return (
 		<div
@@ -86,6 +88,16 @@ const ImageContainer = ({
 			)}
 			onClick={() => {
 				imageKey && onSelection(imageKey);
+			}}
+			onMouseEnter={() => {
+				if (onHover && !loading) {
+					onHover(imageKey!);
+				}
+			}}
+			onMouseLeave={() => {
+				if (onHover && !loading) {
+					onHover("");
+				}
 			}}
 			// style={{
 			// 	boxShadow:
@@ -167,6 +179,8 @@ function ImageRegenerationPopup({
 	regenerateOnOpen,
 	open,
 	handleSubmitEditSegments,
+	hidePopupTimerRef,
+	showPopupTimerRef,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
@@ -177,6 +191,8 @@ function ImageRegenerationPopup({
 	regenerateOnOpen?: boolean;
 	open: boolean;
 	handleSubmitEditSegments: () => void;
+	hidePopupTimerRef?: React.MutableRefObject<NodeJS.Timeout | null>;
+	showPopupTimerRef?: React.MutableRefObject<NodeJS.Timeout | null>;
 }) {
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
 	const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
@@ -188,6 +204,7 @@ function ImageRegenerationPopup({
 	const [selectedImageKey, setSelectedImageKey] = useState<string | undefined>(
 		""
 	);
+	const [hoveredImage, setHoveredImageKey] = useState<string | undefined>("");
 	const alternateImageKeys = useMemo(
 		() => segment.alternateImageKeys ?? [],
 		[segment.alternateImageKeys]
@@ -258,6 +275,7 @@ function ImageRegenerationPopup({
 				image_sampling_steps: segment.settings?.samplingSteps ?? 8,
 				image_seed: segment.settings?.seed ?? 3121472823,
 				image_alt_text: segment.textContent,
+				image_style: story.settings?.style ?? StoryImageStyles.Realistic,
 			});
 
 			dispatch({
@@ -301,6 +319,23 @@ function ImageRegenerationPopup({
 		}
 	}, [regenerateImage]);
 
+	const onMouseEnter = () => {
+		if (hidePopupTimerRef?.current) {
+			clearTimeout(hidePopupTimerRef.current);
+		}
+	};
+
+	const onMouseLeave = () => {
+		if (showPopupTimerRef?.current) {
+			clearTimeout(showPopupTimerRef.current);
+		}
+		if (open && hidePopupTimerRef) {
+			hidePopupTimerRef.current = setTimeout(() => {
+				onClose();
+			}, 500);
+		}
+	};
+
 	if (loading || alternateImageKeys.length > 0) {
 		return (
 			<PopoverContent
@@ -318,6 +353,8 @@ function ImageRegenerationPopup({
 						? "w-[436px]"
 						: "w-[276px]"
 				)}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
 			>
 				<RegenerationPopupHeader
 					title="Generate & Select New Image"
@@ -352,13 +389,14 @@ function ImageRegenerationPopup({
 										imageKey={imageKey}
 										onSelection={setSelectedImageKey}
 										active={selectedImageKey === imageKey}
+										onHover={setHoveredImageKey}
 									/>
 								))}
 								{selectedImageKey && (
 									<ImageContainer
 										imageAspectRatio={imageAspectRatio}
 										segment={segment}
-										imageKey={selectedImageKey}
+										imageKey={hoveredImage || selectedImageKey}
 										expanded
 										onSelection={setSelectedImageKey}
 									/>
@@ -441,6 +479,8 @@ function ImageRegenerationPopup({
 					? "w-[340px]"
 					: "w-[208px]"
 			)}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
 		>
 			<RegenerationPopupHeader title="Generated Image" onClose={onClose} />
 			<div

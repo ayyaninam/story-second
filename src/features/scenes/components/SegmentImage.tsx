@@ -1,6 +1,6 @@
 import Format from "@/utils/format";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
@@ -42,14 +42,16 @@ function SegmentImage({
 	handleSubmitEditSegments: () => void;
 }) {
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
+	const isPopupOpen =
+		imageRegenerationSegmentDetails?.segmentIndex === segmentIndex &&
+		imageRegenerationSegmentDetails?.sceneIndex === sceneIndex;
+	const showPopupTimerRef = useRef<NodeJS.Timeout | null>(null);
+	const hidePopupTimerRef = useRef<NodeJS.Timeout | null>(null);
 	return (
 		<ImageRegenerationPopoverHOC
 			segment={segment}
 			story={story}
-			open={
-				imageRegenerationSegmentDetails?.segmentIndex === segmentIndex &&
-				imageRegenerationSegmentDetails?.sceneIndex === sceneIndex
-			}
+			open={isPopupOpen}
 			onClose={() => {
 				setImageRegenerationSegmentDetails((prevSegmentDetails) => {
 					if (
@@ -66,6 +68,8 @@ function SegmentImage({
 			sceneIndex={sceneIndex}
 			triggerButtonClassName="max-w-full"
 			handleSubmitEditSegments={handleSubmitEditSegments}
+			hidePopupTimerRef={hidePopupTimerRef}
+			showPopupTimerRef={showPopupTimerRef}
 		>
 			<div
 				className={cn(
@@ -82,6 +86,37 @@ function SegmentImage({
 						sceneIndex,
 						segmentIndex,
 					});
+				}}
+				onMouseEnter={() => {
+					if (!isPopupOpen) {
+						showPopupTimerRef.current = setTimeout(() => {
+							setImageRegenerationSegmentDetails({
+								sceneIndex,
+								segmentIndex,
+							});
+						}, 500);
+					}
+					if (hidePopupTimerRef.current) {
+						clearTimeout(hidePopupTimerRef.current);
+					}
+				}}
+				onMouseLeave={() => {
+					if (showPopupTimerRef.current) {
+						clearTimeout(showPopupTimerRef.current);
+					}
+					if (isPopupOpen) {
+						hidePopupTimerRef.current = setTimeout(() => {
+							setImageRegenerationSegmentDetails((prevSegmentDetails) => {
+								if (
+									prevSegmentDetails?.segmentIndex === segmentIndex &&
+									prevSegmentDetails?.sceneIndex === sceneIndex
+								) {
+									return null;
+								}
+								return prevSegmentDetails;
+							});
+						}, 500);
+					}
 				}}
 			>
 				{segment.imageStatus === StoryStatus.PENDING ? (
