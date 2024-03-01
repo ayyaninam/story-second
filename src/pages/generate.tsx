@@ -58,4 +58,5 @@ Generate.getLayout = function getLayout(page: ReactElement) {
 
 export default Generate;
 
-export const getServerSideProps = withPageAuthRequired();
+// Disabled: don't need to check for authentication here - being checked in /create already
+// export const getServerSideProps = withPageAuthRequired();
