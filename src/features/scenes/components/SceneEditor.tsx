@@ -296,7 +296,7 @@ const SceneEditorView = ({
 								/>
 							</div> */}
 							<div
-								className="absolute h-[95%]"
+								className="absolute max-w-[95%] h-[95%]"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
 								<StoryScreen
