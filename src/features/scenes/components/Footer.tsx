@@ -43,6 +43,7 @@ import AnimeImg from "/public/images/editor/anime.png";
 import HorrorImg from "/public/images/editor/horror.png";
 import SciFiImg from "/public/images/editor/scifi.png";
 import Routes from "@/routes";
+import StoryLogo from "../../../../public/auth-prompt/story-logo";
 import { getImageCost, getVideoCost } from "@/utils/credit-cost";
 import Format from "@/utils/format";
 import { cn } from "@/utils";
@@ -231,14 +232,6 @@ const Footer = ({
 				);
 				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
 			}
-
-			// api.video.regenerateAllImages({
-			// 	// @ts-expect-error
-			// 	image_style:
-			// 		story.settings?.style ?? StoryImageStyles.Realistic,
-			// 	story_id: story.id,
-			// 	story_type: story.type,
-			// });
 			router.push(
 				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
 			);
@@ -376,10 +369,10 @@ const Footer = ({
 						onClick={async () => {
 							await GenerateStoryboardMutation.mutateAsync();
 						}}
-						className="space-x-1.5"
+						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={GenerateStoryboardMutation.isPending}
 					>
-						<BrandShortLogo />
+						<StoryLogo />
 						<p className="font-bold text-slate-50">
 							{GenerateStoryboardMutation.isPending
 								? "Generating...."
@@ -419,16 +412,15 @@ const Footer = ({
 						onClick={async () => {
 							await GenerateVideoScenesMutation.mutateAsync();
 						}}
-						className="bg-purple-700 space-x-1.5"
+						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={GenerateVideoScenesMutation.isPending}
 					>
-						<BrandShortLogo />
+						<StoryLogo />
 						{GenerateVideoScenesMutation.isPending ? (
 							<p className="font-bold text-slate-50">Generating.....</p>
 						) : (
 							<p className="font-bold text-slate-50">Generate Video Scenes</p>
 						)}
-
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>
@@ -465,9 +457,9 @@ const Footer = ({
 								Routes.EditStory(story.type, story.topLevelCategory, story.slug)
 							);
 						}}
-						className="space-x-1.5"
+						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 					>
-						<BrandShortLogo />
+						<StoryLogo />
 						<p className="font-bold text-slate-50">Preview Your Video</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
@@ -490,10 +482,10 @@ const Footer = ({
 								);
 							}
 						}}
-						className="bg-purple-700 space-x-1.5"
+						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 					>
-						<BrandShortLogo />
-						<p className="font-bold text-slate-50">Share & Export Video</p>
+						<StoryLogo size={24} />
+						<p className="font-bold">Share & Export Video</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>
@@ -563,7 +555,7 @@ const Footer = ({
 														className={clsx(
 															`w-16 h-12 rounded-lg transition-opacity ease-in-out ${areImagesActive || generationStyle === Number(key) ? "hover:opacity-80" : "opacity-40"}`,
 															{
-																["ring-purple-600 ring-[1.5px] ring-offset-1"]:
+																["ring-accent-600 ring-[1.5px] ring-offset-1"]:
 																	generationStyle === Number(key),
 															}
 														)}
@@ -591,33 +583,6 @@ const Footer = ({
 				)}
 			</div>
 			<FooterRightButtons />
-
-			{/* <div className="flex gap-2">
-				<div>
-					<Select>
-						<label className="text-sm text-slate-600 font-normal">
-							Storyboard Images
-						</label>
-						<SelectTrigger className="max-w-fit py-1.5 px-3 space-x-1.5">
-							<LayoutGrid className="stroke-1 opacity-50" />
-							<SelectValue placeholder="Batch Generate All" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="none">None</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
-				<div className="flex flex-col">
-					<label className="text-sm text-slate-600 font-normal text-right">
-						~30s to Generate Storyboard
-					</label>
-					<Button onClick={onGenerate} className="bg-purple-700 space-x-1.5">
-						<BrandShortLogo />
-						<p className="font-bold text-slate-50">Generate Storyboard</p>
-						<ArrowRight className="w-4 h-4 opacity-50" />
-					</Button>
-				</div>
-			</div> */}
 		</div>
 	);
 };

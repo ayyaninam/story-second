@@ -23,8 +23,10 @@ const library = {
 		return data.data;
 	},
 	getVideos: async ({
+		accessToken,
 		params,
 	}: {
+		accessToken: string;
 		params: LibraryPageVideoQueryOptions;
 	}): Promise<mainSchema["ReturnVideoStoryDTOPagedList"]> => {
 		const { topLevelCategory } = params;
@@ -33,8 +35,8 @@ const library = {
 			topLevelCategory: "",
 		};
 		const data: mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] =
-			await publicFetcher
-				.get(`api/Video/${topLevelCategory}`, {
+			await authFetcher(accessToken)
+				.get(`api/User/Videos/${topLevelCategory}`, {
 					searchParams,
 				})
 				.json();
@@ -64,8 +66,10 @@ const library = {
 		return data.data;
 	},
 	getStoryBooks: async ({
+		accessToken,
 		params,
 	}: {
+		accessToken: string;
 		params: LibraryPageVideoQueryOptions;
 	}): Promise<mainSchema["ReturnWebStoryDTOPagedList"]> => {
 		const { topLevelCategory } = params;
@@ -74,8 +78,8 @@ const library = {
 			topLevelCategory: "",
 		};
 		const data: mainSchema["ReturnWebStoryDTOPagedListApiResponse"] =
-			await publicFetcher
-				.get(`api/StoryBook/${topLevelCategory}`, {
+			await authFetcher(accessToken)
+				.get(`api/User/StoryBooks/${topLevelCategory}`, {
 					searchParams: params,
 				})
 				.json();

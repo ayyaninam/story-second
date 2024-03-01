@@ -161,14 +161,14 @@ const SceneEditorView = ({
 
 	return (
 		<>
-			<div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto overflow-hidden bg-background rounded-md shadow-lg">
-				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
+			<div className="relative w-4/5 h-4/5 m-auto max-w-[1300px] overflow-hidden bg-background rounded-md shadow-lg">
+				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
 					<div className="flex items-center gap-1">
-						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
+						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 						<p>Scene Editor</p>
 					</div>
 					<div className="flex gap-1 items-center">
-						<p className="px-1 text-purple-900">
+						<p className="px-1 text-accent-900">
 							Pro Tip — You can individually regenerate video subsegments.
 						</p>
 					</div>
@@ -217,7 +217,7 @@ const SceneEditorView = ({
 																	>
 																		{scene.status === StoryStatus.PENDING && (
 																			<RefreshCcw
-																				className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s"
+																				className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin "
 																				style={{
 																					animationDirection: "reverse",
 																				}}
@@ -233,10 +233,10 @@ const SceneEditorView = ({
 																							backgroundColor: "transparent",
 																						}}
 																						className={cn(
-																							"flex max-w-sm focus:!bg-purple-200 hover:!bg-purple-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
+																							"flex max-w-sm focus:!bg-accent-200 hover:!bg-accent-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
 																							segment.videoStatus !==
 																								StoryStatus.COMPLETE &&
-																								"text-purple-800"
+																								"text-accent-800"
 																						)}
 																						onClick={() => {
 																							videoPlayerRef.current?.seekToSegment(
@@ -324,21 +324,6 @@ const SceneEditorView = ({
 					</div>
 
 					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2" />
-					{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
-							Use 25 credits to regenerate ·{" "}
-							<Link className="text-purple-600" href="#">
-								See plans
-							</Link>
-						</span>
-						<div className="flex gap-2">
-							<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
-								<Sparkle fill="white" className="w-4 h-4" />
-								Regenerate 2 Edited Scenes
-							</Button>
-							<Button variant="outline" className="w-full text-xs px-3 py-2">
-								Or, Save Without Regenerating
-							</Button>
-						</div> */}
 				</div>
 			</div>
 

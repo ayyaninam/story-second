@@ -5,6 +5,7 @@ const signupHandler = (req: NextApiRequest, res: NextApiResponse) =>
 	handleLogin(req, res, {
 		authorizationParams: {
 			screen_hint: "signup",
+			audience: `${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}`,
 		},
 	});
 

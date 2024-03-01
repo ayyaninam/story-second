@@ -37,7 +37,7 @@ export const GenreTabSwitcher = () => {
 		queryFn: () => api.library.getCategories(),
 		queryKey: [QueryKeys.CATEGORIES],
 	});
-	const selectedGenre = router.query.genre as string;
+	const selectedGenre = router.query.genre as string || "all";
 	const setSelectedGenre = useCallback(
 		(genre: string) => {
 			router.push(
@@ -85,13 +85,13 @@ export const GenreTabSwitcher = () => {
 	}
 
 	return (
-		<div className="flex gap-1.5 items-center bg-none overflow-x-scroll absolute right-1/2 translate-x-1/2">
+		<div className="flex gap-1.5 items-center bg-none absolute right-1/2 translate-x-1/2">
 			{genreOptions?.slice(0, 4).map((category) => (
 				<Button
 					key={category.id}
 					className={`h-7 py-0.5 bg-background px-4 justify-center rounded-[10000px] text-sm font-normal ease-linear duration-300 transition-all flex items-center border border-solid ${
 						selectedGenre === category.id
-							? "bg-teal-600 text-teal-50 border-teal-700 hover:bg-teal-700"
+							? "bg-accent-600 text-accent-50 border-accent-700 hover:bg-accent-700"
 							: "text-muted-foreground border-border hover:bg-gray-200 hover:text-slate-600"
 					}`}
 					onClick={() => setSelectedGenre(category.id)}
@@ -101,7 +101,7 @@ export const GenreTabSwitcher = () => {
 			))}
 			{showExtraSelectedTab && (
 				<Button
-					className={`h-7 py-0.5 bg-background px-4 justify-center rounded-[10000px] text-sm font-normal ease-linear duration-300 transition-all flex items-center border border-solid bg-teal-600 text-teal-50 border-teal-700 hover:bg-teal-700`}
+					className={`h-7 py-0.5 bg-background px-4 justify-center rounded-[10000px] text-sm font-normal ease-linear duration-300 transition-all flex items-center border border-solid bg-accent-600 text-accent-50 border-accent-700 hover:bg-accent-700`}
 					onClick={() => setSelectedGenre("all")}
 				>
 					{getGenreNameFromSlug(selectedGenre)}

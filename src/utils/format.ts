@@ -30,16 +30,14 @@ class Format {
 			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 			.join(" ");
 	}
-	public static AvatarName(string: string | undefined | null) {
-		if (!string) return string;
-		if (string.includes(" "))
-			return string
-				.split(" ")
-				.map((el) => el.charAt(0))
-				.join()
-				.toUpperCase();
-		else return string.slice(0, 2).toUpperCase();
+	public static AvatarName(firstName: string | null | undefined, lastName: string | null | undefined) {
+		if (!firstName) return "";
+		if (lastName) {
+			return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+		}
+		return firstName.slice(0, 2).toUpperCase();
 	}
+
 	public static TruncateText(string: string | undefined | null, limit: number) {
 		if (!string) return string;
 		return string.slice(0, limit);

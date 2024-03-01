@@ -95,9 +95,6 @@ const SceneEditSegmentModal = ({
 						))}
 					</div>
 					<div className="flex mt-2 gap-1 mx-4 justify-end text-sm">
-						{/* <Button className="p-2" variant="outline" onClick={onClose}>
-									Close
-								</Button> */}
 						<Button
 							className="p-2 bg-muted text-muted-foreground"
 							variant="outline"

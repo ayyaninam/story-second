@@ -213,7 +213,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 26106296
+       * @default 7657778
        */
       seed?: number;
       /**
@@ -244,6 +244,7 @@ export interface components {
       story_type: components["schemas"]["OutputTypeEnum"];
       /** Image Key */
       image_key: string;
+      image_style: components["schemas"]["ImageStyleEnum"];
       /**
        * Image Prompt
        * @default
@@ -263,7 +264,7 @@ export interface components {
       image_sampling_steps?: number;
       /**
        * Image Seed
-       * @default 57333283
+       * @default 73980476
        */
       image_seed?: number;
       /**

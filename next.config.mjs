@@ -1,4 +1,13 @@
 /** @type {import('next').NextConfig} */
+
+import withPWAInit from "@ducanh2912/next-pwa";
+
+const withPWA = withPWAInit({
+	pwa: {
+		dest: "public",
+	},
+});
+
 const nextConfig = {
 	reactStrictMode: true,
 	// Make custominput file cached so that it won't be get-pull again
@@ -29,6 +38,10 @@ const nextConfig = {
 					source: "/tiktok",
 					destination: "/tiktok/index.html",
 				},
+				{
+					source: "/sitemap.xml",
+					destination: "/api/sitemap",
+				}
 			],
 		};
 	},
@@ -42,8 +55,10 @@ const nextConfig = {
 		];
 	},
 	images: {
-		domains: ["ik.imagekit.io"],
-	},
+		remotePatterns: [{
+			hostname: "ik.imagekit.io"
+		}],
+	}
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

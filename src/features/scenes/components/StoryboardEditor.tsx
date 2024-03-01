@@ -105,25 +105,14 @@ export default function StoryboardEditor({
 			<div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
-						<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
+						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 						<p>Storyboard View</p>
 					</div>
 					<div className="flex gap-1 items-center">
-						<p className="px-1 text-purple-900">
+						<p className="px-1 text-accent-900">
 							Pro Tip — You can individually regenerate images in this
 							Storyboard.{" "}
-							{/* <a href="#">
-								<u>Learn how</u>
-							</a> */}
 						</p>
-						{/* <Button
-							variant="outline"
-							className="flex gap-1 items-center h-fit py-0 text-purple-600 bg-white rounded-sm p-[1px] hover:text-purple-700 hover:cursor-pointer hover:bg-slate-50"
-						>
-							<SparkleIcon width={"18px"} height={"18px"} />
-							<p className="text-xs">Regenerate</p>
-							<ChevronDown width={"18px"} height={"18px"} />
-						</Button> */}
 					</div>
 				</div>
 				<div className="relative  px-6 pt-6 pb-2">
@@ -132,14 +121,6 @@ export default function StoryboardEditor({
 					</p>
 
 					<div className="w-full inline-flex text-slate-400 text-xs py-1">
-						{/* <div className="flex">
-							Storyboard for a <u> 60 Second</u>{" "}
-							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
-							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div>
-						<div className="flex">
-							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div> */}
 						<CategorySelect
 							value={WebstoryData?.topLevelCategory!}
 							onChange={(category) => UpdateCategory.mutate({ category })}
@@ -152,17 +133,11 @@ export default function StoryboardEditor({
 						className={cn(
 							`w-full pb-6 bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
 						)}
-						// border-[1px]
 					>
 						<div
 							className={`px-6 flex w-full h-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
 						>
-							<div
-								className="space-y-2 h-[80%] overflow-y-scroll"
-								// onMouseLeave={(e) => {
-								// 	setShowActionItems({});
-								// }}
-							>
+							<div className="space-y-2 h-[80%] overflow-y-scroll">
 								<Editor
 									Webstory={WebstoryData!}
 									dispatch={dispatch}
@@ -278,7 +253,7 @@ export default function StoryboardEditor({
 																					}}
 																					name={segmentIndex.toString()}
 																					inputClassName={cn(
-																						"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-purple-200 hover:text-slate-950 hover:!bg-purple-100 rounded-sm px-1 m-0 focus:outline-none",
+																						"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:text-slate-950 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
 																						segment.textStatus ===
 																							TextStatus.EDITED &&
 																							"text-slate-500"

@@ -84,6 +84,7 @@ const StoryScreen: FC<
 				!fetchedVideos.includes(originalTikTokVideoKey)
 			) {
 				const url = Format.GetVideoUrl(originalTikTokVideoKey);
+
 				prefetch(url, {
 					method: "blob-url",
 				})
@@ -114,6 +115,7 @@ const StoryScreen: FC<
 
 		const generatedImages = Webstory?.scenes
 			?.flatMap((el) => el.videoSegments)
+
 			?.filter((seg) => !!seg?.imageKey)
 			.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg?.imageKey!) }));
 
@@ -123,8 +125,12 @@ const StoryScreen: FC<
 				?.flatMap((el) => el.videoSegments)
 				?.filter((seg) => !!seg?.imageKey)?.length ?? 0) < 2;
 
-		const originalTikTokVideoKey = Webstory?.originalMediaKey;
-		const hasOriginalTikTokVideoKey = Boolean(originalTikTokVideoKey);
+		const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
+
+		console.log(Webstory?.scenes);
+
+		const originalTrendsVideoKey = Webstory?.originalMediaKey;
+		const hasOriginalTrendsVideoKey = Boolean(originalTrendsVideoKey);
 
 		const isStoryLoading =
 			!Webstory ||
@@ -133,10 +139,15 @@ const StoryScreen: FC<
 			// Using large vidArray length to ensure that all videos are fetched
 			fetchedVideos.length < (videoArray?.length ?? 1000) ||
 			fetchedAudios.length < (videoArray?.length ?? 1000) ||
-			(hasOriginalTikTokVideoKey &&
-				!fetchedVideos.includes(Format.GetVideoUrl(originalTikTokVideoKey!)));
+			(hasOriginalTrendsVideoKey &&
+				!fetchedVideos.includes(Format.GetVideoUrl(originalTrendsVideoKey!)));
 
-		const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
+		const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
+
+		const seekToSegment = (segment: mainSchema["ReturnVideoSegmentDTO"]) => {
+			videoPlayerRef.current?.seekToSegment(segment);
+		};
+
 
 		console.log(Webstory?.scenes);
 
