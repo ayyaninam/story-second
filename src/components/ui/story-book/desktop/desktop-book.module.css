@@ -1,0 +1,29 @@
+.bookWrapper {
+    perspective: 6000px;
+    perspective-origin: center;
+
+    position: relative;
+    display: flex;
+    flex: 1;
+    background-color: white;
+}
+
+.bookWrapper::after,
+.bookWrapper::before {
+    content: "";
+    display: block;
+    position: absolute;
+    inset: 0 -2% 0 0;
+    z-index: 0;
+    clip-path: polygon(98% 0, 100% 5%, 100% 98%, 98% 100%);
+    background: repeating-linear-gradient(to right,
+    #CBD5E1,
+    #CBD5E1 2px,
+    #CBD5E1 1px,
+    #CBD5E1 3px);
+}
+
+.bookWrapper::before {
+    inset: 0 0 0 -2%;
+    clip-path: polygon(0 2%, 2% 0, 2% 100%, 0 98%);
+}
