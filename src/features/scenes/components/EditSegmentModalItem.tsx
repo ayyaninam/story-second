@@ -293,6 +293,9 @@ function AdvancedEditingOptions({
 	show: boolean;
 }) {
 	const [seed, setSeed] = useState(`${settings?.seed ?? -1}`);
+	useEffect(() => {
+		setSeed(`${settings?.seed ?? -1}`);
+	}, [settings?.seed]);
 	return (
 		<TooltipProvider>
 			{/* <div
