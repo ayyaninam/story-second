@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Routes from "@/routes";
+import { useRouter } from "next/router";
 import { chunk } from "lodash";
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
@@ -6,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Subtrack from "@/components/icons/subtrack";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 import cn from "@/utils/cn";
 import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
@@ -56,6 +59,18 @@ const PricingCards = () => {
 		frequencies[1]
 	);
 
+	const router = useRouter();
+	const { user, isLoading } = useUser();
+
+	const openLoginWhenNotLoggedIn = (e: React.MouseEvent<HTMLButtonElement>) => {
+		if (!user) {
+			// prevents to show the checkout dialog
+			e.preventDefault();
+
+			router.push(Routes.ToAuthPage("/pricing")).then();
+		}
+	};
+
 	const enterpriseProps: PricingCardProps = {
 		variant: "Paid",
 		title: "Enterprise",
@@ -77,6 +92,7 @@ const PricingCards = () => {
 					variant="outline"
 					className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 					size="sm"
+					onClick={openLoginWhenNotLoggedIn}
 				>
 					Sign Up for Enterprise
 				</Button>
@@ -208,6 +224,7 @@ const PricingCards = () => {
 									variant="outline"
 									className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
+									onClick={openLoginWhenNotLoggedIn}
 								>
 									Sign Up For Starter
 								</Button>
@@ -245,6 +262,7 @@ const PricingCards = () => {
 									variant="outline"
 									className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
+									onClick={openLoginWhenNotLoggedIn}
 								>
 									Sign Up For Creator
 								</Button>
@@ -286,6 +304,7 @@ const PricingCards = () => {
 									variant="outline"
 									className="px-4 transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
+									onClick={openLoginWhenNotLoggedIn}
 								>
 									Sign Up for Enterprise
 								</Button>

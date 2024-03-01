@@ -19,8 +19,6 @@ import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-imag
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { CheckIcon, Lock, ScrollText, Sparkle, X, Plus } from "lucide-react";
 import { getImageCost } from "@/utils/credit-cost";
-import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
-import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
 
 function RegenerationPopupHeader({
 	title,
@@ -99,12 +97,6 @@ const ImageContainer = ({
 					onHover("");
 				}
 			}}
-			// style={{
-			// 	boxShadow:
-			// 		active && !loading
-			// 			? "0px 0px 3.468px 0.991px #924FE8, 0px 0px 0px 0.991px #924FE8, 0px 0px 0px 0.495px #FFF inset"
-			// 			: "none",
-			// }}
 		>
 			<div
 				className="relative w-full"

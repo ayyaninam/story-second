@@ -110,11 +110,23 @@ const DesktopBook = ({ story }: BookProps) => {
 	return (
 		<div className="flex aspect-[3/2] w-full flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
 			<div className={styles.bookWrapper}>
-				<PageView page={currentPages[0]} changePage={() => changePage(false)} />
-				<PageView page={currentPages[1]} changePage={() => changePage(true)} />
+				<PageView
+					story={story}
+					page={currentPages[0]}
+					changePage={() => changePage(false)}
+				/>
+				<PageView
+					story={story}
+					page={currentPages[1]}
+					changePage={() => changePage(true)}
+				/>
 
 				{animatedPages && (
-					<AnimatedPage pages={animatedPages} turnDirection={turnDirection} />
+					<AnimatedPage
+						story={story}
+						pages={animatedPages}
+						turnDirection={turnDirection}
+					/>
 				)}
 			</div>
 		</div>

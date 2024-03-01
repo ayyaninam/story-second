@@ -1,13 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { AspectRatios, DisplayAspectRatios } from "@/utils/enums";
+import { DisplayAspectRatios } from "@/utils/enums";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
-import { PlayCircle, Plus } from "lucide-react";
-import Image from "next/image";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 
 import GenerateIcon from "@/components/icons/dashboard/generate-icon";
-import toast from "react-hot-toast";
 import Router from "next/router";
 import Routes from "@/routes";
 
@@ -23,8 +21,6 @@ export default function Navbar({
 	};
 	WebstoryData?: mainSchema["ReturnVideoStoryDTO"];
 }) {
-	const [isEditSegmentsDialogOpen, setIsEditSegmentsDialogOpen] =
-		useState(false);
 	return (
 		<div className="flex justify-between bg-background rounded-tl-lg rounded-tr-lg border-b-[0.5px] border-border p-4">
 			<div className="flex gap-x-2.5 items-center">

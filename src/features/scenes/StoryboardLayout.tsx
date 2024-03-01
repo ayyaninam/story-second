@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
-import { useState } from "react";
-import { useMediaQuery } from "usehooks-ts";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
 import useWebstoryContext from "../edit-story/providers/WebstoryContext";
@@ -24,10 +22,7 @@ export default function EditScript({
 	dispatch: React.Dispatch<EditStoryAction>;
 }) {
 	const router = useRouter();
-	const isDesktop = useMediaQuery("(min-width: 1280px)");
-
-	const [enableQuery, setEnableQuery] = useState(true);
-	const [WebstoryData, setStory] = useWebstoryContext();
+	const [WebstoryData, _] = useWebstoryContext();
 
 	// Queries
 	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({

@@ -1,6 +1,6 @@
 import Format from "@/utils/format";
 import Image from "next/image";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,

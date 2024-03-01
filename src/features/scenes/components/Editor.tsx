@@ -1,4 +1,40 @@
-import AutosizeInput from "react-input-autosize";
+/**
+ * Editor Component
+ *
+ * This component provides functionality for editing scenes and segments of a story.
+ * It allows users to input and edit text content, create, edit, and delete segments and scenes,
+ * and navigate through the segments and scenes using keyboard shortcuts.
+ *
+ * Props:
+ * - Webstory: The mainSchema ReturnVideoStoryDTO object representing the story fetched from the API.
+ * - story: The EditStoryDraft object representing the current state of the story being edited.
+ * - dispatch: React.Dispatch<EditStoryAction> function to dispatch edit actions.
+ * - onInputChange: Function to handle input change event.
+ * - onCreateSegment: Function to handle creation of a new segment.
+ * - onEditSegment: Function to handle editing of a segment.
+ * - onDeleteSegment: Function to handle deletion of a segment.
+ * - onCreateScene: Function to handle creation of a new scene.
+ * - onEditScene: Function to handle editing of a scene.
+ * - onDeleteScene: Function to handle deletion of a scene.
+ * - children: Function that returns JSX for rendering children components.
+ *
+ * Use:
+ * <Editor {...props}>
+ * 	{({
+ * 		handleEnter,
+ * 		handleInput,
+ * 		handleNavigation,
+ * 		handleDelete,
+ * 		refs
+ * 	}) => {
+ * 		return (
+ * 			// The components you want to render inside the Editor Wrapper
+ * 		)
+ * 	}}
+ * </Editor>
+ *
+ */
+
 import {
 	EditStoryAction,
 	EditStoryDraft,
@@ -7,7 +43,6 @@ import {
 	StoryStatus,
 	TextStatus,
 } from "../reducers/edit-reducer";
-import { cn } from "@/utils";
 import React, { useEffect, useRef } from "react";
 import { mainSchema } from "@/api/schema";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
@@ -17,13 +52,6 @@ import {
 } from "@/constants/constants";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import toast from "react-hot-toast";
-
-enum InputStatus {
-	UNEDITED,
-	EDITED,
-	ADDED,
-	DELETED,
-}
 
 const Editor = ({
 	Webstory,
@@ -112,36 +140,10 @@ const Editor = ({
 }) => {
 	const refs = useRef<HTMLInputElement[][]>(
 		// Putting an absurdly high number of scenes to make things simpler
-		Array.from({ length: 100 ?? 0 }, () => [])
+		Array.from({ length: 100 }, () => [])
 	);
 
 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory), story);
-
-	const getSegmentStatus = (sceneIndex: number, segmentIndex: number) => {
-		if (
-			diff.edits.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
-		) {
-			return InputStatus.EDITED;
-		} else if (
-			diff.additions
-				.flat()
-				.find(
-					(el) =>
-						el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-				)
-		) {
-			return InputStatus.ADDED;
-		} else if (
-			diff.subtractions.find(
-				(el) => el.sceneIndex === sceneIndex && el.segmentIndex === segmentIndex
-			)
-		) {
-			// Deletions not yet implemented
-			return InputStatus.DELETED;
-		} else return InputStatus.UNEDITED;
-	};
 
 	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
 

@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { Check, RefreshCw, Save, Settings2, Sparkle } from "lucide-react";
+import { Check, RefreshCw, Settings2 } from "lucide-react";
 import EditSegmentModalItem from "./EditSegmentModalItem";
 import { Button } from "@/components/ui/button";
 import {
 	EditStoryAction,
 	EditStoryDraft,
 	Scene,
-	Segment,
-	StoryStatus,
 } from "../reducers/edit-reducer";
 import api from "@/api";
 import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
@@ -110,13 +108,6 @@ const EditSegmentModal = ({
 										sceneIndex: sceneId,
 										segmentIndex: index,
 										segment: updatedSegment,
-									});
-								}}
-								onSegmentDelete={() => {
-									dispatch({
-										type: "delete_segment",
-										sceneIndex: sceneId,
-										segmentIndex: index,
 									});
 								}}
 								segmentIndex={index}

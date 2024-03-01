@@ -1,53 +1,53 @@
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0";
 
-
-import {GetServerSidePropsContext, InferGetServerSidePropsType} from "next";
-import {getSession} from "@auth0/nextjs-auth0";
-import {AuthError} from "@/utils/auth";
 import Routes from "@/routes";
-import React, {ReactElement} from "react";
+import React, { ReactElement } from "react";
 import PageLayout from "@/components/layouts/PageLayout";
 import AccountsPage from "@/features/account";
 
-
-export default function ProfilePage({ accessToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	return (
-		<>
-			<AccountsPage accessToken={accessToken} />
-		</>
-	);
+export default function ProfilePage({
+  accessToken,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  return (
+    <>
+      <AccountsPage accessToken={accessToken} />
+    </>
+  );
 }
 ProfilePage.getLayout = function getLayout(page: ReactElement) {
-	return <PageLayout pageIndex={4}>{page}</PageLayout>;
+  return <PageLayout pageIndex={4}>{page}</PageLayout>;
 };
 
+const _getServerSideProps = async ({
+  req,
+  res,
+  resolvedUrl,
+}: GetServerSidePropsContext) => {
+  try {
+    const session = await getSession(req, res);
+    if (session == null || session?.accessToken == null) {
+      // if protected by withPageAuthRequired, this should never happen
+      return {
+        redirect: {
+          destination: `${Routes.authpage}?returnTo=${resolvedUrl}`,
+          permanent: false,
+        },
+      };
+    }
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-	try {
-		const session = await getSession(ctx.req, ctx.res);
-		if (!session || !session.accessToken) {
-			return {
-				redirect: {
-					destination: Routes.authpage + "?returnTo=/profile",
-					permanent: false,
-				},
-			};
-		}
-
-		return { props: { accessToken: session.accessToken } };
-	} catch (e) {
-		if (e instanceof AuthError) {
-			return {
-				redirect: {
-					destination: e.redirect,
-					permanent: false,
-				},
-			};
-		}
-		return {
-			redirect: {
-				destination: Routes.defaultRedirect,
-				permanent: false,
-			},
-		};
-	}
+    return { props: { accessToken: session.accessToken } };
+  } catch (e) {
+    return {
+      redirect: {
+        destination: Routes.defaultRedirect,
+        permanent: false,
+      },
+    };
+  }
 };
+
+export const getServerSideProps = withPageAuthRequired({
+  getServerSideProps: _getServerSideProps,
+});
