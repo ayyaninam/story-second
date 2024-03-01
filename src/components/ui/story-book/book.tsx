@@ -97,23 +97,11 @@ const Book = ({ story }: BookProps) => {
 	return (
 		<div className="hidden lg:flex aspect-[3/2] w-full flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
 			<div className={styles.bookWrapper}>
-				<PageView
-					changePage={() => changePage(false)}
-					page={currentPages[0]}
-					story={story}
-				/>
-				<PageView
-					changePage={() => changePage(true)}
-					page={currentPages[1]}
-					story={story}
-				/>
+				<PageView changePage={() => changePage(false)} page={currentPages[0]} />
+				<PageView changePage={() => changePage(true)} page={currentPages[1]} />
 
 				{animatedPages && (
-					<AnimatedPage
-						pages={animatedPages}
-						turnDirection={turnDirection}
-						story={story}
-					/>
+					<AnimatedPage pages={animatedPages} turnDirection={turnDirection} />
 				)}
 			</div>
 		</div>

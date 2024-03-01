@@ -1,15 +1,14 @@
-import React, { FC } from "react";
+import React from "react";
 import ImageView from "./image-view";
 import TextView from "./text-view";
-import { WebStory, Pages } from "./constants";
+import { Pages } from "./constants";
 
 interface PageViewProps {
 	page: Pages;
-	story: WebStory;
 	changePage?(): void;
 }
 
-export const PageView = ({ page, changePage, story }: PageViewProps) => {
+export const PageView = ({ page, changePage }: PageViewProps) => {
 	const handleClick = () => {
 		changePage?.();
 	};
