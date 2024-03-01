@@ -3,7 +3,11 @@ import {
 	useMutation,
 	useQueryClient,
 } from "@tanstack/react-query";
-import { EditStoryAction, EditStoryDraft } from "../reducers/edit-reducer";
+import {
+	EditStoryAction,
+	EditStoryDraft,
+	Scene,
+} from "../reducers/edit-reducer";
 import { mainSchema } from "@/api/schema";
 import {
 	GenerateSceneDiff,
@@ -52,21 +56,45 @@ export const useSubmitEditScenesAndSegments = (
 				updatedStory.slug,
 				updatedStory.type
 			);
+
+			const reindexSceneSegments = (scene: Scene, sceneIndex: number) => {
+				const oldInitialIndex =
+					updatedStory.scenes?.[sceneIndex]?.segments[0]?.id ?? 0;
+				const newInitialIndex = scene.segments[0]?.id ?? 0;
+
+				const indexDiff = oldInitialIndex - newInitialIndex;
+				return updatedStory.scenes?.[sceneIndex]?.segments?.map(
+					(segment, segmentIndex) => {
+						const oldSegment =
+							updatedStory.scenes?.[sceneIndex]?.segments?.[segmentIndex];
+						return {
+							...segment,
+							id:
+								oldSegment?.id && indexDiff
+									? oldSegment.id - indexDiff
+									: segment.id,
+							sceneIndex,
+							segmentIndex,
+							sceneId: scene.id,
+						};
+					}
+				);
+			};
 			const newStoryDraft = WebstoryToStoryDraft(newVideo);
 			const newStory: EditStoryDraft = {
 				...newStoryDraft,
-				scenes:
-					newStoryDraft.scenes?.map((scene, index) => ({
-						...scene,
-						segments: updatedStory.scenes[index]?.segments!,
-					})) ?? [],
+				scenes: newStoryDraft.scenes?.map((scene, sceneIndex) => ({
+					...scene,
+					segments: reindexSceneSegments(scene, sceneIndex) ?? [],
+				})),
 			};
+
+			console.log(newStoryDraft, updatedStory);
 
 			const diff = GenerateStoryDiff(newStoryDraft, newStory);
 			const { edits, additions, deletions } = GenerateStoryDiffDto(diff);
 			// return;
 			if (!additions.length && !edits.length && !deletions.length) {
-				console.log("No edits found");
 			}
 
 			const editedResponse = await EditSegment.mutateAsync({

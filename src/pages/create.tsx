@@ -98,6 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			// TODO: modify to only run when there is a 400 error code
 			await api.user
 				.register(
+					// @ts-ignore
 					{
 						email: session.user.email,
 						name: session.user.nickname,
