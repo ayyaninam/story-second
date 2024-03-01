@@ -71,7 +71,7 @@ export default function EditStory() {
 			<Navbar ImageRatio={ImageRatio} WebstoryData={Webstory.data} />
 
 			{/* Stepper */}
-			<Stepper step={StepperStep.Preview} />
+			<Stepper step={StepperStep.Preview} WebstoryData={Webstory.data} />
 
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>

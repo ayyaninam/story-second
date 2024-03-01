@@ -46,6 +46,7 @@ export type Segment = {
 
 export type Scene = {
 	id: string;
+	index: number;
 	status: StoryStatus;
 	settings?: {
 		modifier_prompt?: string;

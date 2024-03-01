@@ -47,7 +47,9 @@ import StoryLogo from "../../../../public/auth-prompt/story-logo";
 import { getImageCost, getVideoCost } from "@/utils/credit-cost";
 import Format from "@/utils/format";
 import { cn } from "@/utils";
-
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import TooltipComponent from "@/components/ui/tooltip-component";
+import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 const images = [
   {
     key: StoryImageStyles.Auto,
@@ -159,44 +161,188 @@ const Footer = ({
 		mutationFn: api.video.editSegment,
 	});
 
-	const saveEdits = useCallback(async () => {
-		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-		console.log(diff);
-		// console.log(WebstoryToStoryDraft(WebstoryData!), story);
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions.map(
-			(segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			})
-		);
+	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
+	// const saveEdits = useCallback(async () => {
+	// 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
+	// 	console.log(diff);
+	// 	// console.log(WebstoryToStoryDraft(WebstoryData!), story);
+	// 	const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
+	// 		details: { Ind: segment.id, Text: segment.textContent },
+	// 		operation: SegmentModifications.Edit,
+	// 	}));
+	// 	const additions: SegmentModificationData[] = diff.additions.map(
+	// 		(segmentSet) => ({
+	// 			details: {
+	// 				// @ts-ignore should be defined though??
+	// 				Ind: segmentSet[0].id + 1,
+	// 				segments: segmentSet.map((el) => ({
+	// 					Text: el.textContent,
+	// 					SceneId: el.sceneId,
+	// 				})),
+	// 			},
+	// 			operation: SegmentModifications.Add,
+	// 		})
+	// 	);
 
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-		if (additions.length || edits.length || deletions.length) {
-			const editedResponse = await EditSegment.mutateAsync({
-				story_id: WebstoryData?.id as string,
-				story_type: WebstoryData?.storyType,
-				edits: [...edits, ...additions, ...deletions],
+	// 	const deletions: SegmentModificationData[] = diff.subtractions.map(
+	// 		(segment) => ({
+	// 			details: {
+	// 				Ind: segment.id,
+	// 			},
+	// 			operation: SegmentModifications.Delete,
+	// 		})
+	// 	);
+	// 	if (additions.length || edits.length || deletions.length) {
+	// 		const editedResponse = await EditSegment.mutateAsync({
+	// 			story_id: WebstoryData?.id as string,
+	// 			story_type: WebstoryData?.storyType,
+	// 			edits: [...edits, ...additions, ...deletions],
+	// 		});
+	// 	}
+	// }, [WebstoryData, story, EditSegment]);
+
+	const GenerateImagesMutation = useMutation({
+		mutationFn: async () => {
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
 			});
-		}
-	}, [WebstoryData, story, EditSegment]);
+			const newStory = await api.video.get(
+				story.topLevelCategory,
+				story.slug,
+				story.type
+			);
+			const ungeneratedImages = newStory.scenes?.flatMap((scene) =>
+				scene.videoSegments
+					?.map((el, index) => ({ ...el, sceneId: scene.id }))
+					?.filter((segment) => !segment.imageKey)
+			);
+			console.log(ungeneratedImages, newStory);
+			if (ungeneratedImages && ungeneratedImages?.length > 0) {
+				const Promises = ungeneratedImages?.map(
+					async (el) =>
+						(await api.video.regenerateImage({
+							segment_idx: el?.index!,
+							story_id: story.id,
+							story_type: story.type!,
+							// @ts-expect-error
+							image_style: story.settings?.style ?? StoryImageStyles.Realistic,
+							prompt: el?.textContent!,
+						})) ?? Promise.resolve()
+				);
+				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
+			}
+
+			// api.video.regenerateAllImages({
+			// 	// @ts-expect-error
+			// 	image_style:
+			// 		story.settings?.style ?? StoryImageStyles.Realistic,
+			// 	story_id: story.id,
+			// 	story_type: story.type,
+			// });
+			router.push(
+				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
+			);
+		},
+	});
+
+	const GenerateStoryboardMutation = useMutation({
+		mutationFn: async () => {
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
+			router.push(
+				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
+			);
+		},
+	});
+
+	const RegenerateAllImagesMutation = useMutation({
+		mutationFn: async () => {
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
+			dispatch({
+				type: "update_segment_statuses",
+				key: "imageStatus",
+				segmentIndices: story.scenes.flatMap((el, sceneIndex) =>
+					el.segments.map((el, segmentIndex) => ({
+						sceneIndex,
+						segmentIndex,
+					}))
+				),
+				status: StoryStatus.PENDING,
+			});
+			await api.video.regenerateAllImages({
+				// @ts-expect-error
+				image_style: story.settings?.style ?? StoryImageStyles.Realistic,
+				story_id: story.id,
+				story_type: story.type,
+			});
+		},
+	});
+
+	const GenerateVideoScenesMutation = useMutation({
+		mutationFn: async () => {
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
+			const newStory = await api.video.get(
+				story.topLevelCategory,
+				story.slug,
+				story.type
+			);
+			const ungeneratedVideos = newStory.scenes?.flatMap((scene) =>
+				scene.videoSegments
+					?.map((el, index) => ({ ...el, sceneId: scene.id }))
+					?.filter((segment) => !segment.videoKey && !segment.videoRegenerating)
+			);
+
+			if (ungeneratedVideos && ungeneratedVideos?.length > 0) {
+				const Promises = ungeneratedVideos?.map(async (video) => {
+					return await api.video.regenerateVideo({
+						segment_idx: video?.index!,
+						story_id: story.id,
+						story_type: story.type,
+					});
+				});
+				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
+			}
+
+			router.push(
+				Routes.EditScenes(story.type, story.topLevelCategory, story.slug)
+			);
+		},
+	});
+
+	const RegenerateAllScenesMutation = useMutation({
+		mutationFn: async () => {
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
+			dispatch({
+				type: "update_segment_statuses",
+				key: "videoStatus",
+				segmentIndices: story.scenes.flatMap((el, sceneIndex) =>
+					el.segments.map((el, segmentIndex) => ({
+						sceneIndex,
+						segmentIndex,
+					}))
+				),
+				status: StoryStatus.PENDING,
+			});
+			await api.video.regenerateAllVideos({
+				// @ts-expect-error
+				image_style: story.settings?.style ?? StoryImageStyles.Realistic,
+				story_id: story.id,
+				story_type: story.type,
+			});
+		},
+	});
 
 	const View = {
 		script: () => (
@@ -205,58 +351,21 @@ const Footer = ({
 					<Button
 						variant="outline"
 						onClick={async () => {
-							await saveEdits();
-							const newStory = await api.video.get(
-								story.topLevelCategory,
-								story.slug,
-								story.type
-							);
-							const ungeneratedImages = newStory.scenes?.flatMap((scene) =>
-								scene.videoSegments
-									?.map((el, index) => ({ ...el, sceneId: scene.id }))
-									?.filter((segment) => !segment.imageKey)
-							);
-							console.log(ungeneratedImages, newStory);
-							if (ungeneratedImages && ungeneratedImages?.length > 0) {
-								const Promises = ungeneratedImages?.map(
-									async (el) =>
-										(await api.video.regenerateImage({
-											segment_idx: el?.index!,
-											story_id: story.id,
-											story_type: story.type!,
-											// @ts-expect-error
-											image_style:
-												story.settings?.style ?? StoryImageStyles.Realistic,
-											prompt: el?.textContent!,
-										})) ?? Promise.resolve()
-								);
-								Promise.all(Promises).then((val) =>
-									val.map((el) => console.log(el))
-								);
-							}
-
-							// api.video.regenerateAllImages({
-							// 	// @ts-expect-error
-							// 	image_style:
-							// 		story.settings?.style ?? StoryImageStyles.Realistic,
-							// 	story_id: story.id,
-							// 	story_type: story.type,
-							// });
-							router.push(
-								Routes.EditStoryboard(
-									story.type,
-									story.topLevelCategory,
-									story.slug
-								)
-							);
+							await GenerateImagesMutation.mutateAsync();
 						}}
 						className={cn(
 							"stroke-muted text-muted-foreground",
 							regenUngeneratedImagesCost === 0 && "hidden"
 						)}
+						disabled={GenerateImagesMutation.isPending}
 					>
 						<LayoutGrid strokeWidth={1} className="mr-2" />
-						Generate Images{" "}
+						{GenerateImagesMutation.isPending ? (
+							<>Generating..... </>
+						) : (
+							<>Generate Image </>
+						)}
+
 						<span className="ml-1">
 							({regenUngeneratedImagesCost}{" "}
 							{Format.Pluralize("Credit", regenUngeneratedImagesCost)})
@@ -266,19 +375,17 @@ const Footer = ({
 				<div className="flex flex-col">
 					<Button
 						onClick={async () => {
-							await saveEdits();
-							router.push(
-								Routes.EditStoryboard(
-									story.type,
-									story.topLevelCategory,
-									story.slug
-								)
-							);
+							await GenerateStoryboardMutation.mutateAsync();
 						}}
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
+						disabled={GenerateStoryboardMutation.isPending}
 					>
 						<StoryLogo />
-						<p className="font-bold text-slate-50">Generate Storyboard</p>
+						<p className="font-bold text-slate-50">
+							{GenerateStoryboardMutation.isPending
+								? "Generating...."
+								: "Generate Storyboard"}
+						</p>
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>
@@ -290,30 +397,18 @@ const Footer = ({
 					<Button
 						variant="outline"
 						onClick={async () => {
-							await saveEdits();
-							dispatch({
-								type: "update_segment_statuses",
-								key: "imageStatus",
-								segmentIndices: story.scenes.flatMap((el, sceneIndex) =>
-									el.segments.map((el, segmentIndex) => ({
-										sceneIndex,
-										segmentIndex,
-									}))
-								),
-								status: StoryStatus.PENDING,
-							});
-							api.video.regenerateAllImages({
-								// @ts-expect-error
-								image_style:
-									story.settings?.style ?? StoryImageStyles.Realistic,
-								story_id: story.id,
-								story_type: story.type,
-							});
+							await RegenerateAllImagesMutation.mutateAsync();
 						}}
 						className={cn("stroke-muted text-muted-foreground")}
+						disabled={RegenerateAllImagesMutation.isPending}
 					>
 						<LayoutGrid strokeWidth={1} className="mr-2" />
-						Regenerate All Images{" "}
+						{RegenerateAllImagesMutation.isPending ? (
+							<>Regenerating..... </>
+						) : (
+							<>Regenerate All Images </>
+						)}
+
 						<span className="ml-1">
 							({regenAllImagesCreditCost}{" "}
 							{Format.Pluralize("Credit", regenAllImagesCreditCost)})
@@ -323,45 +418,17 @@ const Footer = ({
 				<div>
 					<Button
 						onClick={async () => {
-							await saveEdits();
-							const newStory = await api.video.get(
-								story.topLevelCategory,
-								story.slug,
-								story.type
-							);
-							const ungeneratedVideos = newStory.scenes?.flatMap((scene) =>
-								scene.videoSegments
-									?.map((el, index) => ({ ...el, sceneId: scene.id }))
-									?.filter(
-										(segment) => !segment.videoKey && !segment.videoRegenerating
-									)
-							);
-
-							if (ungeneratedVideos && ungeneratedVideos?.length > 0) {
-								const Promises = ungeneratedVideos?.map(async (video) => {
-									return await api.video.regenerateVideo({
-										segment_idx: video?.index!,
-										story_id: story.id,
-										story_type: story.type,
-									});
-								});
-								Promise.all(Promises).then((val) =>
-									val.map((el) => console.log(el))
-								);
-							}
-
-							router.push(
-								Routes.EditScenes(
-									story.type,
-									story.topLevelCategory,
-									story.slug
-								)
-							);
+							await GenerateVideoScenesMutation.mutateAsync();
 						}}
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
+						disabled={GenerateVideoScenesMutation.isPending}
 					>
 						<StoryLogo />
-						<p className="font-bold text-slate-50">Generate Video Scenes</p>
+						{GenerateVideoScenesMutation.isPending ? (
+							<p className="font-bold text-slate-50">Generating.....</p>
+						) : (
+							<p className="font-bold text-slate-50">Generate Video Scenes</p>
+						)}
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>
@@ -373,30 +440,18 @@ const Footer = ({
 					<Button
 						variant="outline"
 						onClick={async () => {
-							await saveEdits();
-							dispatch({
-								type: "update_segment_statuses",
-								key: "videoStatus",
-								segmentIndices: story.scenes.flatMap((el, sceneIndex) =>
-									el.segments.map((el, segmentIndex) => ({
-										sceneIndex,
-										segmentIndex,
-									}))
-								),
-								status: StoryStatus.PENDING,
-							});
-							api.video.regenerateAllVideos({
-								// @ts-expect-error
-								image_style:
-									story.settings?.style ?? StoryImageStyles.Realistic,
-								story_id: story.id,
-								story_type: story.type,
-							});
+							await RegenerateAllScenesMutation.mutateAsync();
 						}}
 						className={cn("stroke-muted text-muted-foreground")}
+						disabled={RegenerateAllScenesMutation.isPending}
 					>
 						<LayoutGrid strokeWidth={1} className="mr-2" />
-						Regenerate All Scenes{" "}
+						{RegenerateAllScenesMutation.isPending ? (
+							<>Regenerating..... </>
+						) : (
+							<>Regenerate All Scenes </>
+						)}
+
 						<span className="ml-1">
 							({regenAllVideosCreditCost}{" "}
 							{Format.Pluralize("Credit", regenAllVideosCreditCost)})
@@ -447,6 +502,7 @@ const Footer = ({
 	};
 
 	const FooterRightButtons = View[view];
+	const areImagesActive = view === "script" || view === "storyboard";
 	return (
 		<div className="sticky bottom-0  bg-background border-border border-t-[1px] p-3 pt-1.5 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
 			<div className="flex gap-1 py-2">
@@ -494,31 +550,36 @@ const Footer = ({
 								className="flex 2xl:overflow-x-visible overflow-x-hidden "
 							>
 								<div className="flex gap-x-1 py-1">
-									{images.map(({ key, label, src }, index) => (
-										<>
-											<Image
-												src={src}
-												alt={label}
-												key={index}
-												width={64}
-												height={48}
-												className={clsx(
-													"w-16 h-12 rounded-lg hover:opacity-80 transition-opacity ease-in-out ",
-													{
-														["ring-accent-600 ring-[1.5px] ring-offset-1"]:
-															generationStyle === Number(key),
-													}
-												)}
-												role="button"
-												onClick={() =>
-													updateImageStyle(
-														Number(key) as unknown as StoryImageStyles
-													)
-												}
-												style={{ objectFit: "cover" }}
-											/>
-										</>
-									))}
+									<TooltipProvider>
+										{images.map(({ key, label, src }, index) => (
+											<>
+												<TooltipComponent label={label} align="center">
+													<Image
+														src={src}
+														alt={label}
+														key={index}
+														width={64}
+														height={48}
+														className={clsx(
+															`w-16 h-12 rounded-lg transition-opacity ease-in-out ${areImagesActive || generationStyle === Number(key) ? "hover:opacity-80" : "opacity-40"}`,
+															{
+																["ring-accent-600 ring-[1.5px] ring-offset-1"]:
+																	generationStyle === Number(key),
+															}
+														)}
+														role="button"
+														onClick={() => {
+															if (areImagesActive)
+																updateImageStyle(
+																	Number(key) as unknown as StoryImageStyles
+																);
+														}}
+														style={{ objectFit: "cover" }}
+													/>
+												</TooltipComponent>
+											</>
+										))}
+									</TooltipProvider>
 								</div>
 							</div>
 							<ChevronRight

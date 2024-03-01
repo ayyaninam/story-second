@@ -1,3 +1,4 @@
+import { mainSchema } from "@/api/schema";
 import { Badge } from "@/components/ui/badge";
 import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
 import Routes from "@/routes";
@@ -11,16 +12,53 @@ import {
 	ScanEye,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const activeStyles =
 	"border border-accent-500 bg-accent-100 text-accent-900 stepper-box-shadow";
 const baseStyles = `bg-primary-foreground font-normal text-sm cursor-pointer transition-all ease-in-out duration-300`;
 
-export default function Stepper({ step }: { step: StepperStep }) {
+export default function Stepper({
+	step,
+	WebstoryData,
+}: {
+	step: StepperStep;
+	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
+}) {
 	const router = useRouter();
-	const [WebstoryData] = useWebstoryContext();
 	const [currentHover, setCurrentHover] = useState<StepperStep>(step);
+	const [disableNavToScenes, setDisableNavToScenes] = useState(true);
+	const [disableNavToPreview, setDisableNavToPreview] = useState(true);
+
+	useEffect(() => {
+		// let allNull = true;
+
+		// WebstoryData.scenes?.forEach((scene) => {
+		// 	scene.storySegments?.forEach((segment) => {
+		// 		if (segment.imageKey || segment.videoKey) {
+		// 			allNull = false;
+		// 			return;
+		// 		}
+		// 	});
+		// });
+
+		const allNull = WebstoryData.scenes
+			?.flatMap((scene) =>
+				scene.videoSegments?.map((segment) => ({
+					videoKey: segment.videoKey,
+					videoRegenerating: segment.videoRegenerating,
+					imageKey: segment.imageKey,
+					imageRegenerating: segment.videoRegenerating,
+				}))
+			)
+			.every(
+				(segment) => segment?.videoKey === null || segment?.imageKey === null
+			);
+
+		setDisableNavToPreview(!!allNull);
+		setDisableNavToScenes(!!allNull);
+	}, [WebstoryData.scenes]);
+
 	return (
 		<div className="w-full bg-background border-border border-[1px] py-2 min-h-8 flex items-center justify-center">
 			<Badge
@@ -79,23 +117,25 @@ export default function Stepper({ step }: { step: StepperStep }) {
 			<Badge
 				variant="outline"
 				onMouseEnter={() => {
-					setCurrentHover(StepperStep.Scenes);
+					if (!disableNavToScenes) setCurrentHover(StepperStep.Scenes);
 				}}
 				onMouseLeave={() => {
-					setCurrentHover(step);
+					if (!disableNavToScenes) setCurrentHover(step);
 				}}
-				onClick={() =>
-					router.push(
-						Routes.EditScenes(
-							WebstoryData.storyType,
-							WebstoryData.topLevelCategory!,
-							WebstoryData.slug!
-						)
-					)
-				}
+				onClick={() => {
+					if (!disableNavToScenes)
+						router.push(
+							Routes.EditScenes(
+								WebstoryData.storyType,
+								WebstoryData.topLevelCategory!,
+								WebstoryData.slug!
+							)
+						);
+				}}
 				className={clsx(baseStyles, {
 					[activeStyles]:
 						step === StepperStep.Scenes || currentHover === StepperStep.Scenes,
+					"opacity-60": disableNavToScenes,
 				})}
 			>
 				<Film className="stroke-accent-600 mr-1 h-4 w-4" />
@@ -105,24 +145,26 @@ export default function Stepper({ step }: { step: StepperStep }) {
 			<Badge
 				variant="outline"
 				onMouseEnter={() => {
-					setCurrentHover(StepperStep.Preview);
+					if (!disableNavToPreview) setCurrentHover(StepperStep.Preview);
 				}}
 				onMouseLeave={() => {
-					setCurrentHover(step);
+					if (!disableNavToPreview) setCurrentHover(step);
 				}}
-				onClick={() =>
-					router.push(
-						Routes.EditStory(
-							WebstoryData.storyType,
-							WebstoryData.topLevelCategory!,
-							WebstoryData.slug!
-						)
-					)
-				}
+				onClick={() => {
+					if (!disableNavToPreview)
+						router.push(
+							Routes.EditStory(
+								WebstoryData.storyType,
+								WebstoryData.topLevelCategory!,
+								WebstoryData.slug!
+							)
+						);
+				}}
 				className={clsx(baseStyles, {
 					[activeStyles]:
 						step === StepperStep.Preview ||
 						currentHover === StepperStep.Preview,
+					"opacity-60": disableNavToPreview,
 				})}
 			>
 				<ScanEye className="stroke-accent-600 mr-1 h-4 w-4" />

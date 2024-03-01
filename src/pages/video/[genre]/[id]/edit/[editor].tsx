@@ -1,7 +1,5 @@
 import api from "@/api";
 import { mainSchema } from "@/api/schema";
-import { env } from "@/env.mjs";
-import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import StoryScenes from "@/features/scenes/ScenesLayout";
 import ScriptLayout from "@/features/scenes/ScriptLayout";
@@ -11,33 +9,18 @@ import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
 } from "@/features/scenes/reducers/edit-reducer";
-import {
-	GenerateStoryDiff,
-	WebstoryToStoryDraft,
-} from "@/features/scenes/utils/storydraft";
+import { WebstoryToStoryDraft } from "@/features/scenes/utils/storydraft";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";
-import Routes from "@/routes";
-import { SegmentModificationData } from "@/types";
-import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
-import { SegmentModifications, StoryOutputTypes } from "@/utils/enums";
-import {
-	getAccessToken,
-	getSession,
-	withPageAuthRequired,
-} from "@auth0/nextjs-auth0";
+import { StoryOutputTypes } from "@/utils/enums";
+import { getSession } from "@auth0/nextjs-auth0";
 import {
 	QueryClient,
 	dehydrate,
-	useMutation,
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
-import {
-	GetServerSideProps,
-	GetServerSidePropsContext,
-	InferGetServerSidePropsType,
-} from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { notFound } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect } from "react";
@@ -72,90 +55,12 @@ const EditorPage = ({
 		WebstoryToStoryDraft(Webstory.data!)
 	);
 
-	const EditSegment = useMutation({
-		mutationFn: api.video.editSegment,
-	});
-
-	const handleSubmitEditSegments = async () => {
-		const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory.data), story);
-		console.log(diff);
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions
-			.filter((segmentSet) => segmentSet.length > 0)
-			.map((segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			}));
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-		if (!additions.length && !edits.length && !deletions.length) {
-			console.log("No edits found");
-			return;
-		}
-
-		const editedResponse = await EditSegment.mutateAsync({
-			story_id: Webstory.data?.id as string,
-			story_type: Webstory.data?.storyType,
-			edits: [...edits, ...additions, ...deletions],
-		});
-		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
-
-		const newStory = await api.video.get(
-			Webstory.data?.topLevelCategory!,
-			Webstory.data?.slug!,
-			Webstory.data?.storyType!
-		);
-
-		// setPreviousStory(WebstoryToStoryDraft(newStory));
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
-		return newStory;
-	};
-
 	useEffect(() => {
-		console.log(story);
-	}, [story]);
-
-	useEffect(() => {
-		console.log("resetting >>", Webstory.data);
 		dispatch({
 			type: "reset",
 			draft: WebstoryToStoryDraft(Webstory.data),
 		});
 	}, [JSON.stringify(Webstory.data)]);
-
-	useEffect(() => {
-		const handleKeyDown = async (event: KeyboardEvent) => {
-			if ((event.ctrlKey || event.metaKey) && event.key === "s") {
-				// Prevent default browser behavior (saving the page)
-				event.preventDefault();
-
-				const newStory = await handleSubmitEditSegments();
-				console.log("Story saved:", newStory?.slug);
-			}
-		};
-
-		window.addEventListener("keydown", handleKeyDown);
-
-		return () => {
-			window.removeEventListener("keydown", handleKeyDown);
-		};
-	}, []);
 
 	if (router.query.editor === "script") {
 		return (
