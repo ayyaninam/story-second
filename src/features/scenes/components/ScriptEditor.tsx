@@ -98,7 +98,7 @@ export default function ScriptEditor({
 	return (
 		<>
 			<TooltipProvider>
-				<div className="relative w-4/5 h-4/5 m-auto bg-background rounded-lg shadow-lg">
+				<div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto bg-background rounded-lg shadow-lg">
 					<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 						<div className="flex items-center gap-1">
 							<LayoutList className="stroke-purple-600 mr-1 h-4 w-4" />
@@ -167,126 +167,135 @@ export default function ScriptEditor({
 										}) => {
 											return (
 												<div className={cn("w-full")}>
-													{story.scenes.map((scene, sceneIndex) => (
-														<div
-															key={sceneIndex}
-															className="flex flex-wrap flex-col  w-fit"
-														>
-															<TooltipComponent
-																align="start"
-																label="You can edit scenes in the storyboard"
+													{story.scenes
+														.filter((el) => el.segments.length > 0)
+														.map((scene, sceneIndex) => (
+															<div
+																key={sceneIndex}
+																className="flex flex-wrap flex-col  w-fit"
 															>
-																<div className="bg-muted font-normal text-muted-foreground rounded-sm text-sm w-fit my-2 px-1">
-																	{`Scene ${sceneIndex + 1}: `}
-																	{scene.description}
+																<TooltipComponent
+																	align="start"
+																	label="You can edit scenes in the storyboard"
+																>
+																	<div className="bg-muted font-normal text-muted-foreground rounded-sm text-sm w-fit my-2 px-1">
+																		{`Scene ${sceneIndex + 1}: `}
+																		{scene.description}
+																	</div>
+																</TooltipComponent>
+
+																<div className="flex flex-wrap flex-row">
+																	{scene.segments.map(
+																		(segment, segmentIndex) => (
+																			<span
+																				key={segmentIndex}
+																				style={{
+																					backgroundColor: "transparent",
+																				}}
+																				className={cn(`flex flex-wrap `)}
+																			>
+																				<AutosizeInput
+																					autoComplete="false"
+																					disabled={!WebstoryData?.storyDone}
+																					onKeyDown={(e) => {
+																						// ! DEBT: Couldn't focus all elements at once
+																						// const selectedText = window
+																						// 	.getSelection()
+																						// 	?.toString();
+
+																						// console.log(
+																						// 	">>> selectObj",
+																						// 	selectedText
+																						// );
+																						// if (
+																						// 	(e.ctrlKey || e.metaKey) &&
+																						// 	e.key === "a"
+																						// ) {
+																						// 	console.log(
+																						// 		">>> selectObj2",
+																						// 		selectedText
+																						// 	);
+
+																						// 	if (
+																						// 		selectedText === segment.textContent
+																						// 	) {
+																						// 		// @ts-ignore
+																						// 		// refs.current?.[1][2]?.focus();
+																						// 		refs.current[sceneIndex]?.map(
+																						// 			(sgmtRef) => {
+																						// 				sgmtRef?.focus();
+																						// 			}
+																						// 		);
+																						// 	}
+																						// }
+																						if (e.key.startsWith("Arrow")) {
+																							handleNavigation({
+																								event: e,
+																								totalScenes:
+																									story.scenes.length,
+																								totalSegments:
+																									scene.segments.length,
+																								currentScene: sceneIndex,
+																								currentSegment: segmentIndex,
+																								segmentContentLength:
+																									segment.textContent.length,
+																							});
+																						}
+
+																						if (e.key === "Enter") {
+																							handleEnter(
+																								scene,
+																								sceneIndex,
+																								segment,
+																								segmentIndex
+																							);
+																						}
+
+																						if (e.key === "Backspace") {
+																							handleDelete({
+																								event: e,
+																								totalScenes:
+																									story.scenes.length,
+																								currentScene: sceneIndex,
+																								currentSegment: segmentIndex,
+																							});
+																						}
+																					}}
+																					name={segmentIndex.toString()}
+																					inputClassName={cn(
+																						"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
+																						segment.textStatus ===
+																							TextStatus.EDITED &&
+																							"text-purple-500"
+																					)}
+																					inputStyle={{
+																						outline: "none",
+																						backgroundColor: "inherit",
+																					}}
+																					// @ts-ignore
+																					ref={(el) =>
+																						// @ts-ignore
+																						(refs.current[sceneIndex][
+																							segmentIndex
+																						] = el)
+																					}
+																					value={segment.textContent}
+																					onChange={(e) => {
+																						handleInput(
+																							e,
+																							scene,
+																							sceneIndex,
+																							segment,
+																							segmentIndex
+																						);
+																					}}
+																				/>
+																			</span>
+																		)
+																	)}
 																</div>
-															</TooltipComponent>
-
-															<div className="flex flex-wrap flex-row">
-																{scene.segments.map((segment, segmentIndex) => (
-																	<span
-																		key={segmentIndex}
-																		style={{ backgroundColor: "transparent" }}
-																		className={cn(`flex flex-wrap `)}
-																	>
-																		<AutosizeInput
-																			autoComplete="false"
-																			disabled={!WebstoryData?.storyDone}
-																			onKeyDown={(e) => {
-																				// ! DEBT: Couldn't focus all elements at once
-																				// const selectedText = window
-																				// 	.getSelection()
-																				// 	?.toString();
-
-																				// console.log(
-																				// 	">>> selectObj",
-																				// 	selectedText
-																				// );
-																				// if (
-																				// 	(e.ctrlKey || e.metaKey) &&
-																				// 	e.key === "a"
-																				// ) {
-																				// 	console.log(
-																				// 		">>> selectObj2",
-																				// 		selectedText
-																				// 	);
-
-																				// 	if (
-																				// 		selectedText === segment.textContent
-																				// 	) {
-																				// 		// @ts-ignore
-																				// 		// refs.current?.[1][2]?.focus();
-																				// 		refs.current[sceneIndex]?.map(
-																				// 			(sgmtRef) => {
-																				// 				sgmtRef?.focus();
-																				// 			}
-																				// 		);
-																				// 	}
-																				// }
-																				if (e.key.startsWith("Arrow")) {
-																					handleNavigation({
-																						event: e,
-																						totalScenes: story.scenes.length,
-																						totalSegments:
-																							scene.segments.length,
-																						currentScene: sceneIndex,
-																						currentSegment: segmentIndex,
-																						segmentContentLength:
-																							segment.textContent.length,
-																					});
-																				}
-
-																				if (e.key === "Enter") {
-																					handleEnter(
-																						scene,
-																						sceneIndex,
-																						segment,
-																						segmentIndex
-																					);
-																				}
-
-																				if (e.key === "Backspace") {
-																					handleDelete({
-																						event: e,
-																						totalScenes: story.scenes.length,
-																						currentScene: sceneIndex,
-																						currentSegment: segmentIndex,
-																					});
-																				}
-																			}}
-																			name={segmentIndex.toString()}
-																			inputClassName={cn(
-																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-purple-200 hover:!bg-purple-100 rounded-sm px-1 focus:outline-none",
-																				segment.textStatus ===
-																					TextStatus.EDITED && "text-purple-500"
-																			)}
-																			inputStyle={{
-																				outline: "none",
-																				backgroundColor: "inherit",
-																			}}
-																			// @ts-ignore
-																			ref={(el) =>
-																				// @ts-ignore
-																				(refs.current[sceneIndex][
-																					segmentIndex
-																				] = el)
-																			}
-																			value={segment.textContent}
-																			onChange={(e) => {
-																				handleInput(
-																					e,
-																					scene,
-																					sceneIndex,
-																					segment,
-																					segmentIndex
-																				);
-																			}}
-																		/>
-																	</span>
-																))}
 															</div>
-														</div>
-													))}
+														))}
 													{!WebstoryData?.storyDone && (
 														<div className="flex w-full justify-center items-center border-t-2 p-2 gap-1">
 															<RefreshCw className="animate-spin stroke-purple-600" />
