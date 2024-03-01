@@ -1,7 +1,7 @@
 import React from "react";
 import ImageView from "./image-view";
 import TextView from "./text-view";
-import { Page } from "../constants";
+import { Page } from "../../constants";
 import { TheEndLeftView, TheEndRightView } from "./the-end-view";
 
 interface PageViewProps {

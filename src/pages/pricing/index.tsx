@@ -2,7 +2,7 @@
 import api from "@/api";
 import React, { useState, useEffect } from "react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
-import Book from "@/components/ui/story-book/book";
+import DesktopBook from "@/components/ui/story-book/desktop/desktop-book";
 import { mainSchema } from "@/api/schema";
 
 type WebStory = mainSchema["ReturnWebStoryDTO"];

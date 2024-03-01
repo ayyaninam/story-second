@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { cn } from "@/utils";
-import { PageView } from "./pageView/page-view";
-import { TurnDirection, Page, PAGE_TURN_DURATION } from "./constants";
+import { PageView } from "@/components/ui/story-book/desktop/pageView/page-view";
+import { TurnDirection, Page, PAGE_TURN_DURATION } from "../constants";
 import styles from "./animated-page.module.css";
 
 export const AnimatedPage: FC<{

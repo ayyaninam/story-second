@@ -1,15 +1,19 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { AnimatedPage } from "./animated-page";
 import { PageView } from "./pageView/page-view";
-import { WebStory, TurnDirection, Page, PAGE_TURN_DURATION } from "./constants";
-import styles from "./book.module.css";
-import { cn } from "@/utils";
+import {
+	WebStory,
+	TurnDirection,
+	Page,
+	PAGE_TURN_DURATION,
+} from "../constants";
+import styles from "./desktop-book.module.css";
 
 interface BookProps {
 	story: WebStory;
 }
 
-const Book = ({ story }: BookProps) => {
+const DesktopBook = ({ story }: BookProps) => {
 	const [pageArray, setPageArray] = useState<Page[]>([]);
 	const [pageIndex, setPageIndex] = useState(0);
 	const [animatedPages, setAnimatedPages] = useState<[Page, Page]>();
@@ -105,7 +109,7 @@ const Book = ({ story }: BookProps) => {
 
 	return (
 		<div className="flex aspect-[3/2] w-full flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
-			<div className={cn(styles.bookWrapper, "hidden lg:flex")}>
+			<div className={styles.bookWrapper}>
 				<PageView page={currentPages[0]} changePage={() => changePage(false)} />
 				<PageView page={currentPages[1]} changePage={() => changePage(true)} />
 
@@ -117,4 +121,4 @@ const Book = ({ story }: BookProps) => {
 	);
 };
 
-export default Book;
+export default DesktopBook;

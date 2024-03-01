@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import Format from "@/utils/format";
 import Image from "next/image";
 
-import { ImagePage } from "../constants";
+import { ImagePage } from "../../constants";
 
 interface ImageViewProps {
 	page: ImagePage;
