@@ -161,7 +161,8 @@ const SceneEditorView = ({
 
 	return (
 		<>
-			<div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto overflow-hidden bg-background rounded-md shadow-lg">
+			<div className="relative w-4/5 h-4/5 m-auto max-w-[1300px] overflow-hidden bg-background rounded-md shadow-lg">
+
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
@@ -217,7 +218,8 @@ const SceneEditorView = ({
 																	>
 																		{scene.status === StoryStatus.PENDING && (
 																			<RefreshCcw
-																				className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s"
+																				className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin "
+
 																				style={{
 																					animationDirection: "reverse",
 																				}}

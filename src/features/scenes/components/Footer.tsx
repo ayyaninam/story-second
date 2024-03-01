@@ -51,11 +51,11 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 const images = [
-  {
-    key: StoryImageStyles.Auto,
-    src: AutoImg,
-    label: "Auto",
-  },
+	{
+		key: StoryImageStyles.Auto,
+		src: AutoImg,
+		label: "Auto",
+	},
 	{
 		key: StoryImageStyles.Realistic,
 		src: RealisticImg,
@@ -423,6 +423,7 @@ const Footer = ({
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={GenerateVideoScenesMutation.isPending}
 					>
+
 						<StoryLogo />
 						{GenerateVideoScenesMutation.isPending ? (
 							<p className="font-bold text-slate-50">Generating.....</p>

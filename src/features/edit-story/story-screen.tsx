@@ -76,12 +76,13 @@ const StoryScreen: FC<
 				}
 			}
 
-			const originalTrendsVideoKey = Webstory?.originalMediaKey;
+			const originalTikTokVideoKey = Webstory?.originalMediaKey;
 			if (
-				originalTrendsVideoKey &&
-				!fetchedVideos.includes(originalTrendsVideoKey)
+				originalTikTokVideoKey &&
+				!fetchedVideos.includes(originalTikTokVideoKey)
 			) {
-				const url = Format.GetVideoUrl(originalTrendsVideoKey);
+				const url = Format.GetVideoUrl(originalTikTokVideoKey);
+
 				prefetch(url, {
 					method: "blob-url",
 				})
@@ -112,6 +113,7 @@ const StoryScreen: FC<
 
 		const generatedImages = Webstory?.scenes
 			?.flatMap((el) => el.videoSegments)
+
 			?.filter((seg) => !!seg?.imageKey)
 			.map((seg) => ({ ...seg, src: Format.GetImageUrl(seg?.imageKey!) }));
 
@@ -120,6 +122,10 @@ const StoryScreen: FC<
 			(Webstory.scenes
 				?.flatMap((el) => el.videoSegments)
 				?.filter((seg) => !!seg?.imageKey)?.length ?? 0) < 2;
+
+		const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
+
+		console.log(Webstory?.scenes);
 
 		const originalTrendsVideoKey = Webstory?.originalMediaKey;
 		const hasOriginalTrendsVideoKey = Boolean(originalTrendsVideoKey);
@@ -134,7 +140,12 @@ const StoryScreen: FC<
 			(hasOriginalTrendsVideoKey &&
 				!fetchedVideos.includes(Format.GetVideoUrl(originalTrendsVideoKey!)));
 
-		const ImageRatio = GetDisplayImageRatio(Webstory?.resolution);
+		const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
+
+		const seekToSegment = (segment: mainSchema["ReturnVideoSegmentDTO"]) => {
+			videoPlayerRef.current?.seekToSegment(segment);
+		};
+
 
 		console.log(Webstory?.scenes);
 
