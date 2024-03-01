@@ -1,22 +1,7 @@
-import {
-	DefinedUseQueryResult,
-	useMutation,
-	useQueryClient,
-} from "@tanstack/react-query";
-import { EditStoryAction, EditStoryDraft } from "../reducers/edit-reducer";
-import { mainSchema } from "@/api/schema";
-import {
-	GenerateSceneDiff,
-	GenerateSceneDiffDto,
-	GenerateStoryDiff,
-	GenerateStoryDiffDto,
-	WebstoryToStoryDraft,
-} from "../utils/storydraft";
-import api from "@/api";
-import { QueryKeys } from "@/lib/queryKeys";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useUpdateCategory = () => {
-	const queryClient = useQueryClient();
+	const queryClient = useQueryClient(); // TODO: Implement once editor is not dependent on URL route
 	return useMutation({
 		mutationFn: async ({ category }: { category: string }) => {
 			console.log(category);

@@ -232,14 +232,6 @@ const Footer = ({
 				);
 				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
 			}
-
-			// api.video.regenerateAllImages({
-			// 	// @ts-expect-error
-			// 	image_style:
-			// 		story.settings?.style ?? StoryImageStyles.Realistic,
-			// 	story_id: story.id,
-			// 	story_type: story.type,
-			// });
 			router.push(
 				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
 			);
@@ -423,7 +415,6 @@ const Footer = ({
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={GenerateVideoScenesMutation.isPending}
 					>
-
 						<StoryLogo />
 						{GenerateVideoScenesMutation.isPending ? (
 							<p className="font-bold text-slate-50">Generating.....</p>
@@ -592,33 +583,6 @@ const Footer = ({
 				)}
 			</div>
 			<FooterRightButtons />
-
-			{/* <div className="flex gap-2">
-				<div>
-					<Select>
-						<label className="text-sm text-slate-600 font-normal">
-							Storyboard Images
-						</label>
-						<SelectTrigger className="max-w-fit py-1.5 px-3 space-x-1.5">
-							<LayoutGrid className="stroke-1 opacity-50" />
-							<SelectValue placeholder="Batch Generate All" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="none">None</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
-				<div className="flex flex-col">
-					<label className="text-sm text-slate-600 font-normal text-right">
-						~30s to Generate Storyboard
-					</label>
-					<Button onClick={onGenerate} className="bg-accent-700 space-x-1.5">
-						<BrandShortLogo />
-						<p className="font-bold text-slate-50">Generate Storyboard</p>
-						<ArrowRight className="w-4 h-4 opacity-50" />
-					</Button>
-				</div>
-			</div> */}
 		</div>
 	);
 };

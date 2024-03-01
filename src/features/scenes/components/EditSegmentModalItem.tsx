@@ -226,19 +226,7 @@ export default function EditSegmentModalItem({
 									{UploadImage.isPending ? "Uploading" : "Image"}
 									<Plus width={"18px"} height={"18px"} className="stroke-1" />
 								</label>
-								{/*
-								<Button
-									className="flex  py-1 gap-1 h-fit bg-muted border-border border-[1px] rounded-md items-center"
-									variant="outline"
-								>
-									<ImagePlus
-										width={"18px"}
-										height={"18px"}
-										className="stroke-1"
-									/>
-									Image
-									<Plus width={"18px"} height={"18px"} className="stroke-1" />
-								</Button> */}
+
 								<Button
 									className="flex py-1 gap-1 text-white h-fit  border-border border-[1px] rounded-md items-center"
 									variant="default"
@@ -299,16 +287,6 @@ function AdvancedEditingOptions({
 
 	return (
 		<TooltipProvider>
-			{/* <div
-				className={cn(
-					"border-[1px] rounded-md p-5 text-sm hidden transition transform ease-in-out duration-10000",
-					show && "block"
-				)}
-				style={{
-					boxShadow: "0px 0px 6px 0px #D7CBE1",
-					border: "0.5px solid #BB55F7",
-				}}
-			> */}
 			<div
 				className={cn(
 					"border-[1px] rounded-md p-5 text-sm transition-transform ease-in-out duration-200 overflow-hidden transform",

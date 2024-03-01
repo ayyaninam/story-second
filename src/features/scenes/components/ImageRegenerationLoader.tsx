@@ -13,17 +13,10 @@ function ImageRegenerationLoader({
 	circleSize: number;
 }) {
 	return (
-		<div
-			className="border-[0.5px] bg-gradient-to-b from-loader-start to-loader-end border-purple-200 rounded=[1.5px] flex justify-center items-center w-full h-full"
-			// style={{
-			// 	background: "linear-gradient(180deg, #121212 0%, #292929 100%)",
-			// 	// background: "linear-gradient(180deg, #F1F6F9 0%, #FBF5FF 100%)",
-			// }}
-		>
+		<div className="border-[0.5px] bg-gradient-to-b from-loader-start to-loader-end border-purple-200 rounded=[1.5px] flex justify-center items-center w-full h-full">
 			<div
 				className={cn(
 					"rounded-full p-2.5 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-					// expanded ? "w-12 h-12" : "w-6 h-6"
 				)}
 				style={{
 					background:
@@ -33,7 +26,6 @@ function ImageRegenerationLoader({
 				}}
 			>
 				<div className="animate-spin absolute w-full h-full flex justify-center items-center">
-					{/* <SpinnerArc width={expanded ? 43 : 21} height={expanded ? 43 : 21} /> */}
 					<SpinnerArc width={arcSize} height={arcSize} />
 				</div>
 				<div className="absolute w-full h-full flex justify-center items-center">

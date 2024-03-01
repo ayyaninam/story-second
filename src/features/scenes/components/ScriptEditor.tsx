@@ -103,21 +103,12 @@ export default function ScriptEditor({
 						<div className="flex items-center gap-1">
 							<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 							<p>Script View</p>
-							{/* <StoryboardViewTypes type={StoryboardViewType.Outline} /> */}
 						</div>
 						<div className="flex gap-1 items-center">
 							<p className="px-1 text-accent-900">
 								Pro Tip — A script is the foundation of a video. Write
 								expressively.
-								{/* <a href="#">
-								<u>Learn how</u>
-							</a> */}
 							</p>
-							{/* <div className="flex gap-1 items-center text-accent-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
-							<SparkleIcon width={"18px"} height={"18px"} />
-							<p className="text-xs">Regenerate</p>
-							<ChevronDown width={"18px"} height={"18px"} />
-						</div> */}
 						</div>
 					</div>
 					<div className="relative px-6 pt-6 pb-2">
@@ -126,9 +117,6 @@ export default function ScriptEditor({
 						</p>
 
 						<div className="w-full inline-flex text-slate-400 text-xs py-1">
-							{/* <div className="flex">
-								<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
-							</div> */}
 							<CategorySelect
 								value={WebstoryData?.topLevelCategory!}
 								onChange={(category) => UpdateCategory.mutate({ category })}
@@ -141,17 +129,11 @@ export default function ScriptEditor({
 							className={cn(
 								`w-full pb-6 bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
 							)}
-							// border-[1px]
 						>
 							<div
 								className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
 							>
-								<div
-									className="space-y-2 max-h-[40vh] overflow-y-auto overflow-x-hidden"
-									// onMouseLeave={(e) => {
-									// 	setShowActionItems({});
-									// }}
-								>
+								<div className="space-y-2 max-h-[40vh] overflow-y-auto overflow-x-hidden">
 									<Editor
 										Webstory={WebstoryData!}
 										dispatch={dispatch}
@@ -197,36 +179,6 @@ export default function ScriptEditor({
 																					autoComplete="false"
 																					disabled={!WebstoryData?.storyDone}
 																					onKeyDown={(e) => {
-																						// ! DEBT: Couldn't focus all elements at once
-																						// const selectedText = window
-																						// 	.getSelection()
-																						// 	?.toString();
-
-																						// console.log(
-																						// 	">>> selectObj",
-																						// 	selectedText
-																						// );
-																						// if (
-																						// 	(e.ctrlKey || e.metaKey) &&
-																						// 	e.key === "a"
-																						// ) {
-																						// 	console.log(
-																						// 		">>> selectObj2",
-																						// 		selectedText
-																						// 	);
-
-																						// 	if (
-																						// 		selectedText === segment.textContent
-																						// 	) {
-																						// 		// @ts-ignore
-																						// 		// refs.current?.[1][2]?.focus();
-																						// 		refs.current[sceneIndex]?.map(
-																						// 			(sgmtRef) => {
-																						// 				sgmtRef?.focus();
-																						// 			}
-																						// 		);
-																						// 	}
-																						// }
 																						if (e.key.startsWith("Arrow")) {
 																							handleNavigation({
 																								event: e,
