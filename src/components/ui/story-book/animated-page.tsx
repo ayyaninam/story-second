@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { cn } from "@/utils";
-import { PageView } from "./page-view";
-import { TurnDirection, Pages, PAGE_TURN_DURATION } from "./constants";
+import { PageView } from "./pageView/page-view";
+import { TurnDirection, Page, PAGE_TURN_DURATION } from "./constants";
 import styles from "./animated-page.module.css";
 
 export const AnimatedPage: FC<{
-	pages: [Pages, Pages];
+	pages: [Page, Page];
 	turnDirection: TurnDirection;
 }> = ({ pages, turnDirection }) => (
 	<div

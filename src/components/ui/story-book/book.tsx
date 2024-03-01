@@ -1,23 +1,19 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { AnimatedPage } from "./animated-page";
-import { PageView } from "./page-view";
-import {
-	WebStory,
-	TurnDirection,
-	Pages,
-	PAGE_TURN_DURATION,
-} from "./constants";
+import { PageView } from "./pageView/page-view";
+import { WebStory, TurnDirection, Page, PAGE_TURN_DURATION } from "./constants";
 import styles from "./book.module.css";
+import { cn } from "@/utils";
 
 interface BookProps {
 	story: WebStory;
 }
 
 const Book = ({ story }: BookProps) => {
-	const [pageArray, setPageArray] = useState<Pages[]>([]);
+	const [pageArray, setPageArray] = useState<Page[]>([]);
 	const [pageIndex, setPageIndex] = useState(0);
-	const [animatedPages, setAnimatedPages] = useState<[Pages, Pages]>();
-	const [currentPages, setCurrentPages] = useState<[Pages, Pages]>();
+	const [animatedPages, setAnimatedPages] = useState<[Page, Page]>();
+	const [currentPages, setCurrentPages] = useState<[Page, Page]>();
 	const [turnDirection, setTurnDirection] = useState<TurnDirection>();
 
 	const changePage = useCallback(
@@ -57,7 +53,7 @@ const Book = ({ story }: BookProps) => {
 		// if (story.storySegments.length <= 1) index = 0; code from storybird
 		setPageIndex(index);
 
-		const pArray: Pages[] =
+		const pArray: Page[] =
 			story.scenes
 				?.flatMap((scene) => scene.storySegments)
 				.flatMap((item) => {
@@ -84,7 +80,20 @@ const Book = ({ story }: BookProps) => {
 					];
 				}) ?? [];
 
-		setPageArray(pArray);
+		const pageArray: Page[] = [
+			...pArray,
+			{
+				variant: "the-end-left",
+				index: pArray.length,
+				pageNumber: pNum++,
+			},
+			{
+				variant: "the-end-right",
+				index: pArray.length,
+				pageNumber: pNum++,
+			},
+		];
+		setPageArray(pageArray);
 		// @ts-ignore
 		setCurrentPages([pArray[index], pArray[index + 1]]);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,10 +104,10 @@ const Book = ({ story }: BookProps) => {
 	}
 
 	return (
-		<div className="hidden lg:flex aspect-[3/2] w-full flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
-			<div className={styles.bookWrapper}>
-				<PageView changePage={() => changePage(false)} page={currentPages[0]} />
-				<PageView changePage={() => changePage(true)} page={currentPages[1]} />
+		<div className="flex aspect-[3/2] w-full flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
+			<div className={cn(styles.bookWrapper, "hidden lg:flex")}>
+				<PageView page={currentPages[0]} changePage={() => changePage(false)} />
+				<PageView page={currentPages[1]} changePage={() => changePage(true)} />
 
 				{animatedPages && (
 					<AnimatedPage pages={animatedPages} turnDirection={turnDirection} />

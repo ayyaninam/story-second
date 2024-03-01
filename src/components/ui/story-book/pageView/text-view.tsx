@@ -1,5 +1,5 @@
 import React from "react";
-import { TextPage } from "./constants";
+import { TextPage } from "../constants";
 
 interface TextViewProps {
 	page: TextPage;
