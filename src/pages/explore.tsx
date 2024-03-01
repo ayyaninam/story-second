@@ -14,15 +14,10 @@ import PageLayout from "@/components/layouts/PageLayout";
 
 import { NextSeo } from "next-seo";
 import { genreOptions } from "@/constants/feed-constants";
-import useSaveSessionToken from "@/hooks/useSaveSessionToken";
-import { getServerSideSessionWithRedirect } from "@/utils/auth";
-import {getSession} from "@auth0/nextjs-auth0";
 
 function Explore({
-	session,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	useSaveSessionToken(session);
 	return (
 		<HydrationBoundary state={dehydratedState}>
 			<NextSeo
@@ -84,16 +79,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		sort = "desc",
 	} = context.query;
 
-	const session = await getSession(context.req, context.res);
-
-	if (!session) {
-		return {
-			redirect: {
-				destination: '/auth/login?returnTo=' + context.req.url,
-				permanent: false,
-			},
-		};
-	}
 	const genre = genreOptions.find((g) => g.id === queryGenre)?.id || "all";
 
 	const isDescending = sort === "desc";
@@ -209,7 +194,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 	return {
 		props: {
 			dehydratedState: dehydrate(queryClient),
-			session: { ...session },
 		},
 	};
 }

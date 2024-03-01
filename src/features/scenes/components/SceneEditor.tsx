@@ -27,6 +27,9 @@ import api from "@/api";
 import SceneEditSegmentModal from "./SceneEditSegmentModal";
 import { Separator } from "@/components/ui/separator";
 import { useMutation } from "@tanstack/react-query";
+import CategorySelect from "@/components/ui/CategorySelect";
+import { useUpdateCategory } from "../mutations/UpdateCategory";
+import StoryScreen from "@/features/edit-story/story-screen";
 
 // Circular loader as per the designs. Removed for now as we can't determine the progress
 const Loader = ({
@@ -130,7 +133,7 @@ const SceneEditorView = ({
 	const RegenerateAllVideos = useMutation({
 		mutationFn: api.video.regenerateAllVideos,
 	});
-
+	const UpdateCategory = useUpdateCategory();
 	const handleRegenerateAllVideos = async () => {
 		await RegenerateAllVideos.mutateAsync({
 			story_id: story.id,
@@ -158,7 +161,7 @@ const SceneEditorView = ({
 
 	return (
 		<>
-			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
+			<div className="relative w-4/5 h-4/5 m-auto max-w-[1300px] overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
@@ -178,6 +181,10 @@ const SceneEditorView = ({
 						</p>
 
 						<div className="flex gap-1 text-slate-400 text-xs py-1">
+							<CategorySelect
+								value={WebstoryData?.topLevelCategory!}
+								onChange={(category) => UpdateCategory.mutate({ category })}
+							/>
 							<p>by {WebstoryData?.user?.name}</p>
 						</div>
 						<Separator className="w-[35%]" />
@@ -190,7 +197,7 @@ const SceneEditorView = ({
 					>
 						<div className="h-full flex-grow ml-2  flex flex-col justify-between overflow-y-auto">
 							<div className="flex flex-col my-3 md:flex-row items-center w-full">
-								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch">
+								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row">
 									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
 										<Editor
 											Webstory={WebstoryData!}
@@ -200,69 +207,71 @@ const SceneEditorView = ({
 											{({ handleEnter, handleInput, refs }) => {
 												return (
 													<>
-														{story.scenes.map((scene, sceneIndex) => (
-															<>
-																<div
-																	key={sceneIndex}
-																	className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
-																>
-																	{scene.status === StoryStatus.PENDING && (
-																		<RefreshCcw
-																			className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin animate-s"
-																			style={{
-																				animationDirection: "reverse",
-																			}}
-																		/>
-																	)}
-
-																	<span className="flex flex-wrap text-sm">
-																		{scene.segments.map(
-																			(segment, segmentIndex) => (
-																				<span
-																					key={segmentIndex}
-																					style={{
-																						backgroundColor: "transparent",
-																					}}
-																					className={cn(
-																						"flex max-w-sm focus:!bg-accent-200 hover:!bg-accent-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
-																						segment.videoStatus !==
-																							StoryStatus.COMPLETE &&
-																							"text-accent-800"
-																					)}
-																					onClick={() => {
-																						videoPlayerRef.current?.seekToSegment(
-																							{
-																								...segment,
-																								sceneId: scene.id,
-																								index: segment.id,
-																							}
-																						);
-																					}}
-																				>
-																					{segment.textContent}
-																				</span>
-																			)
+														{story.scenes
+															.filter((el) => el.segments.length > 0)
+															.map((scene, sceneIndex) => (
+																<>
+																	<div
+																		key={sceneIndex}
+																		className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
+																	>
+																		{scene.status === StoryStatus.PENDING && (
+																			<RefreshCcw
+																				className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin "
+																				style={{
+																					animationDirection: "reverse",
+																				}}
+																			/>
 																		)}
-																	</span>
-																	<div className="visible flex gap-x-1 p-2">
-																		<span
-																			className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
-																			onClick={() =>
-																				setEditSegmentsModalState({
-																					open: true,
-																					scene: scene,
-																					sceneId: sceneIndex,
-																					dispatch,
-																					story,
-																				})
-																			}
-																		>
-																			<Settings2 className="w-4 h-4 stroke-slate-500" />
+
+																		<span className="flex flex-wrap text-sm">
+																			{scene.segments.map(
+																				(segment, segmentIndex) => (
+																					<span
+																						key={segmentIndex}
+																						style={{
+																							backgroundColor: "transparent",
+																						}}
+																						className={cn(
+																							"flex max-w-sm focus:!bg-accent-200 hover:!bg-accent-100 hover:text-slate-950 rounded-sm px-1 cursor-pointer",
+																							segment.videoStatus !==
+																								StoryStatus.COMPLETE &&
+																								"text-accent-800"
+																						)}
+																						onClick={() => {
+																							videoPlayerRef.current?.seekToSegment(
+																								{
+																									...segment,
+																									sceneId: scene.id,
+																									index: segment.id,
+																								}
+																							);
+																						}}
+																					>
+																						{segment.textContent}
+																					</span>
+																				)
+																			)}
 																		</span>
+																		<div className="visible flex gap-x-1 p-2">
+																			<span
+																				className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
+																				onClick={() =>
+																					setEditSegmentsModalState({
+																						open: true,
+																						scene: scene,
+																						sceneId: sceneIndex,
+																						dispatch,
+																						story,
+																					})
+																				}
+																			>
+																				<Settings2 className="w-4 h-4 stroke-slate-500" />
+																			</span>
+																		</div>
 																	</div>
-																</div>
-															</>
-														))}
+																</>
+															))}
 													</>
 												);
 											}}
@@ -273,7 +282,7 @@ const SceneEditorView = ({
 						</div>
 
 						<div className="relative h-full w-full px-4 flex items-center justify-center ">
-							<div
+							{/* <div
 								className="h-[95%] blur-sm overflow-visible"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
@@ -285,16 +294,15 @@ const SceneEditorView = ({
 									isPlaying={isPlaying}
 									seekedFrame={seekedFrame}
 								/>
-							</div>
+							</div> */}
 							<div
 								className="absolute h-[95%]"
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
-								<VideoPlayer
-									playerClassName="rounded-lg"
-									ref={videoPlayerRef}
+								<StoryScreen
 									Webstory={WebstoryData}
 									isError={isError}
+									ref={videoPlayerRef}
 									onPlay={() => {
 										setIsPlaying(true);
 									}}
@@ -314,21 +322,6 @@ const SceneEditorView = ({
 					</div>
 
 					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2" />
-					{/* <span className="font-medium text-slate-400 mx-1.5 mt-1.5 mb-2.5 text-sm">
-							Use 25 credits to regenerate ·{" "}
-							<Link className="text-accent-600" href="#">
-								See plans
-							</Link>
-						</span>
-						<div className="flex gap-2">
-							<Button className="w-full text-xs flex gap-2 text-white bg-[#8F22CE] px-3 py-2">
-								<Sparkle fill="white" className="w-4 h-4" />
-								Regenerate 2 Edited Scenes
-							</Button>
-							<Button variant="outline" className="w-full text-xs px-3 py-2">
-								Or, Save Without Regenerating
-							</Button>
-						</div> */}
 				</div>
 			</div>
 

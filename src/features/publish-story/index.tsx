@@ -180,14 +180,8 @@ export default function PublishedStory({
 					className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm lg:rounded-br-sm lg:rounded-tr-sm lg:rounded-tl-sm lg:rounded-bl-sm`}
 				>
 					<div className="flex items-center gap-x-2 py-3">
-
-						<Link
-							href={Routes.Explore()}
-						>
-							<StoryLogo
-								size={20}
-								fill="#657D8B"
-							/>
+						<Link href={Routes.Explore()}>
+							<StoryLogo size={20} fill="#657D8B" />
 						</Link>
 
 						{/*<svg*/}
@@ -453,7 +447,10 @@ export default function PublishedStory({
 												src={Webstory.data.user?.profilePicture ?? undefined}
 											/>
 											<AvatarFallback>
-												{Format.AvatarName(Webstory.data.user?.name, Webstory.data.user?.lastName)}
+												{Format.AvatarName(
+													Webstory.data.user?.name,
+													Webstory.data.user?.lastName
+												)}
 											</AvatarFallback>
 										</Avatar>
 									)}
@@ -463,24 +460,24 @@ export default function PublishedStory({
 										<span className="flex flex-col">
 											{Webstory.data.user && (
 												<>
-												<span>{Webstory.data.user.name} {Webstory.data.user?.lastName}</span>
-												<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
-													<>
-														{Webstory.data.user.videoCount > 0 && (
-															<p>
-																{Webstory.data.user?.videoCount} {" "} Videos
-															</p>
-														)}
-														{Webstory.data.user.videoCount > 0 && Webstory.data.user.storyCount > 0 && (
-															<p className="text-slate-300"> • </p>
-														)}
-														{Webstory.data.user.storyCount > 0 && (
-															<p>
-																{Webstory.data.user.storyCount} {" "} Stories
-															</p>
-														)}
-													</>
-												</span>
+													<span>
+														{Webstory.data.user.name}{" "}
+														{Webstory.data.user?.lastName}
+													</span>
+													<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
+														<>
+															{Webstory.data.user.videoCount! > 0 && (
+																<p>{Webstory.data.user?.videoCount} Videos</p>
+															)}
+															{Webstory.data.user.videoCount! > 0 &&
+																Webstory.data.user.storyCount! > 0 && (
+																	<p className="text-slate-300"> • </p>
+																)}
+															{Webstory.data.user.storyCount! > 0 && (
+																<p>{Webstory.data.user.storyCount} Stories</p>
+															)}
+														</>
+													</span>
 												</>
 											)}
 										</span>

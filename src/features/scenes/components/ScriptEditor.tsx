@@ -16,7 +16,7 @@ import editStoryReducer, {
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import { SegmentModificationData } from "@/types";
 import { QueryKeys } from "@/lib/queryKeys";
@@ -29,6 +29,16 @@ import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
+import CategorySelect from "@/components/ui/CategorySelect";
+import { useUpdateCategory } from "../mutations/UpdateCategory";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -72,57 +82,6 @@ export default function ScriptEditor({
 	);
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
-	const diff = GenerateStoryDiff(previousStory, story);
-
-	const EditSegment = useMutation({
-		mutationFn: api.video.editSegment,
-	});
-
-	const handleSubmitEditSegments = async () => {
-		const diff = GenerateStoryDiff(previousStory, story);
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions
-			.filter((segmentSet) => segmentSet.length > 0)
-			.map((segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			}));
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-
-		const editedResponse = await EditSegment.mutateAsync({
-			story_id: WebstoryData?.id as string,
-			story_type: WebstoryData?.storyType,
-			edits: [...edits, ...additions, ...deletions],
-		});
-		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
-
-		const newStory = await api.video.get(
-			WebstoryData?.topLevelCategory!,
-			WebstoryData?.slug!,
-			WebstoryData?.storyType!
-		);
-
-		setPreviousStory(WebstoryToStoryDraft(newStory));
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
-	};
-
 	useEffect(() => {
 		if (selectedSegment) {
 			console.log();
@@ -134,29 +93,22 @@ export default function ScriptEditor({
 		return WebstoryData?.user?.name;
 	}, [WebstoryData?.user?.name]);
 
+	const UpdateCategory = useUpdateCategory();
+
 	return (
 		<>
 			<TooltipProvider>
-				<div className="relative w-4/5 h-4/5 m-auto bg-background rounded-lg shadow-lg">
+				<div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto bg-background rounded-lg shadow-lg">
 					<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 						<div className="flex items-center gap-1">
 							<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
 							<p>Script View</p>
-							{/* <StoryboardViewTypes type={StoryboardViewType.Outline} /> */}
 						</div>
 						<div className="flex gap-1 items-center">
 							<p className="px-1 text-accent-900">
 								Pro Tip — A script is the foundation of a video. Write
 								expressively.
-								{/* <a href="#">
-								<u>Learn how</u>
-							</a> */}
 							</p>
-							{/* <div className="flex gap-1 items-center text-accent-600 bg-white rounded-sm p-[1px] hover:cursor-pointer hover:bg-slate-100">
-							<SparkleIcon width={"18px"} height={"18px"} />
-							<p className="text-xs">Regenerate</p>
-							<ChevronDown width={"18px"} height={"18px"} />
-						</div> */}
 						</div>
 					</div>
 					<div className="relative px-6 pt-6 pb-2">
@@ -165,14 +117,10 @@ export default function ScriptEditor({
 						</p>
 
 						<div className="w-full inline-flex text-slate-400 text-xs py-1">
-							{/* <div className="flex">
-							Storyboard for a <u>60 Second</u>{" "}
-							<ChevronDown className="mr-2 h-4 w-4 text-xs" /> <u>Movie</u>{" "}
-							<ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div>
-						<div className="flex">
-							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
-						</div> */}
+							<CategorySelect
+								value={WebstoryData?.topLevelCategory!}
+								onChange={(category) => UpdateCategory.mutate({ category })}
+							/>
 							<p className="ms-1">by {userName}</p>
 						</div>
 					</div>
@@ -181,90 +129,124 @@ export default function ScriptEditor({
 							className={cn(
 								`w-full pb-6 bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
 							)}
-							// border-[1px]
 						>
 							<div
 								className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
 							>
-								<div
-									className="space-y-2 max-h-[40vh] overflow-y-auto overflow-x-hidden"
-									// onMouseLeave={(e) => {
-									// 	setShowActionItems({});
-									// }}
-								>
+								<div className="space-y-2 max-h-[40vh] overflow-y-auto overflow-x-hidden">
 									<Editor
 										Webstory={WebstoryData!}
 										dispatch={dispatch}
 										story={story}
 									>
-										{({ handleEnter, handleInput, refs }) => {
+										{({
+											handleEnter,
+											handleInput,
+											handleNavigation,
+											handleDelete,
+											refs,
+										}) => {
 											return (
 												<div className={cn("w-full")}>
-													{story.scenes.map((scene, sceneIndex) => (
-														<div
-															key={sceneIndex}
-															className="flex flex-wrap flex-col  w-fit"
-														>
-															<TooltipComponent label="You can edit scenes in the storyboard">
-																<div className="bg-muted font-normal text-muted-foreground rounded-sm text-sm w-fit my-2 px-1">
-																	{`Scene ${sceneIndex + 1}: `}
-																	{scene.description}
-																</div>
-															</TooltipComponent>
+													{story.scenes
+														.filter((el) => el.segments.length > 0)
+														.map((scene, sceneIndex) => (
+															<div
+																key={sceneIndex}
+																className="flex flex-wrap flex-col  w-fit"
+															>
+																<TooltipComponent
+																	align="start"
+																	label="You can edit scenes in the storyboard"
+																>
+																	<div className="bg-muted font-normal text-muted-foreground rounded-sm text-sm w-fit my-2 px-1">
+																		{`Scene ${sceneIndex + 1}: `}
+																		{scene.description}
+																	</div>
+																</TooltipComponent>
 
-															<div className="flex flex-wrap flex-row">
-																{scene.segments.map((segment, segmentIndex) => (
-																	<span
-																		key={segmentIndex}
-																		style={{ backgroundColor: "transparent" }}
-																		className={cn(`flex flex-wrap `)}
-																	>
-																		<AutosizeInput
-																			autoComplete="false"
-																			disabled={!WebstoryData?.storyDone}
-																			onKeyDown={(e) => {
-																				if (e.key === "Enter") {
-																					handleEnter(
-																						scene,
-																						sceneIndex,
-																						segment,
-																						segmentIndex
-																					);
-																				}
-																			}}
-																			name={segmentIndex.toString()}
-																			inputClassName={cn(
-																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 focus:outline-none",
-																				segment.textStatus ===
-																					TextStatus.EDITED && "text-purple-500"
-																			)}
-																			inputStyle={{
-																				outline: "none",
-																				backgroundColor: "inherit",
-																			}}
-																			// @ts-ignore
-																			ref={(el) =>
-																				// @ts-ignore
-																				(refs.current[sceneIndex][
-																					segmentIndex
-																				] = el)
-																			}
-																			value={segment.textContent}
-																			onChange={(e) => {
-																				handleInput(
-																					e,
-																					scene,
-																					sceneIndex,
-																					segment,
-																					segmentIndex
-																				);
-																			}}
-																		/>
-																	</span>
-																))}
+																<div className="flex flex-wrap flex-row">
+																	{scene.segments.map(
+																		(segment, segmentIndex) => (
+																			<span
+																				key={segmentIndex}
+																				style={{
+																					backgroundColor: "transparent",
+																				}}
+																				className={cn(`flex flex-wrap `)}
+																			>
+																				<AutosizeInput
+																					autoComplete="false"
+																					disabled={!WebstoryData?.storyDone}
+																					onKeyDown={(e) => {
+																						if (e.key.startsWith("Arrow")) {
+																							handleNavigation({
+																								event: e,
+																								totalScenes:
+																									story.scenes.length,
+																								totalSegments:
+																									scene.segments.length,
+																								currentScene: sceneIndex,
+																								currentSegment: segmentIndex,
+																								segmentContentLength:
+																									segment.textContent.length,
+																							});
+																						}
+
+																						if (e.key === "Enter") {
+																							handleEnter(
+																								scene,
+																								sceneIndex,
+																								segment,
+																								segmentIndex
+																							);
+																						}
+
+																						if (e.key === "Backspace") {
+																							handleDelete({
+																								event: e,
+																								totalScenes:
+																									story.scenes.length,
+																								currentScene: sceneIndex,
+																								currentSegment: segmentIndex,
+																							});
+																						}
+																					}}
+																					name={segmentIndex.toString()}
+																					inputClassName={cn(
+																						"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 focus:outline-none",
+																						segment.textStatus ===
+																							TextStatus.EDITED &&
+																							"text-purple-500"
+																					)}
+																					inputStyle={{
+																						outline: "none",
+																						backgroundColor: "inherit",
+																					}}
+																					// @ts-ignore
+																					ref={(el) =>
+																						// @ts-ignore
+																						(refs.current[sceneIndex][
+																							segmentIndex
+																						] = el)
+																					}
+																					value={segment.textContent}
+																					onChange={(e) => {
+																						handleInput(
+																							e,
+																							scene,
+																							sceneIndex,
+																							segment,
+																							segmentIndex
+																						);
+																					}}
+																				/>
+																			</span>
+																		)
+																	)}
+																</div>
 															</div>
-														</div>
-													))}
+														))}
 													{!WebstoryData?.storyDone && (
 														<div className="flex w-full justify-center items-center border-t-2 p-2 gap-1">
 															<RefreshCw className="animate-spin stroke-purple-600" />

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { getGenreNameFromSlug } from "../utils";
 
-const getGenreOptions = (categories: string[]) => {
+export const getGenreOptions = (categories: string[]) => {
 	return [
 		{
 			id: "all",

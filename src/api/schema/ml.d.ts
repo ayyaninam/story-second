@@ -213,7 +213,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 12469585
+       * @default 7657778
        */
       seed?: number;
       /**
@@ -244,6 +244,34 @@ export interface components {
       story_type: components["schemas"]["OutputTypeEnum"];
       /** Image Key */
       image_key: string;
+      image_style: components["schemas"]["ImageStyleEnum"];
+      /**
+       * Image Prompt
+       * @default
+       */
+      image_prompt?: string;
+      /**
+       * Image Cfg Scale
+       * @default 2
+       */
+      image_cfg_scale?: number;
+      /** @default 2 */
+      image_resolution?: components["schemas"]["ImageResolutionEnum"];
+      /**
+       * Image Sampling Steps
+       * @default 8
+       */
+      image_sampling_steps?: number;
+      /**
+       * Image Seed
+       * @default 73980476
+       */
+      image_seed?: number;
+      /**
+       * Image Alt Text
+       * @default
+       */
+      image_alt_text?: string;
     };
     /** SceneAdd */
     SceneAdd: {

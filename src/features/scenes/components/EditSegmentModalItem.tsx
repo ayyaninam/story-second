@@ -42,6 +42,8 @@ import createSeed from "@/utils/create-seed";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api";
+import { getImageCost } from "@/utils/credit-cost";
+import { cn } from "@/utils";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -49,10 +51,11 @@ export default function EditSegmentModalItem({
 	onSegmentEdit,
 	segmentIndex,
 	onSegmentDelete,
-	imageRegenerationSegmentId,
-	setImageRegenerationSegmentId,
+	imageRegenerationSegmentDetails,
+	setImageRegenerationSegmentDetails,
 	dispatch,
 	sceneIndex,
+	handleSubmitEditSegments,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
@@ -60,11 +63,18 @@ export default function EditSegmentModalItem({
 	dispatch: React.Dispatch<EditStoryAction>;
 	segmentIndex: number;
 	onSegmentDelete: (segmentIndex: number) => void;
-	imageRegenerationSegmentId: number | null;
-	setImageRegenerationSegmentId: React.Dispatch<
-		React.SetStateAction<number | null>
+	imageRegenerationSegmentDetails: {
+		sceneIndex: number;
+		segmentIndex: number;
+	} | null;
+	setImageRegenerationSegmentDetails: React.Dispatch<
+		React.SetStateAction<{
+			sceneIndex: number;
+			segmentIndex: number;
+		} | null>
 	>;
 	sceneIndex: number;
+	handleSubmitEditSegments: () => void;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
 	const [imageStatus, setImageStatus] = useState(segment.imageStatus);
@@ -85,7 +95,7 @@ export default function EditSegmentModalItem({
 	return (
 		<div className="flex bg-primary-foreground rounded-md border-border border-[1px] p-2 m-2 gap-2">
 			<div className="w-full text-foreground space-y-2">
-				<div className="flex flex-row space-x-2">
+				<div className="flex flex-row space-x-2 items-center">
 					<div
 						className="h-56"
 						style={{
@@ -93,12 +103,21 @@ export default function EditSegmentModalItem({
 						}}
 					>
 						<ImageRegenerationPopoverHOC
+							handleSubmitEditSegments={handleSubmitEditSegments}
 							segment={segment}
 							story={story}
-							open={imageRegenerationSegmentId === segment.id}
+							open={
+								imageRegenerationSegmentDetails?.segmentIndex ===
+									segmentIndex &&
+								imageRegenerationSegmentDetails?.sceneIndex === sceneIndex
+							}
 							onClose={() => {
-								setImageRegenerationSegmentId((prevSegmentId) => {
-									if (prevSegmentId === segment.id) return null;
+								setImageRegenerationSegmentDetails((prevSegmentId) => {
+									if (
+										prevSegmentId?.segmentIndex === segmentIndex &&
+										prevSegmentId?.sceneIndex === sceneIndex
+									)
+										return null;
 									return prevSegmentId;
 								});
 							}}
@@ -118,7 +137,10 @@ export default function EditSegmentModalItem({
 								) : (
 									<Image
 										onClick={() => {
-											setImageRegenerationSegmentId(segment.id);
+											setImageRegenerationSegmentDetails({
+												sceneIndex: sceneIndex,
+												segmentIndex: segmentIndex,
+											});
 											setRegeneratingImage(false);
 										}}
 										alt={segment.textContent}
@@ -132,7 +154,7 @@ export default function EditSegmentModalItem({
 							</div>
 						</ImageRegenerationPopoverHOC>
 					</div>
-					<div className="w-full h-full flex flex-col space-y-3">
+					<div className="w-full h-full self-start flex flex-col space-y-3">
 						<div>
 							<div className="relative w-full h-fit">
 								<ScrollText className="h-6 w-6 stroke-slate-400 stroke-1 p-1 absolute top-[calc(50%-0.75rem)] left-1 " />
@@ -169,12 +191,14 @@ export default function EditSegmentModalItem({
 							<div className="flex items-center space-x-1 text-muted-foreground">
 								<label className="flex py-[4px] w-36 justify-center gap-1 h-fit bg-muted border-border border-[1px] pl-3 pr-2 rounded-md items-center cursor-pointer hover:text-slate-700 transition-colors ease-in-out font-medium text-sm">
 									<Input
-										onChange={(e) => {
-											if (e.target.files?.[0]) {
-												UploadImage.mutateAsync({
+										onChange={async (e) => {
+											const fileElement = e.target as HTMLInputElement;
+											if (fileElement.files && fileElement.files.length > 0) {
+												const file = fileElement.files[0]!;
+												await UploadImage.mutateAsync({
 													id: story.id,
-													image: e.target.files[0],
-													index: segmentIndex,
+													image: file,
+													index: segment.id,
 												});
 											}
 										}}
@@ -202,24 +226,15 @@ export default function EditSegmentModalItem({
 									{UploadImage.isPending ? "Uploading" : "Image"}
 									<Plus width={"18px"} height={"18px"} className="stroke-1" />
 								</label>
-								{/*
+
 								<Button
-									className="flex  py-1 gap-1 h-fit bg-muted border-border border-[1px] rounded-md items-center"
-									variant="outline"
-								>
-									<ImagePlus
-										width={"18px"}
-										height={"18px"}
-										className="stroke-1"
-									/>
-									Image
-									<Plus width={"18px"} height={"18px"} className="stroke-1" />
-								</Button> */}
-								<Button
-									className="flex py-1 gap-1 bg-muted h-fit  border-border border-[1px] rounded-md items-center"
-									variant="outline"
+									className="flex py-1 gap-1 text-white h-fit  border-border border-[1px] rounded-md items-center"
+									variant="default"
 									onClick={() => {
-										setImageRegenerationSegmentId(segment.id);
+										setImageRegenerationSegmentDetails({
+											sceneIndex: sceneIndex,
+											segmentIndex: segmentIndex,
+										});
 										setRegeneratingImage(true);
 									}}
 									disabled={
@@ -235,20 +250,20 @@ export default function EditSegmentModalItem({
 										"Regenerate"}
 									{segment.alternateImagesStatus === StoryStatus.PENDING &&
 										"Regenerating"}
+									<p>{`(${getImageCost(1)} ${Format.Pluralize("Credit", getImageCost(1))})`}</p>
 								</Button>
 							</div>
 						</div>
-						{isChecked && (
-							<AdvancedEditingOptions
-								settings={segment.settings}
-								onSettingsChange={(settings) => {
-									onSegmentEdit({
-										...segment,
-										settings: settings,
-									});
-								}}
-							/>
-						)}
+						<AdvancedEditingOptions
+							show={isChecked}
+							settings={segment.settings}
+							onSettingsChange={(settings) => {
+								onSegmentEdit({
+									...segment,
+									settings: settings,
+								});
+							}}
+						/>
 					</div>
 				</div>
 			</div>
@@ -259,17 +274,30 @@ export default function EditSegmentModalItem({
 function AdvancedEditingOptions({
 	settings,
 	onSettingsChange,
+	show,
 }: {
 	settings?: Settings;
 	onSettingsChange: (settings: Settings) => void;
+	show: boolean;
 }) {
+	const [seed, setSeed] = useState(`${settings?.seed ?? -1}`);
+	useEffect(() => {
+		setSeed(`${settings?.seed ?? -1}`);
+	}, [settings?.seed]);
+
 	return (
 		<TooltipProvider>
 			<div
-				className="border-[1px] rounded-md p-5 text-sm"
+				className={cn(
+					"border-[1px] rounded-md p-5 text-sm transition-transform ease-in-out duration-200 overflow-hidden transform",
+					show ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 max-h-0"
+				)}
 				style={{
 					boxShadow: "0px 0px 6px 0px #D7CBE1",
 					border: "0.5px solid #BB55F7",
+					transition: "transform 200ms ease-in-out, opacity 200ms ease-in-out",
+					// Ensuring transform origin is top to scale from top to bottom
+					transformOrigin: "top",
 				}}
 			>
 				<label
@@ -280,7 +308,13 @@ function AdvancedEditingOptions({
 					<TooltipComponent label="The Image Prompt">
 						<Info width={"18px"} height={"18px"} color="#A6B6FC" />
 					</TooltipComponent>
+					<p className="text-gray-500">
+						{settings?.prompt
+							? "Prompt is used, text is ignored"
+							: "Prompt is generated based on text"}
+					</p>
 				</label>
+
 				<Textarea
 					id="image-animation-prompt"
 					rows={3}
@@ -348,16 +382,25 @@ function AdvancedEditingOptions({
 								max={2e16 - 1}
 								className="w-full border-[1px] rounded-md m-1 p-2"
 								placeholder="2"
-								value={settings?.seed ?? -1}
+								value={seed}
 								onChange={(e) => {
+									const parsedSeed = parseInt(e.target.value);
+									if (isNaN(parsedSeed)) return setSeed(e.target.value);
+									const newSeed =
+										parsedSeed < -1
+											? -1
+											: parsedSeed > 2e16 - 1
+												? 2e16 - 1
+												: parsedSeed;
 									onSettingsChange({
 										...settings,
-										seed: parseInt(e.target.value),
+										seed: newSeed,
 									});
+									setSeed(newSeed.toString());
 								}}
 							/>
 							<Shuffle
-								className="h-8 w-8 absolute right-0 top-1 p-1 rounded-sm shadow-sm hover:cursor-pointer border-border border-[1px]"
+								className="h-8 w-8 absolute stroke-1 right-0 top-1 p-1 rounded-sm shadow-sm hover:cursor-pointer border-border border-[1px]"
 								onClick={() => {
 									onSettingsChange({
 										...settings,

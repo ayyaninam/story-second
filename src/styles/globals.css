@@ -33,6 +33,9 @@
 		--destructive: 0 84.2% 60.2%;
 		--destructive-foreground: 210 40% 98%;
 
+		--loader-start: 210 35% 96.5%;
+		--loader-end: 270 100% 97.5%;
+
 		--button-start: 0 0% 100%;
 		--button-end: 210 40% 98%;
 		--border: 214.3 31.8% 91.4%;
@@ -82,6 +85,9 @@
 
 		--destructive: 0 62.8% 30.6%;
 		--destructive-foreground: 210 40% 98%;
+
+		--loader-start: 0 0% 7.8%;
+		--loader-end: 0 0% 16.5%;
 
 		--button-start: 201 19% 35%;
 		--button-end: 201 19% 35%;

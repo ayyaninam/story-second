@@ -16,12 +16,14 @@ export default function ImageLoader({
 	imageData = [],
 	imageLoadingDurationMs = 2000,
 	displayLoaderAfterFirstShow = false,
+	defaultLoadingText,
 }: {
 	imageData: (components["schemas"]["ReturnVideoSegmentDTO"] & {
 		src: string;
 	})[];
 	imageLoadingDurationMs?: number;
 	displayLoaderAfterFirstShow?: boolean;
+	defaultLoadingText?: string;
 }) {
 	// State
 	const router = useRouter();
@@ -90,7 +92,7 @@ export default function ImageLoader({
 							}}
 						>
 							<p className="font-medium font-mono text-lg">
-								{DisplayLoadingText()}
+								{defaultLoadingText || DisplayLoadingText()}
 							</p>
 						</div>
 					</div>
