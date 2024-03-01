@@ -17,7 +17,7 @@ import UncheckedCheckBox from "@/components/icons/scene-editor/unchecked-check-b
 import CheckedCheckBox from "@/components/icons/scene-editor/checked-check-box";
 import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-image-icon";
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
-import { CheckIcon, Lock, ScrollText, Sparkle, X } from "lucide-react";
+import { CheckIcon, Lock, ScrollText, Sparkle, X, Plus } from "lucide-react";
 import { getImageCost } from "@/utils/credit-cost";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
@@ -65,6 +65,7 @@ const ImageContainer = ({
 	onSelection,
 	loading,
 	active,
+	onHover,
 }: {
 	segment: Segment;
 	imageAspectRatio: number;
@@ -73,6 +74,7 @@ const ImageContainer = ({
 	onSelection: (imageKey: string) => void;
 	loading?: boolean;
 	active?: boolean;
+	onHover?: (imageKey: string) => void;
 }) => {
 	return (
 		<div
@@ -86,6 +88,16 @@ const ImageContainer = ({
 			)}
 			onClick={() => {
 				imageKey && onSelection(imageKey);
+			}}
+			onMouseEnter={() => {
+				if (onHover && !loading) {
+					onHover(imageKey!);
+				}
+			}}
+			onMouseLeave={() => {
+				if (onHover && !loading) {
+					onHover("");
+				}
 			}}
 			// style={{
 			// 	boxShadow:
@@ -166,6 +178,9 @@ function ImageRegenerationPopup({
 	sceneIndex,
 	regenerateOnOpen,
 	open,
+	handleSubmitEditSegments,
+	hidePopupTimerRef,
+	showPopupTimerRef,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
@@ -175,20 +190,34 @@ function ImageRegenerationPopup({
 	sceneIndex: number;
 	regenerateOnOpen?: boolean;
 	open: boolean;
+	handleSubmitEditSegments: () => void;
+	hidePopupTimerRef?: React.MutableRefObject<NodeJS.Timeout | null>;
+	showPopupTimerRef?: React.MutableRefObject<NodeJS.Timeout | null>;
 }) {
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
 	const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
+	const [regenerateImage, setRegenerateImages] = useState(false);
+
 	const loading =
 		segment.alternateImagesStatus === StoryStatus.PENDING ||
 		isRegeneratingImages;
 	const [selectedImageKey, setSelectedImageKey] = useState<string | undefined>(
 		""
 	);
+	const [hoveredImage, setHoveredImageKey] = useState<string | undefined>("");
 	const alternateImageKeys = useMemo(
 		() => segment.alternateImageKeys ?? [],
 		[segment.alternateImageKeys]
 	);
+
+	const triggerRegenerationOfImages = useCallback(async () => {
+		setIsRegeneratingImages(true);
+		await handleSubmitEditSegments();
+		setRegenerateImages(true);
+	}, [handleSubmitEditSegments]);
+
 	const generateAlternateImageOptions = useCallback(async () => {
+		const prevImageStatus = segment.imageStatus;
 		dispatch({
 			type: "edit_segment",
 			sceneIndex,
@@ -205,7 +234,7 @@ function ImageRegenerationPopup({
 			const regeneratedImages = await api.video.regenerateImage({
 				// @ts-ignore
 				image_style: segment.settings?.style ?? StoryImageStyles.Realistic,
-				prompt: segment.settings?.prompt ?? segment.textContent,
+				prompt: segment.settings?.prompt || segment.textContent,
 				segment_idx: segment.id,
 				story_id: story.id,
 				story_type: story.type,
@@ -220,7 +249,7 @@ function ImageRegenerationPopup({
 				segmentIndex: segmentIndex,
 				segment: {
 					...segment,
-					imageStatus: StoryStatus.COMPLETE,
+					imageStatus: prevImageStatus,
 					alternateImagesStatus: StoryStatus.COMPLETE,
 					alternateImageKeys: regeneratedImages.target_paths,
 				},
@@ -240,6 +269,13 @@ function ImageRegenerationPopup({
 				segment_idx: segment.id,
 				story_id: story.id,
 				story_type: story.type,
+				image_prompt: segment.settings?.prompt || segment.textContent,
+				image_cfg_scale: segment.settings?.denoising ?? 7,
+				image_resolution: story.resolution,
+				image_sampling_steps: segment.settings?.samplingSteps ?? 8,
+				image_seed: segment.settings?.seed ?? 3121472823,
+				image_alt_text: segment.textContent,
+				image_style: story.settings?.style ?? StoryImageStyles.Realistic,
 			});
 
 			dispatch({
@@ -250,6 +286,7 @@ function ImageRegenerationPopup({
 					...segment,
 					imageKey: selectedImageKey!,
 					alternateImageKeys: [],
+					imageStatus: StoryStatus.COMPLETE,
 				},
 			});
 		} catch (error) {
@@ -267,11 +304,37 @@ function ImageRegenerationPopup({
 		onClose,
 	]);
 
+	// To trigger regeneration when the popup is opened and regenerateOnOpen is true
 	useEffect(() => {
 		if (open && regenerateOnOpen && !loading) {
-			generateAlternateImageOptions();
+			triggerRegenerationOfImages();
 		}
 	}, [open]);
+
+	// To trigger regeneration after saving the segments
+	useEffect(() => {
+		if (regenerateImage) {
+			setRegenerateImages(false);
+			generateAlternateImageOptions();
+		}
+	}, [regenerateImage]);
+
+	const onMouseEnter = () => {
+		if (hidePopupTimerRef?.current) {
+			clearTimeout(hidePopupTimerRef.current);
+		}
+	};
+
+	const onMouseLeave = () => {
+		if (showPopupTimerRef?.current) {
+			clearTimeout(showPopupTimerRef.current);
+		}
+		if (open && hidePopupTimerRef) {
+			hidePopupTimerRef.current = setTimeout(() => {
+				onClose();
+			}, 500);
+		}
+	};
 
 	if (loading || alternateImageKeys.length > 0) {
 		return (
@@ -290,6 +353,8 @@ function ImageRegenerationPopup({
 						? "w-[436px]"
 						: "w-[276px]"
 				)}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
 			>
 				<RegenerationPopupHeader
 					title="Generate & Select New Image"
@@ -324,13 +389,14 @@ function ImageRegenerationPopup({
 										imageKey={imageKey}
 										onSelection={setSelectedImageKey}
 										active={selectedImageKey === imageKey}
+										onHover={setHoveredImageKey}
 									/>
 								))}
 								{selectedImageKey && (
 									<ImageContainer
 										imageAspectRatio={imageAspectRatio}
 										segment={segment}
-										imageKey={selectedImageKey}
+										imageKey={hoveredImage || selectedImageKey}
 										expanded
 										onSelection={setSelectedImageKey}
 									/>
@@ -382,7 +448,7 @@ function ImageRegenerationPopup({
 				<RegenerateButton
 					text="Regenerate Choices"
 					onClick={() => {
-						generateAlternateImageOptions();
+						triggerRegenerationOfImages();
 					}}
 					loading={loading}
 				/>
@@ -413,6 +479,8 @@ function ImageRegenerationPopup({
 					? "w-[340px]"
 					: "w-[208px]"
 			)}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
 		>
 			<RegenerationPopupHeader title="Generated Image" onClose={onClose} />
 			<div
@@ -421,20 +489,32 @@ function ImageRegenerationPopup({
 					aspectRatio: imageAspectRatio,
 				}}
 			>
-				<Image
-					alt={segment.textContent}
-					src={Format.GetImageUrl(segment.imageKey)}
-					className="rounded-sm"
-					layout="fill"
-					objectFit="cover" // Or use 'cover' depending on the desired effect
-					style={{ objectFit: "contain" }}
-				/>
+				{segment.imageStatus === StoryStatus.READY ? (
+					<div className="w-full h-full bg-slate-100 rounded-sm border border-slate-300 flex items-center justify-center border-dashed">
+						<div className="rounded-full w-6 h-6 bg-slate-200 flex items-center justify-center">
+							<Plus
+								className="text-slate-500 stroke-2"
+								width={12}
+								height={12}
+							/>
+						</div>
+					</div>
+				) : (
+					<Image
+						alt={segment.textContent}
+						src={Format.GetImageUrl(segment.imageKey)}
+						className="rounded-sm"
+						layout="fill"
+						objectFit="cover" // Or use 'cover' depending on the desired effect
+						style={{ objectFit: "contain" }}
+					/>
+				)}
 			</div>
 			<RegenerationPopupScriptContent text={segment.textContent} />
 			<RegenerateButton
 				text="Regenerate"
 				onClick={() => {
-					generateAlternateImageOptions();
+					triggerRegenerationOfImages();
 				}}
 				loading={false}
 			/>

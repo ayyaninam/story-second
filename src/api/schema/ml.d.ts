@@ -115,7 +115,7 @@ export interface components {
      * DisplayResolutionEnum
      * @enum {integer}
      */
-    DisplayResolutionEnum: 0 | 1;
+    DisplayResolutionEnum: 0 | 1 | 2;
     /** EditSceneOperation */
     EditSceneOperation: {
       operation: components["schemas"]["EditType"];
@@ -199,7 +199,7 @@ export interface components {
       segment_idx: number;
       story_type: components["schemas"]["OutputTypeEnum"];
       /** Prompt */
-      prompt: string;
+      prompt?: string;
       image_style: components["schemas"]["ImageStyleEnum"];
       /**
        * Batch Size
@@ -213,7 +213,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 55428216
+       * @default 26106296
        */
       seed?: number;
       /**
@@ -244,6 +244,33 @@ export interface components {
       story_type: components["schemas"]["OutputTypeEnum"];
       /** Image Key */
       image_key: string;
+      /**
+       * Image Prompt
+       * @default
+       */
+      image_prompt?: string;
+      /**
+       * Image Cfg Scale
+       * @default 2
+       */
+      image_cfg_scale?: number;
+      /** @default 2 */
+      image_resolution?: components["schemas"]["ImageResolutionEnum"];
+      /**
+       * Image Sampling Steps
+       * @default 8
+       */
+      image_sampling_steps?: number;
+      /**
+       * Image Seed
+       * @default 57333283
+       */
+      image_seed?: number;
+      /**
+       * Image Alt Text
+       * @default
+       */
+      image_alt_text?: string;
     };
     /** SceneAdd */
     SceneAdd: {

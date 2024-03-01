@@ -35,6 +35,7 @@ const EditSegmentModal = ({
 	sceneIndex,
 	dispatch,
 	story,
+	handleSubmitEditSegments,
 	WebstoryData,
 }: {
 	open?: boolean;
@@ -45,15 +46,15 @@ const EditSegmentModal = ({
 	dispatch: React.Dispatch<EditStoryAction>;
 	story: EditStoryDraft;
 	sceneIndex: number;
+	handleSubmitEditSegments: () => void;
 	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
 }) => {
 	const [webstory] = useWebstoryContext();
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
-	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
-		number | null
-	>(null);
+	const [imageRegenerationSegmentDetails, setImageRegenerationSegmentDetails] =
+		useState<{ sceneIndex: number; segmentIndex: number } | null>(null);
 
 	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
 	const RegenerateSceneImages = useMutation({
@@ -119,9 +120,14 @@ const EditSegmentModal = ({
 									});
 								}}
 								segmentIndex={index}
-								imageRegenerationSegmentId={imageRegenerationSegmentId}
-								setImageRegenerationSegmentId={setImageRegenerationSegmentId}
+								imageRegenerationSegmentDetails={
+									imageRegenerationSegmentDetails
+								}
+								setImageRegenerationSegmentDetails={
+									setImageRegenerationSegmentDetails
+								}
 								sceneIndex={sceneIndex}
+								handleSubmitEditSegments={handleSubmitEditSegments}
 							/>
 						))}
 					</div>

@@ -26,6 +26,7 @@ export type VideoPlayerProps = {
 	isPlaying?: boolean;
 	seekedFrame?: number;
 	isMuted?: boolean;
+	defaultLoadingText?: string;
 };
 
 export type StoryScreenBgBlurProps = {

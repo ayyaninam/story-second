@@ -51,10 +51,11 @@ export default function EditSegmentModalItem({
 	onSegmentEdit,
 	segmentIndex,
 	onSegmentDelete,
-	imageRegenerationSegmentId,
-	setImageRegenerationSegmentId,
+	imageRegenerationSegmentDetails,
+	setImageRegenerationSegmentDetails,
 	dispatch,
 	sceneIndex,
+	handleSubmitEditSegments,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
@@ -62,11 +63,18 @@ export default function EditSegmentModalItem({
 	dispatch: React.Dispatch<EditStoryAction>;
 	segmentIndex: number;
 	onSegmentDelete: (segmentIndex: number) => void;
-	imageRegenerationSegmentId: number | null;
-	setImageRegenerationSegmentId: React.Dispatch<
-		React.SetStateAction<number | null>
+	imageRegenerationSegmentDetails: {
+		sceneIndex: number;
+		segmentIndex: number;
+	} | null;
+	setImageRegenerationSegmentDetails: React.Dispatch<
+		React.SetStateAction<{
+			sceneIndex: number;
+			segmentIndex: number;
+		} | null>
 	>;
 	sceneIndex: number;
+	handleSubmitEditSegments: () => void;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
 	const [imageStatus, setImageStatus] = useState(segment.imageStatus);
@@ -95,12 +103,21 @@ export default function EditSegmentModalItem({
 						}}
 					>
 						<ImageRegenerationPopoverHOC
+							handleSubmitEditSegments={handleSubmitEditSegments}
 							segment={segment}
 							story={story}
-							open={imageRegenerationSegmentId === segment.id}
+							open={
+								imageRegenerationSegmentDetails?.segmentIndex ===
+									segmentIndex &&
+								imageRegenerationSegmentDetails?.sceneIndex === sceneIndex
+							}
 							onClose={() => {
-								setImageRegenerationSegmentId((prevSegmentId) => {
-									if (prevSegmentId === segment.id) return null;
+								setImageRegenerationSegmentDetails((prevSegmentId) => {
+									if (
+										prevSegmentId?.segmentIndex === segmentIndex &&
+										prevSegmentId?.sceneIndex === sceneIndex
+									)
+										return null;
 									return prevSegmentId;
 								});
 							}}
@@ -120,7 +137,10 @@ export default function EditSegmentModalItem({
 								) : (
 									<Image
 										onClick={() => {
-											setImageRegenerationSegmentId(segment.id);
+											setImageRegenerationSegmentDetails({
+												sceneIndex: sceneIndex,
+												segmentIndex: segmentIndex,
+											});
 											setRegeneratingImage(false);
 										}}
 										alt={segment.textContent}
@@ -223,7 +243,10 @@ export default function EditSegmentModalItem({
 									className="flex py-1 gap-1 text-white h-fit  border-border border-[1px] rounded-md items-center"
 									variant="default"
 									onClick={() => {
-										setImageRegenerationSegmentId(segment.id);
+										setImageRegenerationSegmentDetails({
+											sceneIndex: sceneIndex,
+											segmentIndex: segmentIndex,
+										});
 										setRegeneratingImage(true);
 									}}
 									disabled={
@@ -269,6 +292,7 @@ function AdvancedEditingOptions({
 	onSettingsChange: (settings: Settings) => void;
 	show: boolean;
 }) {
+	const [seed, setSeed] = useState(`${settings?.seed ?? -1}`);
 	return (
 		<TooltipProvider>
 			{/* <div
@@ -376,12 +400,21 @@ function AdvancedEditingOptions({
 								max={2e16 - 1}
 								className="w-full border-[1px] rounded-md m-1 p-2"
 								placeholder="2"
-								value={settings?.seed ?? -1}
+								value={seed}
 								onChange={(e) => {
+									const parsedSeed = parseInt(e.target.value);
+									if (isNaN(parsedSeed)) return setSeed(e.target.value);
+									const newSeed =
+										parsedSeed < -1
+											? -1
+											: parsedSeed > 2e16 - 1
+												? 2e16 - 1
+												: parsedSeed;
 									onSettingsChange({
 										...settings,
-										seed: parseInt(e.target.value),
+										seed: newSeed,
 									});
+									setSeed(newSeed.toString());
 								}}
 							/>
 							<Shuffle
