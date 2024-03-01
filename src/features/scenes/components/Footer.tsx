@@ -224,12 +224,15 @@ const Footer = ({
         ),
         status: StoryStatus.PENDING,
       });
-      await api.video.regenerateAllImages({
+      api.video.regenerateAllImages({
         // @ts-expect-error
         image_style: story.settings?.style ?? StoryImageStyles.Realistic,
         story_id: story.id,
         story_type: story.type,
       });
+      router.push(
+        Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
+      );
     },
   });
 
@@ -417,7 +420,7 @@ const Footer = ({
             <StoryLogo />
             <p className="font-bold text-slate-50">
               {GenerateStoryboardMutation.isPending
-                ? "Generating...."
+                ? "Generating..."
                 : "Generate Storyboard"}
             </p>
             <ArrowRight className="w-4 h-4 opacity-50" />
