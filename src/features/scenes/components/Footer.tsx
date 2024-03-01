@@ -361,49 +361,31 @@ const Footer = ({
 				<div>
 					<Select
 						value={selectedImagesGenButton}
-						onValueChange={(value) => {
+						onValueChange={async (value) => {
 							setSelectedImagesGenButton(value as ScenesGenButtonType);
+							await imagesGenerationButtonOptions[
+								value as ScenesGenButtonType
+							].mutation.mutateAsync();
 						}}
 					>
-						<div
-							className={`relative ${selectedImagesGenButton === ScenesGenButtonType.all ? "w-[325px]" : "w-[375px]"}`}
+						<SelectTrigger
+							className={`py-1.5 px-3 relative ${selectedImagesGenButton === ScenesGenButtonType.all ? "w-[325px]" : "w-[375px]"}`}
 						>
-							<Button
-								variant="ghost"
-								onClick={async (e) => {
-									await imagesGenerationButtonOptions[
-										selectedImagesGenButton
-									].mutation.mutateAsync();
-								}}
-								className={cn("absolute stroke-muted text-muted-foreground")}
-								disabled={
-									imagesGenerationButtonOptions[selectedImagesGenButton]
-										.isPending
-								}
-							>
-								<LayoutGrid strokeWidth={1} className="mr-2" />
-								{imagesGenerationButtonOptions[selectedImagesGenButton]
-									.isPending ? (
-									<>Generating..... </>
-								) : (
-									<>
-										{
-											imagesGenerationButtonOptions[selectedImagesGenButton]
-												.name
-										}
-									</>
-								)}
+							<LayoutGrid strokeWidth={1} className="mr-2" />
+							{imagesGenerationButtonOptions[selectedImagesGenButton]
+								.isPending ? (
+								<>Generating..... </>
+							) : (
+								<SelectValue placeholder="Generate All Images" />
+							)}
 
-								<span className="ml-1">
-									{imagesGenerationButtonOptions[selectedImagesGenButton]
-										.name === ScenesGenButtonType.all
-										? `(${regenAllImagesCreditCost} ${Format.Pluralize("Credit", regenAllImagesCreditCost)})`
-										: `(${regenUngeneratedImagesCost} ${Format.Pluralize("Credit", regenUngeneratedImagesCost)})`}
-								</span>
-							</Button>
-							<SelectTrigger className="w-full justify-end" />
-						</div>
-
+							<span className="ml-1">
+								{imagesGenerationButtonOptions[selectedImagesGenButton].name ===
+								ScenesGenButtonType.all
+									? `(${regenAllImagesCreditCost} ${Format.Pluralize("Credit", regenAllImagesCreditCost)})`
+									: `(${regenUngeneratedImagesCost} ${Format.Pluralize("Credit", regenUngeneratedImagesCost)})`}
+							</span>
+						</SelectTrigger>
 						<SelectContent>
 							{Object.entries(imagesGenerationButtonOptions).map(
 								([key, type]) => {
@@ -484,49 +466,33 @@ const Footer = ({
 				<div>
 					<Select
 						value={selectedScenesGenButton}
-						onValueChange={(value) => {
+						onValueChange={async (value) => {
 							setSelectedScenesGenButton(value as ScenesGenButtonType);
+							await scenesGenerationButtonOptions[
+								value as ScenesGenButtonType
+							].mutation.mutateAsync();
 						}}
 					>
-						<div
-							className={`relative ${selectedScenesGenButton === ScenesGenButtonType.all ? "w-[325px]" : "w-[375px]"}`}
+						<SelectTrigger
+							className={`py-1.5 px-3 relative ${selectedScenesGenButton === ScenesGenButtonType.all ? "w-[325px]" : "w-[375px]"}`}
 						>
-							<Button
-								variant="ghost"
-								onClick={async (e) => {
-									await scenesGenerationButtonOptions[
-										selectedScenesGenButton
-									].mutation.mutateAsync();
-								}}
-								className={cn("absolute stroke-muted text-muted-foreground")}
-								disabled={
-									scenesGenerationButtonOptions[selectedScenesGenButton]
-										.isPending
-								}
-							>
-								<LayoutGrid strokeWidth={1} className="mr-2" />
-								{scenesGenerationButtonOptions[selectedScenesGenButton]
-									.isPending ? (
-									<>Regenerating..... </>
-								) : (
-									<>
-										{
-											scenesGenerationButtonOptions[selectedScenesGenButton]
-												.name
-										}
-									</>
-								)}
+							<LayoutGrid strokeWidth={1} className="mr-2" />
+							{scenesGenerationButtonOptions[selectedScenesGenButton]
+								.isPending ? (
+								<>Regenerating..... </>
+							) : (
+								<>
+									{scenesGenerationButtonOptions[selectedScenesGenButton].name}
+								</>
+							)}
 
-								<span className="ml-1">
-									{scenesGenerationButtonOptions[selectedScenesGenButton]
-										.name === ScenesGenButtonType.all
-										? `(${regenAllVideosCreditCost} ${Format.Pluralize("Credit", regenAllVideosCreditCost)})`
-										: `(${regenRemVideosCreditCost} ${Format.Pluralize("Credit", regenRemVideosCreditCost)})`}
-								</span>
-							</Button>
-							<SelectTrigger className="w-full justify-end" />
-						</div>
-
+							<span className="ml-1">
+								{scenesGenerationButtonOptions[selectedScenesGenButton].name ===
+								ScenesGenButtonType.all
+									? `(${regenAllVideosCreditCost} ${Format.Pluralize("Credit", regenAllVideosCreditCost)})`
+									: `(${regenRemVideosCreditCost} ${Format.Pluralize("Credit", regenRemVideosCreditCost)})`}
+							</span>
+						</SelectTrigger>
 						<SelectContent>
 							{Object.entries(scenesGenerationButtonOptions).map(
 								([key, type]) => {
