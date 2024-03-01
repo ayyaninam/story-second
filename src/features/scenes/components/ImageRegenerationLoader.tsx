@@ -14,10 +14,11 @@ function ImageRegenerationLoader({
 }) {
 	return (
 		<div
-			className="border-[0.5px] border-purple-200 rounded=[1.5px] flex justify-center items-center w-full h-full"
-			style={{
-				background: "linear-gradient(180deg, #F1F6F9 0%, #FBF5FF 100%)",
-			}}
+			className="border-[0.5px] bg-gradient-to-b from-loader-start to-loader-end border-purple-200 rounded=[1.5px] flex justify-center items-center w-full h-full"
+			// style={{
+			// 	background: "linear-gradient(180deg, #121212 0%, #292929 100%)",
+			// 	// background: "linear-gradient(180deg, #F1F6F9 0%, #FBF5FF 100%)",
+			// }}
 		>
 			<div
 				className={cn(

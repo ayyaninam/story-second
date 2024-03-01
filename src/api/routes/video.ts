@@ -36,24 +36,25 @@ const video = {
 
 		return data.data;
 	},
-	editScene: async (
-		params: mlSchema["EditSceneRequest"],
-		accessToken?: string
-	): Promise<Object> => {
-		const data: string = await mlFetcher(accessToken ?? getJwt())
-			.get(`edit-scene`, {
-				body: JSON.stringify(params),
-			})
-			.json();
 
-		return data;
-	},
 	editSegment: async (
 		params: mlSchema["EditSegmentRequest"],
 		accessToken?: string
 	) => {
 		const data: string = await mlFetcher(accessToken ?? getJwt())
 			.put(`edit-segments`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		return data;
+	},
+	editScenes: async (
+		params: mlSchema["EditSceneRequest"],
+		accessToken?: string
+	) => {
+		const data: string = await mlFetcher(accessToken ?? getJwt())
+			.put(`edit-scenes`, {
 				body: JSON.stringify(params),
 			})
 			.json();
@@ -67,14 +68,13 @@ const video = {
 		accessToken?: string;
 	}) => {
 		const body = new FormData();
-		body.append("Image", params.image);
-		body.append("Index", params.index.toString());
+		body.append("image", params.image);
+		body.append("index", params.index.toString());
 		const data: string = await authFetcher(params.accessToken ?? getJwt())
 			.post(`api/WebStory/SaveStorySegmentImage/${params.id}`, {
-				body,
-
+				body: body,
 				headers: {
-					"Content-Type": "multipart/form-data",
+					Authorization: "Bearer " + (params.accessToken ?? getJwt()),
 				},
 			})
 			.json();

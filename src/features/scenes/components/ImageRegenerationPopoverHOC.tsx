@@ -18,6 +18,9 @@ function ImageRegenerationPopoverHOC({
 	children,
 	regenerateOnOpen,
 	triggerButtonClassName,
+	handleSubmitEditSegments,
+	hidePopupTimerRef,
+	showPopupTimerRef,
 }: {
 	segment: Segment;
 	story: EditStoryDraft;
@@ -29,6 +32,9 @@ function ImageRegenerationPopoverHOC({
 	children: React.ReactNode;
 	regenerateOnOpen?: boolean;
 	triggerButtonClassName?: string;
+	handleSubmitEditSegments: () => void;
+	hidePopupTimerRef?: React.MutableRefObject<NodeJS.Timeout | null>;
+	showPopupTimerRef?: React.MutableRefObject<NodeJS.Timeout | null>;
 }) {
 	return (
 		<Popover open={open}>
@@ -44,6 +50,9 @@ function ImageRegenerationPopoverHOC({
 				sceneIndex={sceneIndex}
 				regenerateOnOpen={regenerateOnOpen}
 				open={open}
+				handleSubmitEditSegments={handleSubmitEditSegments}
+				hidePopupTimerRef={hidePopupTimerRef}
+				showPopupTimerRef={showPopupTimerRef}
 			/>
 		</Popover>
 	);

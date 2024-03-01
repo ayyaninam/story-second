@@ -14,8 +14,8 @@ import {
 } from "../reducers/edit-reducer";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
-import React, { useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import EditSegmentModal from "./EditSegmentModal";
 import { SegmentModificationData } from "@/types";
@@ -33,6 +33,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { Button } from "@/components/ui/button";
 import SegmentImage from "./SegmentImage";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
+import CategorySelect from "@/components/ui/CategorySelect";
+import { useUpdateCategory } from "../mutations/UpdateCategory";
+import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 
 const MAX_SUMMARY_LENGTH = 251;
 
@@ -62,9 +73,11 @@ export default function StoryboardEditor({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
-	const [imageRegenerationSegmentId, setImageRegenerationSegmentId] = useState<
-		number | null
-	>(null);
+	const [imageRegenerationSegmentDetails, setImageRegenerationSegmentDetails] =
+		useState<{
+			sceneIndex: number;
+			segmentIndex: number;
+		} | null>(null);
 
 	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
 		open?: boolean;
@@ -75,97 +88,21 @@ export default function StoryboardEditor({
 		sceneIndex?: number;
 	}>();
 
-	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
-		WebstoryToStoryDraft(WebstoryData!)
-	);
-
-	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
-
-	const diff = GenerateStoryDiff(previousStory, story);
-
-	const EditSegment = useMutation({
-		mutationFn: api.video.editSegment,
-	});
+	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
 
 	const handleSubmitEditSegments = async () => {
-		const diff = GenerateStoryDiff(WebstoryToStoryDraft(WebstoryData!), story);
-		console.log(diff, "updating diffing");
-		const edits: SegmentModificationData[] = diff.edits.map((segment) => ({
-			details: { Ind: segment.id, Text: segment.textContent },
-			operation: SegmentModifications.Edit,
-		}));
-		const additions: SegmentModificationData[] = diff.additions
-			.filter((segmentSet) => segmentSet.length > 0)
-			.map((segmentSet) => ({
-				details: {
-					// @ts-ignore should be defined though??
-					Ind: segmentSet[0].id + 1,
-					segments: segmentSet.map((el) => ({
-						Text: el.textContent,
-						SceneId: el.sceneId,
-					})),
-				},
-				operation: SegmentModifications.Add,
-			}));
-		const deletions: SegmentModificationData[] = diff.subtractions.map(
-			(segment) => ({
-				details: {
-					Ind: segment.id,
-				},
-				operation: SegmentModifications.Delete,
-			})
-		);
-		if (!additions.length && !edits.length && !deletions.length) {
-			console.log("No edits found");
-			return;
-		}
-
-		const editedResponse = await EditSegment.mutateAsync({
-			story_id: WebstoryData?.id as string,
-			story_type: WebstoryData?.storyType,
-			edits: [...edits, ...additions, ...deletions],
+		const newStory = await SaveEdits.mutateAsync({
+			prevStory: WebstoryData!,
+			updatedStory: story,
 		});
-		queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
-
-		const newStory = await api.video.get(
-			WebstoryData?.topLevelCategory!,
-			WebstoryData?.slug!,
-			WebstoryData?.storyType!
-		);
-
-		setPreviousStory(WebstoryToStoryDraft(newStory));
-		dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory) });
 		return newStory;
 	};
 
-	const handleRegenerateSceneImages = async (sceneIndex: number) => {
-		const scene = story.scenes[sceneIndex];
-		if (!scene) return;
-		// dispatch({
-		// 	type: "update_segment_statuses",
-		// 	key: "imageStatus",
-		// 	segmentIndices:
-		// 		scene.segments?.map((el, segmentIndex) => ({
-		// 			segmentIndex,
-		// 			sceneIndex,
-		// 		})) ?? [],
-		// 	status: StoryStatus.PENDING,
-		// });
-
-		const newStory = await handleSubmitEditSegments();
-
-		const regeneratedImages = await api.video.regenerateAllImages({
-			// @ts-expect-error
-			image_style: scene.settings?.style ?? StoryImageStyles.Realistic,
-			story_id: story.id,
-			story_type: story.type,
-			scene_id: scene.id,
-		});
-	};
+	const UpdateCategory = useUpdateCategory();
 
 	return (
 		<>
-			<div className="relative w-4/5 h-4/5 m-auto overflow-hidden bg-background rounded-md shadow-lg">
+			<div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
@@ -203,6 +140,10 @@ export default function StoryboardEditor({
 						<div className="flex">
 							<u>No Audio</u> <ChevronDown className="mr-2 h-4 w-4 text-xs" />
 						</div> */}
+						<CategorySelect
+							value={WebstoryData?.topLevelCategory!}
+							onChange={(category) => UpdateCategory.mutate({ category })}
+						/>
 						<p className="ms-1">by {WebstoryData?.user?.name}</p>
 					</div>
 				</div>
@@ -234,150 +175,159 @@ export default function StoryboardEditor({
 													"w-full  divide-y divide-dashed space-y-2"
 												)}
 											>
-												{story.scenes.map((scene, sceneIndex) => (
-													<div
-														key={sceneIndex}
-														className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
-													>
+												{story.scenes
+													.filter((el) => el.segments.length > 0)
+													.map((scene, sceneIndex) => (
 														<div
-															className={cn("gap-4 flex max-w-1/2 flex-wrap")}
+															key={sceneIndex}
+															className="px-1 flex flex-row justify-between w-full rounded-md hover:text-primary hover:bg-primary-foreground group items-center"
 														>
-															{scene.segments.map((segment, segmentIndex) => {
-																return (
-																	<div
-																		className={cn("flex gap-1 items-center")}
-																		key={segmentIndex}
-																	>
-																		{(segment.imageStatus ===
-																			StoryStatus.COMPLETE ||
-																			segment.imageStatus ===
-																				StoryStatus.PENDING) && (
-																			<SegmentImage
-																				segment={segment}
-																				story={story}
-																				imageRegenerationSegmentId={
-																					imageRegenerationSegmentId
-																				}
-																				setImageRegenerationSegmentId={
-																					setImageRegenerationSegmentId
-																				}
-																				dispatch={dispatch}
-																				segmentIndex={segmentIndex}
-																				sceneIndex={sceneIndex}
-																			/>
-																		)}
-																		{segment.imageStatus ===
-																			StoryStatus.READY && (
-																			<div
-																				className="relative max-w-full h-40"
-																				style={{
-																					aspectRatio: GetDisplayImageRatio(
-																						story.displayResolution
-																					).ratio,
-																				}}
-																			>
-																				<div className="w-full h-full bg-slate-100 rounded-sm border border-slate-300 flex items-center justify-center border-dashed">
-																					<div className="rounded-full w-6 h-6 bg-slate-200 flex items-center justify-center">
-																						<Plus
-																							className="text-slate-500 stroke-2"
-																							width={12}
-																							height={12}
-																						/>
+															<div
+																className={cn("gap-4 flex max-w-1/2 flex-wrap")}
+															>
+																{scene.segments.map((segment, segmentIndex) => {
+																	return (
+																		<div
+																			className={cn("flex gap-1 items-center")}
+																			key={segmentIndex}
+																		>
+																			{(segment.imageStatus ===
+																				StoryStatus.COMPLETE ||
+																				segment.imageStatus ===
+																					StoryStatus.PENDING) && (
+																				<SegmentImage
+																					segment={segment}
+																					story={story}
+																					imageRegenerationSegmentDetails={
+																						imageRegenerationSegmentDetails
+																					}
+																					setImageRegenerationSegmentDetails={
+																						setImageRegenerationSegmentDetails
+																					}
+																					dispatch={dispatch}
+																					segmentIndex={segmentIndex}
+																					sceneIndex={sceneIndex}
+																					handleSubmitEditSegments={
+																						handleSubmitEditSegments
+																					}
+																				/>
+																			)}
+																			{segment.imageStatus ===
+																				StoryStatus.READY && (
+																				<div
+																					className="relative max-w-full h-40"
+																					style={{
+																						aspectRatio: GetDisplayImageRatio(
+																							story.displayResolution
+																						).ratio,
+																					}}
+																				>
+																					<div className="w-full h-full bg-slate-100 rounded-sm border border-slate-300 flex items-center justify-center border-dashed">
+																						<div className="rounded-full w-6 h-6 bg-slate-200 flex items-center justify-center">
+																							<Plus
+																								className="text-slate-500 stroke-2"
+																								width={12}
+																								height={12}
+																							/>
+																						</div>
 																					</div>
 																				</div>
-																			</div>
-																		)}
-																		{segmentIndex !==
-																			scene.segments.length - 1 && (
-																			<div className="min-w-4 min-h-4">
-																				<ChevronRight
-																					width={16}
-																					height={16}
-																					className="text-slate-500 stroke-1 min-w-4 min-h-4"
-																				/>
-																			</div>
-																		)}
-																	</div>
-																);
-															})}
-														</div>
-														<div className="w-[55%] flex justify-between items-center p-2 ">
-															<div className="flex flex-wrap flex-row ">
-																{scene.segments.map((segment, segmentIndex) => (
-																	<span
-																		key={segmentIndex}
-																		style={{ backgroundColor: "transparent" }}
-																		className={cn(`flex flex-wrap w-full`)}
-																		onClick={() => {
-																			// handleRegenerateImage(
-																			// 	segment,
-																			// 	sceneIndex,
-																			// 	segmentIndex
-																			// );
-																		}}
-																	>
-																		<AutosizeInput
-																			onKeyDown={(e) => {
-																				if (e.key === "Enter") {
-																					handleEnter(
-																						scene,
-																						sceneIndex,
-																						segment,
-																						segmentIndex
-																					);
-																				}
-																			}}
-																			name={segmentIndex.toString()}
-																			inputClassName={cn(
-																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:text-slate-950 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
-																				segment.textStatus ===
-																					TextStatus.EDITED && "text-slate-500"
 																			)}
-																			inputStyle={{
-																				outline: "none",
-																				backgroundColor: "inherit",
-																			}}
-																			// @ts-ignore
-																			ref={(el) =>
-																				// @ts-ignore
-																				(refs.current[sceneIndex][
-																					segmentIndex
-																				] = el)
-																			}
-																			value={segment.textContent}
-																			onChange={(e) => {
-																				handleInput(
-																					e,
-																					scene,
-																					sceneIndex,
-																					segment,
-																					segmentIndex
-																				);
-																			}}
-																		/>
-																	</span>
-																))}
+																			{segmentIndex !==
+																				scene.segments.length - 1 && (
+																				<div className="min-w-4 min-h-4">
+																					<ChevronRight
+																						width={16}
+																						height={16}
+																						className="text-slate-500 stroke-1 min-w-4 min-h-4"
+																					/>
+																				</div>
+																			)}
+																		</div>
+																	);
+																})}
 															</div>
-															<div className="flex gap-x-1 p-2">
-																<span
-																	className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
-																	onClick={() =>
-																		setEditSegmentsModalState({
-																			open: true,
-																			dispatch: dispatch,
-																			scene: scene,
-																			sceneId: sceneIndex,
-																			story: story,
-																			sceneIndex: sceneIndex,
-																		})
-																	}
-																>
-																	<Settings2 className="w-4 h-4 stroke-slate-500" />
-																</span>
+															<div className="w-[55%] min-w-[55%] flex justify-between items-center p-2 ">
+																<div className="flex flex-wrap flex-row ">
+																	{scene.segments.map(
+																		(segment, segmentIndex) => (
+																			<span
+																				key={segmentIndex}
+																				style={{
+																					backgroundColor: "transparent",
+																				}}
+																				className={cn(`flex flex-wrap w-full`)}
+																				onClick={() => {
+																					// handleRegenerateImage(
+																					// 	segment,
+																					// 	sceneIndex,
+																					// 	segmentIndex
+																					// );
+																				}}
+																			>
+																				<AutosizeInput
+																					onKeyDown={(e) => {
+																						if (e.key === "Enter") {
+																							handleEnter(
+																								scene,
+																								sceneIndex,
+																								segment,
+																								segmentIndex
+																							);
+																						}
+																					}}
+																					name={segmentIndex.toString()}
+																					inputClassName={cn(
+																						"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:text-slate-950 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
+																						segment.textStatus ===
+																							TextStatus.EDITED &&
+																							"text-slate-500"
+																					)}
+																					inputStyle={{
+																						outline: "none",
+																						backgroundColor: "inherit",
+																					}}
+																					// @ts-ignore
+																					ref={(el) =>
+																						(refs.current[sceneIndex]![
+																							segmentIndex
+																						] = el)
+																					}
+																					value={segment.textContent}
+																					onChange={(e) => {
+																						handleInput(
+																							e,
+																							scene,
+																							sceneIndex,
+																							segment,
+																							segmentIndex
+																						);
+																					}}
+																				/>
+																			</span>
+																		)
+																	)}
+																</div>
+																<div className="flex gap-x-1 p-2">
+																	<span
+																		className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
+																		onClick={() =>
+																			setEditSegmentsModalState({
+																				open: true,
+																				dispatch: dispatch,
+																				scene: scene,
+																				sceneId: sceneIndex,
+																				story: story,
+																				sceneIndex: sceneIndex,
+																			})
+																		}
+																	>
+																		<Settings2 className="w-4 h-4 stroke-slate-500" />
+																	</span>
+																</div>
 															</div>
 														</div>
-													</div>
-												))}
+													))}
 											</div>
 										);
 									}}
@@ -396,9 +346,9 @@ export default function StoryboardEditor({
 							editSegmentsModalState.sceneId !== undefined
 						}
 						onClose={() => setEditSegmentsModalState(undefined)}
-						handleRegenerateSceneImages={handleRegenerateSceneImages}
 						scene={editSegmentsModalState?.scene!}
 						sceneId={editSegmentsModalState?.sceneId}
+						WebstoryData={WebstoryData!}
 						dispatch={dispatch}
 						story={story}
 						onSceneEdit={(scene, index) => {
@@ -409,84 +359,9 @@ export default function StoryboardEditor({
 							});
 						}}
 						sceneIndex={editSegmentsModalState?.sceneIndex!}
+						handleSubmitEditSegments={handleSubmitEditSegments}
 					/>
 				)}
 		</>
 	);
 }
-
-const OptionsButton = (props: {
-	onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-}) => (
-	<div>
-		<div
-			onClick={props.onClick}
-			className="bg-gradient-to-b from-white to-slate-50 rounded hover:shadow border border-slate-200 flex-col justify-start  hover:cursor-pointer items-center gap-2.5 inline-flex"
-		>
-			<div className="self-stretch h-8 pl-[5px] pr-1 opacity-50 rounded-[3px] hover:shadow justify-end items-center inline-flex">
-				{/* <div className="px-0.5 flex-col justify-start items-start inline-flex">
-					<div className="self-stretch justify-between items-center inline-flex">
-						<div className="flex-col justify-start items-center inline-flex">
-							<svg
-								width={16}
-								height={16}
-								viewBox="0 0 16 16"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M8 2L6.73333 5.86667C6.66847 6.06748 6.55688 6.25003 6.40772 6.3993C6.25856 6.54858 6.07609 6.66032 5.87533 6.72533L2 8L5.86667 9.26667C6.06748 9.33153 6.25003 9.44312 6.3993 9.59228C6.54858 9.74144 6.66032 9.92391 6.72533 10.1247L8 14L9.26667 10.1333C9.33153 9.93252 9.44312 9.74997 9.59228 9.6007C9.74144 9.45142 9.92391 9.33968 10.1247 9.27467L14 8L10.1333 6.73333C9.93252 6.66847 9.74997 6.55688 9.6007 6.40772C9.45142 6.25856 9.33968 6.07609 9.27467 5.87533L8 2Z"
-									stroke="#657D8B"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-							</svg>
-						</div>
-					</div>
-				</div> */}
-				<div className="px-0.5 flex-col justify-start items-start inline-flex ">
-					<div className="self-stretch justify-between items-center inline-flex">
-						<div className="flex-col justify-start items-center inline-flex ">
-							<svg
-								width={16}
-								height={16}
-								viewBox="0 0 16 16"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M13.3327 4.66667H7.33268M9.33268 11.3333H3.33268M9.33268 11.3333C9.33268 12.4379 10.2281 13.3333 11.3327 13.3333C12.4373 13.3333 13.3327 12.4379 13.3327 11.3333C13.3327 10.2288 12.4373 9.33334 11.3327 9.33334C10.2281 9.33334 9.33268 10.2288 9.33268 11.3333ZM6.66602 4.66667C6.66602 5.77124 5.77059 6.66667 4.66602 6.66667C3.56145 6.66667 2.66602 5.77124 2.66602 4.66667C2.66602 3.5621 3.56145 2.66667 4.66602 2.66667C5.77059 2.66667 6.66602 3.5621 6.66602 4.66667Z"
-									stroke="#657D8B"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-							</svg>
-						</div>
-					</div>
-				</div>
-				{/* <div className="px-0.5 flex-col justify-start items-start inline-flex">
-					<div className="self-stretch justify-between items-center inline-flex">
-						<div
-							className="flex-col justify-start items-center inline-flex"
-							onClick={props.onExpandClick}
-						>
-							<svg
-								width={16}
-								height={16}
-								viewBox="0 0 16 16"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M3.3668 8C3.3668 8.3866 3.0534 8.7 2.6668 8.7C2.2802 8.7 1.9668 8.3866 1.9668 8C1.9668 7.6134 2.2802 7.3 2.6668 7.3C3.0534 7.3 3.3668 7.6134 3.3668 8ZM8.70013 8C8.70013 8.3866 8.38673 8.7 8.00013 8.7C7.61353 8.7 7.30013 8.3866 7.30013 8C7.30013 7.6134 7.61353 7.3 8.00013 7.3C8.38673 7.3 8.70013 7.6134 8.70013 8ZM14.0335 8C14.0335 8.3866 13.72 8.7 13.3335 8.7C12.9469 8.7 12.6335 8.3866 12.6335 8C12.6335 7.61341 12.9469 7.3 13.3335 7.3C13.72 7.3 14.0335 7.61341 14.0335 8Z"
-									fill="#657D8B"
-									stroke="#657D8B"
-								/>
-							</svg>
-						</div>
-					</div>
-				</div> */}
-			</div>
-		</div>
-	</div>
-);

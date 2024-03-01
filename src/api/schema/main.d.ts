@@ -3788,7 +3788,7 @@ export interface components {
      * Format: int32
      * @enum {integer}
      */
-    DisplayResolution: _1024x576 | _576x1024;
+    DisplayResolution: _1024x576 | _576x1024 | _1024x1024;
     /** @description Represents the payment type for a story item. */
     DownloadVideoDTO: {
       creditSpendType?: components["schemas"]["CreditSpendType"];
