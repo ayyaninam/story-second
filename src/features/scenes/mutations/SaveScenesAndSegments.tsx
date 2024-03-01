@@ -89,29 +89,26 @@ export const useSubmitEditScenesAndSegments = (
 				})),
 			};
 
-			console.log(newStoryDraft, updatedStory);
-
 			const diff = GenerateStoryDiff(newStoryDraft, newStory);
 			const { edits, additions, deletions } = GenerateStoryDiffDto(diff);
-			// return;
 			if (!additions.length && !edits.length && !deletions.length) {
 			}
 
-			const editedResponse = await EditSegment.mutateAsync({
+			const _editedResponse = await EditSegment.mutateAsync({
 				story_id: prevStory?.id as string,
 				story_type: prevStory?.storyType,
 				edits: [...edits, ...additions, ...deletions],
 			});
 			await queryClient.invalidateQueries({ queryKey: [QueryKeys.STORY] });
 
-			const newStory2 = await api.video.get(
+			const response = await api.video.get(
 				prevStory?.topLevelCategory!,
 				prevStory?.slug!,
 				prevStory?.storyType!
 			);
 
-			dispatch({ type: "reset", draft: WebstoryToStoryDraft(newStory2) });
-			return newStory2;
+			dispatch({ type: "reset", draft: WebstoryToStoryDraft(response) });
+			return response;
 		},
 	});
 };

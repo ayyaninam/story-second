@@ -60,9 +60,6 @@ export default function Navbar({
 				</div>
 			</div>
 			<div className="hidden md:block text-muted-foreground space-x-2 items-center">
-				{/*<Button className="p-2" variant="ghost">*/}
-				{/*	<PlayCircle className="mr-2 h-4 w-4 text-accent-700" /> Tutorial*/}
-				{/*</Button>*/}
 				<Button
 					className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 					variant="default"
