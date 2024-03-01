@@ -343,19 +343,17 @@ const Footer = ({
 			isPending: RegenerateAllImagesMutation.isPending,
 		},
 		["remaining"]: {
-			name: "Regenerate Remaining Images",
+			name: "Generate Remaining Images",
 			mutation: GenerateImagesMutation,
 			isPending: GenerateImagesMutation.isPending,
 		},
 	};
 
-	const [selectedScenesGenButton, setSelectedScenesGenButton] = useState<
-		ScenesGenButtonType | undefined
-	>();
+	const [selectedScenesGenButton, setSelectedScenesGenButton] =
+		useState<ScenesGenButtonType>(ScenesGenButtonType.all);
 
-	const [selectedImagesGenButton, setSelectedImagesGenButton] = useState<
-		ScenesGenButtonType | undefined
-	>();
+	const [selectedImagesGenButton, setSelectedImagesGenButton] =
+		useState<ScenesGenButtonType>(ScenesGenButtonType.all);
 
 	const View = {
 		script: () => (
@@ -371,7 +369,7 @@ const Footer = ({
 						}}
 					>
 						<SelectTrigger
-							className={`py-1.5 px-3 justify-between relative ${selectedImagesGenButton ? (selectedImagesGenButton === ScenesGenButtonType.all ? "w-[325px]" : "w-[375px]") : "w-[250px]"}`}
+							className={`py-1.5 px-3 justify-between relative ${selectedImagesGenButton === ScenesGenButtonType.all ? "w-[225px]" : "w-[325px]"}`}
 						>
 							<LayoutGrid strokeWidth={1} />
 							{selectedImagesGenButton &&
@@ -380,25 +378,21 @@ const Footer = ({
 								<>Generating..... </>
 							) : (
 								<>
-									<SelectValue placeholder="Generate All Scenes" />
+									{imagesGenerationButtonOptions[selectedImagesGenButton].name}
 								</>
 							)}
-
-							<span>
-								{selectedImagesGenButton
-									? imagesGenerationButtonOptions[selectedImagesGenButton]
-											.name === ScenesGenButtonType.all
-										? `(${regenAllImagesCreditCost} ${Format.Pluralize("Credit", regenAllImagesCreditCost)})`
-										: `(${regenUngeneratedImagesCost} ${Format.Pluralize("Credit", regenUngeneratedImagesCost)})`
-									: ""}
-							</span>
 						</SelectTrigger>
 						<SelectContent>
 							{Object.entries(imagesGenerationButtonOptions).map(
 								([key, type]) => {
 									return (
-										<SelectItem key={key} value={key}>
+										<SelectItem key={key} value={key} className="gap-1">
 											{type.name}
+											<span>
+												{key === ScenesGenButtonType.all
+													? ` (${regenAllImagesCreditCost} ${Format.Pluralize("Credit", regenAllImagesCreditCost)})`
+													: ` (${regenUngeneratedImagesCost} ${Format.Pluralize("Credit", regenUngeneratedImagesCost)})`}
+											</span>
 										</SelectItem>
 									);
 								}
@@ -472,16 +466,17 @@ const Footer = ({
 			<div className="flex gap-2 mt-6 w-full justify-end">
 				<div>
 					<Select
+						disabled={!WebstoryData.storyDone}
 						value={selectedScenesGenButton}
 						onValueChange={async (value) => {
-							// await scenesGenerationButtonOptions[
-							// 	value as ScenesGenButtonType
-							// ].mutation.mutateAsync();
 							setSelectedScenesGenButton(value as ScenesGenButtonType);
+							await scenesGenerationButtonOptions[
+								value as ScenesGenButtonType
+							].mutation.mutateAsync();
 						}}
 					>
 						<SelectTrigger
-							className={`py-1.5 px-3 justify-between relative ${selectedScenesGenButton ? (selectedScenesGenButton === ScenesGenButtonType.all ? "w-[325px]" : "w-[375px]") : "w-[250px]"}`}
+							className={`py-1.5 px-3 justify-between relative ${selectedScenesGenButton === ScenesGenButtonType.all ? "w-[225px]" : "w-[325px]"}`}
 						>
 							<LayoutGrid strokeWidth={1} />
 							{selectedScenesGenButton &&
@@ -490,18 +485,9 @@ const Footer = ({
 								<>Regenerating..... </>
 							) : (
 								<>
-									<SelectValue placeholder="Regenerate All Scenes" />
+									{scenesGenerationButtonOptions[selectedScenesGenButton].name}
 								</>
 							)}
-
-							<span>
-								{selectedScenesGenButton
-									? scenesGenerationButtonOptions[selectedScenesGenButton]
-											.name === ScenesGenButtonType.all
-										? `(${regenAllVideosCreditCost} ${Format.Pluralize("Credit", regenAllVideosCreditCost)})`
-										: `(${regenRemVideosCreditCost} ${Format.Pluralize("Credit", regenRemVideosCreditCost)})`
-									: ""}
-							</span>
 						</SelectTrigger>
 						<SelectContent>
 							{Object.entries(scenesGenerationButtonOptions).map(
@@ -509,6 +495,11 @@ const Footer = ({
 									return (
 										<SelectItem key={key} value={key}>
 											{type.name}
+											<span>
+												{key === ScenesGenButtonType.all
+													? ` (${regenAllVideosCreditCost} ${Format.Pluralize("Credit", regenAllVideosCreditCost)})`
+													: ` (${regenRemVideosCreditCost} ${Format.Pluralize("Credit", regenRemVideosCreditCost)})`}
+											</span>
 										</SelectItem>
 									);
 								}
