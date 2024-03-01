@@ -65,12 +65,14 @@ export default function EditSegmentModalItem({
     sceneIndex: number;
     segmentIndex: number;
     segmentSettings?: Settings;
+    disabledHover?: boolean;
   } | null;
   setImageRegenerationSegmentDetails: React.Dispatch<
     React.SetStateAction<{
       sceneIndex: number;
       segmentIndex: number;
       segmentSettings?: Settings;
+      disabledHover?: boolean;
     } | null>
   >;
   sceneIndex: number;
@@ -119,6 +121,9 @@ export default function EditSegmentModalItem({
                 triggerButtonClassName="w-full h-full"
                 imageRegenerationSegmentDetails={
                   imageRegenerationSegmentDetails
+                }
+                setImageRegenerationSegmentDetails={
+                  setImageRegenerationSegmentDetails
                 }
               >
                 <div className="relative w-full h-full">

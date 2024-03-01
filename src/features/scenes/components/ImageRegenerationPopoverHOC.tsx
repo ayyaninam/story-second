@@ -23,6 +23,7 @@ function ImageRegenerationPopoverHOC({
   hidePopupTimerRef,
   showPopupTimerRef,
   imageRegenerationSegmentDetails,
+  setImageRegenerationSegmentDetails,
 }: {
   segment: Segment;
   story: EditStoryDraft;
@@ -41,7 +42,16 @@ function ImageRegenerationPopoverHOC({
     sceneIndex: number;
     segmentIndex: number;
     segmentSettings?: Settings;
+    disabledHover?: boolean;
   } | null;
+  setImageRegenerationSegmentDetails: React.Dispatch<
+    React.SetStateAction<{
+      sceneIndex: number;
+      segmentIndex: number;
+      segmentSettings?: Settings;
+      disabledHover?: boolean;
+    } | null>
+  >;
 }) {
   return (
     <Popover open={open}>
@@ -61,6 +71,7 @@ function ImageRegenerationPopoverHOC({
         hidePopupTimerRef={hidePopupTimerRef}
         showPopupTimerRef={showPopupTimerRef}
         imageRegenerationSegmentDetails={imageRegenerationSegmentDetails}
+        setImageRegenerationSegmentDetails={setImageRegenerationSegmentDetails}
       />
     </Popover>
   );

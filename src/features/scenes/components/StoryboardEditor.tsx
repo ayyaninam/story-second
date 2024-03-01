@@ -46,6 +46,7 @@ export default function StoryboardEditor({
       sceneIndex: number;
       segmentIndex: number;
       segmentSettings?: Settings;
+      disabledHover?: boolean;
     } | null>(null);
 
   const [editSegmentsModalState, setEditSegmentsModalState] = useState<{

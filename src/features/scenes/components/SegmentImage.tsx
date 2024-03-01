@@ -34,12 +34,14 @@ function SegmentImage({
     sceneIndex: number;
     segmentIndex: number;
     segmentSettings?: Settings;
+    disabledHover?: boolean;
   } | null;
   setImageRegenerationSegmentDetails: React.Dispatch<
     React.SetStateAction<{
       sceneIndex: number;
       segmentIndex: number;
       segmentSettings?: Settings;
+      disabledHover?: boolean;
     } | null>
   >;
   handleSubmitEditSegments: () => void;
@@ -74,6 +76,7 @@ function SegmentImage({
       hidePopupTimerRef={hidePopupTimerRef}
       showPopupTimerRef={showPopupTimerRef}
       imageRegenerationSegmentDetails={imageRegenerationSegmentDetails}
+      setImageRegenerationSegmentDetails={setImageRegenerationSegmentDetails}
     >
       <div
         className={cn(
@@ -92,7 +95,7 @@ function SegmentImage({
           });
         }}
         onMouseEnter={() => {
-          if (!isPopupOpen) {
+          if (!isPopupOpen && !imageRegenerationSegmentDetails?.disabledHover) {
             showPopupTimerRef.current = setTimeout(() => {
               setImageRegenerationSegmentDetails({
                 sceneIndex,
@@ -108,7 +111,7 @@ function SegmentImage({
           if (showPopupTimerRef.current) {
             clearTimeout(showPopupTimerRef.current);
           }
-          if (isPopupOpen) {
+          if (isPopupOpen && !imageRegenerationSegmentDetails?.disabledHover) {
             hidePopupTimerRef.current = setTimeout(() => {
               setImageRegenerationSegmentDetails((prevSegmentDetails) => {
                 if (

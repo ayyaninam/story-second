@@ -57,6 +57,7 @@ const EditSegmentModal = ({
       sceneIndex: number;
       segmentIndex: number;
       segmentSettings?: Settings;
+      disabledHover?: boolean;
     } | null>(null);
 
   const SaveEdits = useSubmitEditScenesAndSegments(dispatch);

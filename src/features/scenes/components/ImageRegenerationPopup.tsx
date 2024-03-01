@@ -175,6 +175,7 @@ function ImageRegenerationPopup({
   hidePopupTimerRef,
   showPopupTimerRef,
   imageRegenerationSegmentDetails,
+  setImageRegenerationSegmentDetails,
 }: {
   segment: Segment;
   story: EditStoryDraft;
@@ -191,7 +192,16 @@ function ImageRegenerationPopup({
     sceneIndex: number;
     segmentIndex: number;
     segmentSettings?: Settings;
+    disabledHover?: boolean;
   } | null;
+  setImageRegenerationSegmentDetails: React.Dispatch<
+    React.SetStateAction<{
+      sceneIndex: number;
+      segmentIndex: number;
+      segmentSettings?: Settings;
+      disabledHover?: boolean;
+    } | null>
+  >;
 }) {
   const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
   const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
@@ -213,6 +223,12 @@ function ImageRegenerationPopup({
 
   const triggerRegenerationOfImages = useCallback(async () => {
     setIsRegeneratingImages(true);
+    if (imageRegenerationSegmentDetails) {
+      setImageRegenerationSegmentDetails({
+        ...imageRegenerationSegmentDetails,
+        disabledHover: true,
+      });
+    }
     await handleSubmitEditSegments();
     setRegenerateImages(true);
   }, [handleSubmitEditSegments]);
@@ -332,7 +348,12 @@ function ImageRegenerationPopup({
     if (showPopupTimerRef?.current) {
       clearTimeout(showPopupTimerRef.current);
     }
-    if (open && hidePopupTimerRef) {
+    if (
+      open &&
+      hidePopupTimerRef &&
+      imageRegenerationSegmentDetails &&
+      !imageRegenerationSegmentDetails.disabledHover
+    ) {
       hidePopupTimerRef.current = setTimeout(() => {
         onClose();
       }, 500);
@@ -392,7 +413,12 @@ function ImageRegenerationPopup({
                     imageKey={imageKey}
                     onSelection={setSelectedImageKey}
                     active={selectedImageKey === imageKey}
-                    onHover={setHoveredImageKey}
+                    onHover={
+                      imageRegenerationSegmentDetails &&
+                      !imageRegenerationSegmentDetails.disabledHover
+                        ? setHoveredImageKey
+                        : undefined
+                    }
                   />
                 ))}
                 {selectedImageKey && (

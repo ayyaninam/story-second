@@ -612,10 +612,10 @@ const Footer = ({
             </span>
 
             <div className="flex space-x-1 items-center">
-              <ChevronLeft
+              {/* <ChevronLeft
                 onClick={scrollLeft}
                 className="w-8 h-8 opacity-50 "
-              />
+              /> */}
               <div
                 ref={scrollRef}
                 className="flex 2xl:overflow-x-visible overflow-x-hidden "
@@ -653,10 +653,10 @@ const Footer = ({
                   </TooltipProvider>
                 </div>
               </div>
-              <ChevronRight
+              {/* <ChevronRight
                 onClick={scrollRight}
                 className="w-8 h-8 opacity-50 hover:bg-slate-200 hover:cursor-pointer rounded-sm"
-              />
+              /> */}
             </div>
           </div>
         )}
