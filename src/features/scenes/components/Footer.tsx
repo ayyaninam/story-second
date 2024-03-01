@@ -362,7 +362,7 @@ const Footer = ({
 
   const View = {
     script: () => (
-      <div className="flex gap-2 mt-6 w-full justify-end">
+      <div className="flex gap-2 w-full justify-end flex-wrap">
         <div>
           <Select
             disabled={!WebstoryData.storyDone}
@@ -429,7 +429,7 @@ const Footer = ({
       </div>
     ),
     storyboard: () => (
-      <div className="flex gap-2 mt-6 w-full justify-end">
+      <div className="flex gap-2 w-full justify-end flex-wrap">
         <div>
           <Button
             variant="outline"
@@ -476,7 +476,7 @@ const Footer = ({
       </div>
     ),
     scene: () => (
-      <div className="flex gap-2 mt-6 w-full justify-end">
+      <div className="flex gap-2 w-full justify-end flex-wrap">
         <div>
           <Select
             disabled={!WebstoryData.storyDone}
@@ -539,7 +539,7 @@ const Footer = ({
       </div>
     ),
     preview: () => (
-      <div className="flex gap-2 mt-6 w-full justify-end">
+      <div className="flex gap-2 w-full justify-end flex-wrap">
         <div className="flex flex-col">
           <Button
             disabled={
@@ -572,7 +572,7 @@ const Footer = ({
   const FooterRightButtons = View[view];
   const areImagesActive = view === "script" || view === "storyboard";
   return (
-    <div className="sticky bottom-0  bg-background border-border border-t-[1px] p-3 pt-1.5 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
+    <div className="sticky bottom-0  bg-background border-border border-t-[1px] p-2 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
       <div className="flex gap-1 py-2">
         <div>
           <label className="text-sm text-slate-600 font-normal">Narrator</label>
@@ -597,9 +597,9 @@ const Footer = ({
         </div>
       </div>
 
-      <div className="text-center max-w-md">
+      <div className="text-center w-100 flex flex-col items-center justify-center">
         {view !== "preview" && (
-          <>
+          <div className="flex flex-col items-center justify-center max-w-md">
             <span className="text-sm font-normal">
               <span className="text-slate-600">Primary Image Style:</span>{" "}
               <span className="text-purple-600">
@@ -658,7 +658,7 @@ const Footer = ({
                 className="w-8 h-8 opacity-50 hover:bg-slate-200 hover:cursor-pointer rounded-sm"
               />
             </div>
-          </>
+          </div>
         )}
       </div>
       <FooterRightButtons />

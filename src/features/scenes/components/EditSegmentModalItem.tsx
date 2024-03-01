@@ -64,11 +64,13 @@ export default function EditSegmentModalItem({
   imageRegenerationSegmentDetails: {
     sceneIndex: number;
     segmentIndex: number;
+    segmentSettings?: Settings;
   } | null;
   setImageRegenerationSegmentDetails: React.Dispatch<
     React.SetStateAction<{
       sceneIndex: number;
       segmentIndex: number;
+      segmentSettings?: Settings;
     } | null>
   >;
   sceneIndex: number;
@@ -115,6 +117,9 @@ export default function EditSegmentModalItem({
                 sceneIndex={sceneIndex}
                 regenerateOnOpen={regeneratingImage}
                 triggerButtonClassName="w-full h-full"
+                imageRegenerationSegmentDetails={
+                  imageRegenerationSegmentDetails
+                }
               >
                 <div className="relative w-full h-full">
                   {segment.imageStatus !== StoryStatus.COMPLETE ? (
@@ -129,6 +134,7 @@ export default function EditSegmentModalItem({
                         setImageRegenerationSegmentDetails({
                           sceneIndex: sceneIndex,
                           segmentIndex: segmentIndex,
+                          segmentSettings: segment.settings,
                         });
                         setRegeneratingImage(false);
                       }}
@@ -225,6 +231,7 @@ export default function EditSegmentModalItem({
                       setImageRegenerationSegmentDetails({
                         sceneIndex: sceneIndex,
                         segmentIndex: segmentIndex,
+                        segmentSettings: segment.settings,
                       });
                       setRegeneratingImage(true);
                     }}
