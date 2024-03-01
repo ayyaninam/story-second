@@ -4,7 +4,6 @@ import {
 	StoryImageStyles,
 	StoryOutputTypes,
 } from "@/utils/enums";
-import { nanoid } from "nanoid";
 import { recursivelyUpdateOverlappingKeys } from "../utils/storydraft";
 
 export enum StoryStatus {

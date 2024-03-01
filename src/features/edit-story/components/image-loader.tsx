@@ -17,7 +17,9 @@ export default function ImageLoader({
 	imageLoadingDurationMs = 2000,
 	displayLoaderAfterFirstShow = false,
 	defaultLoadingText,
+	roundedClassName,
 }: {
+	roundedClassName?: string;
 	imageData: (components["schemas"]["ReturnVideoSegmentDTO"] & {
 		src: string;
 	})[];
@@ -71,6 +73,7 @@ export default function ImageLoader({
 
 	return (
 		<CustomImageSuspense
+			isStoryScreen={roundedClassName === undefined}
 			imageSrc={currentImage.src}
 			isLoaded={true}
 			onComplete={() => setSeenIndices((prev) => [...prev, index])}
@@ -81,7 +84,7 @@ export default function ImageLoader({
 			Container={({ children, style, className }) => (
 				<div
 					style={style}
-					className={`relative w-full h-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg ${className} `}
+					className={`relative w-full h-full rounded-t-lg ${roundedClassName ? roundedClassName : "lg:rounded-tr-none lg:rounded-bl-lg"} ${className} `}
 				>
 					<div className="absolute flex h-full w-full justify-center items-end z-[100]">
 						<div
@@ -91,7 +94,7 @@ export default function ImageLoader({
 								borderColor: "rgba(0, 0, 0, 0.29)",
 							}}
 						>
-							<p className="font-medium font-mono text-lg">
+							<p className="font-medium font-mono text-sm">
 								{defaultLoadingText || DisplayLoadingText()}
 							</p>
 						</div>

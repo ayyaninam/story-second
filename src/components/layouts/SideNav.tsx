@@ -4,7 +4,7 @@ import { AvatarImage } from "@radix-ui/react-avatar";
 import ExploreIcon from "@/components/icons/side-nav/ExploreIcon";
 import GenerateIcon from "@/components/icons/side-nav/GenerateIcon";
 import LibraryIcon from "@/components/icons/side-nav/LibraryIcon";
-import {CircleUserRoundIcon, Command} from "lucide-react";
+import { CircleUserRoundIcon, Command } from "lucide-react";
 import Link from "next/link";
 import RightPlay from "@/components/icons/right-play";
 import Format from "@/utils/format";
@@ -16,6 +16,7 @@ import {QueryKeys} from "@/lib/queryKeys";
 import api from "@/api";
 import {useEffect, useState} from "react";
 
+
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
 	{
@@ -25,7 +26,8 @@ export const menuItems = [
 		redirectUrl: "/explore",
 		cssVars: {
 			"--hover-border-color": "rgba(122,255,180,0.1)",
-			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(102, 129, 255, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+			"--hover-background":
+				"radial-gradient(70% 100% at 0% 50%, rgba(102, 129, 255, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
 		},
 	},
 	{
@@ -35,8 +37,9 @@ export const menuItems = [
 		redirectUrl: "/generate",
 		cssVars: {
 			"--hover-border-color": "rgba(206, 122, 255, 0.2)",
-			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(187, 85, 247, 0.5) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
-		}
+			"--hover-background":
+				"radial-gradient(70% 100% at 0% 50%, rgba(187, 85, 247, 0.5) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+		},
 	},
 	{
 		icon: <LibraryIcon />,
@@ -45,29 +48,10 @@ export const menuItems = [
 		redirectUrl: "/library",
 		cssVars: {
 			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
-			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(48, 149, 136, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
-		}
+			"--hover-background":
+				"radial-gradient(70% 100% at 0% 50%, rgba(48, 149, 136, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+		},
 	},
-	// {
-	// 	icon: <ChallengesIcon />,
-	// 	text: "Challenges",
-	// 	shortcut: "C",
-	// 	redirectUrl: "/challenges",
-	// 	cssVars: {
-	// 		"--hover-border-color": "rgba(152, 230, 55, 0.50)",
-	// 		"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(119, 177, 46, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
-	// 	}
-	// },
-	// {
-	// 	icon: <FreeCreditsIcon />,
-	// 	text: "Free Credits",
-	// 	shortcut: "F",
-	// 	redirectUrl: "/credits",
-	// 	cssVars: {
-	// 		"--hover-border-color": "rgba(148, 171, 184, 0.50)",
-	// 		"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
-	// 	}
-	// },
 	{
 		icon: <CircleUserRoundIcon />,
 		text: "Account",
@@ -75,24 +59,27 @@ export const menuItems = [
 		redirectUrl: "/account",
 		cssVars: {
 			"--hover-border-color": "rgba(148, 171, 184, 0.50)",
-			"--hover-background": "radial-gradient(70% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
-		}
-	}
+			"--hover-background":
+				"radial-gradient(70% 100% at 0% 50%, rgba(72, 94, 106, 0.50) 37.5%, rgba(102, 129, 255, 0.00) 100%)",
+		},
+	},
 ];
 
 export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	const selectedStyle = {
 		border: "0.5px solid rgba(255, 255, 255, 0.08)",
-		background: "linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.00) 100%)",
+		background:
+			"linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.00) 100%)",
 		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset",
 	};
 
 	const userHandlerStyle = {
 		borderRadius: "2px",
 		border: "0.5px solid rgba(255, 255, 255, 0.12)",
-		background: "linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%)",
-		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset"
-	}
+		background:
+			"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%)",
+		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset",
+	};
 
 	// const { user, isLoading } = useUser();
 
@@ -141,10 +128,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 					) : (
 						<>
 							<Skeleton className="h-8 w-8 rounded-full" />
-							<Link
-								href={"/auth/login"}
-								className={"flex flex-col gap-y-1"}
-							>
+							<Link href={"/auth/login"} className={"flex flex-col gap-y-1"}>
 								<Button
 									variant="outline"
 									className="text-white font-normal hover:text-accent-600"
@@ -164,12 +148,11 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 							key={index}
 							aria-selected={index === pageIndex}
 							className="ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem"
-							style={{ ...menuItem.cssVars as React.CSSProperties}}
+							style={{ ...(menuItem.cssVars as React.CSSProperties) }}
 						>
 							{menuItem.icon}
 							{menuItem.text}
-							<div
-								className="flex gap-2 flex-grow justify-end items-center opacity-65">
+							<div className="flex gap-2 flex-grow justify-end items-center opacity-65">
 								<Command
 									className="h-5 w-5 p-0.5"
 									style={{
@@ -195,9 +178,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 			</div>
 			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-100">
 				<div className="mb-4 mx-3">
-					<Link
-						href={"/explore"}
-					>
+					<Link href={"/explore"}>
 						<StoryLogoFullWhite />
 					</Link>
 				</div>

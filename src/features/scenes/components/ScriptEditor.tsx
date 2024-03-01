@@ -1,26 +1,13 @@
+import { DisplayAspectRatios } from "@/utils/enums";
+import { LayoutList, RefreshCw } from "lucide-react";
 import {
-	AspectRatios,
-	DisplayAspectRatios,
-	SegmentModifications,
-	StoryboardViewType,
-} from "@/utils/enums";
-import { ChevronDown, LayoutList, RefreshCw, SparkleIcon } from "lucide-react";
-import { useImmerReducer } from "use-immer";
-import editStoryReducer, {
 	EditStoryAction,
 	EditStoryDraft,
-	Scene,
 	Segment,
 	TextStatus,
 } from "../reducers/edit-reducer";
-import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import { mainSchema } from "@/api/schema";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import api from "@/api";
-import { SegmentModificationData } from "@/types";
-import { QueryKeys } from "@/lib/queryKeys";
-import { useRouter } from "next/router";
 import { VideoPlayerHandler } from "@/features/edit-story/components/video-player";
 
 import Editor from "./Editor";
@@ -29,18 +16,8 @@ import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
 import CategorySelect from "@/components/ui/CategorySelect";
 import { useUpdateCategory } from "../mutations/UpdateCategory";
-
-const MAX_SUMMARY_LENGTH = 251;
 
 export default function ScriptEditor({
 	WebstoryData,
@@ -62,24 +39,7 @@ export default function ScriptEditor({
 	story: EditStoryDraft;
 	dispatch: React.Dispatch<EditStoryAction>;
 }) {
-	const router = useRouter();
 	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
-	const queryClient = useQueryClient();
-	const [showFullDescription, setShowFullDescription] = useState(false);
-	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
-	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
-
-	const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
-		open?: boolean;
-		scene?: Scene;
-		sceneId?: number;
-		dispatch?: React.Dispatch<EditStoryAction>;
-		story?: EditStoryDraft;
-	}>();
-
-	const [previousStory, setPreviousStory] = useState<EditStoryDraft>(
-		WebstoryToStoryDraft(WebstoryData!)
-	);
 	const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
 
 	useEffect(() => {

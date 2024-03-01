@@ -285,6 +285,7 @@ export default function PublishedStory({
 								</div> */}
 								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
 									<StoryScreen
+										playerClassName="rounded-tl-lg rounded-bl-lg"
 										Webstory={Webstory.data}
 										isError={Webstory.isError}
 										onPlay={() => {
