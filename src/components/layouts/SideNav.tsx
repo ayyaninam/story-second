@@ -183,7 +183,7 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 					))}
 				</div>
 			</div>
-			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-600">
+			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-100">
 				<div className="mb-4 mx-3">
 					<Link
 						href={"/explore"}
@@ -239,9 +239,9 @@ export default function SideNav({ pageIndex, userDetails }: { pageIndex: number;
 									boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
 								}}
 							>
-								17
+								17d
 							</span>
-							<span>Days till Reset</span>
+							<span>Until Reset</span>
 						</div>
 					</div>
 
