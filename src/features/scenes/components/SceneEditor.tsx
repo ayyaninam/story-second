@@ -195,7 +195,7 @@ const SceneEditorView = ({
 						className="h-screen flex justify-between overflow-y-hidden w-full"
 						style={{ background: "transparent" }}
 					>
-						<div className="h-full flex-grow ml-2  flex flex-col justify-between overflow-y-auto">
+						<div className="h-full w-[50%] flex-grow ml-2  flex flex-col justify-between overflow-y-auto">
 							<div className="flex flex-col my-3 md:flex-row items-center w-full">
 								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row">
 									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
@@ -281,7 +281,7 @@ const SceneEditorView = ({
 							</div>
 						</div>
 
-						<div className="relative h-full w-full px-4 flex items-center justify-center ">
+						<div className="relative h-full w-[50%] px-4 flex items-center justify-center ">
 							{/* <div
 								className="h-[95%] blur-sm overflow-visible"
 								style={{ aspectRatio: ImageRatio.ratio }}
@@ -300,9 +300,11 @@ const SceneEditorView = ({
 								style={{ aspectRatio: ImageRatio.ratio }}
 							>
 								<StoryScreen
+									playerClassName="lg:rounded-lg"
+									roundedClassName="lg:rounded-lg"
+									ref={videoPlayerRef}
 									Webstory={WebstoryData}
 									isError={isError}
-									ref={videoPlayerRef}
 									onPlay={() => {
 										setIsPlaying(true);
 									}}

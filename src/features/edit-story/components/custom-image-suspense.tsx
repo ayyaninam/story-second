@@ -18,6 +18,7 @@ export default function CustomImageSuspense({
 	Container,
 	onComplete,
 	showAnimation = true,
+	isStoryScreen,
 }: {
 	loadingDuration: number;
 	imageSrc: string;
@@ -31,6 +32,7 @@ export default function CustomImageSuspense({
 		className?: string;
 	}>;
 	onComplete: () => void;
+	isStoryScreen?: boolean;
 }) {
 	const router = useRouter();
 	const [Webstory] = useWebstoryContext();
@@ -182,7 +184,18 @@ export default function CustomImageSuspense({
 											key={idx(rowIdx, colIdx)}
 											className={cn(
 												`h-full w-full ${col === 1 || !showAnimation ? "opacity-0" : "bg-purple-400"} m-0 p-0 transition-all duration-500`,
-												rowIdx === 0 && colIdx === 0 && "rounded-tl-lg"
+												rowIdx === 0 && colIdx === 0 && "rounded-tl-lg",
+												!isStoryScreen &&
+													rowIdx === 0 &&
+													colIdx === row.length - 1 &&
+													"rounded-tr-lg",
+												rowIdx === twoDArray.length - 1 &&
+													colIdx === 0 &&
+													"rounded-bl-lg",
+												!isStoryScreen &&
+													rowIdx === twoDArray.length - 1 &&
+													colIdx === row.length - 1 &&
+													"rounded-br-lg"
 											)}
 											style={{ aspectRatio: 1 }}
 										></div>
