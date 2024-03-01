@@ -170,13 +170,6 @@ export default function StoryboardEditor({
                                       backgroundColor: "transparent",
                                     }}
                                     className={cn(`flex flex-wrap w-full`)}
-                                    onClick={() => {
-                                      // handleRegenerateImage(
-                                      // 	segment,
-                                      // 	sceneIndex,
-                                      // 	segmentIndex
-                                      // );
-                                    }}
                                   >
                                     <AutosizeInput
                                       onKeyDown={(e) => {
