@@ -8,46 +8,46 @@ import PageLayout from "@/components/layouts/PageLayout";
 import AccountsPage from "@/features/account";
 
 export default function ProfilePage({
-	accessToken,
+  accessToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	return (
-		<>
-			<AccountsPage accessToken={accessToken} />
-		</>
-	);
+  return (
+    <>
+      <AccountsPage accessToken={accessToken} />
+    </>
+  );
 }
 ProfilePage.getLayout = function getLayout(page: ReactElement) {
-	return <PageLayout pageIndex={4}>{page}</PageLayout>;
+  return <PageLayout pageIndex={4}>{page}</PageLayout>;
 };
 
 const _getServerSideProps = async ({
-	req,
-	res,
-	resolvedUrl,
+  req,
+  res,
+  resolvedUrl,
 }: GetServerSidePropsContext) => {
-	try {
-		const session = await getSession(req, res);
-		if (session == null || session?.accessToken == null) {
-			// if protected by withPageAuthRequired, this should never happen
-			return {
-				redirect: {
-					destination: `${Routes.authpage}?returnTo=${resolvedUrl}`,
-					permanent: false,
-				},
-			};
-		}
+  try {
+    const session = await getSession(req, res);
+    if (session == null || session?.accessToken == null) {
+      // if protected by withPageAuthRequired, this should never happen
+      return {
+        redirect: {
+          destination: `${Routes.authpage}?returnTo=${resolvedUrl}`,
+          permanent: false,
+        },
+      };
+    }
 
-		return { props: { accessToken: session.accessToken } };
-	} catch (e) {
-		return {
-			redirect: {
-				destination: Routes.defaultRedirect,
-				permanent: false,
-			},
-		};
-	}
+    return { props: { accessToken: session.accessToken } };
+  } catch (e) {
+    return {
+      redirect: {
+        destination: Routes.defaultRedirect,
+        permanent: false,
+      },
+    };
+  }
 };
 
 export const getServerSideProps = withPageAuthRequired({
-	getServerSideProps: _getServerSideProps,
+  getServerSideProps: _getServerSideProps,
 });
