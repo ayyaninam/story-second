@@ -132,6 +132,9 @@ const library = {
     )
       .patch(`api/Library/${id}/Like`, {
         body: JSON.stringify(params),
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
       .json();
 
