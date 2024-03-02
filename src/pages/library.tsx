@@ -6,11 +6,16 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { InferGetServerSidePropsType } from "next";
 import PageLayout from "@/components/layouts/PageLayout";
 import { NextSeo } from "next-seo";
+import Routes from "@/routes";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { getServerSidePropsStub } from "@/utils/getServerSidePropsStub";
 
 function Library({
   accessToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const accessToken = (session.accessToken as string) || "";
+  useSaveSessionToken(session);
+  
   return (
     <>
       <NextSeo
