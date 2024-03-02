@@ -1,7 +1,7 @@
-import { authFetcher, publicFetcher } from "@/lib/fetcher";
-import { getJwt } from "@/utils/jwt";
-import { mainSchema } from "../schema";
-import { LibraryPageVideoQueryOptions } from "@/types";
+import { authFetcher, publicFetcher, publicProxyApiFetcher } from "@/lib/fetcher"
+import { getJwt } from "@/utils/jwt"
+import { mainSchema } from "../schema"
+import { LibraryPageVideoQueryOptions } from "@/types"
 
 const library = {
 	get: async (
@@ -10,88 +10,88 @@ const library = {
 		accessToken?: string
 	): Promise<mainSchema["ReturnVideoStoryDTO"]> => {
 		const data: mainSchema["ReturnVideoStoryDTOApiResponse"] =
-			await publicFetcher.get(`api/library/${topLevelCategory}/${slug}`).json();
+			await publicFetcher.get(`proxyApi/library/${topLevelCategory}/${slug}`).json()
 
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}
 
 		if (!data.data) {
-			throw new Error("No data returned");
+			throw new Error("No data returned")
 		}
 
-		return data.data;
+		return data.data
 	},
 	getVideos: async ({
 		accessToken,
 		params,
 	}: {
-		accessToken: string;
-		params: LibraryPageVideoQueryOptions;
+		accessToken: string
+		params: LibraryPageVideoQueryOptions
 	}): Promise<mainSchema["ReturnVideoStoryDTOPagedList"]> => {
-		const { topLevelCategory } = params;
+		const { topLevelCategory } = params
 		const searchParams = {
 			...params,
 			topLevelCategory: "",
-		};
+		}
 		const data: mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] =
-			await authFetcher(accessToken)
-				.get(`api/User/Videos/${topLevelCategory}`, {
+			await publicProxyApiFetcher
+				.get(`proxyApi/User/Videos/${topLevelCategory}`, {
 					searchParams,
 				})
-				.json();
+				.json()
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}
 
 		if (!data.data) {
-			throw new Error("No data returned");
+			throw new Error("No data returned")
 		}
 
-		return data.data;
+		return data.data
 	},
 	getCategories: async (): Promise<string[]> => {
 		const data: mainSchema["StringICollectionApiResponse"] = await publicFetcher
 			.get("api/StoryBook/Categories")
-			.json();
+			.json()
 
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}
 
 		if (!data.data) {
-			throw new Error("No data returned");
+			throw new Error("No data returned")
 		}
 
-		return data.data;
+		return data.data
 	},
 	getStoryBooks: async ({
 		accessToken,
 		params,
 	}: {
-		accessToken: string;
-		params: LibraryPageVideoQueryOptions;
+		accessToken: string
+		params: LibraryPageVideoQueryOptions
 	}): Promise<mainSchema["ReturnWebStoryDTOPagedList"]> => {
-		const { topLevelCategory } = params;
+		const { topLevelCategory } = params
 		const searchParams = {
 			...params,
 			topLevelCategory: "",
-		};
+		}
 		const data: mainSchema["ReturnWebStoryDTOPagedListApiResponse"] =
 			await authFetcher(accessToken)
 				.get(`api/User/StoryBooks/${topLevelCategory}`, {
 					searchParams: params,
 				})
-				.json();
+				.json()
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}
 
 		if (!data.data) {
-			throw new Error("No data returned");
+			throw new Error("No data returned")
 		}
 
-		return data.data;
+		return data.data
 	},
 	getMultiple: async (
 		params: {},
@@ -100,26 +100,26 @@ const library = {
 		const data: mainSchema["ReturnWebStoryDTOPagedListApiResponse"] =
 			await publicFetcher
 				.get(`api/library`, { searchParams: { ...params } })
-				.json();
+				.json()
 
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}
 
 		if (!data.data) {
-			throw new Error("No data returned");
+			throw new Error("No data returned")
 		}
 
-		return data.data;
+		return data.data
 	},
 	likeVideo: async ({
 		id,
 		params,
 		token,
 	}: {
-		id: string;
-		params: mainSchema["LikeStoryDTO"];
-		token?: string;
+		id: string
+		params: mainSchema["LikeStoryDTO"]
+		token?: string
 	}): Promise<boolean> => {
 		const data: mainSchema["BooleanApiResponse"] = await authFetcher(
 			token || getJwt()
@@ -127,18 +127,18 @@ const library = {
 			.patch(`api/Library/${id}/Like`, {
 				body: JSON.stringify(params),
 			})
-			.json();
+			.json()
 
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}
 
 		if (!data.data) {
-			throw new Error("No data returned");
+			throw new Error("No data returned")
 		}
 
-		return data.data;
+		return data.data
 	},
-};
+}
 
-export default library;
+export default library
