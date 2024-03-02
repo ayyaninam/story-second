@@ -12,10 +12,10 @@ export interface SessionType {
 	refreshToken?: string | undefined;
 }
 
-const useSaveSessionToken = (session: SessionType) => {
+const useSaveSessionToken = (accessToken: string | null | undefined) => {
 	useEffect(() => {
-		if (session) setJwt(session?.accessToken ?? "");
-	}, [session]);
+		if (accessToken) setJwt(accessToken ?? "");
+	}, [accessToken]);
 };
 
 export default useSaveSessionToken;

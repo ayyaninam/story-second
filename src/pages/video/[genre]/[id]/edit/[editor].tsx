@@ -32,7 +32,7 @@ const EditorPage = ({
   session,
   storyData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  useSaveSessionToken(session);
+  useSaveSessionToken(session.accessToken);
   const router = useRouter();
   const queryClient = useQueryClient();
 

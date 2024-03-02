@@ -23,7 +23,7 @@ export default function PublishPage({
 	session,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	useSaveSessionToken(session);
+	useSaveSessionToken(session.accessToken);
 	return (
 		<HydrationBoundary state={dehydratedState}>
 			<NextSeo

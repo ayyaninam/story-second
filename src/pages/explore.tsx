@@ -21,7 +21,7 @@ function Explore({
   dehydratedState,
   session,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  useSaveSessionToken(session);
+  useSaveSessionToken(session.accessToken);
 
   return (
     <HydrationBoundary state={dehydratedState}>

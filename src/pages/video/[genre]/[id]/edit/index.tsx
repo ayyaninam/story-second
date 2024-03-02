@@ -21,7 +21,7 @@ function StoryPage({
 	session,
 	storyData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	useSaveSessionToken(session);
+	useSaveSessionToken(session.accessToken);
 
 	return (
 		<WebStoryProvider initialValue={storyData}>
