@@ -12,6 +12,7 @@ export const getServerSidePropsStub = async ({
 }: GetServerSidePropsContext) => {
   try {
     const session = await getSession(req, res);
+    console.log("session", session)
     if (session == null || session?.accessToken == null) {
       // if protected by withPageAuthRequired, this should never happen
       return {

@@ -13,6 +13,7 @@ import { getServerSidePropsStub } from "@/utils/getServerSidePropsStub";
 function Library({
   accessToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  useSaveSessionToken(accessToken);
   return (
     <>
       <NextSeo

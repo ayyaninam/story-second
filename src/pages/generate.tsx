@@ -11,7 +11,7 @@ import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 function Generate({
   session,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  useSaveSessionToken(session);
+  useSaveSessionToken(session.accessToken);
 
   return (
     <HydrationBoundary>

@@ -5,6 +5,7 @@ import {
 } from "@auth0/nextjs-auth0";
 
 import { authFetcher } from "@/lib/fetcher";
+import {NextResponse} from "next/server";
 
 /**
  * Handler for the proxy API.  Traffic will be forwarded to the actual API server
@@ -17,13 +18,13 @@ const _GET: AppRouteHandlerFn = async (request) => {
     return Response.json({ error: "Invalid path" }, { status: 404 });
   }
 
-  const { accessToken } = await getAccessToken();
+  const { accessToken } = await getAccessToken(request, new NextResponse());
   if (accessToken == null) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const newUrl = `${pathname.replace("/proxyApi", "api")}${request.nextUrl.search}`;
-  return await authFetcher(accessToken).get(newUrl);
+  return authFetcher(accessToken).get(newUrl);
 };
 
 export const GET = withApiAuthRequired(_GET);

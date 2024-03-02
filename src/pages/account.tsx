@@ -5,10 +5,12 @@ import React, { ReactElement } from "react";
 import PageLayout from "@/components/layouts/PageLayout";
 import AccountsPage from "@/features/account";
 import { getServerSidePropsStub } from "@/utils/getServerSidePropsStub";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
 export default function ProfilePage({
   accessToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  useSaveSessionToken(accessToken);
   return (
     <>
       <AccountsPage accessToken={accessToken} />
