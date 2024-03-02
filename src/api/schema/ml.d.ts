@@ -213,7 +213,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 7657778
+       * @default 93741310
        */
       seed?: number;
       /**
@@ -264,7 +264,7 @@ export interface components {
       image_sampling_steps?: number;
       /**
        * Image Seed
-       * @default 73980476
+       * @default 18184406
        */
       image_seed?: number;
       /**
@@ -305,6 +305,15 @@ export interface components {
       Text: string;
       /** Sceneid */
       SceneId: string;
+      /** Prompt */
+      Prompt: string;
+      Style: components["schemas"]["ImageStyleEnum"];
+      /** Seed */
+      Seed: number;
+      /** Cfgscale */
+      CfgScale: number;
+      /** Steps */
+      Steps: number;
     };
     /** SegmentDelete */
     SegmentDelete: {
@@ -317,6 +326,15 @@ export interface components {
       Ind: number;
       /** Text */
       Text: string;
+      /** Prompt */
+      Prompt: string;
+      Style: components["schemas"]["ImageStyleEnum"];
+      /** Seed */
+      Seed: number;
+      /** Cfgscale */
+      CfgScale: number;
+      /** Steps */
+      Steps: number;
     };
     /**
      * StoryLanguageEnum
