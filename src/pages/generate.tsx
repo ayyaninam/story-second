@@ -1,12 +1,18 @@
 import GeneratePage from "@/features/generate";
 import React, { ReactElement } from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { withPageAuthRequired, getSession } from "@auth0/nextjs-auth0";
 
 import { HydrationBoundary } from "@tanstack/react-query";
 import PageLayout from "@/components/layouts/PageLayout";
 import { NextSeo } from "next-seo";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
-function Generate() {
+function Generate({
+  session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  useSaveSessionToken(session);
+
   return (
     <HydrationBoundary>
       <NextSeo
@@ -57,6 +63,16 @@ Generate.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default Generate;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getSession(context.req, context.res);
+
+  return {
+    props: {
+      session: { ...session },
+    },
+  };
+}
 
 // Disabled: don't need to check for authentication here - being checked in /create already
 // export const getServerSideProps = withPageAuthRequired();

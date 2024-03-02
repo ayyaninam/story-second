@@ -4,6 +4,7 @@ import {
   EditStoryAction,
   EditStoryDraft,
   Scene,
+  Settings,
   StoryStatus,
   TextStatus,
 } from "../reducers/edit-reducer";
@@ -44,6 +45,8 @@ export default function StoryboardEditor({
     useState<{
       sceneIndex: number;
       segmentIndex: number;
+      segmentSettings?: Settings;
+      disabledHover?: boolean;
     } | null>(null);
 
   const [editSegmentsModalState, setEditSegmentsModalState] = useState<{
