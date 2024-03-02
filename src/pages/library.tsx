@@ -17,12 +17,15 @@ import PageLayout from "@/components/layouts/PageLayout";
 import { getSession } from "@auth0/nextjs-auth0";
 import { NextSeo } from "next-seo";
 import Routes from "@/routes";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
 function Library({
   session,
   dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const accessToken = (session.accessToken as string) || "";
+  useSaveSessionToken(session);
+
   return (
     <HydrationBoundary state={dehydratedState}>
       <NextSeo
