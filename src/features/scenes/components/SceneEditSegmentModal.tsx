@@ -80,7 +80,7 @@ const SceneEditSegmentModal = ({
 							<EditVideoSegmentModalitem
 								key={index}
 								segment={segment}
-								onRegenerateImage={() => handleRegenerateVideo(index)}
+								onRegenerateVideo={() => handleRegenerateVideo(index)}
 								regeneratingImage={regeratingImages[index]}
 								onSegmentEdit={(updatedSegment) => {
 									dispatch({
