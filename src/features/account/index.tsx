@@ -12,9 +12,10 @@ import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import { pick } from "lodash";
 import { parseISO, subDays } from "date-fns";
-import {NextSeo} from "next-seo";
+import { NextSeo } from "next-seo";
 import user from "@/api/routes/user";
-import {AccountsHeader} from "@/features/account/components/header";
+import { AccountsHeader } from "@/features/account/components/header";
+import Billing from "@/features/account/components/billing";
 
 const profileSchema = z.object({
   profileName: z
@@ -58,7 +59,7 @@ const preferenceSchema = z.object({
 
 type Account = z.infer<typeof profileSchema>;
 
-const AccountsPage = ({accessToken}: {accessToken: string}) => {
+const AccountsPage = ({ accessToken }: { accessToken: string }) => {
   const router = useRouter();
   const { step = "profile" } = router.query ?? {};
 
@@ -140,77 +141,80 @@ const AccountsPage = ({accessToken}: {accessToken: string}) => {
       />
       <AccountsHeader user={data?.data} />
       <div className="flex flex-grow">
-      <div className="w-full h-full bg-background p-8 lg:p-14">
-        <p className="text-3xl font-bold">Settings</p>
-        <p className="text-base font-extralight text-muted-foreground">
-          Manage your account settings and set e-mail preferences.
-        </p>
-        <hr className="mt-2 lg:mt-8" />
-        <div className="flex flex-col sm:flex-row">
-          {/* Toggle Group: Adjust for mobile and larger screens */}
-          <div className="w-full sm:w-2/12">
-            <ToggleGroup
-              value={step as string}
-              type="single"
-              className="flex flex-row sm:flex-col space-x-2 sm:space-x-0 space-y-0 sm:space-y-2 mt-5"
-              onValueChange={onClickNavMenu}
-            >
-              <ToggleGroupItem
-                value="profile"
-                className="justify-center sm:justify-start text-center sm:text-left w-full"
+        <div className="w-full h-full bg-background p-8 lg:p-14">
+          <p className="text-3xl font-bold">Settings</p>
+          <p className="text-base font-extralight text-muted-foreground">
+            Manage your account settings and set e-mail preferences.
+          </p>
+          <hr className="mt-2 lg:mt-8" />
+          <div className="flex flex-col sm:flex-row">
+            {/* Toggle Group: Adjust for mobile and larger screens */}
+            <div className="w-full sm:w-2/12">
+              <ToggleGroup
+                value={step as string}
+                type="single"
+                className="flex flex-row sm:flex-col space-x-2 sm:space-x-0 space-y-0 sm:space-y-2 mt-5"
+                onValueChange={onClickNavMenu}
               >
-                Profile
-              </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="profile"
+                  className="justify-center sm:justify-start text-center sm:text-left w-full"
+                >
+                  Profile
+                </ToggleGroupItem>
 
-              <ToggleGroupItem
-                value="payment"
-                className="justify-center sm:justify-start text-center sm:text-left w-full"
-              >
-                Billing
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="preferences"
-                className="justify-center sm:justify-start text-center sm:text-left w-full"
-              >
-                Notification Preferences
-              </ToggleGroupItem>
-            </ToggleGroup>
-          </div>
-          {isPending ? (
-            <p className="ml-28 mt-10">Loading...</p>
-          ) : (
-            <div id="tab-section" className="mt-8 sm:mt-0 sm:ml-28 w-full sm:w-4/6">
-              <div className="lg:py-8">
-                {step === "profile" && (
-                  <>
-                    <div className="hidden lg:block">
-                      <p className="text-2xl font-bold">Profile</p>
-                      <p className="text-base font-extralight text-muted-foreground">
-                        This is how others will see you on the site.
-                      </p>
-                      <Separator className="my-8" />
-                    </div>
-                    <AccountForm<Account> form={form} refetch={refetch} accessToken={accessToken}/>
-                  </>
-                )}
-
-                {step === "payment" && (
-                  <>
-                    <h1>Still in progress...</h1>
-                  </>
-                )}
-
-                {step === "preferences" && (
-                  <>
-                    <PreferencesForm form={preferenceForm} />
-                  </>
-                )}
-              </div>
+                <ToggleGroupItem
+                  value="payment"
+                  className="justify-center sm:justify-start text-center sm:text-left w-full"
+                >
+                  Billing
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="preferences"
+                  className="justify-center sm:justify-start text-center sm:text-left w-full"
+                >
+                  Notification Preferences
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
-          )}
+            {isPending ? (
+              <p className="ml-28 mt-10">Loading...</p>
+            ) : (
+              <div
+                id="tab-section"
+                className="mt-8 sm:mt-0 sm:ml-28 w-full sm:w-4/6"
+              >
+                <div className="lg:py-8">
+                  {step === "profile" && (
+                    <>
+                      <div className="hidden lg:block">
+                        <p className="text-2xl font-bold">Profile</p>
+                        <p className="text-base font-extralight text-muted-foreground">
+                          This is how others will see you on the site.
+                        </p>
+                        <Separator className="my-8" />
+                      </div>
+                      <AccountForm<Account>
+                        form={form}
+                        refetch={refetch}
+                        accessToken={accessToken}
+                      />
+                    </>
+                  )}
+
+                  {step === "payment" && <Billing />}
+
+                  {step === "preferences" && (
+                    <>
+                      <PreferencesForm form={preferenceForm} />
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
