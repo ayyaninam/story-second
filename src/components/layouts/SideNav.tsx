@@ -146,8 +146,10 @@ export default function SideNav({
 							as={menuItem.redirectUrl}
 							key={index}
 							aria-selected={index === pageIndex}
-							className="ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem"
-							style={{ ...(menuItem.cssVars as React.CSSProperties) }}
+							className="ml-1 pl-3.5 flex gap-2 py-2 pr-4 items-center text-white cursor-pointer menuItem "
+							style={{
+								...(menuItem.cssVars as React.CSSProperties),
+							}}
 						>
 							{menuItem.icon}
 							{menuItem.text}
