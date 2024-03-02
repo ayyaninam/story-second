@@ -29,7 +29,6 @@ export const env = createEnv({
 			.min(1)
 			.optional()
 			.default(""),
-		NEXT_PUBLIC_VERCEL_URL: z.string().min(1)
 	},
 	/*
 	 * Due to how Next.js bundles environment variables on Edge and Client,
@@ -49,6 +48,5 @@ export const env = createEnv({
 			process.env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES,
 		NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
 			process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-		NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL ?? 'http://localhost:3000'
 	},
 });

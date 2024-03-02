@@ -14,7 +14,7 @@ export const publicFetcher = baseFetcher.extend({
  * A custom fetcher for making public requests to the proxy API.
  */
 export const publicProxyApiFetcher = baseFetcher.extend({
-  prefixUrl: env.NEXT_PUBLIC_VERCEL_URL,
+  prefixUrl: "/",
 });
 
 /**

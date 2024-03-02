@@ -22,7 +22,6 @@ esbuild
 			"process.env.NEXT_PUBLIC_AUTH0_AUDIENCE": `"${process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}"`,
 			"process.env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES": `"${process.env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES}"`,
 			"process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": `"${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}"`,
-			"process.env.NEXT_PUBLIC_VERCEL_URL": `"${process.env.NEXT_PUBLIC_VERCEL_URL}"`,
 		},
 	})
 	.then(() => console.log("⚡Bundle build complete ⚡"))
