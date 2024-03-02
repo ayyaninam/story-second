@@ -50,7 +50,7 @@ const pricingStructure: PricingStructure = {
           price: "$119.99",
         },
       ],
-      total: "$120",
+      total: "$119.99",
     },
   },
   [SubscriptionPlan.Pro]: {
