@@ -77,7 +77,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 
   const enterpriseProps: PricingCardProps = {
     variant: "Paid",
-    title: "Enterprise",
+    title: "Professional",
     description:
       "Maximum power and flexibility for large-scale content generation needs.",
     priceLabel: frequency.label === "Monthly" ? "$999.99" : "$799.99",
@@ -98,7 +98,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
           size="sm"
           onClick={openLoginWhenNotLoggedIn}
         >
-          Sign Up for Enterprise
+          Sign Up for Professional
         </Button>
       </CheckoutDialog>
     ),
@@ -114,7 +114,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
     icon: (
       <>
         <div className="self-end font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px] mt-1">
-          if you want more than enterprise,{" "}
+          if you want more than professional,{" "}
           <Link
             href="/contact-us"
             className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -313,7 +313,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
                   size="sm"
                   onClick={openLoginWhenNotLoggedIn}
                 >
-                  Sign Up for Enterprise
+                  Sign Up for Professional
                 </Button>
               </CheckoutDialog>
             </div>
@@ -359,7 +359,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
                   </>
                 ))}
                 <div className="self-end font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px] mt-1">
-                  if you want more than enterprise,{" "}
+                  if you want more than professional,{" "}
                   <Link
                     href="/contact-us"
                     className="font-medium text-accent-700 dark:text-blue-500 hover:underline"

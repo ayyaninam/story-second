@@ -88,20 +88,20 @@ const pricingStructure: PricingStructure = {
   },
   [SubscriptionPlan.Premium]: {
     [SubscriptionPeriod.Monthly]: {
-      title: "Enterprise Subscription",
+      title: "Professional Subscription",
       label: "$999.99 / Month",
       description:
         "Maximum power and flexibility for large-scale content generation needs.",
       items: [
         {
-          description: "Enterprise Monthly",
+          description: "Professional Monthly",
           price: "$999.99",
         },
       ],
       total: "$999.99",
     },
     [SubscriptionPeriod.Annual]: {
-      title: "Enterprise Subscription",
+      title: "Professional Subscription",
       label: "$9599.99 / Year",
       description:
         "Maximum power and flexibility for large-scale content generation needs.",
