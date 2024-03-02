@@ -6748,7 +6748,7 @@ export interface components {
      * @description The type of Subscription Plan.
      * @enum {integer}
      */
-    SubscriptionPlan: Free | Starter | Creator | Enterprise;
+    SubscriptionPlan: Free | Starter | Creator | Professional;
     /** @description DTO used to return User's Token Transaction list. */
     TokenTransactionDTO: {
       /** Format: uuid */
