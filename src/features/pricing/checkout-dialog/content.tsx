@@ -71,7 +71,7 @@ const CheckoutDialogContent = ({
           <div className="border-t border-dashed border-slate-300" />
 
           <div className="flex justify-between mt-4">
-            <span className="text-slate-400 text-lg">Total</span>
+            <span className="text-slate-400">Checkout Price</span>
             <span className="text-[#00BA34] font-medium text-lg">{total}</span>
           </div>
         </div>
