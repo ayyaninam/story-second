@@ -74,7 +74,7 @@ const pricingStructure: PricingStructure = {
           price: "$59.99 / month",
         },
         {
-          description: "Creator Annual",
+          description: "Billed annually (x12)",
           price: "$719.99",
         },
       ],
@@ -102,7 +102,7 @@ const pricingStructure: PricingStructure = {
           price: "$799.99 / month",
         },
         {
-          description: "Enterprise Annual",
+          description: "Billed annually (x12)",
           price: "$9599.99",
         },
       ],
