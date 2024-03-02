@@ -7,6 +7,7 @@ export default handleAuth({
 	login: handleLogin({
 		authorizationParams: {
 			audience: `${env.NEXT_PUBLIC_AUTH0_AUDIENCE}`,
+			scope: "openid profile email offline_access",
 		},
 	}),
 });

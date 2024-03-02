@@ -12,14 +12,16 @@ export default function LoginPage() {
 	const returnTo = router.query.returnTo === "/auth/login" ? Routes.defaultRedirect : router.query.returnTo as string || Routes.defaultRedirect;
 	const { user, error, isLoading } = useUser();
 
-	useEffect(() => {
-		if (isLoading) return;
-		console.log("user", user, "error", error, "isLoading", isLoading)
-		console.log("returnTo", returnTo)
-		if (user) {
-			router.push(returnTo);
-		}
-	}, [isLoading]);
+
+	// Disabled: This is causing a fake login redirect
+	// useEffect(() => {
+	// 	if (isLoading) return;
+	// 	console.log("user", user, "error", error, "isLoading", isLoading)
+	// 	console.log("returnTo", returnTo)
+	// 	if (user) {
+	// 		router.push(returnTo);
+	// 	}
+	// }, [isLoading]);
 
 
 	const onLogIn = () => {
