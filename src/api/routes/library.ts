@@ -1,4 +1,8 @@
-import { authFetcher, publicFetcher } from "@/lib/fetcher";
+import {
+  authFetcher,
+  publicFetcher,
+  publicProxyApiFetcher,
+} from "@/lib/fetcher";
 import { getJwt } from "@/utils/jwt";
 import { mainSchema } from "../schema";
 import { LibraryPageVideoQueryOptions } from "@/types";
@@ -10,7 +14,9 @@ const library = {
     accessToken?: string
   ): Promise<mainSchema["ReturnVideoStoryDTO"]> => {
     const data: mainSchema["ReturnVideoStoryDTOApiResponse"] =
-      await publicFetcher.get(`api/library/${topLevelCategory}/${slug}`).json();
+      await publicFetcher
+        .get(`proxyApi/library/${topLevelCategory}/${slug}`)
+        .json();
 
     if (!data.succeeded) {
       // TODO:figure out error boundaries
@@ -35,8 +41,8 @@ const library = {
       topLevelCategory: "",
     };
     const data: mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] =
-      await authFetcher(accessToken)
-        .get(`api/User/Videos/${topLevelCategory}`, {
+      await publicProxyApiFetcher
+        .get(`proxyApi/User/Videos/${topLevelCategory}`, {
           searchParams,
         })
         .json();

@@ -1,10 +1,15 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { FacebookShareButton, TwitterShareButton } from "react-share";
+import {
+	FacebookShareButton,
+	TwitterShareButton,
+	WhatsappShareButton,
+} from "react-share";
 import CopyUrlBtn from "@/components/ui/copy-url-btn";
 import Facebook from "@/components/icons/facebook";
 import Twitter from "@/components/icons/twitter";
 import { WebStory } from "@/components/ui/story-book/constants";
+import Whatsapp from "@/components/icons/whatsapp";
 
 export const TheEndLeftView = () => (
 	<div className="flex justify-center items-center font-bold text-6xl text-black">
@@ -51,6 +56,16 @@ export const TheEndRightView = ({ story }: TheEndViewProps) => {
 					<Twitter size={24} />
 					<span>Share it on Twitter</span>
 				</TwitterShareButton>
+
+				<WhatsappShareButton
+					aria-label="Share on Whatsapp"
+					url={shareUrl}
+					title={`Just stumbled upon "${story.storyTitle}" on Story.com and couldn't resist sharing! 🌟 \n\n${story.summary}\n\n`}
+					className="flex items-center gap-4"
+				>
+					<Whatsapp size={24} />
+					<span>Share it on WhatsApp</span>
+				</WhatsappShareButton>
 			</div>
 
 			<div className="flex w-full max-w-xs h-10 border-2 bg-white border-accent-500">
