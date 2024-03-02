@@ -1,35 +1,35 @@
-import ky from "ky"
-import { env } from "@/env.mjs"
+import ky from "ky";
+import { env } from "@/env.mjs";
 
-const baseFetcher = ky.create({ timeout: false, cache: "no-cache" })
+const baseFetcher = ky.create({ timeout: false, cache: "no-cache" });
 /**
  * Creates a fetcher instance for making public requests.
  * This fetcher should be used in browser environments only.
  */
 export const publicFetcher = baseFetcher.extend({
-	prefixUrl: env.NEXT_PUBLIC_API_URL,
-})
+  prefixUrl: env.NEXT_PUBLIC_API_URL,
+});
 
 /**
  * A custom fetcher for making public requests to the proxy API.
  */
 export const publicProxyApiFetcher = baseFetcher.extend({
-	prefixUrl: env.NEXT_PUBLIC_VERCEL_URL
-})
+  prefixUrl: env.NEXT_PUBLIC_VERCEL_URL,
+});
 
 /**
  * Fetcher for all ML ops.
  * This fetcher should be used in browser environments only.
  */
 export const mlFetcher = (token: string) => {
-	return baseFetcher.extend({
-		prefixUrl: env.NEXT_PUBLIC_ML_API_URL,
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: "Bearer " + token,
-		},
-	})
-}
+  return baseFetcher.extend({
+    prefixUrl: env.NEXT_PUBLIC_ML_API_URL,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  });
+};
 
 // TODO: add authenticated request instances
 /**
@@ -37,8 +37,8 @@ export const mlFetcher = (token: string) => {
  * This fetcher should be used in browser environments only.
  */
 export const authFetcher = (token: string) =>
-	publicFetcher.extend({
-		headers: {
-			Authorization: "Bearer " + token,
-		},
-	})
+  publicFetcher.extend({
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });

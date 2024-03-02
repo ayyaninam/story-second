@@ -1,6 +1,6 @@
-import { GetServerSidePropsContext } from 'next'
-import { getSession } from '@auth0/nextjs-auth0'
-import Routes from "@/routes"
+import { GetServerSidePropsContext } from "next";
+import { getSession } from "@auth0/nextjs-auth0";
+import Routes from "@/routes";
 
 /**
  * Temporary `getServerSideProps()` that passes accessToken to the page.
@@ -11,7 +11,7 @@ export const getServerSidePropsStub = async ({
   resolvedUrl,
 }: GetServerSidePropsContext) => {
   try {
-    const session = await getSession(req, res)
+    const session = await getSession(req, res);
     if (session == null || session?.accessToken == null) {
       // if protected by withPageAuthRequired, this should never happen
       return {
@@ -19,16 +19,16 @@ export const getServerSidePropsStub = async ({
           destination: `${Routes.authpage}?returnTo=${resolvedUrl}`,
           permanent: false,
         },
-      }
+      };
     }
 
-    return { props: { accessToken: session.accessToken } }
+    return { props: { accessToken: session.accessToken } };
   } catch (e) {
     return {
       redirect: {
         destination: Routes.defaultRedirect,
         permanent: false,
       },
-    }
+    };
   }
-}
+};
