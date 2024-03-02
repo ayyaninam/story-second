@@ -213,7 +213,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 93741310
+       * @default 33115494
        */
       seed?: number;
       /**
@@ -264,7 +264,7 @@ export interface components {
       image_sampling_steps?: number;
       /**
        * Image Seed
-       * @default 18184406
+       * @default 90100605
        */
       image_seed?: number;
       /**
@@ -317,8 +317,8 @@ export interface components {
     };
     /** SegmentDelete */
     SegmentDelete: {
-      /** Ind */
-      Ind: number;
+      /** Index */
+      Index: number;
     };
     /** SegmentEdit */
     SegmentEdit: {

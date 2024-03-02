@@ -193,8 +193,8 @@ export const GenerateStoryDiffDto = (diff: StoryDiff) => {
         segment.settings?.style !== 1
           ? segment.settings?.style ?? StoryImageStyles.Realistic
           : StoryImageStyles.Realistic,
-      Seed: segment.settings?.seed ?? 2,
-      CfgScale: segment.settings?.denoising ?? 3121472823,
+      Seed: segment.settings?.seed ?? 3121472823,
+      CfgScale: segment.settings?.denoising ?? 2,
       Steps: segment.settings?.samplingSteps ?? 8,
     },
     operation: SegmentModifications.Edit,
@@ -212,8 +212,8 @@ export const GenerateStoryDiffDto = (diff: StoryDiff) => {
             el.settings?.style !== 1
               ? el.settings?.style ?? StoryImageStyles.Realistic
               : StoryImageStyles.Realistic,
-          Seed: el.settings?.seed ?? 2,
-          CfgScale: el.settings?.denoising ?? 3121472823,
+          Seed: el.settings?.seed ?? 3121472823,
+          CfgScale: el.settings?.denoising ?? 2,
           Steps: el.settings?.samplingSteps ?? 8,
         })),
       },
@@ -222,7 +222,7 @@ export const GenerateStoryDiffDto = (diff: StoryDiff) => {
   const deletions: SegmentModificationData[] = diff.subtractions.map(
     (segment) => ({
       details: {
-        Ind: segment.id,
+        Index: segment.id,
       },
       operation: SegmentModifications.Delete,
     })
