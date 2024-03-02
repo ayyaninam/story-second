@@ -8,17 +8,18 @@ import Format from "@/utils/format";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { DisplayAspectRatios } from "@/utils/enums";
+import { RefreshCcw } from "lucide-react";
 
 function RegenerateSegmentBar({
 	segment,
 	onTextContentChange,
-	onRegenerateImage,
+	onRegenerateVideo,
 	regeneratingImage,
 	displayResolution,
 }: {
 	segment: Segment;
 	onTextContentChange: (change: string) => void;
-	onRegenerateImage: () => void;
+	onRegenerateVideo: () => void;
 	regeneratingImage: boolean;
 	displayResolution: DisplayAspectRatios;
 }) {
@@ -31,6 +32,12 @@ function RegenerateSegmentBar({
 				}}
 			>
 				<div className="relative w-full h-full">
+					{segment.videoStatus === StoryStatus.PENDING && (
+						<RefreshCcw
+							className="stroke-purple-500 absolute right-2 top-2 z-10 h-4 w-4 animate-spin"
+							style={{ animationDirection: "reverse" }}
+						/>
+					)}
 					{segment.imageStatus === StoryStatus.COMPLETE ? (
 						<Image
 							alt={segment.textContent}
@@ -52,7 +59,7 @@ function RegenerateSegmentBar({
 			<Button
 				className="w-[150px] text-background bg-accent-600"
 				disabled={segment.videoStatus === StoryStatus.PENDING}
-				onClick={() => onRegenerateImage()}
+				onClick={() => onRegenerateVideo()}
 			>
 				{segment.videoStatus === StoryStatus.PENDING
 					? "Loading"
@@ -66,14 +73,14 @@ export default function EditSegmentModalItem({
 	segment,
 	onSegmentEdit,
 	onSegmentDelete,
-	onRegenerateImage,
+	onRegenerateVideo,
 	regeneratingImage,
 	displayResolution,
 }: {
 	segment: Segment;
 	onSegmentEdit: (updatedSegment: Segment) => void;
 	onSegmentDelete?: () => void;
-	onRegenerateImage: () => void;
+	onRegenerateVideo: () => void;
 	regeneratingImage: boolean;
 	displayResolution: DisplayAspectRatios;
 }) {
@@ -82,7 +89,7 @@ export default function EditSegmentModalItem({
 			<div className="w-full text-background space-y-2">
 				<RegenerateSegmentBar
 					segment={segment}
-					onRegenerateImage={onRegenerateImage}
+					onRegenerateVideo={onRegenerateVideo}
 					regeneratingImage={regeneratingImage}
 					onTextContentChange={(change) => {
 						onSegmentEdit({
