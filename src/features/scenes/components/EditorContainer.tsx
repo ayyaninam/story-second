@@ -20,7 +20,7 @@ const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 					icon: <ScrollText className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 				bottom: {
-					text: "Next — Select Options & Generate Storyboard",
+					text: "Next — Select Options & Generate Storyboard",
 					icon: <Film className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 			};
@@ -31,7 +31,7 @@ const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 					icon: <LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 				bottom: {
-					text: "Next — Produce Animated Video Scenes",
+					text: "Next — Produce Animated Video Scenes",
 					icon: <Film className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 			};

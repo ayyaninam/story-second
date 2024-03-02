@@ -77,9 +77,6 @@ const SceneEditorView = ({
 		story?: EditStoryDraft;
 	}>();
 
-	const RegenerateAllVideos = useMutation({
-		mutationFn: api.video.regenerateAllVideos,
-	});
 	const UpdateCategory = useUpdateCategory();
 
 	return (
@@ -136,7 +133,10 @@ const SceneEditorView = ({
 																	key={sceneIndex}
 																	className="relative flex group border border-slate-200/0 border-transparent hover:border-slate-200/100 rounded-sm items-center justify-between"
 																>
-																	{scene.status === StoryStatus.PENDING && (
+																	{scene.segments.some(
+																		(el) =>
+																			el.videoStatus === StoryStatus.PENDING
+																	) && (
 																		<RefreshCcw
 																			className="stroke-2 w-4 h-4 text-purple-500 absolute -left-[1.5rem] -top-[${index + 1 / 4}] animate-spin "
 																			style={{
