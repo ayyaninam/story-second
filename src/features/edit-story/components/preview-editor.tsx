@@ -36,26 +36,26 @@ export default function PreviewEditor({
 	return (
 		<div
 			className={cn(
-				"relative w-4/5 h-4/5 m-auto",
+				"relative w-4/5 m-auto",
 				`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row m-auto`,
 				// Based on aspect ratio we need to adjust the parent width
 				// NOTE: taking 65% of the actual size on right (eg: 1080px, etc.)
 				ImageRatio.width === 1 && "md:max-w-[702px]", // 1080px
 				ImageRatio.width === 3 && "md:max-w-[585px]", // 900px
 				ImageRatio.width === 4 && "md:max-w-[832px]", // 1280px
-				ImageRatio.width === 9 && "md:max-w-[600px]", // 780px
+				ImageRatio.width === 9 && "max-w-[300px] md:max-w-[600px]", // 780px
 				ImageRatio.width === 16 && "md:max-w-[1200px]" // 1620px
 			)}
 		>
 			<div
-				className=" rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
+				className=" rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg w-full"
 				style={{ aspectRatio: ImageRatio.ratio }}
 			>
 				<StoryScreen Webstory={WebstoryData} isError={isError} />
 			</div>
 			<div
 				className={cn(
-					`p-6 flex flex-col-reverse w-full justify-between md:flex-col lg:max-w-sm bg-background rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`
+					`p-6 flex flex-col-reverse w-full min-w-[300px] justify-between md:flex-col lg:max-w-sm bg-background rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`
 				)}
 			>
 				<div className="relative space-y-2">
@@ -119,35 +119,6 @@ export default function PreviewEditor({
 						)}
 				</div>
 				<div className="lg:hidden my-2.5 bg-slate-200 self-stretch h-px" />
-				<div className="flex gap-x-2.5">
-					{isLoading ? (
-						<Skeleton className="w-[44px] h-[44px] rounded-full" />
-					) : (
-						<Avatar className="h-11 w-11">
-							<AvatarImage
-								src={WebstoryData?.user?.profilePicture ?? undefined}
-							/>
-							<AvatarFallback>
-								{Format.AvatarName(WebstoryData?.user?.name, WebstoryData?.user?.lastName)}
-							</AvatarFallback>
-						</Avatar>
-					)}
-					{isLoading ? (
-						<Skeleton className="w-[168px] h-[44px] rounded-lg" />
-					) : (
-						<span className="flex flex-col">
-							<span>{WebstoryData?.user?.name} </span>
-							<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
-								<p>
-									{(WebstoryData?.user?.videoCount ?? 0) +
-										(WebstoryData?.user?.storyCount ?? 0)}{" "}
-									Stories
-								</p>
-								<p className="text-slate-300"> • </p>
-							</span>
-						</span>
-					)}
-				</div>
 			</div>
 		</div>
 	);
