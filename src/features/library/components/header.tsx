@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React, { CSSProperties, Dispatch, SetStateAction } from "react";
+import React, {CSSProperties, Dispatch, SetStateAction, useEffect, useState} from "react";
 import { HeaderTabSwitcher } from "./orientation-tab-switcher";
 import { Input } from "@/components/ui/input";
 import { GenreTabSwitcher } from "./genre-tab-switcher";
@@ -18,6 +18,9 @@ import toast from "react-hot-toast";
 import {MobileSelector} from "@/components/ui/mobile-selector";
 import {Plus} from "lucide-react";
 import Routes from "@/routes";
+import {useQuery} from "@tanstack/react-query";
+import {QueryKeys} from "@/lib/queryKeys";
+import api from "@/api";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -78,6 +81,18 @@ export const LibraryHeader = ({
 	const sortOptions = Object.values(SORTING_OPTIONS);
 	const [isMobile, setIsMobile] = React.useState(true);
 
+	const { data, isPending, refetch } = useQuery({
+		queryKey: [QueryKeys.USER],
+		queryFn: () => api.user.get(),
+	});
+
+	console.log(data)
+
+	const [userName, setUserName] = useState("Story.com");
+	useEffect(() => {
+		setUserName(data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName || "Story.com");
+	}, [data]);
+
 	React.useEffect(() => {
 		const handleResize = () => {
 			setIsMobile(window.innerWidth < 768);
@@ -107,7 +122,18 @@ export const LibraryHeader = ({
 					/>
 					<div className="pl-[12px] flex flex-col items-start">
 						<span className="text-slate-950 text-base font-bold">Library</span>
-						<span className="text-accent-700 text-sm font-normal">17 Videos</span>
+						<span className="text-accent-700 text-sm font-normal flex flex-row">
+															{data?.data?.videoCount! > 0 && (
+																<p>{data?.data?.videoCount} Videos</p>
+															)}
+							{data?.data?.videoCount! > 0 &&
+								data?.data?.storyCount! > 0 && (
+									<p className="text-slate-300"> • </p>
+								)}
+							{data?.data?.storyCount! > 0 && (
+								<p>{data?.data?.storyCount} Stories</p>
+							)}
+														</span>
 					</div>
 				</div>
 				{ isMobile ? <MobileSelector

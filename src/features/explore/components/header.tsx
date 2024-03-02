@@ -96,7 +96,7 @@ export const ExploreHeader = ({
 					/>
 					<div className="pl-[12px] flex flex-col items-start">
 						<span className="text-slate-950 text-base font-bold">Explore</span>
-						<span className="text-accent-700 text-sm font-normal">17 Videos</span>
+						<span className="text-accent-700 text-sm font-normal">Inspiration Board</span>
 					</div>
 				</div>
 				{ isMobile ? <MobileSelector

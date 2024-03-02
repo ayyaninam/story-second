@@ -16,7 +16,7 @@ export default function ProfilePage({
   );
 }
 ProfilePage.getLayout = function getLayout(page: ReactElement) {
-  return <PageLayout pageIndex={4}>{page}</PageLayout>;
+  return <PageLayout pageIndex={3}>{page}</PageLayout>;
 };
 
 export const getServerSideProps = withPageAuthRequired({
