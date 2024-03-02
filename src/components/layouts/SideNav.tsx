@@ -19,6 +19,7 @@ import {SubscriptionConstants} from "@/constants/subscription-constants";
 import {userInfo} from "os";
 import {mainSchema} from "@/api/schema";
 import {calculateDaysBetweenDates} from "@/utils/daytime";
+import {boolean} from "zod";
 
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
@@ -99,11 +100,10 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 
 
 	const [userName, setUserName] = useState("Story.com");
-	const [subscriptionDetails, setSubscriptionDetails] = useState<mainSchema["UserSubscriptionDTO"]>({});
+	const [subscriptionDetails, setSubscriptionDetails] = useState<mainSchema["UserSubscriptionDTO"]|null>(null);
 	useEffect(() => {
-		console.log("DATA", data?.data?.subscription)
 		setUserName(data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName || "Story.com");
-		setSubscriptionDetails(data?.data?.subscription || {});
+		setSubscriptionDetails(data?.data?.subscription || null);
 		console.log(subscriptionDetails)
 	}, [data]);
 
@@ -143,7 +143,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 							<Link href={"/auth/login"} className={"flex flex-col gap-y-1"}>
 								<Button
 									variant="outline"
-									className="text-white font-normal hover:text-accent-600"
+									className="text-white font-normal hover:text-accent-300"
 									style={userHandlerStyle}
 								>
 									Create an account
@@ -197,10 +197,10 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 					</Link>
 				</div>
 				<div className="my-2 mx-3 space-y-2">
-					{subscriptionDetails.endDate && (
+					{(subscriptionDetails !== null && subscriptionDetails !== undefined) && (
 						<>
 							{/*<p className="font-medium text-sm">{SubscriptionConstants[subscriptionDetails.subscriptionPlan as number].name} Plan</p>*/}
-							<p className="font-medium text-sm">{SubscriptionConstants[subscriptionDetails.subscriptionPlan].name} Plan</p>
+							<p className="font-medium text-sm">{SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.name} Plan</p>
 
 							<div className="grid grid-cols-2 gap-1 text-sm pr-4">
 								<div className="flex gap-x-2 items-center">
@@ -211,7 +211,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 											boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
 										}}
 									>
-										{`${subscriptionDetails.videoGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan].videos}`}
+										{`${subscriptionDetails.videoGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.videos}`}
 									</span>
 									<span>Videos</span>
 								</div>
@@ -223,7 +223,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 											boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
 										}}
 									>
-										{`${subscriptionDetails.storyGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan].stories}`}
+										{`${subscriptionDetails.storyGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.stories}`}
 									</span>
 									<span>Storybooks</span>
 								</div>
@@ -248,7 +248,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 										}}
 									>
 										{/*convert subscriptionDetails.endDate to days left*/}
-										{calculateDaysBetweenDates(new Date().toString(), new Date(subscriptionDetails.endDate).toString())}d
+										{calculateDaysBetweenDates(new Date().toString(), new Date(subscriptionDetails.nextRefreshDate || Date()).toString())}d
 									</span>
 									<span>Until Reset</span>
 								</div>
@@ -279,7 +279,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						Upgrade Subscription
 					</Button>
 				</UpgradeSubscriptionDialog>
-				<Link
+				{ data?.data && <Link
 					href={"/auth/logout"}
 				>
 					<Button
@@ -289,7 +289,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						>
 						Logout
 					</Button>
-				</Link>
+				</Link>}
 			</div>
 		</div>
 	);

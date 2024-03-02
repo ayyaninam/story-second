@@ -2,6 +2,8 @@
 // # TODO: Update values
 // # TODO: use const values for showing the plan
 
+import {SubscriptionPlan} from "@/utils/enums";
+
 export const subscriptionText = {
   0: "Free",
   1: "Starter",
@@ -9,7 +11,12 @@ export const subscriptionText = {
   3: "Professional"
 }
 
-export const SubscriptionConstants = {
+export const SubscriptionConstants: Record<any, {
+  name: string;
+  videos: number;
+  stories: number;
+  credits: number;
+}> = {
   0: {
     name: "Free",
     videos: 5,
