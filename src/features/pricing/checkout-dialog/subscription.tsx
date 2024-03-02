@@ -147,6 +147,8 @@ const SubscriptionCheckoutDialog = ({
   const { title, label, items, total, description } =
     pricingStructure[plan][period];
 
+  const submitButtonText = `Pay ${total}`;
+
   const onCreateSubscription = async () => {
     if (submitting) return;
 
@@ -255,7 +257,7 @@ const SubscriptionCheckoutDialog = ({
           </div>
         </>
       }
-      submitButtonText="Subscribe"
+      submitButtonText={submitButtonText}
       buttonProps={{
         onClick: () => onCreateSubscription(),
         disabled: !stripeLoaded || userHasPaidSubscription,
