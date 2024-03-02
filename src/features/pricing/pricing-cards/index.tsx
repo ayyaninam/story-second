@@ -75,7 +75,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
     }
   };
 
-  const enterpriseProps: PricingCardProps = {
+  const professionalProps: PricingCardProps = {
     variant: "Paid",
     title: "Professional",
     description:
@@ -288,7 +288,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
             ]}
           />
           <div className="block lg:hidden relative">
-            <PricingCard {...enterpriseProps} />
+            <PricingCard {...professionalProps} />
           </div>
         </div>
 
@@ -296,7 +296,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
           <div className="group gap-[8px] p-[24px] self-stretch w-full flex-[0_0_auto] border-[#ffffff33] shadow-[0px_0px_0px_1px_#12376914,0px_1px_2px_#e1eaef,0px_24px_32px_-12px_#36394a3d] flex flex-col items-start relative bg-background rounded-[10px] overflow-hidden border-[0px] border-solid backdrop-blur-[10px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(10px)_brightness(100%)] hover:shadow-[0px_1px_10px_var(--accent-color-500),0px_24px_32px_-12px_#36394a3d]">
             <div className="flex justify-between pt-0 pb-[0.25px] px-0 self-stretch w-full items-start relative flex-[0_0_auto]">
               <div className="relative w-fit mt-[-1.00px] font-medium text-theme-variables-text-colors-text-base text-[26px] tracking-[0] leading-[39px] whitespace-nowrap">
-                {enterpriseProps.title}
+                {professionalProps.title}
               </div>
               <CheckoutDialog
                 variant="subscription"
@@ -321,18 +321,18 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
               <div className="flex w-[193px] pl-0 pr-[17.87px] py-0 flex-col items-start relative">
                 <div className="pl-0 pr-[50.73px] py-0 mr-[-31.60px] inline-flex items-baseline gap-[8px] relative flex-[0_0_auto]">
                   <div className="relative w-fit mt-[-1.00px] font-light text-slate-700 text-[32px] tracking-[0] leading-[48px] whitespace-nowrap">
-                    {enterpriseProps.priceLabel}
+                    {professionalProps.priceLabel}
                   </div>
                   <div className="relative w-fit font-medium text-slate-400 text-[14px] tracking-[0] leading-[24px] whitespace-nowrap">
-                    {enterpriseProps.priceSuffix}
+                    {professionalProps.priceSuffix}
                   </div>
                 </div>
                 <p className="relative self-stretch font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px]">
-                  {enterpriseProps.description}
+                  {professionalProps.description}
                 </p>
               </div>
               <div className="w-[458px] flex flex-col items-start gap-[12px] relative">
-                {chunk(enterpriseProps.items, 2).map(([item1, item2]) => (
+                {chunk(professionalProps.items, 2).map(([item1, item2]) => (
                   <>
                     <div className="w-[492px] items-start gap-[12px] mr-[-34.00px] flex relative flex-[0_0_auto]">
                       <div className="flex pl-0 pr-[50.61px] py-0 flex-1 grow items-start gap-[12px] relative">
