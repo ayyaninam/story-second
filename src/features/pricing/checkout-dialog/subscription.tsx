@@ -15,6 +15,7 @@ type PricingStructure = Record<
     {
       title: string;
       label: string;
+      description: string;
       items: {
         description: string;
         price: string;
@@ -29,6 +30,7 @@ const pricingStructure: PricingStructure = {
     [SubscriptionPeriod.Monthly]: {
       title: "Starter Subscription",
       label: "$11.99 / Month",
+      description: "When you grow, need more power and flexibility.",
       items: [
         {
           description: "Starter Monthly",
@@ -40,6 +42,7 @@ const pricingStructure: PricingStructure = {
     [SubscriptionPeriod.Annual]: {
       title: "Starter Subscription",
       label: "$119.99 / Year",
+      description: "When you grow, need more power and flexibility.",
       items: [
         {
           description: "Monthly",
@@ -47,7 +50,7 @@ const pricingStructure: PricingStructure = {
         },
         {
           description: "Billed annually (x12)",
-          price: "$119.99",
+          price: "$119.99 / year",
         },
       ],
       total: "$119.99",
@@ -57,6 +60,7 @@ const pricingStructure: PricingStructure = {
     [SubscriptionPeriod.Monthly]: {
       title: "Creator Subscription",
       label: "$79.99 / Month",
+      description: "More videos. More stories. Faster generation times.",
       items: [
         {
           description: "Creator Monthly",
@@ -68,6 +72,7 @@ const pricingStructure: PricingStructure = {
     [SubscriptionPeriod.Annual]: {
       title: "Creator Subscription",
       label: "$719.99 / Year",
+      description: "More videos. More stories. Faster generation times.",
       items: [
         {
           description: "Monthly",
@@ -75,7 +80,7 @@ const pricingStructure: PricingStructure = {
         },
         {
           description: "Billed annually (x12)",
-          price: "$719.99",
+          price: "$719.99 / year",
         },
       ],
       total: "$719.99",
@@ -85,6 +90,8 @@ const pricingStructure: PricingStructure = {
     [SubscriptionPeriod.Monthly]: {
       title: "Enterprise Subscription",
       label: "$999.99 / Month",
+      description:
+        "Maximum power and flexibility for large-scale content generation needs.",
       items: [
         {
           description: "Enterprise Monthly",
@@ -96,6 +103,8 @@ const pricingStructure: PricingStructure = {
     [SubscriptionPeriod.Annual]: {
       title: "Enterprise Subscription",
       label: "$9599.99 / Year",
+      description:
+        "Maximum power and flexibility for large-scale content generation needs.",
       items: [
         {
           description: "Monthly",
@@ -103,7 +112,7 @@ const pricingStructure: PricingStructure = {
         },
         {
           description: "Billed annually (x12)",
-          price: "$9599.99",
+          price: "$9599.99 / year",
         },
       ],
       total: "$9599.99",
@@ -135,7 +144,8 @@ const SubscriptionCheckoutDialog = ({
     user?.subscription?.subscriptionPlan !== SubscriptionPlan.Free;
   const showPaymentCard = userHasCard && !userWantsToChangePayment;
 
-  const { title, label, items, total } = pricingStructure[plan][period];
+  const { title, label, items, total, description } =
+    pricingStructure[plan][period];
 
   const onCreateSubscription = async () => {
     if (submitting) return;
@@ -225,6 +235,7 @@ const SubscriptionCheckoutDialog = ({
         price,
       }))}
       total={total}
+      description={description}
       stripeForm={
         <>
           {showPaymentCard && (
