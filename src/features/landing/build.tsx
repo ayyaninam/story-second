@@ -100,7 +100,7 @@ const App = () => {
 						name="Prompt"
 						data-name="Prompt"
 						onChange={handlePromptChange}
-						placeholder="What is your story about?"
+						placeholder="Tell your story..."
 						id="Prompt"
 						required={!videoFileId}
 						onInput={(e) => {
