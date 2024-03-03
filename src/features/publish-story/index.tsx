@@ -175,7 +175,7 @@ export default function PublishedStory({
   ).length;
 
   return (
-    <div className={`max-w-full min-h-screen bg-reverse items-center`}>
+    <div className={`h-full bg-reverse items-center`}>
       {/* Navbar */}
       <div className="flex justify-between p-4">
         <div
@@ -486,7 +486,7 @@ export default function PublishedStory({
 												</a> */}
             </div>
           </div>
-          <div className="absolute bottom-4 left-4 items-center flex flex-row gap-x-1">
+          <div className="absolute bottom-10 left-4 items-center flex flex-row gap-x-1">
             <span
               className="rounded-full text-xs text-purple-100 bg-purple-500 p-1.5 hover:cursor-pointer hover:bg-purple-400 transition-colors duration-200  ease-in-out"
               style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
@@ -505,9 +505,10 @@ export default function PublishedStory({
               </div>
             </span>
           </div>
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-row gap-x-3 text-sm text-muted-foreground">
+          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-row gap-x-3 text-sm text-muted-foreground">
             © 2024 Story.com - All rights reserved
           </div>
+          {!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
           <div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
             <span
               className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
@@ -515,15 +516,14 @@ export default function PublishedStory({
             >
               <ModeToggle />
             </span>
-            {!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
               <span
                 className="rounded-full w-8 h-8 bg-popover p-1.5"
                 style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
               >
                 <HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
               </span>
-            )}
           </div>
+          )}
         </div>
       </div>
     </div>
