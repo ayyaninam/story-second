@@ -1,16 +1,15 @@
 import toast from "react-hot-toast";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { SubscriptionConstants } from "@/constants/subscription-constants";
 
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import UnsubscribeButton from "@/features/account/components/unsubscribe-button";
 import PaymentCard, { getUserHasCard } from "@/features/pricing/payment-card";
 import StripeForm from "@/features/pricing/stripe-form";
 import { useStripeSetup, useUser } from "@/features/pricing/hooks";
-
-type View = "no-subscription" | "has-subscription" | null;
+import { pricingValues, PricingDetails } from "@/features/pricing/constants";
+import { SubscriptionPeriod } from "@/utils/enums";
 
 interface BillingInfoProps {
 	userIsEditing: boolean;
@@ -30,6 +29,7 @@ const BillingInfo = ({ userIsEditing, setUserIsEditing }: BillingInfoProps) => {
 		setSubmitting(true);
 		try {
 			await onAddCard();
+			updateUserDataAfter1Second();
 		} catch (e) {
 			toast.error("Error Adding Card");
 		} finally {
@@ -75,51 +75,49 @@ const BillingInfo = ({ userIsEditing, setUserIsEditing }: BillingInfoProps) => {
 };
 
 const Billing = () => {
-	const { user } = useUser();
-	const [view, setView] = useState<View>(null);
+	const { user, userHasPaidSubscription } = useUser();
 
 	const [userIsEditing, setUserIsEditing] = useState(false);
 
-	const subscriptionPlan = user?.subscription?.subscriptionPlan ?? 0;
-	const userHasPaidSubscription = subscriptionPlan !== 0;
-	const plan = SubscriptionConstants[subscriptionPlan]!;
+	const subscriptionPlan = user?.subscription?.subscriptionPlan;
+	const subscriptionPeriod = user?.subscription?.subscriptionPeriod;
+	const plan: PricingDetails | undefined =
+		// @ts-ignore
+		pricingValues?.[subscriptionPlan]?.[subscriptionPeriod];
 
-	useEffect(() => {
-		setView(userHasPaidSubscription ? "has-subscription" : "no-subscription");
-	}, [userHasPaidSubscription]);
-
-	if (!view) {
-		return null;
-	}
+	const userHasCard = user ? getUserHasCard(user) : false;
 
 	return (
 		<div>
-			{view === "has-subscription" && (
-				<>
-					<span className="font-medium text-[#181d25] text-2xl">$20.00</span>
-					<span className="font-light text-[#485e6a] text-[22px] leading-[33px] ml-1">
-						/mo
-					</span>
+			<span className="font-medium text-[#181d25] text-2xl">
+				{userHasPaidSubscription ? plan?.itemMonthly : "$0"}
+			</span>
+			<span className="font-light text-[#485e6a] text-[22px] leading-[33px] ml-1">
+				/mo
+			</span>
 
-					<div className="font-medium text-[15px] text-accent-500 leading-[20px]">
-						{plan.name} Monthly/Annual Subscription
-					</div>
+			<div className="font-medium text-[15px] text-accent-500 leading-[20px]">
+				{userHasPaidSubscription
+					? `${plan?.title} ${subscriptionPeriod === SubscriptionPeriod.Annual ? "Annually" : "Monthly"}`
+					: "Free plan"}
+			</div>
 
-					<div className="flex flex-row gap-2 mt-2">
-						<UpgradeSubscriptionDialog>
-							<Button
-								variant="outline"
-								className="font-medium text-accent-600 text-[15px] leading-[20px]"
-							>
-								Change plan
-							</Button>
-						</UpgradeSubscriptionDialog>
+			{userHasPaidSubscription && (
+				<div className="flex flex-row gap-2 mt-2">
+					<UpgradeSubscriptionDialog>
+						<Button
+							variant="outline"
+							className="font-medium text-accent-600 text-[15px] leading-[20px]"
+						>
+							Change plan
+						</Button>
+					</UpgradeSubscriptionDialog>
 
-						<UnsubscribeButton />
-					</div>
-				</>
+					<UnsubscribeButton />
+				</div>
 			)}
-			{view === "no-subscription" && !userIsEditing && (
+
+			{!userHasPaidSubscription && !userIsEditing && userHasCard && (
 				<UpgradeSubscriptionDialog>
 					<Button variant="accent" className="w-60 mt-4 self-center">
 						Upgrade Subscription

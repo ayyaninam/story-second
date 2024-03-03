@@ -5,6 +5,7 @@ import { Stripe, StripeElements } from "@stripe/stripe-js";
 import { mainSchema } from "@/api/schema";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
+import { SubscriptionPlan } from "@/utils/enums";
 
 export const useStripeSetup = () => {
 	const [stripe, setStripe] = useState<Stripe>();
@@ -62,13 +63,21 @@ export const useStripeSetup = () => {
 };
 
 export const useUser = () => {
-	const { data, isPending, refetch } = useQuery({
+	const {
+		data,
+		isPending: isLoading,
+		refetch,
+	} = useQuery({
 		queryKey: [QueryKeys.USER],
 		queryFn: () => api.user.get(),
 	});
 
 	const [user, setUser] = useState<mainSchema["UserInfoDTO"] | null>(null);
 	const [error, setError] = useState<unknown>(null);
+
+	const userHasPaidSubscription =
+		user?.subscription?.subscriptionPlan !== SubscriptionPlan.Free &&
+		user?.subscription?.subscriptionPlan !== undefined;
 
 	const updateUserDataAfter1Second = () => {
 		setTimeout(() => {
@@ -80,5 +89,11 @@ export const useUser = () => {
 		setUser(data?.data ?? null);
 	}, [data]);
 
-	return { user, updateUserDataAfter1Second, isLoading: isPending, error };
+	return {
+		user,
+		updateUserDataAfter1Second,
+		userHasPaidSubscription,
+		isLoading,
+		error,
+	};
 };

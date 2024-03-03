@@ -10,19 +10,25 @@ import {
 	Dialog,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/features/pricing/hooks";
 
 const UnsubscribeButton = () => {
+	const { updateUserDataAfter1Second } = useUser();
+	const [submitting, setSubmitting] = useState(false);
 	const [dialogOpen, setDialogOpen] = useState(false);
 
 	const handleUnsubscribe = async () => {
+		setSubmitting(true);
 		try {
 			await api.payment.cancelSubscription();
 			toast.success("Unsubscribed successfully");
+			updateUserDataAfter1Second();
 		} catch (error) {
 			console.error("Failed to unsubscribe:", error);
 			toast.error("Failed to unsubscribe");
 		} finally {
 			setDialogOpen(false);
+			setSubmitting(false);
 		}
 	};
 
@@ -40,7 +46,11 @@ const UnsubscribeButton = () => {
 							<Button variant="secondary" onClick={() => setDialogOpen(false)}>
 								Cancel
 							</Button>
-							<Button variant="destructive" onClick={handleUnsubscribe}>
+							<Button
+								variant="destructive"
+								onClick={handleUnsubscribe}
+								disabled={submitting}
+							>
 								Confirm
 							</Button>
 						</div>

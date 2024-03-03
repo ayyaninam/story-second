@@ -13,6 +13,7 @@ import { useUser } from "@/features/pricing/hooks";
 import cn from "@/utils/cn";
 import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
 import PricingCard, { PricingCardProps } from "./pricing-card";
+import { pricingValues } from "@/features/pricing/constants";
 
 export interface PricingTierFrequency {
 	id: string;
@@ -71,36 +72,81 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 			// prevents to show the checkout dialog
 			e.preventDefault();
 
-			router.push(Routes.ToAuthPage("/pricing")).then();
+			router.push(Routes.ToAuthPage("/account?step=payment")).then();
 		}
 	};
 
+	const period =
+		frequency.label === "Monthly"
+			? SubscriptionPeriod.Monthly
+			: SubscriptionPeriod.Annual;
 	const userSubscriptionPlan = user?.subscription?.subscriptionPlan;
+	const userSubscriptionPeriod = user?.subscription?.subscriptionPeriod;
+
+	const getIsCurrentPlan = (plan: SubscriptionPlan) =>
+		userSubscriptionPlan === plan && userSubscriptionPeriod === period;
+
+	const isUpgradePlan = (plan: SubscriptionPlan) =>
+		(Object.values(SubscriptionPlan).indexOf(plan) >
+			Object.values(SubscriptionPlan).indexOf(userSubscriptionPlan) ||
+			period > userSubscriptionPeriod) &&
+		period >= userSubscriptionPeriod;
+
+	const getButtonText = (plan: SubscriptionPlan) => {
+		if (userSubscriptionPlan) {
+			if (getIsCurrentPlan(plan)) {
+				return "Current Plan";
+			} else if (isUpgradePlan(plan)) {
+				return "Upgrade Plan";
+			} else {
+				return "Downgrade Plan";
+			}
+		} else {
+			switch (plan) {
+				case SubscriptionPlan.Basic:
+					return "Sign Up For Starter";
+				case SubscriptionPlan.Pro:
+					return "Sign Up For Creator";
+				case SubscriptionPlan.Premium:
+					return "Sign Up for Professional";
+				default:
+					return "Get Started For Free";
+			}
+		}
+	};
+
+	const getDisabledButton = (plan: SubscriptionPlan) => {
+		if (userSubscriptionPlan) {
+			return getIsCurrentPlan(plan) || !isUpgradePlan(plan);
+		}
+	};
 
 	const professionalProps: PricingCardProps = {
 		variant: "Paid",
 		title: "Professional",
 		description:
 			"Maximum power and flexibility for large-scale content generation needs.",
-		priceLabel: frequency.label === "Monthly" ? "$1300" : "$1000",
+		priceLabel:
+			frequency.label === "Monthly"
+				? pricingValues[SubscriptionPlan.Premium][SubscriptionPeriod.Monthly]
+						.itemMonthly
+				: pricingValues[SubscriptionPlan.Premium][SubscriptionPeriod.Annual]
+						.itemMonthly,
 		priceSuffix: frequency.priceSuffix,
 		button: (
 			<CheckoutDialog
 				variant="subscription"
 				plan={SubscriptionPlan.Premium}
-				period={
-					frequency.label === "Monthly"
-						? SubscriptionPeriod.Monthly
-						: SubscriptionPeriod.Annual
-				}
+				period={period}
 			>
 				<Button
 					variant="outline"
 					className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 					size="sm"
 					onClick={openLoginWhenNotLoggedIn}
+					disabled={getDisabledButton(SubscriptionPlan.Premium)}
 				>
-					Sign Up for Professional
+					{getButtonText(SubscriptionPlan.Premium)}
 				</Button>
 			</CheckoutDialog>
 		),
@@ -194,8 +240,9 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 									onClick={(e) => {
 										onClickFreePlan();
 									}}
+									disabled={getDisabledButton(SubscriptionPlan.Free)}
 								>
-									Get Started For Free
+									{getButtonText(SubscriptionPlan.Free)}
 								</Button>
 							</Link>
 						}
@@ -204,7 +251,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 							"1 story generation",
 							"20 tokens for your editing",
 							"Free plans do NOT replenish",
-							"10 credits",
+							"20 credits",
 						]}
 					/>
 					<PricingCard
@@ -217,28 +264,30 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								power and flexibility.
 							</>
 						}
-						priceLabel={frequency.label === "Monthly" ? "$12" : "$9"}
+						priceLabel={
+							frequency.label === "Monthly"
+								? pricingValues[SubscriptionPlan.Basic][
+										SubscriptionPeriod.Monthly
+									].itemMonthly
+								: pricingValues[SubscriptionPlan.Basic][
+										SubscriptionPeriod.Annual
+									].itemMonthly
+						}
 						priceSuffix={frequency.priceSuffix}
 						button={
 							<CheckoutDialog
 								variant="subscription"
 								plan={SubscriptionPlan.Basic}
-								period={
-									frequency.label === "Monthly"
-										? SubscriptionPeriod.Monthly
-										: SubscriptionPeriod.Annual
-								}
+								period={period}
 							>
 								<Button
 									variant="outline"
 									className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
 									onClick={openLoginWhenNotLoggedIn}
-									disabled={userSubscriptionPlan === SubscriptionPlan.Basic}
+									disabled={getDisabledButton(SubscriptionPlan.Basic)}
 								>
-									{userSubscriptionPlan !== SubscriptionPlan.Basic
-										? "Sign Up For Starter"
-										: "Current Plan"}
+									{getButtonText(SubscriptionPlan.Basic)}
 								</Button>
 							</CheckoutDialog>
 						}
@@ -246,7 +295,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 							"3 videos / month",
 							"5 stories / month",
 							<>
-							$4 per additional video
+								$4 per additional video
 								<br />
 								$2 per additional story
 							</>,
@@ -257,25 +306,29 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 						variant="Paid"
 						title="Creator"
 						description="More videos. More stories. Faster generation times."
-						priceLabel={frequency.label === "Monthly" ? "$80" : "$60"}
+						priceLabel={
+							frequency.label === "Monthly"
+								? pricingValues[SubscriptionPlan.Pro][
+										SubscriptionPeriod.Monthly
+									].itemMonthly
+								: pricingValues[SubscriptionPlan.Pro][SubscriptionPeriod.Annual]
+										.itemMonthly
+						}
 						priceSuffix={frequency.priceSuffix}
 						button={
 							<CheckoutDialog
 								variant="subscription"
 								plan={SubscriptionPlan.Pro}
-								period={
-									frequency.label === "Monthly"
-										? SubscriptionPeriod.Monthly
-										: SubscriptionPeriod.Annual
-								}
+								period={period}
 							>
 								<Button
 									variant="outline"
 									className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
 									onClick={openLoginWhenNotLoggedIn}
+									disabled={getDisabledButton(SubscriptionPlan.Pro)}
 								>
-									Sign Up For Creator
+									{getButtonText(SubscriptionPlan.Pro)}
 								</Button>
 							</CheckoutDialog>
 						}
@@ -283,7 +336,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 							"35 videos / month",
 							"60 stories / month",
 							<>
-							$3 per additional video
+								$3 per additional video
 								<br />
 								$1.5 per additional story
 							</>,
@@ -304,19 +357,16 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 							<CheckoutDialog
 								variant="subscription"
 								plan={SubscriptionPlan.Premium}
-								period={
-									frequency.label === "Monthly"
-										? SubscriptionPeriod.Monthly
-										: SubscriptionPeriod.Annual
-								}
+								period={period}
 							>
 								<Button
 									variant="outline"
 									className="px-4 transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
 									onClick={openLoginWhenNotLoggedIn}
+									disabled={getDisabledButton(SubscriptionPlan.Premium)}
 								>
-									Sign Up for Professional
+									{getButtonText(SubscriptionPlan.Premium)}
 								</Button>
 							</CheckoutDialog>
 						</div>
