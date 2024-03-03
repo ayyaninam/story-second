@@ -39,7 +39,7 @@ const subHeaderContainer: CSSProperties = {
 	background: "var(--base-white, #FFF)",
 };
 
-export const ExploreHeader = ({
+export const FeedHeader = ({
 	selectedOrientationTab,
 	setSelectedOrientationTab,
 	selectedGenre,
@@ -89,13 +89,13 @@ export const ExploreHeader = ({
 			>
 				<div className="flex items-start w-[250px]">
 					<Image
-						src="/images/nav-icons/explore-icon.png"
-						alt="Explore"
+						src="/images/nav-icons/feed-icon.png"
+						alt="Feed"
 						width={40}
 						height={40}
 					/>
 					<div className="pl-[12px] flex flex-col items-start">
-						<span className="text-slate-950 text-base font-bold">Explore</span>
+						<span className="text-slate-950 text-base font-bold">Feed</span>
 						<span className="text-accent-700 text-sm font-normal">Inspiration Board</span>
 					</div>
 				</div>

@@ -3,7 +3,7 @@ import payment from "./routes/payment";
 import webstory from "./routes/webstory";
 import storybook from "./routes/storybook";
 import library from "./routes/library";
-import explore from "./routes/explore";
+import feed from "./routes/feed";
 import video from "./routes/video";
 import user from "./routes/user";
 const api = {
@@ -12,7 +12,7 @@ const api = {
 	webstory,
 	storybook,
 	library,
-	explore,
+	feed,
 	video,
 	user,
 };

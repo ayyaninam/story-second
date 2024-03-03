@@ -1,4 +1,4 @@
-export default function ExploreIcon() {
+export default function FeedIcon() {
 	return (
 		<svg
 			width="54"

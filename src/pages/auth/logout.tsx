@@ -6,7 +6,7 @@ export default function LogoutPage() {
 	const router = useRouter();
 	useEffect(() => {
 		removeJwt();
-		router.push(`/api/auth/logout?returnTo=/explore`);
+		router.push(`/api/auth/logout?returnTo=/feed`);
 	}, [router]);
 	return <div>Logging you out...</div>;
 }

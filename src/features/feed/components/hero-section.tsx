@@ -13,7 +13,7 @@ const heroSectionContainer: CSSProperties = {
 	boxShadow: "0px 1px 2px 0px rgba(20, 21, 26, 0.05)",
 };
 
-function ExploreHeroSection({ randomThumbnail = "" } : { randomThumbnail?: string | null } ) {
+function FeedHeroSection({ randomThumbnail = "" } : { randomThumbnail?: string | null } ) {
 	return (
 		<div className="w-full flex items-center justify-center gap-2 pb-6">
 			<div
@@ -88,4 +88,4 @@ function ExploreHeroSection({ randomThumbnail = "" } : { randomThumbnail?: strin
 	);
 }
 
-export default ExploreHeroSection;
+export default FeedHeroSection;

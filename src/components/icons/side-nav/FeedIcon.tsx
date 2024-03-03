@@ -1,4 +1,4 @@
-const ExploreIcon = ({ className, size=20 }: { className?: string, size?: number }) => {
+const FeedIcon = ({ className, size=20 }: { className?: string, size?: number }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -20,4 +20,4 @@ const ExploreIcon = ({ className, size=20 }: { className?: string, size?: number
 	);
 };
 
-export default ExploreIcon;
+export default FeedIcon;
