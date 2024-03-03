@@ -61,7 +61,7 @@ export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
 		title: "Wide",
 		orientation: "wide",
 		header: {
-			title: "Your Most Recent Widescreen Videos",
+			title: "YourRecent Widescreen Videos",
 			subtitle: "Desktop 16:9 Aspect Ratio",
 			buttonText: "See all your wide videos",
 		},
@@ -74,7 +74,7 @@ export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
 		icon: <VerticalOrientationIcon />,
 		aspectRatio: "9:16",
 		header: {
-			title: "Your Most Recent Portrait-Mode Videos",
+			title: "YourRecent Portrait-Mode Videos",
 			subtitle: "Mobile 9:16 Aspect Ratio",
 			buttonText: "See all your portrait videos",
 		},
@@ -85,7 +85,7 @@ export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
 		icon: <BookOrientationIcon />,
 		aspectRatio: "1:1",
 		header: {
-			title: "Your Most Recent Story Books",
+			title: "YourRecent Story Books",
 			subtitle: "Upload yourself & generate",
 			buttonText: "See all your Story Books",
 		},
@@ -96,7 +96,7 @@ export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
 		icon: <TrendsOrientation />,
 		aspectRatio: "9:16",
 		header: {
-			title: "Your Most Recent Trends",
+			title: "YourRecent Trends",
 			subtitle: "Upload yourself & generate",
 			buttonText: "See all your Trends",
 		},

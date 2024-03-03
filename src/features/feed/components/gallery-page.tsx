@@ -46,7 +46,7 @@ function FeedGalleryPage({
 			if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
 				return api.feed.getStoryBooks({
 					params: {
-						PageSize: 50,
+						PageSize: 20,
 						...filterOptions,
 					},
 				});
@@ -54,7 +54,7 @@ function FeedGalleryPage({
 			if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
 				return api.feed.getVideos({
 					params: {
-						PageSize: 50,
+						PageSize: 20,
 						storyType: StoryOutputTypes.SplitScreen,
 						resolution: DisplayAspectRatios["576x1024"],
 						...filterOptions,
@@ -63,7 +63,7 @@ function FeedGalleryPage({
 			}
 			return api.feed.getVideos({
 				params: {
-					PageSize: 50,
+					PageSize: 20,
 					storyType: StoryOutputTypes.Video,
 					resolution:
 						orientation === VIDEO_ORIENTATIONS.WIDE.id

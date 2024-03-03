@@ -122,13 +122,13 @@ export const LibraryHeader = ({
 					/>
 					<div className="pl-[12px] flex flex-col items-start">
 						<span className="text-slate-950 text-base font-bold">Library</span>
-						<span className="text-accent-700 text-sm font-normal flex flex-row">
+						<span className="text-accent-700 text-sm font-normal flex lg:flex-row flex-col">
 															{data?.data?.videoCount! > 0 && (
 																<p>{data?.data?.videoCount} Videos</p>
 															)}
 							{data?.data?.videoCount! > 0 &&
 								data?.data?.storyCount! > 0 && (
-									<p className="text-slate-300"> • </p>
+									<p className="text-slate-300 hidden lg:block"> • </p>
 								)}
 							{data?.data?.storyCount! > 0 && (
 								<p>{data?.data?.storyCount} Stories</p>
