@@ -116,12 +116,20 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				session.accessToken as string
 			)
 			.catch((e) => {
+				// Error if not enough balance
+				if (e.response?.status === 402) {
+					throw new AuthError(
+						Routes.defaultRedirect,
+						Routes.Landing("Not enough balance to create story")
+					);
+				}
 				console.log("There was an error generating the story: ", e);
 				throw new AuthError(
 					Routes.defaultRedirect,
 					Routes.Landing("There was an error creating the story")
 				);
 			});
+		console.log("Story created: ", story)
 		const { url } = story;
 
 		const [genre, id] = url.split("/");
