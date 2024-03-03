@@ -328,26 +328,23 @@ export default function PublishedStory({
                       {Format.Title(Webstory.data.storyTitle)}
                     </p>
                   )}
-                  <div className="block space-x-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
-                      className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
+                      className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
                       variant="outline"
                       onClick={() => handleLikeVideo(!Interactions.data?.liked)}
                     >
                       <Heart
-                        className={cn("mr-2 h-4 w-4")}
+                        className="mr-2 h-4 w-4 md:h-5 md:w-5"
                         style={{
-                          fill:
-                            isBrowser && Interactions.data?.liked
-                              ? "#EC4899"
-                              : undefined,
+                          fill: isBrowser && Interactions.data?.liked ? "#EC4899" : undefined,
                         }}
-                      />{" "}
+                      />
                       Like video
                     </Button>
                     {User?.data?.data?.id === Webstory.data?.user?.id && (
                       <Button
-                        className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md `}
+                        className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
                         variant="outline"
                         onClick={() =>
                           router.push(
@@ -359,15 +356,12 @@ export default function PublishedStory({
                           )
                         }
                       >
-                        <Edit className={cn("mr-2 h-4 w-4")} /> Edit Video
+                        <Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Video
                       </Button>
                     )}
 
-                    {User?.data?.data?.id !== Webstory.data?.user?.id ||
-                    (numVideoSegmentsReady ?? 0) <
-                      (numTotalVideoSegments ?? 0) ||
-                    !Webstory.data?.storyDone ? null : Webstory.data
-                        ?.renderedVideoKey ? (
+                    { (numVideoSegmentsReady ?? 0) < (numTotalVideoSegments ?? 0) ||
+                    !Webstory.data?.storyDone ? null : Webstory.data?.renderedVideoKey ? (
                       <Button
                         onClick={async (e) => {
                           setIsVideoDownloading(true);
@@ -383,31 +377,30 @@ export default function PublishedStory({
                           link.download = `download.mp4`;
                           link.target = "_blank";
 
-                          console.log(link.download);
-
                           document.body.appendChild(link);
                           link.click();
                           document.body.removeChild(link);
                           setIsVideoDownloading(false);
                         }}
-                        className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+                        className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
                         variant="outline"
                         disabled={isVideoDownloading}
                       >
-                        <DownloadIcon className="mr-2 h-4 w-4" />{" "}
+                        <DownloadIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                         {isVideoDownloading ? "Loading" : "Download"}
                       </Button>
                     ) : (
                       <Button
-                        className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+                        className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
                         variant="outline"
                         onClick={handleRenderVideo}
                       >
-                        <DownloadCloudIcon className="mr-2 h-4 w-4" />{" "}
-                        {RenderVideo.isPending ? "Loading" : "Render"}
+                        <DownloadCloudIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                        {RenderVideo.isPending ? "Loading" : "Download"}
                       </Button>
                     )}
                   </div>
+
                   {isLoading ? (
                     <Skeleton className="min-w-72 h-[220px] rounded-lg" />
                   ) : (
