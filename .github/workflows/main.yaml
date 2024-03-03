@@ -37,7 +37,7 @@ jobs:
           version: 8
 
       - name: Install dependencies
-        run: pnpm install --no-progress
+        run: pnpm install
 
       - name: Lint code
         run: pnpm lint
