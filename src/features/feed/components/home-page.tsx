@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import ExploreHeroSection from "./hero-section";
-import ExploreGalleryComponent from "./gallery-component";
-import { ExplorePageVideoQueryOptions } from "@/types";
+import FeedHeroSection from "./hero-section";
+import FeedGalleryComponent from "./gallery-component";
+import { FeedPageVideoQueryOptions } from "@/types";
 import { EXPLORE_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { mainSchema } from "@/api/schema";
@@ -12,7 +12,7 @@ import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { useDebounce } from "usehooks-ts";
 import { getGalleryThumbnails } from "../utils";
 
-function ExploreHomePage({
+function FeedHomePage({
 	setSelectedOrientationTab,
 }: {
 	setSelectedOrientationTab: (orientation: string) => void;
@@ -21,7 +21,7 @@ function ExploreHomePage({
 	const queryClient = useQueryClient();
 
 	const filterOptions = useDebounce(
-		useMemo<ExplorePageVideoQueryOptions>(() => {
+		useMemo<FeedPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
 			const sort = router.query.sort as string || "desc";
 			return {
@@ -35,7 +35,7 @@ function ExploreHomePage({
 
 	const wideVideoList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>({
 		queryFn: () =>
-			api.explore.getVideos({
+			api.feed.getVideos({
 				params: {
 					PageSize: 7,
 					storyType: StoryOutputTypes.Video,
@@ -58,7 +58,7 @@ function ExploreHomePage({
 		mainSchema["ReturnVideoStoryDTOPagedList"]
 	>({
 		queryFn: () =>
-			api.explore.getVideos({
+			api.feed.getVideos({
 				params: {
 					PageSize: 5,
 					storyType: StoryOutputTypes.Video,
@@ -79,7 +79,7 @@ function ExploreHomePage({
 
 	const storyBooksList = useQuery<mainSchema["ReturnWebStoryDTOPagedList"]>({
 		queryFn: () =>
-			api.explore.getStoryBooks({
+			api.feed.getStoryBooks({
 				params: {
 					PageSize: 5,
 					CurrentPage: 1,
@@ -99,7 +99,7 @@ function ExploreHomePage({
 	const trendsVideosList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>(
 		{
 			queryFn: () =>
-				api.explore.getVideos({
+				api.feed.getVideos({
 					params: {
 						PageSize: 5,
 						storyType: StoryOutputTypes.SplitScreen,
@@ -141,7 +141,7 @@ function ExploreHomePage({
 	return (
 		<div className="flex p-4 flex-col gap-2 grow items-center justify-center">
 			{/* # TODO: select at random from the format based on responsiveness */}
-			{/*<ExploreHeroSection*/}
+			{/*<FeedHeroSection*/}
 			{/*	randomThumbnail={segregatedStories[VIDEO_ORIENTATIONS.WIDE.id]?.[0]?.thumbnail}*/}
 			{/*/>*/}
 			<div className="flex max-w-[1440px] w-full flex-col gap-4">
@@ -150,7 +150,7 @@ function ExploreHomePage({
 					.map((orientation) =>
 					orientation.id !== VIDEO_ORIENTATIONS.ALL.id &&
 					EXPLORE_HOME_GALLERY_DATA[orientation.id] ? (
-						<ExploreGalleryComponent
+						<FeedGalleryComponent
 							setSelectedOrientationTab={setSelectedOrientationTab}
 							key={orientation.id}
 							galleryDetails={EXPLORE_HOME_GALLERY_DATA[orientation.id]!}
@@ -169,4 +169,4 @@ function ExploreHomePage({
 	);
 }
 
-export default ExploreHomePage;
+export default FeedHomePage;

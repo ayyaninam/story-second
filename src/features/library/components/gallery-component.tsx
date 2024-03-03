@@ -3,7 +3,7 @@ import { GalleryData, VideoOrientation, VideoThumbnail } from "@/types";
 import { Button } from "@/components/ui/button";
 import GalleryImage from "./gallery-image";
 import GalleryComponentLoader from "./gallery-component-loader";
-import RightArrow from "@/features/explore/components/svgs/right-arrow";
+import RightArrow from "@/features/feed/components/svgs/right-arrow";
 
 const navigationButtonStyles = {
 	border: "0.5px solid var(--border)",

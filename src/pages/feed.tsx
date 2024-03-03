@@ -1,4 +1,4 @@
-import ExplorePage from "@/features/explore";
+import FeedPage from "@/features/feed";
 import React, { ReactElement } from "react";
 import {
   dehydrate,
@@ -10,14 +10,14 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { getSession } from "@auth0/nextjs-auth0";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { VIDEO_ORIENTATIONS } from "@/features/explore/constants";
+import { VIDEO_ORIENTATIONS } from "@/features/feed/constants";
 
 import PageLayout from "@/components/layouts/PageLayout";
 import { NextSeo } from "next-seo";
 import { genreOptions } from "@/constants/feed-constants";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
-function Explore({
+function Feed({
   dehydratedState,
   session,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -26,15 +26,15 @@ function Explore({
   return (
     <HydrationBoundary state={dehydratedState}>
       <NextSeo
-        title="Explore"
-        description="Explore our massive colleciton of videos, storybooks, and more"
+        title="Feed"
+        description="Feed our massive colleciton of videos, storybooks, and more"
         openGraph={{
           images: [
             {
-              url: "/og-assets/og-explore.png",
+              url: "/og-assets/og-feed.png",
               width: 1200,
               height: 630,
-              alt: "Explore Story.com",
+              alt: "Feed Story.com",
             },
           ],
         }}
@@ -64,16 +64,16 @@ function Explore({
           --accent-color-950: #1e1b4b;
         }
       `}</style>
-      <ExplorePage />
+      <FeedPage />
     </HydrationBoundary>
   );
 }
 
-Explore.getLayout = function getLayout(page: ReactElement) {
+Feed.getLayout = function getLayout(page: ReactElement) {
   return <PageLayout pageIndex={0}>{page}</PageLayout>;
 };
 
-export default Explore;
+export default Feed;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const queryClient = new QueryClient();
@@ -95,7 +95,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       await Promise.all([
         queryClient.fetchQuery({
           queryFn: () =>
-            api.explore.getVideos({
+            api.feed.getVideos({
               params: {
                 PageSize: 7,
                 resolution: DisplayAspectRatios["1024x576"],
@@ -110,7 +110,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         }),
         queryClient.fetchQuery({
           queryFn: () =>
-            api.explore.getVideos({
+            api.feed.getVideos({
               params: {
                 PageSize: 5,
                 resolution: DisplayAspectRatios["576x1024"],
@@ -125,7 +125,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         }),
         queryClient.fetchQuery({
           queryFn: () =>
-            api.explore.getStoryBooks({
+            api.feed.getStoryBooks({
               params: {
                 PageSize: 5,
                 CurrentPage: 1,
@@ -138,7 +138,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         }),
         queryClient.fetchQuery({
           queryFn: () =>
-            api.explore.getVideos({
+            api.feed.getVideos({
               params: {
                 PageSize: 5,
                 storyType: StoryOutputTypes.SplitScreen,
@@ -161,7 +161,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       await queryClient.fetchQuery({
         queryFn: () => {
           if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
-            return api.explore.getStoryBooks({
+            return api.feed.getStoryBooks({
               params: {
                 PageSize: 50,
                 ...filterOptions,
@@ -169,7 +169,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             });
           }
           if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
-            return api.explore.getVideos({
+            return api.feed.getVideos({
               params: {
                 PageSize: 50,
                 storyType: StoryOutputTypes.SplitScreen,
@@ -178,7 +178,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
               },
             });
           }
-          return api.explore.getVideos({
+          return api.feed.getVideos({
             params: {
               PageSize: 50,
               storyType: StoryOutputTypes.Video,
