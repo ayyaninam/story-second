@@ -13,11 +13,18 @@ export const config = {
 };
 
 async function middleware(request: NextRequest) {
+  /**
+   * Add access token to the request headers
+   */
   const { accessToken } = await getAccessToken(request, new NextResponse());
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("Authorization", `Bearer ${accessToken}`);
 
-  const newUrl = `${env.NEXT_PUBLIC_API_URL}${request.nextUrl.pathname.replace("/proxyApi", "api")}${request.nextUrl.search}`;
+  /**
+   * Rewrite the URL to the actual API server
+   */
+  const { pathname, search } = request.nextUrl;
+  const newUrl = `${env.NEXT_PUBLIC_API_URL}${pathname.replace("/proxyApi", "api")}${search}`;
   return NextResponse.rewrite(newUrl, {
     request: {
       headers: requestHeaders,
