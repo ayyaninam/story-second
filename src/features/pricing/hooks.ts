@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import api from "@/api";
 import { Stripe, StripeElements } from "@stripe/stripe-js";
 import { mainSchema } from "@/api/schema";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
 
 export const useStripeSetup = () => {
 	const [stripe, setStripe] = useState<Stripe>();
@@ -60,37 +62,23 @@ export const useStripeSetup = () => {
 };
 
 export const useUser = () => {
-	const [user, setUser] = useState<mainSchema["UserInfoDTO"] | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState<unknown>(null);
+	const { data, isPending, refetch } = useQuery({
+		queryKey: [QueryKeys.USER],
+		queryFn: () => api.user.get(),
+	});
 
-	const updateUserData = async () => {
-		setIsLoading(true);
-		try {
-			const { data } = await api.user.get();
-			if (data) {
-				setUser(data);
-				setError(null);
-			} else {
-				throw new Error("user data does not exist");
-			}
-		} catch (err) {
-			setError(err);
-			setUser(null);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	const [user, setUser] = useState<mainSchema["UserInfoDTO"] | null>(null);
+	const [error, setError] = useState<unknown>(null);
 
 	const updateUserDataAfter1Second = () => {
 		setTimeout(() => {
-			updateUserData().then();
+			refetch().then();
 		}, 1000);
 	};
 
 	useEffect(() => {
-		updateUserData().then();
-	}, []);
+		setUser(data?.data ?? null);
+	}, [data]);
 
-	return { user, updateUserDataAfter1Second, isLoading, error };
+	return { user, updateUserDataAfter1Second, isLoading: isPending, error };
 };
