@@ -3,7 +3,7 @@ import { getJwt } from "@/utils/jwt";
 import { mainSchema } from "../schema";
 import { LibraryPageVideoQueryOptions } from "@/types";
 
-const explore = {
+const feed = {
   get: async (
     topLevelCategory: string,
     slug: string,
@@ -137,4 +137,4 @@ const explore = {
   },
 };
 
-export default explore;
+export default feed;

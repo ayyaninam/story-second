@@ -117,7 +117,7 @@ export type RegenerateVideoSegments = {
 	target_paths: string[];
 };
 
-export type ExplorePageVideoQueryOptions = {
+export type FeedPageVideoQueryOptions = {
 	CurrentPage?: number;
 	PageSize?: number;
 	storyType?: StoryOutputTypes;

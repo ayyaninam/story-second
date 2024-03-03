@@ -1,12 +1,12 @@
 import React from "react";
-import { ExploreHeader } from "./components/header";
+import { FeedHeader } from "./components/header";
 import { VIDEO_ORIENTATIONS } from "./constants";
-import ExploreHomePage from "./components/home-page";
-import ExploreGalleryPage from "./components/gallery-page";
+import FeedHomePage from "./components/home-page";
+import FeedGalleryPage from "./components/gallery-page";
 import { VideoOrientation } from "@/types";
 import { useRouter } from "next/router";
 
-function ExplorePage() {
+function FeedPage() {
 	const router = useRouter();
 	const selectedOrientationTab =
 		(router.query.orientation as string) || VIDEO_ORIENTATIONS.ALL.id;
@@ -33,18 +33,18 @@ function ExplorePage() {
 
 	return (
 		<div className="h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
-			<ExploreHeader
+			<FeedHeader
 				selectedOrientationTab={selectedOrientationTab}
 				setSelectedOrientationTab={setSelectedOrientationTab}
 				selectedGenre={selectedGenre}
 				setSelectedGenre={setSelectedGenre}
 			/>
 			{selectedOrientationTab === VIDEO_ORIENTATIONS.ALL.id ? (
-				<ExploreHomePage
+				<FeedHomePage
 					setSelectedOrientationTab={setSelectedOrientationTab}
 				/>
 			) : (
-				<ExploreGalleryPage
+				<FeedGalleryPage
 					key={selectedOrientationTab}
 					orientation={selectedOrientationTab as VideoOrientation}
 				/>
@@ -53,4 +53,4 @@ function ExplorePage() {
 	);
 }
 
-export default ExplorePage;
+export default FeedPage;

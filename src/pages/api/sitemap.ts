@@ -40,7 +40,7 @@ async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categorySitemap = await categories.map((category: string) => {
     return {
-      url: `${env.NEXT_PUBLIC_BASE_URL}explore?genre=${category}`,
+      url: `${env.NEXT_PUBLIC_BASE_URL}feed?genre=${category}`,
       changeFrequency: 'always',
       priority: 1,
     };

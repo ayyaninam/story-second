@@ -1,4 +1,4 @@
-import { VIDEO_ORIENTATIONS } from "@/features/explore/constants";
+import { VIDEO_ORIENTATIONS } from "@/features/feed/constants";
 import {
   Select,
   SelectContent,

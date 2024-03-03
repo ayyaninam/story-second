@@ -65,7 +65,7 @@ export default function PublishedStory({
       ),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
     queryKey: [QueryKeys.STORY, router.asPath],
-    refetchInterval: enableQuery ? 1000 : 5000,
+    refetchInterval: enableQuery ? 1000 : false,
     // Disable once all the videoKeys are obtained
     // enabled: enableQuery,
   });
@@ -93,6 +93,7 @@ export default function PublishedStory({
   const isLoading = Webstory.isLoading || !Webstory.data;
 
   useEffect(() => {
+    console.log("Webstory.data", Webstory.data)
     if (Webstory.data) {
       if (
         Webstory.data?.scenes
@@ -100,6 +101,7 @@ export default function PublishedStory({
           ?.every((segment) => !!segment?.videoKey) &&
         Webstory.data?.scenes?.flatMap((el) => el.videoSegments)?.length > 0
       ) {
+        console.log("All video segments are ready")
         setEnableQuery(false);
         setStorySegments(
           Webstory?.data?.scenes?.flatMap((el) => el?.videoSegments!)
@@ -180,7 +182,7 @@ export default function PublishedStory({
           className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm lg:rounded-br-sm lg:rounded-tr-sm lg:rounded-tl-sm lg:rounded-bl-sm`}
         >
           <div className="flex items-center gap-x-2 py-3">
-            <Link href={Routes.Explore()}>
+            <Link href={Routes.Feed()}>
               <StoryLogo size={20} fill="#657D8B" />
             </Link>
 
@@ -241,7 +243,7 @@ export default function PublishedStory({
             className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
             variant="outline"
             onClick={() => {
-              router.push(Routes.Logout("/explore"));
+              router.push(Routes.Logout("/feed"));
             }}
           >
             <LogOutIcon className="mr-2 h-4 w-4" /> Log Out

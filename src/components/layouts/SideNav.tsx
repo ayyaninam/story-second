@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import ExploreIcon from "@/components/icons/side-nav/ExploreIcon";
+import FeedIcon from "@/components/icons/side-nav/FeedIcon";
 import GenerateIcon from "@/components/icons/side-nav/GenerateIcon";
 import LibraryIcon from "@/components/icons/side-nav/LibraryIcon";
 import { CircleUserRoundIcon, Command } from "lucide-react";
@@ -25,10 +25,10 @@ import {boolean} from "zod";
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
 	{
-		icon: <ExploreIcon />,
-		text: "Explore",
+		icon: <FeedIcon />,
+		text: "Feed",
 		shortcut: "E",
-		redirectUrl: "/explore",
+		redirectUrl: "/feed",
 		cssVars: {
 			"--hover-border-color": "rgba(122,255,180,0.1)",
 			"--hover-background":
@@ -121,10 +121,10 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 							</Avatar>
 								{/*# TODO: enable profile pages when ready*/}
 								{/*# TODO: replace with userDetails*/}
-							<Link
-								href={"#"}
-								// href={"/" + user?.nickname || ""}
-							>
+							{/*<Link*/}
+							{/*	href={"#"}*/}
+							{/*	// href={"/" + user?.nickname || ""}*/}
+							{/*>*/}
 								<span className="flex flex-col text-white gap-y-1">
 									<span>{userName}</span>
 									<span
@@ -135,7 +135,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 										<span>{(data?.data?.profileName?.length || 0) > 7 ? "/"+data?.data?.profileName : "story.com/"+data?.data?.profileName}</span>
 									</span>
 								</span>
-							</Link>
+							{/*</Link>*/}
 						</>
 					) : (
 						<>
@@ -192,7 +192,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 			</div>
 			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-100">
 				<div className="mb-4 mx-3">
-					<Link href={"/explore"}>
+					<Link href={"/feed"}>
 						<StoryLogoFullWhite />
 					</Link>
 				</div>

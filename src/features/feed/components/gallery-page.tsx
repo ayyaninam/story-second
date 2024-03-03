@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
-import ExploreGalleryComponent from "./gallery-component";
-import { ExplorePageVideoQueryOptions, VideoOrientation } from "@/types";
+import FeedGalleryComponent from "./gallery-component";
+import { FeedPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { EXPLORE_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import {
@@ -16,7 +16,7 @@ import { useDebounce } from "usehooks-ts";
 import { getGalleryThumbnails } from "../utils";
 import GenericPagination from "@/components/ui/generic-pagination";
 
-function ExploreGalleryPage({
+function FeedGalleryPage({
 	orientation = "wide",
 }: {
 	orientation: VideoOrientation;
@@ -27,7 +27,7 @@ function ExploreGalleryPage({
 	const currentPage = parseInt((router.query.page as string) || "1");
 
 	const filterOptions = useDebounce(
-		useMemo<ExplorePageVideoQueryOptions>(() => {
+		useMemo<FeedPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
 			const sort = router.query.sort as string || "desc"
 			return {
@@ -44,7 +44,7 @@ function ExploreGalleryPage({
 	>({
 		queryFn: () => {
 			if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
-				return api.explore.getStoryBooks({
+				return api.feed.getStoryBooks({
 					params: {
 						PageSize: 50,
 						...filterOptions,
@@ -52,7 +52,7 @@ function ExploreGalleryPage({
 				});
 			}
 			if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
-				return api.explore.getVideos({
+				return api.feed.getVideos({
 					params: {
 						PageSize: 50,
 						storyType: StoryOutputTypes.SplitScreen,
@@ -61,7 +61,7 @@ function ExploreGalleryPage({
 					},
 				});
 			}
-			return api.explore.getVideos({
+			return api.feed.getVideos({
 				params: {
 					PageSize: 50,
 					storyType: StoryOutputTypes.Video,
@@ -102,7 +102,7 @@ function ExploreGalleryPage({
 
 	return (
 		<div className="flex flex-col gap-4 max-w-[1440px] mx-auto px-6 p-10">
-			<ExploreGalleryComponent
+			<FeedGalleryComponent
 				galleryDetails={galleryDetails}
 				isIndependentGalleryPage
 				thumbnails={galleryThumbnails}
@@ -113,4 +113,4 @@ function ExploreGalleryPage({
 	);
 }
 
-export default ExploreGalleryPage;
+export default FeedGalleryPage;
