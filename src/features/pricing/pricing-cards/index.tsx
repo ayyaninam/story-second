@@ -80,7 +80,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
     title: "Professional",
     description:
       "Maximum power and flexibility for large-scale content generation needs.",
-    priceLabel: frequency.label === "Monthly" ? "$999.99" : "$799.99",
+    priceLabel: frequency.label === "Monthly" ? "$1300" : "$1000",
     priceSuffix: frequency.priceSuffix,
     button: (
       <CheckoutDialog
@@ -103,13 +103,13 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
       </CheckoutDialog>
     ),
     items: [
-      "175 videos / month",
-      "350 stories / month",
-      "$5 / extra video",
+      "600 videos / month",
+      "1000 stories / month",
+      "$2 / extra video",
       "$1 / extra story",
       "Fast Generation Time",
       "Dedicated support",
-      "2500 credits",
+      "10000 credits",
     ],
     icon: (
       <>
@@ -215,7 +215,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
                 power and flexibility.
               </>
             }
-            priceLabel={frequency.label === "Monthly" ? "$11.99" : "$9.99"}
+            priceLabel={frequency.label === "Monthly" ? "$12" : "$9"}
             priceSuffix={frequency.priceSuffix}
             button={
               <CheckoutDialog
@@ -238,22 +238,21 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
               </CheckoutDialog>
             }
             items={[
-              "2 videos / month",
+              "3 videos / month",
               "5 stories / month",
-              "Slow Generation Time",
               <>
-                $7 per additional video
+                $4 per additional video
                 <br />
                 $2 per additional story
               </>,
-              "30 credits",
+              "150 credits",
             ]}
           />
           <PricingCard
             variant="Paid"
             title="Creator"
             description="More videos. More stories. Faster generation times."
-            priceLabel={frequency.label === "Monthly" ? "$79.99" : "$59.99"}
+            priceLabel={frequency.label === "Monthly" ? "$80" : "$60"}
             priceSuffix={frequency.priceSuffix}
             button={
               <CheckoutDialog
@@ -276,15 +275,14 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
               </CheckoutDialog>
             }
             items={[
-              "12 videos / month",
-              "25 stories / month",
-              "Fast Generation Time",
+              "35 videos / month",
+              "60 stories / month",
               <>
-                $6 per additional video
+                $3 per additional video
                 <br />
                 $1.5 per additional story
               </>,
-              "200 credits",
+              "900 credits",
             ]}
           />
           <div className="block lg:hidden relative">
