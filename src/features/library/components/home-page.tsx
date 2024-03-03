@@ -144,11 +144,21 @@ function LibraryHomePage({
 		return segregatedStories;
 	}, [wideVideoList.data, verticalVideoList.data, storyBooksList.data]);
 
+	const allStories = useMemo(() => {
+		return Object.values(segregatedStories).flat().filter(Boolean);
+	}, [segregatedStories]);
+
+	const randomStory = useMemo(() => {
+		if (allStories.length === 0) return null;
+		const randomIndex = Math.floor(Math.random() * allStories.length);
+		return allStories[randomIndex];
+	}, [allStories]);
+
 	return (
 		<div className="flex p-4 flex-col gap-2 grow items-center justify-center">
 			{/* # TODO: select at random from the format based on responsiveness */}
 			<LibraryHeroSection
-				randomThumbnail={segregatedStories[VIDEO_ORIENTATIONS.WIDE.id]?.[0]?.thumbnail}
+				randomStory={randomStory}
 			/>
 			<div className="flex max-w-[1440px] w-full flex-col gap-4">
 				{Object.values(VIDEO_ORIENTATIONS)

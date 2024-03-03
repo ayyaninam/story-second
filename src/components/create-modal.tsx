@@ -34,7 +34,6 @@ const GenerateModalContent: FC = () => {
   const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
 
   const onSubmit = async () => {
-    console.log(input, selectedLanguage, selectedVideoLength, selectedVideoRatio, videoFileId, tabIndex, tabs[tabIndex]?.enumValue);
     const videoRatio = tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
     setIsLoading(true);
     const params: CreateInitialStoryQueryParams = {
@@ -55,9 +54,14 @@ const GenerateModalContent: FC = () => {
       params["video_key"] = videoFileId;
       params["image_resolution"] = ImageRatios["9x8"].enumValue;
     }
+
     const response = Routes.CreateStoryFromRoute(params);
-    Router.push(response);
-    setIsLoading(false);
+    Router.push(response).then(() => {
+      setIsLoading(false);
+    }).catch(error => {
+      console.error('Navigation error:', error);
+      setIsLoading(false); // Ensure loading state is reset even if navigation fails
+    });
   };
 
   return (
@@ -167,7 +171,7 @@ const GenerateModalContent: FC = () => {
                 onClick={() => onSubmit()}
               >
                 <Sparkles className="h-4 w-4" />
-                {isLoading ? "Generating Experience" : "Generate"}
+                {isLoading ? "Generating" : "Generate"}
               </Button>
             </div>
           </div>

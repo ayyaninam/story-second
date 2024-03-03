@@ -29,7 +29,6 @@ export default function MobileGeneratePage() {
   const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
 
   const onSubmit = async () => {
-    console.log(input, selectedLanguage, selectedVideoLength, selectedVideoRatio, videoFileId, tabIndex, tabs[tabIndex]?.enumValue);
     const videoRatio = tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
     setIsLoading(true);
     const params: CreateInitialStoryQueryParams = {
@@ -50,9 +49,14 @@ export default function MobileGeneratePage() {
       params["video_key"] = videoFileId;
       params["image_resolution"] = ImageRatios["9x8"].enumValue;
     }
+
     const response = Routes.CreateStoryFromRoute(params);
-    Router.push(response);
-    setIsLoading(false);
+    Router.push(response).then(() => {
+      setIsLoading(false);
+    }).catch(error => {
+      console.error('Navigation error:', error);
+      setIsLoading(false); // Ensure loading state is reset even if navigation fails
+    });
   };
 
   return (

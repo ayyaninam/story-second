@@ -89,7 +89,8 @@ export const GenreTabSwitcher = () => {
 			{genreOptions?.slice(0, 4).map((category) => (
 				<Button
 					key={category.id}
-					className={`h-7 py-0.5 bg-background px-4 justify-center rounded-[10000px] text-sm font-normal ease-linear duration-300 transition-all flex items-center border border-solid ${
+					className={`h-7 py-0.5 bg-background px-4 justify-center rounded-[10000px] text-sm font-normal ease-linear 
+					duration-300 transition-all flex items-center border border-solid ${
 						selectedGenre === category.id
 							? "bg-accent-600 text-accent-50 border-accent-700 hover:bg-accent-700"
 							: "text-muted-foreground border-border hover:bg-gray-200 hover:text-slate-600"

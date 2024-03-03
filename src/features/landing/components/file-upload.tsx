@@ -28,7 +28,6 @@ export default function FileUpload({
 					method: "PUT",
 					body: file,
 				});
-				console.log(uploadData.data.objectKey);
 				setVideoFileId(uploadData.data.objectKey ?? "");
 			}
 		}

@@ -156,7 +156,7 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const defaultSeoProps: DefaultSeoProps = {
-	defaultTitle: "Story.com | Imagination meets creativity.",
+	defaultTitle: "Story.com | Tell Your Story",
 	titleTemplate: "%s | Story.com",
 	description: "Unlock your imagination with Story.com. Everyone has a story to tell, what is your story?",
 	openGraph: {

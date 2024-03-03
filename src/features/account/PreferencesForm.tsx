@@ -50,7 +50,6 @@ const PreferenceInput = ({
 
 export const PreferencesForm = ({ form }: { form: UseFormReturn<any> }) => {
 	const onSubmit = useCallback((values: any) => {
-		console.log(values, "values..");
 	}, []);
 	return (
 		<>

@@ -7,6 +7,8 @@ import {cn} from "@/utils";
 import toast from "react-hot-toast";
 import Router from "next/router";
 import Routes from "@/routes";
+import Link from "next/link";
+import {VideoThumbnail} from "@/types";
 
 const heroSectionContainer: CSSProperties = {
 	borderRadius: "var(--radius-3xl, 24px)",
@@ -15,7 +17,7 @@ const heroSectionContainer: CSSProperties = {
 	boxShadow: "0px 1px 2px 0px rgba(20, 21, 26, 0.05)",
 };
 
-function LibraryHeroSection( { randomThumbnail = "" } : { randomThumbnail?: string | null } ) {
+function LibraryHeroSection( { randomStory } : { randomStory?: VideoThumbnail | null } ) {
 	return (
 		<div className="w-full flex items-center justify-center gap-2 pb-6">
 			<div
@@ -65,15 +67,21 @@ function LibraryHeroSection( { randomThumbnail = "" } : { randomThumbnail?: stri
 						{/*</Button>*/}
 					</div>
 				</div>
-				<div className="hidden lg:block w-full min-h-full bg-accent-700 self-stretch">
+				<Link
+					href={`${Routes.ViewStory(
+						randomStory?.storyType || 0,
+						randomStory?.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all",
+						randomStory?.slug || ""
+					)}`}
+					className="hidden lg:block w-full min-h-full bg-accent-700 self-stretch">
 					{/* # TODO: make this responsive*/}
-					{randomThumbnail && (
+					{randomStory && (
 						<div
 							className={cn(
 								"w-full h-full relative bg-gray-100 overflow-hidden aspect-[16/9]"
 							)}
 							style={{
-								backgroundImage: `url(${randomThumbnail})`,
+								backgroundImage: `url(${randomStory.thumbnail})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
 								borderRadius: "8px",
@@ -83,7 +91,7 @@ function LibraryHeroSection( { randomThumbnail = "" } : { randomThumbnail?: stri
 						</div>
 
 					)}
-				</div>
+				</Link>
 			</div>
 		</div>
 	);

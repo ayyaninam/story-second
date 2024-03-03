@@ -29,93 +29,93 @@ const pricingStructure: PricingStructure = {
   [SubscriptionPlan.Basic]: {
     [SubscriptionPeriod.Monthly]: {
       title: "Starter Subscription",
-      label: "$11.99 / Month",
+      label: "$12 / Month",
       description: "When you grow, need more power and flexibility.",
       items: [
         {
           description: "Starter Monthly",
-          price: "$11.99",
+          price: "$12",
         },
       ],
-      total: "$11.99",
+      total: "$12",
     },
     [SubscriptionPeriod.Annual]: {
       title: "Starter Subscription",
-      label: "$119.99 / Year",
+      label: "$108 / Year",
       description: "When you grow, need more power and flexibility.",
       items: [
         {
           description: "Monthly",
-          price: "$9.99 / month",
+          price: "$9 / month",
         },
         {
           description: "Billed annually (x12)",
-          price: "$119.99 / year",
+          price: "$108 / year",
         },
       ],
-      total: "$119.99",
+      total: "$108",
     },
   },
   [SubscriptionPlan.Pro]: {
     [SubscriptionPeriod.Monthly]: {
       title: "Creator Subscription",
-      label: "$79.99 / Month",
+      label: "$80 / Month",
       description: "More videos. More stories. Faster generation times.",
       items: [
         {
           description: "Creator Monthly",
-          price: "$79.99",
+          price: "$80",
         },
       ],
-      total: "$79.99",
+      total: "$80",
     },
     [SubscriptionPeriod.Annual]: {
       title: "Creator Subscription",
-      label: "$719.99 / Year",
+      label: "$720 / Year",
       description: "More videos. More stories. Faster generation times.",
       items: [
         {
           description: "Monthly",
-          price: "$59.99 / month",
+          price: "$60 / month",
         },
         {
           description: "Billed annually (x12)",
-          price: "$719.99 / year",
+          price: "$720 / year",
         },
       ],
-      total: "$719.99",
+      total: "$720",
     },
   },
   [SubscriptionPlan.Premium]: {
     [SubscriptionPeriod.Monthly]: {
       title: "Professional Subscription",
-      label: "$999.99 / Month",
+      label: "$1300 / Month",
       description:
         "Maximum power and flexibility for large-scale content generation needs.",
       items: [
         {
           description: "Professional Monthly",
-          price: "$999.99",
+          price: "$1300",
         },
       ],
-      total: "$999.99",
+      total: "$1300",
     },
     [SubscriptionPeriod.Annual]: {
       title: "Professional Subscription",
-      label: "$9599.99 / Year",
+      label: "$12000 / Year",
       description:
         "Maximum power and flexibility for large-scale content generation needs.",
       items: [
         {
           description: "Monthly",
-          price: "$799.99 / month",
+          price: "$1000 / month",
         },
         {
           description: "Billed annually (x12)",
-          price: "$9599.99 / year",
+          price: "$12000 / year",
         },
       ],
-      total: "$9599.99",
+      total: "$12000",
     },
   },
 };

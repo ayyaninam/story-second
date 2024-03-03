@@ -54,11 +54,11 @@ export const GenreTabSwitcher = ({
 			{genreOptions?.slice(0, 4).map((category) => (
 				<Button
 					key={category.id}
-					className={`h-7 py-0.5 bg-background px-4 justify-center rounded-[10000px] text-sm 
-					font-normal ease-linear duration-300 transition-all flex items-center border border-solid ${
+					className={`h-7 py-0.5 bg-background px-4 justify-center rounded-[10000px] text-sm font-normal ease-linear 
+					duration-300 transition-all flex items-center border border-solid ${
 						selectedGenre === category.id
-							? "bg-accent-100 text-accent-700 border-accent-600 hover:bg-accent-200 hover:text-accent-700 hover:border-accent-600"
-							: "text-muted-foreground border-border hover:bg-accent-200 hover:text-accent-700 hover:border-accent-600"
+							? "bg-accent-600 text-teal-50 border-accent-700 hover:bg-accent-700"
+							: "text-muted-foreground border-border hover:bg-gray-200 hover:text-slate-600"
 					}`}
 					onClick={() => setSelectedGenre(category.id)}
 				>
@@ -69,7 +69,7 @@ export const GenreTabSwitcher = ({
 				<Button
 					className={`h-7 py-0.5 px-4 justify-center rounded-[10000px] text-sm font-normal ease-linear 
 					duration-300 transition-all flex items-center border border-solid 
-					bg-accent-100 text-accent-700 border-accent-600 hover:bg-accent-200 hover:text-accent-700 hover:border-accent-600"
+					bg-accent-600 text-teal-50 border-accent-700 hover:bg-accent-700 hover:text-accent-700 hover:border-accent-600"
 					}`}
 					onClick={() => setSelectedGenre("all")}
 				>

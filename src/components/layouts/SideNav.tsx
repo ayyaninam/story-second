@@ -104,7 +104,6 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	useEffect(() => {
 		setUserName(data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName || "Story.com");
 		setSubscriptionDetails(data?.data?.subscription || null);
-		console.log(subscriptionDetails)
 	}, [data]);
 
 	return (
@@ -121,10 +120,10 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 							</Avatar>
 								{/*# TODO: enable profile pages when ready*/}
 								{/*# TODO: replace with userDetails*/}
-							{/*<Link*/}
-							{/*	href={"#"}*/}
-							{/*	// href={"/" + user?.nickname || ""}*/}
-							{/*>*/}
+							<Link
+								href={"/account"}
+								// href={"/" + user?.nickname || ""}
+							>
 								<span className="flex flex-col text-white gap-y-1">
 									<span>{userName}</span>
 									<span
@@ -135,7 +134,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 										<span>{(data?.data?.profileName?.length || 0) > 7 ? "/"+data?.data?.profileName : "story.com/"+data?.data?.profileName}</span>
 									</span>
 								</span>
-							{/*</Link>*/}
+							</Link>
 						</>
 					) : (
 						<>

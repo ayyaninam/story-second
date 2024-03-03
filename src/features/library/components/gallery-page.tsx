@@ -50,7 +50,7 @@ function LibraryGalleryPage({
 				return api.library.getStoryBooks({
 					accessToken,
 					params: {
-						PageSize: 50,
+						PageSize: 20,
 						...filterOptions,
 					},
 				});
@@ -59,7 +59,7 @@ function LibraryGalleryPage({
 				return api.library.getVideos({
 					accessToken,
 					params: {
-						PageSize: 50,
+						PageSize: 20,
 						storyType: StoryOutputTypes.SplitScreen,
 						resolution: DisplayAspectRatios["576x1024"],
 						...filterOptions,
@@ -69,7 +69,7 @@ function LibraryGalleryPage({
 			return api.library.getVideos({
 				accessToken,
 				params: {
-					PageSize: 50,
+					PageSize: 20,
 					storyType: StoryOutputTypes.Video,
 					resolution:
 						orientation === VIDEO_ORIENTATIONS.WIDE.id

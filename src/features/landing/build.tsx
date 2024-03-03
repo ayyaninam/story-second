@@ -73,7 +73,6 @@ const App = () => {
 				params["video_key"] = videoFileId;
 				params["image_resolution"] = ImageRatios["9x8"].enumValue;
 			}
-			console.log(Routes.CreateStoryFromRoute(params));
 			window.location.href = Routes.CreateStoryFromRoute(params);
 		}, 500);
 		setIsLoading(true);
@@ -100,7 +99,7 @@ const App = () => {
 						name="Prompt"
 						data-name="Prompt"
 						onChange={handlePromptChange}
-						placeholder="What is your story about?"
+						placeholder="Tell your story..."
 						id="Prompt"
 						required={!videoFileId}
 						onInput={(e) => {
