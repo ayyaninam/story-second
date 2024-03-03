@@ -18,7 +18,7 @@ function GalleryComponentLoader({
 		>
 			<div
 				className={cn(
-					"w-full min-h-[100%] relative bg-gray-100 relative overflow-hidden",
+					"w-full min-h-[100%] bg-gray-100 relative overflow-hidden",
 					galleryDetails.orientation === VIDEO_ORIENTATIONS.WIDE.id
 						? "aspect-[16/9]"
 						: galleryDetails.orientation === VIDEO_ORIENTATIONS.BOOK.id
