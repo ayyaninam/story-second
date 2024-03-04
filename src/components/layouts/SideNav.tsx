@@ -78,6 +78,13 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset",
 	};
 
+	const loginStyle = {
+		border: "0.5px solid rgba(255, 255, 255, 0.08)",
+		background:
+			"linear-gradient(0deg, rgba(0, 255, 0, 0.22) 0%, rgba(255, 255, 255, 0.00) 100%)",
+		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset",
+	};
+
 	const logoutStyle = {
 		border: "0.5px solid rgba(255, 255, 255, 0.08)",
 		background:
@@ -145,7 +152,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 									className="text-white font-normal hover:text-accent-300"
 									style={userHandlerStyle}
 								>
-									Create an account
+									Get Started
 								</Button>
 							</Link>
 						</>
@@ -278,17 +285,30 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						Upgrade Subscription
 					</Button>
 				</UpgradeSubscriptionDialog>
-				{ data?.data && <Link
-					href={"/auth/logout"}
-				>
-					<Button
-						variant="outline"
-						className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-pink-700"
-						style={logoutStyle}
+				{ data?.data
+					? <Link
+							href={"/auth/logout"}
 						>
-						Logout
-					</Button>
-				</Link>}
+							<Button
+								variant="outline"
+								className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-pink-700"
+								style={logoutStyle}
+								>
+								Logout
+							</Button>
+						</Link>
+					: <Link
+							href={"/auth/login"}
+						>
+							<Button
+								variant="outline"
+								className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-accent-300"
+								style={loginStyle}
+								>
+								Login
+							</Button>
+						</Link>
+				}
 			</div>
 		</div>
 	);

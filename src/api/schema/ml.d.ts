@@ -49,6 +49,10 @@ export interface paths {
     /** Edit Scene */
     put: operations["edit_scene_edit_scenes_put"];
   };
+  "/regenerate-audio": {
+    /** Regenerate Audio */
+    post: operations["regenerate_audio_regenerate_audio_post"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -191,6 +195,12 @@ export interface components {
       /** Scene Id */
       scene_id?: string;
     };
+    /** RegenerateAudioRequest */
+    RegenerateAudioRequest: {
+      /** Story Id */
+      story_id: string;
+      story_type: components["schemas"]["OutputTypeEnum"];
+    };
     /** RegenerateImageRequest */
     RegenerateImageRequest: {
       /** Story Id */
@@ -213,7 +223,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 33115494
+       * @default 53049925
        */
       seed?: number;
       /**
@@ -264,7 +274,7 @@ export interface components {
       image_sampling_steps?: number;
       /**
        * Image Seed
-       * @default 90100605
+       * @default 46319564
        */
       image_seed?: number;
       /**
@@ -572,6 +582,28 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["EditSceneRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Regenerate Audio */
+  regenerate_audio_regenerate_audio_post: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegenerateAudioRequest"];
       };
     };
     responses: {

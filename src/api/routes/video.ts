@@ -61,6 +61,18 @@ const video = {
 
 		return data;
 	},
+	regenerateAllAudio: async (
+		params: mlSchema["RegenerateAudioRequest"],
+		accessToken?: string
+	): Promise<unknown> => {
+		const data = await mlFetcher(accessToken ?? getJwt())
+			.post(`regenerate-audio`, {
+				body: JSON.stringify(params),
+			})
+			.json();
+
+		return data;
+	},
 	uploadSegmentImage: async (params: {
 		id: string;
 		image: File;

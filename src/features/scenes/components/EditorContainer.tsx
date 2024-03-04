@@ -9,6 +9,7 @@ import {
 	Upload,
 } from "lucide-react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
+import {env} from "@/env.mjs";
 
 const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 	switch (view) {
@@ -86,6 +87,7 @@ const EditorContainer: FC<{
 					{badgeData.bottom.text}
 				</Badge>
 			</div>
+			{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
 			<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
 				<span
 					className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
@@ -101,6 +103,7 @@ const EditorContainer: FC<{
 					<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
 				</span>
 			</div>
+			)}
 			<div className="absolute w-[1px] h-screen bg-accent-300 z-[-1] mix-blend-multiply" />
 		</div>
 	);
