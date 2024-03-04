@@ -47,6 +47,7 @@ import { cn } from "@/utils";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
+import {boolean} from "zod";
 const images = [
 	{
 		key: StoryImageStyles.Auto,
@@ -91,11 +92,11 @@ const images = [
 ];
 
 const voiceTypes = {
-	[VoiceType.GenericFemale]: "Generic Female",
+	// [VoiceType.GenericFemale]: "Generic Female",
 	[VoiceType.GenericMale]: "Generic Male",
-	[VoiceType.Portuguese]: "Portuguese",
-	[VoiceType.Custom]: "Custom",
-	[VoiceType.None]: "None ",
+	// [VoiceType.Portuguese]: "Portuguese",
+	// [VoiceType.Custom]: "Custom",
+	// [VoiceType.None]: "None ",
 };
 
 const Footer = ({
@@ -136,6 +137,18 @@ const Footer = ({
 					!segment.videoKey && segment.videoStatus !== StoryStatus.PENDING
 			)
 	);
+
+	const [regenerateAudioLoading, setRegenerateAudioLoading] = useState(false);
+	const ungeneratedAudios = story.scenes?.flatMap((scene) =>
+		scene.segments
+			?.map((el, index) => ({ ...el, sceneId: scene.id }))
+			?.filter(
+				(segment) =>
+					!segment.audioKey
+			)
+	);
+	console.log(story.scenes.flatMap((el) => el.segments.map((el) => el.audioKey)))
+	console.log("ungeneratedAudio", ungeneratedAudios)
 	const regenUngeneratedImagesCost = getImageCost(ungeneratedImages.length);
 
 	const numImages = story.scenes.flatMap((el) => el.segments);
@@ -329,6 +342,19 @@ const Footer = ({
 		},
 	});
 
+	const RegenerateAllAudio = useMutation({
+		mutationFn: async () => {
+			await SaveEdits.mutateAsync({
+				updatedStory: story,
+				prevStory: WebstoryData,
+			});
+			await api.video.regenerateAllAudio({
+				story_id: story.id,
+				story_type: story.type,
+			});
+		},
+	});
+
 	const scenesGenerationButtonOptions = {
 		["all"]: {
 			name: "Regenerate All Scenes",
@@ -365,7 +391,7 @@ const Footer = ({
 
 	const View = {
 		script: () => (
-			<div className="flex  gap-2 w-full justify-end items-end py-2 h-full flex-wrap">
+			<div className="flex flex-wrap gap-2 w-full justify-end items-end py-2 h-full">
 				<div>
 					<Select
 						disabled={!WebstoryData.storyDone}
@@ -510,7 +536,7 @@ const Footer = ({
 						{RegenerateAllScenesMutation.isPending ? (
 							<>Regenerating... </>
 						) : (
-							<>Regenerate Videos </>
+							<>Regenerate All Videos </>
 						)}
 
 						<span className="ml-1">
@@ -571,9 +597,9 @@ const Footer = ({
 	const areImagesActive = view === "script" || view === "storyboard";
 	return (
 		<div className="sticky bottom-0  bg-background border-border border-t-[1px] p-2 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
-			<div className="flex gap-1 py-2">
+			<div className="flex flex-wrap gap-1 py-2">
 				<div>
-					<label className="text-sm text-slate-600 font-normal">Narrator</label>
+					{/*<label className="text-sm text-slate-600 font-normal">Narrator</label>*/}
 					<Select
 						onValueChange={onUpdateNarrator}
 						disabled={!WebstoryData.storyDone}
@@ -593,6 +619,22 @@ const Footer = ({
 						</SelectContent>
 					</Select>
 				</div>
+				{/*<div className="flex">*/}
+				{/*	<Button*/}
+				{/*		disabled={!WebstoryData.storyDone || !ungeneratedAudios.length || regenerateAudioLoading}*/}
+				{/*		onClick={() => {*/}
+				{/*			setRegenerateAudioLoading(true);*/}
+				{/*			RegenerateAllAudio.mutateAsync().then(*/}
+				{/*					() => {*/}
+				{/*						setRegenerateAudioLoading(false);*/}
+				{/*					}*/}
+				{/*				);*/}
+				{/*			}*/}
+				{/*		}*/}
+				{/*	>*/}
+				{/*		{regenerateAudioLoading ? "Regenerating" : "Regenerate Audio"}*/}
+				{/*	</Button>*/}
+				{/*</div>*/}
 			</div>
 
 			<div className="text-center w-100 flex flex-col items-center justify-center">

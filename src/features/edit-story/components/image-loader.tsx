@@ -84,7 +84,7 @@ export default function ImageLoader({
 			Container={({ children, style, className }) => (
 				<div
 					style={style}
-					className={`relative w-full h-full rounded-t-lg ${roundedClassName ? roundedClassName : "lg:rounded-tr-none lg:rounded-bl-lg"} ${className} `}
+					className={`relative w-max-full h-max-full rounded-t-lg ${roundedClassName ? roundedClassName : "lg:rounded-tr-none lg:rounded-bl-lg"} ${className} `}
 				>
 					<div className="absolute flex h-full w-full justify-center items-end z-[100]">
 						<div

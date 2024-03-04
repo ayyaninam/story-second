@@ -2144,6 +2144,13 @@ export interface paths {
      */
     put: operations["RenderVideo"];
   };
+  "/api/Video/CopyVideo/{id}": {
+    /**
+     * Copy a video
+     * @description Copy a video based on the provided story id
+     */
+    post: operations["CopyVideo"];
+  };
   "/api/WebStory/NoAuth": {
     /** Request a new anonymous story based on the provided parameters */
     post: {
@@ -7759,6 +7766,31 @@ export interface operations {
           "text/plain": components["schemas"]["StringApiResponse"];
           "application/json": components["schemas"]["StringApiResponse"];
           "text/json": components["schemas"]["StringApiResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Copy a video
+   * @description Copy a video based on the provided story id
+   */
+  CopyVideo: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "text/plain": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+          "application/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+          "text/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
         };
       };
       /** @description Unauthorized */

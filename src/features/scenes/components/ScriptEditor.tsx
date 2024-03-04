@@ -103,15 +103,15 @@ export default function ScriptEditor({
                               key={sceneIndex}
                               className="flex flex-wrap flex-col  w-fit"
                             >
-                              <TooltipComponent
-                                align="start"
-                                label="You can edit scenes in the storyboard"
-                              >
+                              {/*<TooltipComponent*/}
+                              {/*  align="start"*/}
+                              {/*  label="You can edit scenes in the storyboard"*/}
+                              {/*>*/}
                                 <div className="bg-muted font-normal text-muted-foreground rounded-sm text-sm w-fit my-2 px-1">
                                   {`Scene ${sceneIndex + 1}: `}
                                   {scene.description}
                                 </div>
-                              </TooltipComponent>
+                              {/*</TooltipComponent>*/}
 
                               <div className="flex flex-wrap flex-row">
                                 {scene.segments.map((segment, segmentIndex) => (
