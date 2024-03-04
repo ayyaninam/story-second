@@ -13,11 +13,11 @@ import {
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import { genreOptions, SORTING_OPTIONS, VIDEO_ORIENTATIONS} from "@/constants/feed-constants";
-import toast from "react-hot-toast";
 import {MobileSelector} from "@/components/ui/mobile-selector";
 import {Plus} from "lucide-react";
 import Routes from "@/routes";
 import {useMediaQuery} from "usehooks-ts";
+import FeedIcon from "@/components/icons/side-nav/FeedIcon";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -80,12 +80,14 @@ export const FeedHeader = ({
 				style={theme ? mainHeaderContainer[theme] : mainHeaderContainer.light}
 			>
 				<div className="flex items-start w-[250px]">
-					<Image
-						src="/images/nav-icons/feed-icon.png"
-						alt="Feed"
-						width={40}
-						height={40}
-					/>
+          <div style={{width: 32, height: 32, position: 'relative', boxShadow: '0px 2.999999761581421px 10.999999046325684px rgba(54.89, 55.76, 117.32, 0.12)'}}>
+            <div style={{width: 32, height: 32, left: 0, top: 0, position: 'absolute', background: 'linear-gradient(0deg, #3A54CB 0%, #3A54CB 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%)', boxShadow: '0px -0.800000011920929px 9.600000381469727px rgba(255, 255, 255, 0.12) inset', borderRadius: 8}} />
+            <div style={{width: 28, height: 28, left: 2, top: 2, position: 'absolute', background: 'linear-gradient(192deg, #6060A6 0%, #F0D2FC 100%)', boxShadow: '0px 0.3720930516719818px 1.4883722066879272px rgba(0, 0, 0, 0.25) inset', borderRadius: 9999}} />
+            <div style={{width: 28, height: 28, left: 2, top: 2, position: 'absolute', background: 'linear-gradient(180deg, #001824 0%, #4941C5 100%)', boxShadow: '0px 0.2499999850988388px 0.9999999403953552px rgba(0, 0, 0, 0.25) inset', borderRadius: 9999, border: '0.40px #1B244B solid'}} />
+            <div style={{width: 19, height: 19, left: 6, top: 6, position: 'absolute'}}>
+              <FeedIcon />
+            </div>
+          </div>
 					<div className="pl-[12px] flex flex-col items-start">
 						<span className="text-slate-950 text-base font-bold">Feed</span>
 						<span className="text-accent-700 text-sm font-normal">Inspiration Board</span>
