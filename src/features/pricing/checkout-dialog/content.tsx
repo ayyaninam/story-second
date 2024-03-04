@@ -80,9 +80,9 @@ const CheckoutDialogContent = ({
 			<div className="bg-background p-6">
 				<div className="font-medium text-slate-400">Billing Info</div>
 
-				<div className="min-h-[375px]">{stripeForm}</div>
+				<div className="min-h-[200px]">{stripeForm}</div>
 
-				<Button variant="accent" className="w-full" {...buttonProps}>
+				<Button variant="accent" className="w-full mt-4" {...buttonProps}>
 					{submitButtonText}
 				</Button>
 			</div>
