@@ -26,8 +26,7 @@ const profileSchema = z.object({
     .email("Invalid email"),
   bio: z
     .string({ required_error: "Bio is required" })
-    .min(50, "Bio should contain atleast 50 characters")
-    .max(1500, "Bio should be lest than 1500 character"),
+    .max(1500, "Bio should be less than 1500 character"),
   name: z
     .string({ required_error: "First name is required" })
     .min(1, "First name is required"),

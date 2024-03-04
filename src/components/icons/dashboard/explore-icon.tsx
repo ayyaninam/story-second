@@ -43,7 +43,7 @@ export default function FeedIcon() {
 							cy="24"
 							r="13.8"
 							stroke="url(#paint3_linear_1887_8386)"
-							stroke-width="0.4"
+							strokeWidth="0.4"
 						/>
 					</g>
 					<g filter="url(#filter3_d_1887_8386)">
@@ -68,7 +68,7 @@ export default function FeedIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -121,7 +121,7 @@ export default function FeedIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -179,7 +179,7 @@ export default function FeedIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -230,7 +230,7 @@ export default function FeedIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -263,8 +263,8 @@ export default function FeedIcon() {
 					y2="40"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="white" stop-opacity="0.12" />
-					<stop offset="1" stop-color="white" stop-opacity="0" />
+					<stop stopColor="white" stopOpacity="0.12" />
+					<stop offset="1" stopColor="white" stopOpacity="0" />
 				</linearGradient>
 				<linearGradient
 					id="paint1_linear_1887_8386"
@@ -274,8 +274,8 @@ export default function FeedIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#6060A6" />
-					<stop offset="1" stop-color="#F0D2FC" />
+					<stop stopColor="#6060A6" />
+					<stop offset="1" stopColor="#F0D2FC" />
 				</linearGradient>
 				<linearGradient
 					id="paint2_linear_1887_8386"
@@ -285,8 +285,8 @@ export default function FeedIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#001824" />
-					<stop offset="1" stop-color="#4941C5" />
+					<stop stopColor="#001824" />
+					<stop offset="1" stopColor="#4941C5" />
 				</linearGradient>
 				<linearGradient
 					id="paint3_linear_1887_8386"
@@ -296,8 +296,8 @@ export default function FeedIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#1B244B" />
-					<stop offset="1" stop-color="#8197F8" />
+					<stop stopColor="#1B244B" />
+					<stop offset="1" stopColor="#8197F8" />
 				</linearGradient>
 			</defs>
 		</svg>
