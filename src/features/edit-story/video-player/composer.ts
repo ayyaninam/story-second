@@ -8,13 +8,11 @@ import {
 	RemotionSegment,
 	VIDEO_FPS,
 	INCREASED_LAST_PAGE_DURATION,
-	SILENT_DURATION,
 	PREMOUNT_FRAMES,
 	RemotionPlayerInputProps,
 	RemotionPageSegment,
-	RemotionInterpolationSegment,
-	RemotionTransitionSegment,
 	RemotionVariant,
+	RemotionTransitionSegment,
 } from "./constants";
 
 const calculateSegmentDuration = async ({
@@ -24,14 +22,12 @@ const calculateSegmentDuration = async ({
 	audioURL: string | null;
 	isLastSegment: boolean;
 }) => {
-	const minContentDuration = 3 * VIDEO_FPS;
-
-	const silentTime = 2 * SILENT_DURATION * VIDEO_FPS;
+	const minContentDuration = 0 * VIDEO_FPS;
 
 	if (!audioURL) {
 		return {
 			contentDuration: minContentDuration,
-			durationInFrames: minContentDuration + silentTime,
+			durationInFrames: minContentDuration,
 		};
 	}
 
@@ -45,8 +41,7 @@ const calculateSegmentDuration = async ({
 
 	return {
 		contentDuration,
-		durationInFrames:
-			contentDuration + silentTime + (isLastSegment ? PREMOUNT_FRAMES : 0),
+		durationInFrames: contentDuration + (isLastSegment ? PREMOUNT_FRAMES : 0),
 	};
 };
 
@@ -57,6 +52,7 @@ type ToRemotionSegmentProps = {
 	videoURL: string | null;
 	imageURL: string | null;
 	interpolationURL: string | null;
+	coverImage: string | null;
 	isFirstSegment: boolean;
 	isLastSegment: boolean;
 	seekId: string;
@@ -69,6 +65,7 @@ export const toRemotionSegment = async ({
 	videoURL,
 	imageURL,
 	interpolationURL,
+	coverImage,
 	isFirstSegment,
 	isLastSegment,
 	seekId,
@@ -95,13 +92,12 @@ export const toRemotionSegment = async ({
 			playbackRate: Math.min(
 				1,
 				((await getVideoMetadata(videoURL)).durationInSeconds * VIDEO_FPS) /
-				contentDuration
+					contentDuration
 			),
 			visual: {
 				format: "video",
 				videoURL,
 			},
-			seekId,
 		};
 	} else if (imageURL) {
 		pageSegment = {
@@ -113,32 +109,34 @@ export const toRemotionSegment = async ({
 		};
 	}
 
-	let intermediateSegment: Omit<RemotionInterpolationSegment, "index"> | null =
-		null;
-	let transitionSegment: RemotionTransitionSegment | null = null;
-	if (interpolationURL) {
-		intermediateSegment = {
-			type: "intermediate",
+	let coverImageSegment: Omit<RemotionPageSegment, "index"> | null = null;
+	if (coverImage) {
+		coverImageSegment = {
+			type: "page",
 			id: uuidv4(),
+			storyText: "",
+			durationInFrames: 1.5 * VIDEO_FPS,
+			contentDuration: 1.5 * VIDEO_FPS,
+			playbackRate: 1,
 			visual: {
-				format: "video",
-				videoURL: interpolationURL,
+				format: "image",
+				imageURL: coverImage,
 			},
-			durationInFrames: 17,
-			playbackRate: 1,
-		};
-	} else {
-		transitionSegment = {
-			type: "transition",
-			id: uuidv4(),
-			durationInFrames: VIDEO_FPS,
-			playbackRate: 1,
+			seekId: "",
 		};
 	}
 
+	const transitionSegment: RemotionTransitionSegment = {
+		type: "transition",
+		id: uuidv4(),
+		durationInFrames: VIDEO_FPS,
+		playbackRate: 1,
+	};
+
 	// @ts-ignore
 	return [
-		isFirstSegment ? undefined : intermediateSegment ?? transitionSegment,
+		isFirstSegment ? coverImageSegment : undefined,
+		isFirstSegment ? transitionSegment : undefined,
 		pageSegment,
 		isLastSegment && (variant === "landscape" || variant === "portrait")
 			? transitionSegment
