@@ -15,6 +15,7 @@ import { parseISO, subDays } from "date-fns";
 import { NextSeo } from "next-seo";
 import user from "@/api/routes/user";
 import { AccountsHeader } from "@/features/account/components/header";
+import Billing from "@/features/account/components/billing";
 
 const profileSchema = z.object({
   profileName: z
@@ -196,11 +197,7 @@ const AccountsPage = () => {
                     </>
                   )}
 
-                  {step === "payment" && (
-                    <>
-                      <h1>Still in progress...</h1>
-                    </>
-                  )}
+                  {step === "payment" && <Billing />}
 
                   {step === "preferences" && (
                     <>
