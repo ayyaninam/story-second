@@ -1,0 +1,43 @@
+name: "Continuous integration"
+
+on: [pull_request]
+
+jobs:
+  pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v4
+        with:
+          paths_ignore: '["**/README.md"]'
+          concurrent_skipping: "same_content_newer"
+
+  build:
+    name: Test build
+    runs-on: "ubuntu-latest"
+    environment: "Preview"
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    steps:
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version: "18"
+
+      - name: "Checkout Project"
+        uses: "actions/checkout@v3"
+        with:
+          fetch-depth: 1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint code
+        run: pnpm lint
