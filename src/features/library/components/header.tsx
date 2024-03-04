@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React, {CSSProperties, Dispatch, SetStateAction, useEffect, useState} from "react";
+import React, {CSSProperties, useEffect, useState} from "react";
 import { HeaderTabSwitcher } from "./orientation-tab-switcher";
-import { Input } from "@/components/ui/input";
 import { GenreTabSwitcher } from "./genre-tab-switcher";
 import {
 	Select,
@@ -14,13 +13,13 @@ import {
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import { genreOptions, SORTING_OPTIONS, VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
-import toast from "react-hot-toast";
 import {MobileSelector} from "@/components/ui/mobile-selector";
 import {Plus} from "lucide-react";
 import Routes from "@/routes";
 import {useQuery} from "@tanstack/react-query";
 import {QueryKeys} from "@/lib/queryKeys";
 import api from "@/api";
+import {useMediaQuery} from "usehooks-ts";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -79,7 +78,7 @@ export const LibraryHeader = ({
 		);
 	};
 	const sortOptions = Object.values(SORTING_OPTIONS);
-	const [isMobile, setIsMobile] = React.useState(true);
+	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	const { data, isPending, refetch } = useQuery({
 		queryKey: [QueryKeys.USER],
@@ -93,14 +92,6 @@ export const LibraryHeader = ({
 		setUserName(data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName || "Story.com");
 	}, [data]);
 
-	React.useEffect(() => {
-		const handleResize = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
-		handleResize();
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
 	return (
 		<div
 			style={{
@@ -234,7 +225,11 @@ export const LibraryHeader = ({
 						/>
 					</div>
 					: <>
-						<GenreTabSwitcher />
+						<GenreTabSwitcher
+							selectedGenre={selectedGenre}
+							setSelectedGenre={setSelectedGenre}
+							genreOptions={genreOptions}
+						/>
 						<div className="flex h-[40px] w-[180px] gap-2 items-center">
 							<Select
 								onValueChange={setSort}

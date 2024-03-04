@@ -77,7 +77,7 @@ export default function PublishedStory({
     queryKey: [QueryKeys.INTERACTIONS, router.asPath],
   });
   const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
-    queryFn: () => api.user.get(session.accessToken),
+    queryFn: () => api.user.get(),
     staleTime: 3000,
     // eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
     queryKey: [QueryKeys.USER],
@@ -93,7 +93,7 @@ export default function PublishedStory({
   const isLoading = Webstory.isLoading || !Webstory.data;
 
   useEffect(() => {
-    console.log("Webstory.data", Webstory.data)
+    console.log("Webstory.data", Webstory.data);
     if (Webstory.data) {
       if (
         Webstory.data?.scenes
@@ -101,7 +101,7 @@ export default function PublishedStory({
           ?.every((segment) => !!segment?.videoKey) &&
         Webstory.data?.scenes?.flatMap((el) => el.videoSegments)?.length > 0
       ) {
-        console.log("All video segments are ready")
+        console.log("All video segments are ready");
         setEnableQuery(false);
         setStorySegments(
           Webstory?.data?.scenes?.flatMap((el) => el?.videoSegments!)
@@ -337,31 +337,36 @@ export default function PublishedStory({
                       <Heart
                         className="mr-2 h-4 w-4 md:h-5 md:w-5"
                         style={{
-                          fill: isBrowser && Interactions.data?.liked ? "#EC4899" : undefined,
+                          fill:
+                            isBrowser && Interactions.data?.liked
+                              ? "#EC4899"
+                              : undefined,
                         }}
                       />
                       Like video
                     </Button>
-                    {/*{User?.data?.data?.id === Webstory.data?.user?.id && (*/}
-                    {/*  <Button*/}
-                    {/*    className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"*/}
-                    {/*    variant="outline"*/}
-                    {/*    onClick={() =>*/}
-                    {/*      router.push(*/}
-                    {/*        Routes.EditScript(*/}
-                    {/*          storyData.storyType,*/}
-                    {/*          storyData.topLevelCategory!,*/}
-                    {/*          storyData.slug!*/}
-                    {/*        )*/}
-                    {/*      )*/}
-                    {/*    }*/}
-                    {/*  >*/}
-                    {/*    <Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Video*/}
-                    {/*  </Button>*/}
-                    {/*)}*/}
+                    { (User?.data?.data?.id === Webstory.data?.user?.id && Webstory.data?.storyType !== 2) && (
+                      <Button
+                        className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+                        variant="outline"
+                        onClick={() =>
+                          router.push(
+                            Routes.EditScript(
+                              storyData.storyType,
+                              storyData.topLevelCategory!,
+                              storyData.slug!
+                            )
+                          )
+                        }
+                      >
+                        <Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Video
+                      </Button>
+                    )}
 
-                    { (numVideoSegmentsReady ?? 0) < (numTotalVideoSegments ?? 0) ||
-                    !Webstory.data?.storyDone ? null : Webstory.data?.renderedVideoKey ? (
+                    {(numVideoSegmentsReady ?? 0) <
+                      (numTotalVideoSegments ?? 0) ||
+                    !Webstory.data?.storyDone ? null : Webstory.data
+                        ?.renderedVideoKey ? (
                       <Button
                         onClick={async (e) => {
                           setIsVideoDownloading(true);
@@ -509,20 +514,20 @@ export default function PublishedStory({
             © 2024 Story.com - All rights reserved
           </div>
           {!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
-          <div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
-            <span
-              className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
-              style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-            >
-              <ModeToggle />
-            </span>
+            <div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
+              <span
+                className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
+                style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+              >
+                <ModeToggle />
+              </span>
               <span
                 className="rounded-full w-8 h-8 bg-popover p-1.5"
                 style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
               >
                 <HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
               </span>
-          </div>
+            </div>
           )}
         </div>
       </div>

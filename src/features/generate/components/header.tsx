@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import {Plus} from "lucide-react";
 import Routes from "@/routes";
+import {useMediaQuery} from "usehooks-ts";
 
 const mainHeaderContainer: {
   [key: string]: CSSProperties;
@@ -31,17 +32,8 @@ export const GenerateHeader = ({
                               }: {
 }) => {
   const { theme } = useTheme();
-  const [isMobile, setIsMobile] = React.useState(true);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     <div

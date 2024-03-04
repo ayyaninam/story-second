@@ -3,17 +3,10 @@ import LibraryPage from "@/features/library";
 import React, { ReactElement } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
-import { InferGetServerSidePropsType } from "next";
 import PageLayout from "@/components/layouts/PageLayout";
 import { NextSeo } from "next-seo";
-import Routes from "@/routes";
-import useSaveSessionToken from "@/hooks/useSaveSessionToken";
-import { getServerSidePropsStub } from "@/utils/getServerSidePropsStub";
 
-function Library({
-  accessToken,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  useSaveSessionToken(accessToken);
+function Library() {
   return (
     <>
       <NextSeo
@@ -55,7 +48,7 @@ function Library({
           --accent-color-950: #042f2e;
         }
       `}</style>
-      <LibraryPage accessToken={accessToken} />
+      <LibraryPage />
     </>
   );
 }
@@ -66,6 +59,4 @@ Library.getLayout = function getLayout(page: ReactElement) {
 
 export default Library;
 
-export const getServerSideProps = withPageAuthRequired({
-  getServerSideProps: getServerSidePropsStub,
-});
+export const getServerSideProps = withPageAuthRequired();

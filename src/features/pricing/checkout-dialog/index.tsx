@@ -21,7 +21,7 @@ const CheckoutDialog = (props: CheckoutDialogProps) => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{props.children}</DialogTrigger>
-			<DialogContent className="rounded-md p-0 shadow-xl gap-0 overflow-hidden left-[50%]">
+			<DialogContent className="rounded-md p-0 max-h-screen shadow-xl gap-0 overflow-y-scroll sm:overflow-y-hidden left-[50%]">
 				{props.variant === "credits" ? (
 					<CreditsCheckoutDialog
 						allowanceType={props.allowanceType}

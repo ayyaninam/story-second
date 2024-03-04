@@ -1,9 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/api";
-import { QueryKeys } from "@/lib/queryKeys";
-import { useRouter } from "next/router";
 import {
 	Select,
 	SelectContent,
@@ -12,24 +8,6 @@ import {
 } from "@/components/ui/select";
 import { getGenreNameFromSlug } from "../utils";
 
-const getGenreOptions = (categories: string[]) => {
-	return [
-		{
-			id: "all",
-			name: "All",
-		},
-		...categories
-			.filter((category) => category !== "all" && category !== "other")
-			.map((category) => ({
-				id: category,
-				name: getGenreNameFromSlug(category),
-			})),
-		{
-			id: "other",
-			name: "Other",
-		},
-	];
-};
 
 export const GenreTabSwitcher = ({
 	selectedGenre,

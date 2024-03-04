@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import SideNav from "./SideNav";
 import BottomNav from "@/components/layouts/BottomNav";
+import {useMediaQuery} from "usehooks-ts";
 
 const PageLayout = ({
 	children,
@@ -9,16 +10,7 @@ const PageLayout = ({
 	children: ReactNode;
 	pageIndex?: number;
 }) => {
-	const [isMobile, setIsMobile] = React.useState(true);
-
-	React.useEffect(() => {
-		const handleResize = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
-		handleResize();
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
+	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	return (
 		<div
