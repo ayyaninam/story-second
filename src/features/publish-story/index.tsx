@@ -345,23 +345,23 @@ export default function PublishedStory({
                       />
                       Like video
                     </Button>
-                    {/*{User?.data?.data?.id === Webstory.data?.user?.id && (*/}
-                    {/*  <Button*/}
-                    {/*    className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"*/}
-                    {/*    variant="outline"*/}
-                    {/*    onClick={() =>*/}
-                    {/*      router.push(*/}
-                    {/*        Routes.EditScript(*/}
-                    {/*          storyData.storyType,*/}
-                    {/*          storyData.topLevelCategory!,*/}
-                    {/*          storyData.slug!*/}
-                    {/*        )*/}
-                    {/*      )*/}
-                    {/*    }*/}
-                    {/*  >*/}
-                    {/*    <Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Video*/}
-                    {/*  </Button>*/}
-                    {/*)}*/}
+                    { (User?.data?.data?.id === Webstory.data?.user?.id && Webstory.data?.storyType !== 2) && (
+                      <Button
+                        className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+                        variant="outline"
+                        onClick={() =>
+                          router.push(
+                            Routes.EditScript(
+                              storyData.storyType,
+                              storyData.topLevelCategory!,
+                              storyData.slug!
+                            )
+                          )
+                        }
+                      >
+                        <Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Video
+                      </Button>
+                    )}
 
                     {(numVideoSegmentsReady ?? 0) <
                       (numTotalVideoSegments ?? 0) ||
