@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Routes from "@/routes";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import { chunk } from "lodash";
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
@@ -232,19 +232,17 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 						priceLabel="$0"
 						priceSuffix={frequency.priceSuffix}
 						button={
-							<Link href="/generate" className="w-full">
-								<Button
-									variant="outline"
-									className="w-full transition-none group-hover:border-2"
-									size="sm"
-									onClick={(e) => {
-										onClickFreePlan();
-									}}
-									disabled={getDisabledButton(SubscriptionPlan.Free)}
-								>
-									{getButtonText(SubscriptionPlan.Free)}
-								</Button>
-							</Link>
+							<Button
+								variant="outline"
+								className="w-full transition-none group-hover:border-2"
+								size="sm"
+								onClick={(e) => {
+									Router.push(Routes.ToAuthPage("/generate")).then();
+								}}
+								disabled={getDisabledButton(SubscriptionPlan.Free)}
+							>
+								{getButtonText(SubscriptionPlan.Free)}
+							</Button>
 						}
 						items={[
 							"1 video generation",

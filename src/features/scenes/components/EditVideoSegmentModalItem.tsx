@@ -65,7 +65,7 @@ function RegenerateSegmentBar({
 				{segment.videoStatus === StoryStatus.PENDING
 					? "Loading"
 					: "Regenerate Video"}
-				<p>{`(${getImageCost(1)} ${Format.Pluralize("Credit", getVideoCost(1))})`}</p>
+				<p>{`(${getVideoCost(1)} ${Format.Pluralize("Credit", getVideoCost(1))})`}</p>
 			</Button>
 		</div>
 	);

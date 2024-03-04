@@ -253,7 +253,7 @@ export default function EditSegmentModalItem({
                       "Regenerate"}
                     {segment.alternateImagesStatus === StoryStatus.PENDING &&
                       "Regenerating"}
-                    <p>{`(${getImageCost(1)} ${Format.Pluralize("Credit", getImageCost(1))})`}</p>
+                    <p>{`(${getImageCost(4)} ${Format.Pluralize("Credit", getImageCost(4))})`}</p>
                   </Button>
                 </div>
               </div>

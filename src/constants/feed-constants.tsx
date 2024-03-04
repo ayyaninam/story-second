@@ -56,6 +56,17 @@ export const EXPLORE_HOME_GALLERY_DATA: GalleryData = {
 		icon: <WideOrientationIcon />,
 		aspectRatio: "16:9",
 	},
+	[VIDEO_ORIENTATIONS.TIK_TOK.id]: {
+		title: "Trends",
+		orientation: "tik-tok",
+		icon: <TrendsOrientation />,
+		aspectRatio: "9:16",
+		header: {
+			title: "Most Recent Trends",
+			subtitle: "Upload yourself & generate",
+			buttonText: "See all Trends",
+		},
+	},
 	[VIDEO_ORIENTATIONS.VERTICAL.id]: {
 		title: "Vertical",
 		orientation: "vertical",
@@ -76,17 +87,6 @@ export const EXPLORE_HOME_GALLERY_DATA: GalleryData = {
 			title: "Trending Story Books",
 			subtitle: "Upload yourself & generate",
 			buttonText: "See all Story Books",
-		},
-	},
-	[VIDEO_ORIENTATIONS.TIK_TOK.id]: {
-		title: "Trends",
-		orientation: "tik-tok",
-		icon: <TrendsOrientation />,
-		aspectRatio: "9:16",
-		header: {
-			title: "Most Recent Trends",
-			subtitle: "Upload yourself & generate",
-			buttonText: "See all Trends",
 		},
 	},
 };

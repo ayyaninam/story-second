@@ -42,7 +42,7 @@ const BillingInfo = ({ userIsEditing, setUserIsEditing }: BillingInfoProps) => {
 	return (
 		<>
 			{userHasCard && !userIsEditing ? (
-				<div className="mt-2 w-80">
+				<div className="mt-2 md:w-80 w-full">
 					<div className="font-medium text-xl mt-4 mb-2">My card</div>
 
 					<PaymentCard
@@ -106,8 +106,7 @@ const Billing = () => {
 				<div className="flex flex-row gap-2 mt-2">
 					<UpgradeSubscriptionDialog>
 						<Button
-							variant="outline"
-							className="font-medium text-accent-600 text-[15px] leading-[20px]"
+							className="font-medium text-white bg-accent-600 hover:bg-accent-700 text-[15px] leading-[20px]"
 						>
 							Change plan
 						</Button>

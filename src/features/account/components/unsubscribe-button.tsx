@@ -35,7 +35,9 @@ const UnsubscribeButton = () => {
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger>
-				<Button variant="destructive">Unsubscribe</Button>
+				<Button className="text-white bg-pink-700 hover:bg-pink-800">
+					Unsubscribe
+				</Button>
 			</DialogTrigger>
 			<DialogContent className="left-[50%]">
 				<DialogHeader>
@@ -47,9 +49,9 @@ const UnsubscribeButton = () => {
 								Cancel
 							</Button>
 							<Button
-								variant="destructive"
 								onClick={handleUnsubscribe}
 								disabled={submitting}
+								className="text-white bg-pink-700 hover:bg-pink-800"
 							>
 								Confirm
 							</Button>
