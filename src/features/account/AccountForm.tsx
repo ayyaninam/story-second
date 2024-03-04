@@ -13,6 +13,8 @@ import { startCase } from "lodash";
 import { useCallback } from "react";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import toast from "react-hot-toast";
+import Router from "next/router";
+import Routes from "@/routes";
 
 export const AccountForm = <T extends FieldValues>({
   form,
@@ -94,6 +96,7 @@ export const AccountForm = <T extends FieldValues>({
             <Input
               {...form.register("email", { required: true })}
               className="w-full mt-2"
+              disabled
             />
             <Error control={form.control} name="email" />
           </div>
@@ -135,13 +138,22 @@ export const AccountForm = <T extends FieldValues>({
             <Error control={form.control} name="bio" />
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center gap-4">
           <Button
             isLoading={isUpdating}
             type="submit"
             className="bg-accent-500 hover:bg-accent-700"
           >
             Update Profile
+          </Button>
+          <Button
+            className="bg-pink-600 hover:bg-pink-700"
+            onClick={(e) => {
+              e.preventDefault();
+              Router.push(Routes.Logout());
+            }}
+          >
+            Logout
           </Button>
         </div>
       </form>
