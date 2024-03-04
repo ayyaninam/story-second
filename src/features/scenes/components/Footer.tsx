@@ -619,22 +619,22 @@ const Footer = ({
 						</SelectContent>
 					</Select>
 				</div>
-				<div className="flex">
-					<Button
-						disabled={!WebstoryData.storyDone || !ungeneratedAudios.length || regenerateAudioLoading}
-						onClick={() => {
-							setRegenerateAudioLoading(true);
-							RegenerateAllAudio.mutateAsync().then(
-									() => {
-										setRegenerateAudioLoading(false);
-									}
-								);
-							}
-						}
-					>
-						{regenerateAudioLoading ? "Regenerating" : "Regenerate Audio"}
-					</Button>
-				</div>
+				{/*<div className="flex">*/}
+				{/*	<Button*/}
+				{/*		disabled={!WebstoryData.storyDone || !ungeneratedAudios.length || regenerateAudioLoading}*/}
+				{/*		onClick={() => {*/}
+				{/*			setRegenerateAudioLoading(true);*/}
+				{/*			RegenerateAllAudio.mutateAsync().then(*/}
+				{/*					() => {*/}
+				{/*						setRegenerateAudioLoading(false);*/}
+				{/*					}*/}
+				{/*				);*/}
+				{/*			}*/}
+				{/*		}*/}
+				{/*	>*/}
+				{/*		{regenerateAudioLoading ? "Regenerating" : "Regenerate Audio"}*/}
+				{/*	</Button>*/}
+				{/*</div>*/}
 			</div>
 
 			<div className="text-center w-100 flex flex-col items-center justify-center">
