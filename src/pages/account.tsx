@@ -7,20 +7,11 @@ import AccountsPage from "@/features/account";
 import { getServerSidePropsStub } from "@/utils/getServerSidePropsStub";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
-export default function ProfilePage({
-  accessToken,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  useSaveSessionToken(accessToken);
-  return (
-    <>
-      <AccountsPage accessToken={accessToken} />
-    </>
-  );
+export default function ProfilePage() {
+  return <AccountsPage />;
 }
 ProfilePage.getLayout = function getLayout(page: ReactElement) {
   return <PageLayout pageIndex={3}>{page}</PageLayout>;
 };
 
-export const getServerSideProps = withPageAuthRequired({
-  getServerSideProps: getServerSidePropsStub,
-});
+export const getServerSideProps = withPageAuthRequired();
