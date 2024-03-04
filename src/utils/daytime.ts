@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Calculates the difference between two dates and returns the number of days.
@@ -7,24 +7,27 @@ import React from 'react';
  * as JavaScript's Date constructor is used for parsing which has its own parsing rules.
  * @returns The number of days between the two dates or an error message.
  */
-export function calculateDaysBetweenDates(startDateStr: string, endDateStr: string): string | number {
-  try {
-    const startDate = new Date(startDateStr);
-    const endDate = new Date(endDateStr);
-    const timeDiff = endDate.getTime() - startDate.getTime();
+export function calculateDaysBetweenDates(
+	startDateStr: string,
+	endDateStr: string
+): string | number {
+	try {
+		const startDate = new Date(startDateStr);
+		const endDate = new Date(endDateStr);
+		const timeDiff = endDate.getTime() - startDate.getTime();
 
-    if (isNaN(timeDiff)) {
-      throw new Error("Invalid date format.");
-    }
+		if (isNaN(timeDiff)) {
+			throw new Error("Invalid date format.");
+		}
 
-    const daysDiff = timeDiff / (1000 * 3600 * 24);
+		const daysDiff = timeDiff / (1000 * 3600 * 24);
 
-    if (daysDiff < 0) {
-      throw new Error("End date must be after start date.");
-    }
+		if (daysDiff < 0) {
+			throw new Error("End date must be after start date.");
+		}
 
-    return Math.round(daysDiff);
-  } catch (error) {
-    return `Error: ${(error as Error).message}`;
-  }
+		return Math.round(daysDiff);
+	} catch (error) {
+		return `Error: ${(error as Error).message}`;
+	}
 }
