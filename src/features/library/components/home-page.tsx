@@ -44,12 +44,12 @@ const LibraryHomePage: React.FC<{
       }),
     staleTime: 3000,
     queryKey: [
-      QueryKeys.WIDE_VIDEOS,
+      QueryKeys.LIBRARY_WIDE_VIDEOS,
       filterOptions.topLevelCategory,
       filterOptions.isDescending,
     ],
     initialData: queryClient.getQueryData([
-      QueryKeys.WIDE_VIDEOS,
+      QueryKeys.LIBRARY_WIDE_VIDEOS,
       filterOptions.topLevelCategory,
       filterOptions.isDescending,
     ]),
@@ -71,12 +71,12 @@ const LibraryHomePage: React.FC<{
       }),
     staleTime: 3000,
     queryKey: [
-      QueryKeys.VERTICAL_VIDEOS,
+      QueryKeys.LIBRARY_VERTICAL_VIDEOS,
       filterOptions.topLevelCategory,
       filterOptions.isDescending,
     ],
     initialData: queryClient.getQueryData([
-      QueryKeys.VERTICAL_VIDEOS,
+      QueryKeys.LIBRARY_VERTICAL_VIDEOS,
       filterOptions.topLevelCategory,
       filterOptions.isDescending,
     ]),
@@ -94,12 +94,12 @@ const LibraryHomePage: React.FC<{
       }),
     staleTime: 3000,
     queryKey: [
-      QueryKeys.STORY_BOOKS,
+      QueryKeys.LIBRARY_STORY_BOOKS,
       filterOptions.topLevelCategory,
       filterOptions.isDescending,
     ],
     initialData: queryClient.getQueryData([
-      QueryKeys.STORY_BOOKS,
+      QueryKeys.LIBRARY_STORY_BOOKS,
       filterOptions.topLevelCategory,
       filterOptions.isDescending,
     ]),
@@ -120,12 +120,12 @@ const LibraryHomePage: React.FC<{
         }),
       staleTime: 3000,
       queryKey: [
-        QueryKeys.TIK_TOK,
+        QueryKeys.LIBRARY_TIK_TOK,
         filterOptions.topLevelCategory,
         filterOptions.isDescending,
       ],
       initialData: queryClient.getQueryData([
-        QueryKeys.TIK_TOK,
+        QueryKeys.LIBRARY_TIK_TOK,
         filterOptions.topLevelCategory,
         filterOptions.isDescending,
       ]),

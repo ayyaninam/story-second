@@ -10,7 +10,6 @@ function LibraryPage() {
   const router = useRouter();
   const selectedOrientationTab =
     (router.query.orientation as string) || VIDEO_ORIENTATIONS.ALL.id;
-  const [searchTerm, setSearchTerm] = useState("");
   const setSelectedOrientationTab = (orientation: string) => {
     router.push(
       {

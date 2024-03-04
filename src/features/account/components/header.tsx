@@ -8,6 +8,7 @@ import Routes from "@/routes";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import Format from "@/utils/format";
 import {useUser} from "@auth0/nextjs-auth0/client";
+import {useMediaQuery} from "usehooks-ts";
 
 const mainHeaderContainer: {
   [key: string]: CSSProperties;
@@ -32,19 +33,10 @@ const subHeaderContainer: CSSProperties = {
 
 export function AccountsHeader({ user }: { user: any }) {
   const { theme } = useTheme();
-  const [isMobile, setIsMobile] = React.useState(true);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
 
   const { user:authUser} = useUser();
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     <div

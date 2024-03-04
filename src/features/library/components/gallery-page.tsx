@@ -72,9 +72,9 @@ const LibraryGalleryPage: React.FC<{ orientation: VideoOrientation }> = ({
       });
     },
     staleTime: 3000,
-    queryKey: [QueryKeys.GALLERY, filterOptions, orientation],
+    queryKey: [QueryKeys.LIBRARY_GALLERY, filterOptions, orientation],
     initialData: queryClient.getQueryData([
-      QueryKeys.GALLERY,
+      QueryKeys.LIBRARY_GALLERY,
       filterOptions,
       orientation,
     ]),

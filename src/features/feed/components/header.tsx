@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import {MobileSelector} from "@/components/ui/mobile-selector";
 import {Plus} from "lucide-react";
 import Routes from "@/routes";
+import {useMediaQuery} from "usehooks-ts";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -64,16 +65,7 @@ export const FeedHeader = ({
 		);
 	};
 	const sortOptions = Object.values(SORTING_OPTIONS);
-	const [isMobile, setIsMobile] = React.useState(true);
-
-	React.useEffect(() => {
-		const handleResize = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
-		handleResize();
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
+	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	return (
 		<div
