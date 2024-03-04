@@ -4,7 +4,6 @@ import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
 import {
 	VoiceType,
-	AspectRatios,
 	StoryOutputTypes,
 	DisplayAspectRatios,
 } from "@/utils/enums";
@@ -78,6 +77,9 @@ export const webStoryToRemotionInputProps = async (
 							: null,
 						interpolationURL: segment.frameInterpolationKey
 							? Format.GetVideoUrl(segment.frameInterpolationKey)
+							: null,
+						coverImage: story.coverImage
+							? Format.GetVideoUrl(story.coverImage)
 							: null,
 						storyText: segment.textContent!,
 						isFirstSegment: index === 0,
