@@ -59,14 +59,13 @@ const preferenceSchema = z.object({
 
 type Account = z.infer<typeof profileSchema>;
 
-const AccountsPage = ({ accessToken }: { accessToken: string }) => {
+const AccountsPage = () => {
   const router = useRouter();
   const { step = "profile" } = router.query ?? {};
 
   const { data, isPending, refetch } = useQuery({
-    queryKey: [QueryKeys.USER, accessToken],
-    queryFn: () => user.get(accessToken),
-    enabled: !!accessToken,
+    queryKey: [QueryKeys.USER],
+    queryFn: () => user.get(),
   });
 
   const basicDetails: Record<string, any> = useMemo(() => {
@@ -194,11 +193,7 @@ const AccountsPage = ({ accessToken }: { accessToken: string }) => {
                         </p>
                         <Separator className="my-8" />
                       </div>
-                      <AccountForm<Account>
-                        form={form}
-                        refetch={refetch}
-                        accessToken={accessToken}
-                      />
+                      <AccountForm<Account> form={form} refetch={refetch} />
                     </>
                   )}
 

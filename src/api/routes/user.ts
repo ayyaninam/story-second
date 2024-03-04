@@ -1,44 +1,37 @@
-import { authFetcher } from "@/lib/fetcher";
+import { publicProxyApiFetcher } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
-import { getJwt } from "@/utils/jwt";
 import { toFromData } from "@/utils/request";
 
 const user = {
-	register: async (
-		params: mainSchema["RegisterUserDTO"],
-		token?: string
-	): Promise<mainSchema["UserInfoDTOApiResponse"]> => {
-		return await authFetcher(token || getJwt())
-			.post(`api/User/register`, { body: JSON.stringify(params) })
-			.json();
-	},
-	get: async (
-		token?: string
-	): Promise<mainSchema["UserInfoDTOApiResponse"]> => {
-		return await authFetcher(token || getJwt())
-			.get(`api/User`)
-			.json();
-	},
-	updateDetails: async <T>(data: T & Record<string, any>, token?: string) => {
-		return await authFetcher(token || getJwt())
-			.patch("api/User/Details", {
-				body: toFromData(data),
-			})
-			.json<mainSchema["StringApiResponse"]>();
-	},
-	toggleStoryPrivacy: async (token?: string) => {
-		return await authFetcher(token || getJwt())
-			.put("api/User/ToggleDefaultStoryPrivacy")
-			.json<mainSchema["StringApiResponse"]>();
-	},
-	updateEmailNotificationPreferences: async (
-		data: mainSchema["EmailNotificationPreferencesDTO"],
-		token?: string
-	) => {
-		return await authFetcher(token || getJwt())
-			.put("api/User/EmailNotificationPreferences", { json: data })
-			.json<mainSchema["StringApiResponse"]>();
-	},
+  register: async (
+    params: mainSchema["RegisterUserDTO"]
+  ): Promise<mainSchema["UserInfoDTOApiResponse"]> => {
+    return await publicProxyApiFetcher
+      .post(`proxyApi/User/register`, { body: JSON.stringify(params) })
+      .json();
+  },
+  get: async (): Promise<mainSchema["UserInfoDTOApiResponse"]> => {
+    return await publicProxyApiFetcher.get(`proxyApi/User`).json();
+  },
+  updateDetails: async <T>(data: T & Record<string, any>) => {
+    return await publicProxyApiFetcher
+      .patch("proxyApi/User/Details", {
+        body: toFromData(data),
+      })
+      .json<mainSchema["StringApiResponse"]>();
+  },
+  toggleStoryPrivacy: async () => {
+    return await publicProxyApiFetcher
+      .put("proxyApi/User/ToggleDefaultStoryPrivacy")
+      .json<mainSchema["StringApiResponse"]>();
+  },
+  updateEmailNotificationPreferences: async (
+    data: mainSchema["EmailNotificationPreferencesDTO"]
+  ) => {
+    return await publicProxyApiFetcher
+      .put("proxyApi/User/EmailNotificationPreferences", { json: data })
+      .json<mainSchema["StringApiResponse"]>();
+  },
 };
 
 export default user;
