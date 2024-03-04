@@ -1,8 +1,3 @@
-import api from "@/api";
-import { getGenreOptions } from "@/features/library/components/genre-tab-switcher";
-import { QueryKeys } from "@/lib/queryKeys";
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 import {
 	Select,
 	SelectContent,
