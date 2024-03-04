@@ -237,7 +237,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								className="w-full transition-none group-hover:border-2"
 								size="sm"
 								onClick={(e) => {
-									Router.push(Routes.ToAuthPage("/generate")).then();
+									Router.push(Routes.Generate()).then();
 								}}
 								disabled={getDisabledButton(SubscriptionPlan.Free)}
 							>
