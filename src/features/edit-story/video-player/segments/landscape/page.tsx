@@ -9,6 +9,7 @@ import {
 	Img,
 } from "remotion";
 import {
+	SILENT_DURATION,
 	VIDEO_FPS,
 	INCREASED_LAST_PAGE_DURATION,
 	bigZIndexTrick,
@@ -60,7 +61,7 @@ const SegmentPage = ({
 		[]
 	);
 
-	const startAudioFrom = 0;
+	const startAudioFrom = VIDEO_FPS * SILENT_DURATION;
 
 	const percentageTextToShow = interpolate(
 		frame,
