@@ -19,6 +19,7 @@ import { SceneModificationData, SegmentModificationData } from "@/types";
 export const WebstoryToStoryDraft = (
 	Webstory: mainSchema["ReturnWebStoryDTO"]
 ): EditStoryDraft => {
+    
 	return {
 		id: Webstory.id!,
 		type: Webstory.storyType,
