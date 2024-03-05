@@ -85,12 +85,9 @@ const SegmentPage = ({
 			return "";
 		}
 
-		const numberOfWordsToShow = 3;
+		const numberOfWordsToShow = 4;
 
-		const blacklist = /[,.-]/g;
-
-		const cleanedText = segment.storyText.replace(blacklist, "").toLowerCase();
-		const words = cleanedText.split(" ");
+		const words = segment.storyText.toLowerCase().split(" ");
 
 		const startIndex =
 			Math.floor(percentageTextToShow * (words.length / numberOfWordsToShow)) *
