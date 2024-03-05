@@ -9,7 +9,10 @@ import editStoryReducer, {
   EditStoryAction,
   EditStoryDraft,
 } from "@/features/scenes/reducers/edit-reducer";
-import { WebstoryToStoryDraft } from "@/features/scenes/utils/storydraft";
+import {
+  WebstoryToStoryDraft,
+  filterSelectedKeysFromObject,
+} from "@/features/scenes/utils/storydraft";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";
 import { StoryOutputTypes } from "@/utils/enums";
@@ -61,7 +64,14 @@ const EditorPage = ({
       type: "reset",
       draft: WebstoryToStoryDraft(Webstory.data),
     });
-  }, [JSON.stringify(Webstory.data)]);
+  }, [
+    JSON.stringify(
+      filterSelectedKeysFromObject({
+        originalObject: Webstory.data,
+        keysToBeFiltered: ["renderedVideoKey"],
+      })
+    ),
+  ]);
 
   if (router.query.editor === "script") {
     return (
