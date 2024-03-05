@@ -1,8 +1,6 @@
 import React, { CSSProperties, useMemo } from "react";
 import {
 	AbsoluteFill,
-	Audio,
-	Sequence,
 	interpolate,
 	useCurrentFrame,
 	OffthreadVideo,
@@ -18,7 +16,7 @@ import {
 	RemotionPlayerInputProps,
 	INCREASED_LAST_PAGE_DURATION,
 } from "../../constants";
-import { Premount } from "../../../components/premount";
+import { AudioWithPremount } from "../../../components/audio-with-premount";
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
@@ -138,9 +136,10 @@ export const SegmentSplitPage = ({
 			)}
 
 			{inputProps.enableAudio && segment.audioURL && (
-				<Premount for={startAudioFrom}>
-					<Audio src={segment.audioURL} />
-				</Premount>
+				<AudioWithPremount
+					startAudioFrom={startAudioFrom}
+					audioURL={segment.audioURL}
+				/>
 			)}
 		</AbsoluteFill>
 	);
