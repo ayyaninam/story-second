@@ -28,7 +28,20 @@ export default function LoginPage() {
 		router.push(Routes.Signup(returnTo));
 	};
 
-	if (isMobile)
-		return <AuthPromptMobile onLogIn={onLogIn} onSignUp={onSignUp} />;
-	return <AuthPrompt onLogIn={onLogIn} onSignUp={onSignUp}></AuthPrompt>;
+  return (
+    <>
+      <style jsx global>{`
+        :root {
+          .intercom-launcher {
+              display: none;
+          }
+        }
+      `}
+      </style>
+      {isMobile
+        ? <AuthPromptMobile onLogIn={onLogIn} onSignUp={onSignUp} />
+        : <AuthPrompt onLogIn={onLogIn} onSignUp={onSignUp}></AuthPrompt>
+      }
+    </>
+  )
 }

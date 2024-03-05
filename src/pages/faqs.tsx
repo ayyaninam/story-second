@@ -23,7 +23,7 @@ export const FAQs = () => {
           <AccordionItem value="whats-new">
             <AccordionTrigger>What&apos;s new?</AccordionTrigger>
             <AccordionContent>
-              We have been working diligently on transforming our website into something new and innovative, story.com, to improve your story making capabilities with the help of narrative AI videos. Have a look at some samples <Link href={"/feed"} className="underline">here</Link>.
+              We have been working diligently on transforming our website into something new and innovative, story.com, to improve your story making capabilities with the help of narrative AI videos. Have a look at some samples <Link href="/feed" className="underline" target="_blank">here</Link>.
             </AccordionContent>
           </AccordionItem>
 

@@ -26,6 +26,7 @@ import { useRouter } from "next/router";
 import React, { ReactElement, useEffect } from "react";
 import { useImmerReducer } from "use-immer";
 import EditAccentStyles from "@/features/scenes/edit-accent-style";
+import Script from "next/script";
 
 const EditorPage = ({
   dehydratedState,
@@ -65,6 +66,13 @@ const EditorPage = ({
   if (router.query.editor === "script") {
     return (
       <WebStoryProvider initialValue={storyData}>
+        <Script id={'intercom-editor'}>
+          {`
+            window.intercomSettings = {
+              hide_default_launcher: true,
+            };
+          `}
+        </Script>
         <EditAccentStyles />
         <ScriptLayout {...{ story, dispatch }} />
       </WebStoryProvider>

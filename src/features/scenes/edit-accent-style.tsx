@@ -24,6 +24,11 @@ const EditAccentStyles = () => {
 					--accent-color-800: #6B21A8;
 					--accent-color-900: #581C87;
 					--accent-color-950: #3B0764;
+        
+          // TODO: Remove this once we have a better solution for showing the intercom launcher
+          .intercom-launcher {
+            display: none;
+          }
 				}
 			`}</style>
   );
