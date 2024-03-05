@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "next dev",
 		"update:env": "op inject -i gen.env -o .env",
-		"build": "node homepage-builder.js && node tiktok-builder.js && next build",
+		"build": "node tiktok-builder.js && next build",
 		"start": "next start",
 		"lint": "next lint",
 		"build:static-tw": "npx tailwindcss -i ./src/styles/globals.css -o ./public/landing/css/tailwind.css",

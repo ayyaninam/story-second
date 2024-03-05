@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import GenerateModalContent from "@/components/create-modal";
 import { LandingSubmitButton } from "./LandingSubmitButton";
 
@@ -8,8 +9,20 @@ import { LandingSubmitButton } from "./LandingSubmitButton";
  */
 export const LandingPrompt: React.FC = () => {
 	const [activated, setActivated] = useState(false);
+	const [queryClient] = useState(
+		() =>
+			new QueryClient({
+				defaultOptions: {
+					queries: {
+						staleTime: 1000 * 60 * 5,
+					},
+				},
+			})
+	);
 	return activated ? (
-		<GenerateModalContent className="relative h-full" />
+		<QueryClientProvider client={queryClient}>
+			<GenerateModalContent className="relative h-full" />
+		</QueryClientProvider>
 	) : (
 		<form
 			className="bg-white p-2 rounded-md w-full flex items-center cursor-pointer pointer-events-auto "

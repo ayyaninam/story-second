@@ -1,4 +1,4 @@
-import React from "react";
+
 {/* # TODO: clean up the logo and re-use everywhere possible - ig some usage might be broken */}
 export default function StoryLogo(
   {
