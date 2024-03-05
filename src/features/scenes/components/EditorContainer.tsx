@@ -68,7 +68,7 @@ const EditorContainer: FC<{
 	const badgeData = getBadgeData(view);
 	return (
 		<div className="relative z-0 w-full gap-1 items-center justify-center flex flex-col h-full px-2 lg:px-5 py-2">
-			<div className="flex justify-center mt-auto mb-auto">
+			<div className="hidden lg:flex justify-center mt-auto mb-auto">
 				<Badge
 					variant="outline"
 					className={`bg-primary-foreground font-normal text-sm`}
@@ -78,7 +78,7 @@ const EditorContainer: FC<{
 				</Badge>
 			</div>
 			{children}
-			<div className="flex justify-center mt-auto mb-auto">
+			<div className="hidden lg:flex justify-center mt-auto mb-auto">
 				<Badge
 					variant="outline"
 					className={`bg-primary-foreground font-normal text-sm`}

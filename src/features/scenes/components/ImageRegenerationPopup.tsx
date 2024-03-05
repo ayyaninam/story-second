@@ -20,6 +20,7 @@ import RegenerateImageIcon from "@/components/icons/scene-editor/regenerate-imag
 import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { CheckIcon, Lock, ScrollText, Sparkle, X, Plus } from "lucide-react";
 import { getImageCost } from "@/utils/credit-cost";
+import {useMediaQuery} from "usehooks-ts";
 
 function RegenerationPopupHeader({
   title,
@@ -360,10 +361,12 @@ function ImageRegenerationPopup({
     }
   };
 
+  const isMobile = useMediaQuery("(max-width: 1280px)");
+
   if (loading || alternateImageKeys.length > 0) {
     return (
       <PopoverContent
-        side="right"
+        side={isMobile ? "bottom" : "right"}
         onInteractOutside={(e) => {
           if (loading) {
             e.preventDefault();

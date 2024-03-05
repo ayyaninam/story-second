@@ -18,6 +18,7 @@ import TooltipComponent from "@/components/ui/tooltip-component";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import CategorySelect from "@/components/ui/CategorySelect";
 import { useUpdateCategory } from "../mutations/UpdateCategory";
+import {useMediaQuery} from "usehooks-ts";
 
 export default function ScriptEditor({
   WebstoryData,
@@ -44,11 +45,12 @@ export default function ScriptEditor({
   }, [WebstoryData?.user?.name]);
 
   const UpdateCategory = useUpdateCategory();
+  const isMobile = useMediaQuery("(max-width: 640px)");
 
   return (
     <>
       <TooltipProvider>
-        <div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto bg-background rounded-lg shadow-lg">
+        <div className="relative w-full lg:w-4/5 h-full lg:h-4/5 max-w-[1300px] m-auto bg-background rounded-lg shadow-lg">
           <div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
             <div className="flex items-center gap-1">
               <LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
@@ -56,8 +58,10 @@ export default function ScriptEditor({
             </div>
             <div className="flex gap-1 items-center">
               <p className="px-1 text-accent-900">
-                Pro Tip — A script is the foundation of a video. Write
-                expressively.
+                {isMobile
+                  ? "Pro Tip — Visit on desktop for granular editing control"
+                  : "Pro Tip — A script is the foundation of a video. Write expressively."
+                }
               </p>
             </div>
           </div>
@@ -77,13 +81,13 @@ export default function ScriptEditor({
           <div className="flex flex-col md:flex-row items-center justify-center w-full">
             <div
               className={cn(
-                `w-full pb-6 bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
+                `w-full pb-6 bg-background rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
               )}
             >
               <div
                 className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
               >
-                <div className="space-y-2 max-h-[40vh] overflow-y-auto overflow-x-hidden">
+                <div className="space-y-2 max-h-[55vh] lg:max-h-[40vh] overflow-y-auto overflow-x-hidden">
                   <Editor
                     Webstory={WebstoryData!}
                     dispatch={dispatch}
@@ -101,7 +105,7 @@ export default function ScriptEditor({
                           {story.scenes.map((scene, sceneIndex) => (
                             <div
                               key={sceneIndex}
-                              className="flex flex-wrap flex-col  w-fit"
+                              className="flex flex-wrap flex-col w-fit"
                             >
                               {/*<TooltipComponent*/}
                               {/*  align="start"*/}

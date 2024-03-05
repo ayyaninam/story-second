@@ -10,11 +10,11 @@ const PageLayout = ({
 	children: ReactNode;
 	pageIndex?: number;
 }) => {
-	const isMobile = useMediaQuery("(max-width: 768px)");
+	const isMobile = useMediaQuery("(max-width: 1280px)");
 
 	return (
 		<div
-			className="flex flex-col lg:flex-row w-screen h-screen bg-primary lg:p-2 overflow-hidden"
+			className="flex flex-col xl:flex-row w-screen h-screen bg-primary lg:p-2 overflow-hidden"
 			style={{
 				background: isMobile
 					? "linear-gradient(180deg, var(--accent-color-600) 86.59%, #021017 100%)"
@@ -22,7 +22,7 @@ const PageLayout = ({
 			}}
 		>
 			<SideNav pageIndex={pageIndex} />
-			<div className="flex-1 overflow-hidden rounded">{children}</div>
+			<div className="flex-1 overflow-y-scroll overflow-x-hidden lg:overflow-hidden rounded pb-[4.5rem] xl:pb-0">{children}</div>
 			<BottomNav pageIndex={pageIndex} />
 		</div>
 	);

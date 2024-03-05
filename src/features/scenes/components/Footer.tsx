@@ -596,7 +596,7 @@ const Footer = ({
 	const FooterRightButtons = View[view];
 	const areImagesActive = view === "script" || view === "storyboard";
 	return (
-		<div className="sticky bottom-0  bg-background border-border border-t-[1px] p-2 justify-between items-center overflow-hidden grid grid-cols-3 gap-4">
+		<div className="hidden lg:grid sticky bottom-0  bg-background border-border border-t-[1px] p-2 justify-between items-center overflow-hidden grid-cols-3 gap-4">
 			<div className="flex flex-wrap gap-1 py-2">
 				<div>
 					{/*<label className="text-sm text-slate-600 font-normal">Narrator</label>*/}
@@ -638,7 +638,7 @@ const Footer = ({
 			</div>
 
 			<div className="text-center w-100 flex flex-col items-center justify-center">
-				{view !== "preview" && (
+				{view !== "preview" && view != "script" && (
 					<div className="flex flex-col items-center justify-center max-w-md">
 						<span className="text-sm font-normal">
 							<span className="text-slate-600">Primary Image Style:</span>{" "}
