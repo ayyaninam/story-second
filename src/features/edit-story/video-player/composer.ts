@@ -13,6 +13,7 @@ import {
 	RemotionPageSegment,
 	RemotionVariant,
 	RemotionTransitionSegment,
+	SILENT_DURATION,
 } from "./constants";
 
 const calculateSegmentDuration = async ({
@@ -24,10 +25,12 @@ const calculateSegmentDuration = async ({
 }) => {
 	const minContentDuration = 0 * VIDEO_FPS;
 
+	const silentTime = 2 * SILENT_DURATION * VIDEO_FPS;
+
 	if (!audioURL) {
 		return {
 			contentDuration: minContentDuration,
-			durationInFrames: minContentDuration,
+			durationInFrames: minContentDuration + silentTime,
 		};
 	}
 
@@ -41,7 +44,8 @@ const calculateSegmentDuration = async ({
 
 	return {
 		contentDuration,
-		durationInFrames: contentDuration + (isLastSegment ? PREMOUNT_FRAMES : 0),
+		durationInFrames:
+			contentDuration + silentTime + (isLastSegment ? PREMOUNT_FRAMES : 0),
 	};
 };
 
