@@ -20,6 +20,7 @@ import SegmentImage from "./SegmentImage";
 import CategorySelect from "@/components/ui/CategorySelect";
 import { useUpdateCategory } from "../mutations/UpdateCategory";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
+import {useMediaQuery} from "usehooks-ts";
 
 export default function StoryboardEditor({
   WebstoryData,
@@ -70,18 +71,19 @@ export default function StoryboardEditor({
 
   const UpdateCategory = useUpdateCategory();
 
+  const isMobile = useMediaQuery("(max-width: 640px)");
+
   return (
     <>
-      <div className="relative w-4/5 h-4/5 max-w-[1300px] m-auto overflow-hidden bg-background rounded-md shadow-lg">
-        <div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
-          <div className="flex items-center gap-1">
+      <div className="relative w-full lg:w-4/5 h-full lg:h-4/5 max-w-[1300px] m-auto bg-background rounded-lg shadow-lg">
+        <div className="w-full md:flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg bg-primary-foreground font-normal text-xs border border-purple-500 bg-purple-100 text-purple-900">
+          <div className="flex items-center gap-1 mb-2 md:mb-0">
             <LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
             <p>Storyboard View</p>
           </div>
           <div className="flex gap-1 items-center">
             <p className="px-1 text-accent-900">
-              Pro Tip — You can individually regenerate images in this
-              Storyboard.{" "}
+              Pro Tip — You can individually regenerate images in this Storyboard.{" "}
             </p>
           </div>
         </div>
@@ -98,16 +100,16 @@ export default function StoryboardEditor({
             <p className="ms-1">by {WebstoryData?.user?.name}</p>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row items-center justify-center h-full w-full">
+        <div className="flex flex-col md:flex-row items-center justify-center w-full">
           <div
             className={cn(
-              `w-full pb-6 bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
+              `w-full pb-6 bg-background rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row justify-stretch h-full`
             )}
           >
             <div
-              className={`px-6 flex w-full h-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
+              className={`px-6 flex w-full flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none`}
             >
-              <div className="space-y-2 h-[80%] overflow-y-scroll">
+              <div className="space-y-2 max-h-[55vh] lg:max-h-[40vh] overflow-y-auto">
                 <Editor
                   Webstory={WebstoryData!}
                   dispatch={dispatch}
@@ -117,7 +119,7 @@ export default function StoryboardEditor({
                     return (
                       <div
                         className={cn(
-                          "w-full  divide-y divide-dashed space-y-2"
+                          "w-full divide-y divide-dashed space-y-2"
                         )}
                       >
                         {story.scenes.map((scene, sceneIndex) => (
@@ -164,56 +166,58 @@ export default function StoryboardEditor({
                                 );
                               })}
                             </div>
-                            <div className="w-[55%] min-w-[55%] flex justify-between items-center p-2 ">
+                            <div className="lg:w-[55%] lg:min-w-[55%] flex justify-between items-center p-2 ">
                               <div className="flex flex-wrap flex-row ">
-                                {scene.segments.map((segment, segmentIndex) => (
-                                  <span
-                                    key={segmentIndex}
-                                    style={{
-                                      backgroundColor: "transparent",
-                                    }}
-                                    className={cn(`flex flex-wrap w-full`)}
-                                  >
-                                    <AutosizeInput
-                                      onKeyDown={(e) => {
-                                        if (e.key === "Enter") {
-                                          handleEnter(
+                                {!isMobile && (
+                                  scene.segments.map((segment, segmentIndex) => (
+                                    <span
+                                      key={segmentIndex}
+                                      style={{
+                                        backgroundColor: "transparent",
+                                      }}
+                                      className={cn(`flex flex-wrap w-full`)}
+                                    >
+                                      <AutosizeInput
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter") {
+                                            handleEnter(
+                                              scene,
+                                              sceneIndex,
+                                              segment,
+                                              segmentIndex
+                                            );
+                                          }
+                                        }}
+                                        name={segmentIndex.toString()}
+                                        inputClassName={cn(
+                                          "active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:text-slate-950 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
+                                          segment.textStatus ===
+                                            TextStatus.EDITED && "text-slate-500"
+                                        )}
+                                        inputStyle={{
+                                          outline: "none",
+                                          backgroundColor: "inherit",
+                                        }}
+                                        // @ts-ignore
+                                        ref={(el) =>
+                                          (refs.current[sceneIndex]![
+                                            segmentIndex
+                                          ] = el)
+                                        }
+                                        value={segment.textContent}
+                                        onChange={(e) => {
+                                          handleInput(
+                                            e,
                                             scene,
                                             sceneIndex,
                                             segment,
                                             segmentIndex
                                           );
-                                        }
-                                      }}
-                                      name={segmentIndex.toString()}
-                                      inputClassName={cn(
-                                        "active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:text-slate-950 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
-                                        segment.textStatus ===
-                                          TextStatus.EDITED && "text-slate-500"
-                                      )}
-                                      inputStyle={{
-                                        outline: "none",
-                                        backgroundColor: "inherit",
-                                      }}
-                                      // @ts-ignore
-                                      ref={(el) =>
-                                        (refs.current[sceneIndex]![
-                                          segmentIndex
-                                        ] = el)
-                                      }
-                                      value={segment.textContent}
-                                      onChange={(e) => {
-                                        handleInput(
-                                          e,
-                                          scene,
-                                          sceneIndex,
-                                          segment,
-                                          segmentIndex
-                                        );
-                                      }}
-                                    />
-                                  </span>
-                                ))}
+                                        }}
+                                      />
+                                    </span>
+                                  ))
+                                )}
                               </div>
                               <div className="flex gap-x-1 p-2">
                                 <span

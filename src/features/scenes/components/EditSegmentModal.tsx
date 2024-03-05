@@ -89,7 +89,7 @@ const EditSegmentModal = ({
           !open && onClose();
         }}
       >
-        <DialogContent className="max-w-[1100px] w-2/3 bg-background">
+        <DialogContent className="max-w-[1100px] w-full xl:w-2/3 bg-background">
           <DialogTitle className="m-0 font-semibold text-foreground px-3 text-md">
             <div className="flex gap-2 items-center">
               <Settings2 width={16} height={16} />
@@ -101,7 +101,7 @@ const EditSegmentModal = ({
             control, used the advanced editing options. When you’re ready to see
             it, click regenerate.
           </DialogDescription>
-          <div className="overflow-auto max-h-[70vh] px-3">
+          <div className="overflow-auto max-h-[70vh] md:px-3">
             {story.scenes[sceneId]?.segments?.map((segment, index) => (
               <EditSegmentModalItem
                 key={index}
@@ -151,7 +151,7 @@ const EditSegmentModal = ({
                 </p>
               ) : (
                 <>
-                  <p className="text-sm text-foreground font-semibold">
+                  <p className="text-sm text-foreground font-semibold text-wrap">
                     Regenerate All Images
                   </p>
                   <p className="text-sm">{`(${getImageCost(scene.segments.length)} ${Format.Pluralize("Credit", getImageCost(scene.segments.length))})`}</p>

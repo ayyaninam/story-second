@@ -10,8 +10,6 @@ export default function LoginPage() {
 	const isMobile = useMediaQuery("(max-width: 768px)");
 	const router = useRouter();
 	const returnTo = router.query.returnTo === "/auth/login" ? Routes.defaultRedirect : router.query.returnTo as string || Routes.defaultRedirect;
-	const { user, error, isLoading } = useUser();
-
 
 	// Disabled: This is causing a fake login redirect
 	// useEffect(() => {
@@ -22,7 +20,6 @@ export default function LoginPage() {
 	// 		router.push(returnTo);
 	// 	}
 	// }, [isLoading]);
-
 
 	const onLogIn = () => {
 		router.push(Routes.Login(returnTo));

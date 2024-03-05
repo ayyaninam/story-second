@@ -89,6 +89,10 @@ export default function PublishedStory({
     mutationFn: api.video.render,
   });
 
+  const CopyVideo = useMutation({
+    mutationFn: api.video.copyVideo,
+  });
+
   const ImageRatio = GetDisplayImageRatio(Webstory.data?.resolution);
   const isLoading = Webstory.isLoading || !Webstory.data;
 
@@ -329,22 +333,47 @@ export default function PublishedStory({
                     </p>
                   )}
                   <div className="flex flex-wrap gap-2">
-                    <Button
+                    {/*<Button*/}
+                    {/*  className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"*/}
+                    {/*  variant="outline"*/}
+                    {/*  onClick={() => handleLikeVideo(!Interactions.data?.liked)}*/}
+                    {/*>*/}
+                    {/*  <Heart*/}
+                    {/*    className="mr-2 h-4 w-4 md:h-5 md:w-5"*/}
+                    {/*    style={{*/}
+                    {/*      fill:*/}
+                    {/*        isBrowser && Interactions.data?.liked*/}
+                    {/*          ? "#EC4899"*/}
+                    {/*          : undefined,*/}
+                    {/*    }}*/}
+                    {/*  />*/}
+                    {/*  Like video*/}
+                    {/*</Button>*/}
+                    { !(User?.data?.data?.id === Webstory.data?.user?.id && Webstory.data?.storyType !== 2) && (
+                      <Button
                       className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
                       variant="outline"
-                      onClick={() => handleLikeVideo(!Interactions.data?.liked)}
+                      onClick={async (e) => {
+                        const newStory = await CopyVideo.mutateAsync({
+                          id: storyData.id!,
+                          accessToken: session.accessToken,
+                        });
+
+                        if (newStory) {
+                          router.push(
+                            Routes.ViewStory(
+                              newStory.storyType,
+                              newStory.topLevelCategory!,
+                              newStory.slug!
+                            )
+                          );
+                          toast.success("Video added to your library");
+                        }
+                      }}
                     >
-                      <Heart
-                        className="mr-2 h-4 w-4 md:h-5 md:w-5"
-                        style={{
-                          fill:
-                            isBrowser && Interactions.data?.liked
-                              ? "#EC4899"
-                              : undefined,
-                        }}
-                      />
-                      Like video
+                      <Video className="mr-1 h-4 w-4 md:h-5 md:w-5" /> Make a video like this
                     </Button>
+                    )}
                     { (User?.data?.data?.id === Webstory.data?.user?.id && Webstory.data?.storyType !== 2) && (
                       <Button
                         className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
