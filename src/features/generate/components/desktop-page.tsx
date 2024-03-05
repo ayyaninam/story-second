@@ -5,7 +5,7 @@ export default function DesktopGeneratePage() {
 	return (
 		<div className="hidden lg:block h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
 			<GenerateHeader />
-			<GenerateModalContent className="mt-24" />
+			<GenerateModalContent className="mt-24 w-4/5 mx-auto" />
 		</div>
 	);
 }

@@ -93,10 +93,9 @@ const GenerateModalContent: React.FC<{ className?: string }> = ({
 	return (
 		<div className={clsx("relative flex flex-col items-center", className)}>
 			<div
-				className={`flex flex-col w-4/5 gap-4 p-4`}
+				className={`flex flex-col gap-4 p-4 w-full`}
 				style={{
 					borderRadius: "12px",
-					border: "0.622px solid rgba(255, 255, 255, 0.64)",
 					background:
 						"radial-gradient(160.1% 83.28% at 24.99% 40.87%, rgba(206, 123, 255, 0.40) 0%, rgba(102, 129, 255, 0.40) 38.5%, rgba(134, 248, 255, 0.40) 100%)",
 					backdropFilter: "blur(3.7341220378875732px)",
@@ -159,12 +158,12 @@ const GenerateModalContent: React.FC<{ className?: string }> = ({
 							<div className="flex flex-col lg:flex-row gap-4 w-3/5">
 								{/* Always display LanguageSelect */}
 
-								{/* {tabIndex !== 1 && (
+								{tabIndex !== 1 && (
 									<LanguageSelect
 										selectedLanguage={selectedLanguage}
 										setSelectedLanguage={setSelectedLanguage}
 									/>
-								)} */}
+								)}
 
 								{tabIndex === 1 && (
 									<FileUpload
@@ -182,14 +181,14 @@ const GenerateModalContent: React.FC<{ className?: string }> = ({
 								{/*)}*/}
 
 								{/* Conditionally display VideoRatioSelect */}
-								{/* {tabIndex === 0 && (
+								{tabIndex === 0 && (
 									<>
 										<VideoRatioSelect
 											selectedVideoRatio={selectedVideoRatio}
 											setSelectedVideoRatio={setSelectedVideoRatio}
 										/>
 									</>
-								)} */}
+								)}
 							</div>
 						</div>
 

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import GenerateModalContent from "@/components/create-modal";
 import { LandingSubmitButton } from "./LandingSubmitButton";
@@ -8,12 +9,11 @@ import { LandingSubmitButton } from "./LandingSubmitButton";
 export const LandingPrompt: React.FC = () => {
 	const [activated, setActivated] = useState(false);
 	return activated ? (
-		<GenerateModalContent />
+		<GenerateModalContent className="relative h-full" />
 	) : (
 		<form
-			className="w-full flex items-center cursor-pointer"
+			className="bg-white p-2 rounded-md w-full flex items-center cursor-pointer pointer-events-auto "
 			onClick={() => {
-				console.log("clicked");
 				setActivated(true);
 			}}
 		>

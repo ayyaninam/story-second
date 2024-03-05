@@ -3,7 +3,7 @@ import StoryLogo from "../../../../public/auth-prompt/story-logo";
 
 export const LandingSubmitButton: React.FC = () => {
 	return (
-		<button type="submit" className="flex flex-nowrap">
+		<button type="submit" className="flex flex-nowrap prompt-default-button">
 			<StoryLogo />
 
 			<span>Generate</span>

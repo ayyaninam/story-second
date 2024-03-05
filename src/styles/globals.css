@@ -45,15 +45,15 @@
 		--radius: 0.5rem;
 
 		/*Defaults - in case someone forgets to add them in page level*/
-		--accent-color-50: #F8FAFC;
-		--accent-color-100: #F1F6F9;
-		--accent-color-200: #E1EAEF;
-		--accent-color-300: #CBD9E1;
-		--accent-color-400: #94ABB8;
-		--accent-color-500: #657D8B;
-		--accent-color-600: #485E6A;
+		--accent-color-50: #f8fafc;
+		--accent-color-100: #f1f6f9;
+		--accent-color-200: #e1eaef;
+		--accent-color-300: #cbd9e1;
+		--accent-color-400: #94abb8;
+		--accent-color-500: #657d8b;
+		--accent-color-600: #485e6a;
 		--accent-color-700: #344956;
-		--accent-color-800: #1F323D;
+		--accent-color-800: #1f323d;
 		--accent-color-900: #031926;
 		--accent-color-950: #021017;
 	}
@@ -107,11 +107,11 @@
 }
 
 @layer base {
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+	input[type="number"]::-webkit-inner-spin-button,
+	input[type="number"]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 }
 
 .filled-bar-background {
@@ -185,4 +185,26 @@
   iframe[name='intercom-notifications-frame'] {
     bottom: 124px !important;
   }
+.prompt-embedded-page {
+	background: transparent !important;
+}
+
+.prompt-default-button[type="submit"] {
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	width: max-content;
+	border: none;
+	border-radius: 8px;
+	padding: 8px 12px;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 24px;
+	color: white;
+	background-color: #1f323d;
+}
+
+.prompt-default-button[type="submit"]:hover {
+	color: white;
+	background-color: #8f22ce;
 }
