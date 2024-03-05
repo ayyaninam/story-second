@@ -375,6 +375,7 @@ export function filterSelectedKeysFromObject<T extends object>({
   originalObject: T;
   keysToBeFiltered: (keyof T)[];
 }) {
+  if (!originalObject) return originalObject;
   const newObject = { ...originalObject };
   keysToBeFiltered.forEach((key) => {
     delete newObject[key];
