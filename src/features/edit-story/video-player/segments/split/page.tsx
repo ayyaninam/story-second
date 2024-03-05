@@ -1,8 +1,6 @@
 import React, { CSSProperties, useMemo } from "react";
 import {
 	AbsoluteFill,
-	Audio,
-	Sequence,
 	interpolate,
 	useCurrentFrame,
 	OffthreadVideo,
@@ -18,6 +16,7 @@ import {
 	RemotionPlayerInputProps,
 	INCREASED_LAST_PAGE_DURATION,
 } from "../../constants";
+import { AudioWithPremount } from "../../../components/audio-with-premount";
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
@@ -85,12 +84,9 @@ export const SegmentSplitPage = ({
 			return "";
 		}
 
-		const numberOfWordsToShow = 3;
+		const numberOfWordsToShow = 4;
 
-		const blacklist = /[,.-]/g;
-
-		const cleanedText = segment.storyText.replace(blacklist, "").toLowerCase();
-		const words = cleanedText.split(" ");
+		const words = segment.storyText.toLowerCase().split(" ");
 
 		const startIndex =
 			Math.floor(percentageTextToShow * (words.length / numberOfWordsToShow)) *
@@ -140,9 +136,10 @@ export const SegmentSplitPage = ({
 			)}
 
 			{inputProps.enableAudio && segment.audioURL && (
-				<Sequence from={startAudioFrom}>
-					<Audio src={segment.audioURL} />
-				</Sequence>
+				<AudioWithPremount
+					startAudioFrom={startAudioFrom}
+					audioURL={segment.audioURL}
+				/>
 			)}
 		</AbsoluteFill>
 	);
