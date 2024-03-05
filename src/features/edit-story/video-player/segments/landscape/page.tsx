@@ -1,7 +1,6 @@
 import React, { useMemo, CSSProperties } from "react";
 import {
 	AbsoluteFill,
-	Audio,
 	interpolate,
 	useCurrentFrame,
 	OffthreadVideo,
@@ -18,7 +17,7 @@ import {
 	RemotionPlayerInputProps,
 } from "../../constants";
 import LogoWatermark from "./components/LogoWatermark";
-import { Premount } from "../../../components/premount";
+import { AudioWithPremount } from "../../../components/audio-with-premount";
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
@@ -140,9 +139,10 @@ const SegmentPage = ({
 			)}
 
 			{inputProps.enableAudio && segment.audioURL && (
-				<Premount for={startAudioFrom}>
-					<Audio src={segment.audioURL} />
-				</Premount>
+				<AudioWithPremount
+					startAudioFrom={startAudioFrom}
+					audioURL={segment.audioURL}
+				/>
 			)}
 		</AbsoluteFill>
 	);
