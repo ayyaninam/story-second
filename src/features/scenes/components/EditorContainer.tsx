@@ -104,7 +104,6 @@ const EditorContainer: FC<{
 				</span>
 			</div>
 			)}
-			<div className="absolute w-[1px] h-screen bg-accent-300 z-[-1] mix-blend-multiply" />
 		</div>
 	);
 };
