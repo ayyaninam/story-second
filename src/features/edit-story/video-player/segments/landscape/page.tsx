@@ -1,14 +1,13 @@
 import React, { useMemo, CSSProperties } from "react";
 import {
 	AbsoluteFill,
-	Audio,
-	Sequence,
 	interpolate,
 	useCurrentFrame,
 	OffthreadVideo,
 	Img,
 } from "remotion";
 import {
+	SILENT_DURATION,
 	VIDEO_FPS,
 	INCREASED_LAST_PAGE_DURATION,
 	bigZIndexTrick,
@@ -18,6 +17,7 @@ import {
 	RemotionPlayerInputProps,
 } from "../../constants";
 import LogoWatermark from "./components/LogoWatermark";
+import { AudioWithPremount } from "../../../components/audio-with-premount";
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
@@ -60,7 +60,7 @@ const SegmentPage = ({
 		[]
 	);
 
-	const startAudioFrom = 0;
+	const startAudioFrom = VIDEO_FPS * SILENT_DURATION;
 
 	const percentageTextToShow = interpolate(
 		frame,
@@ -139,9 +139,10 @@ const SegmentPage = ({
 			)}
 
 			{inputProps.enableAudio && segment.audioURL && (
-				<Sequence from={startAudioFrom}>
-					<Audio src={segment.audioURL} />
-				</Sequence>
+				<AudioWithPremount
+					startAudioFrom={startAudioFrom}
+					audioURL={segment.audioURL}
+				/>
 			)}
 		</AbsoluteFill>
 	);

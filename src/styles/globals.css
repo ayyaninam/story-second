@@ -124,7 +124,6 @@
 }
 
 .remotion-player-control-background {
-	backdrop-filter: blur(35px);
 }
 
 /* Targeting the thumb of the range input for Webkit browsers (Chrome, Safari, Edge) */
