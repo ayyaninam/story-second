@@ -2,7 +2,6 @@ import React, { CSSProperties, useMemo } from "react";
 import {
 	AbsoluteFill,
 	Audio,
-	Sequence,
 	interpolate,
 	useCurrentFrame,
 	OffthreadVideo,
@@ -19,6 +18,7 @@ import {
 	INCREASED_LAST_PAGE_DURATION,
 } from "../../constants";
 import LogoWatermark from "./components/LogoWatermark";
+import { Premount } from "../../../components/premount";
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
@@ -140,9 +140,9 @@ export const SegmentPortraitPage = ({
 			)}
 
 			{inputProps.enableAudio && segment.audioURL && (
-				<Sequence from={startAudioFrom}>
+				<Premount for={startAudioFrom}>
 					<Audio src={segment.audioURL} />
-				</Sequence>
+				</Premount>
 			)}
 		</AbsoluteFill>
 	);

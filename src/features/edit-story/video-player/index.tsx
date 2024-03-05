@@ -52,7 +52,7 @@ type RemotionPlayerProps = {
 } & Omit<Partial<ComponentProps<typeof Player>>, "component">;
 
 const controlBackgroundStyles =
-	" remotion-player-control-background flex justify-center items-center border-[#0000004A] border-[0.5px]";
+	" remotion-player-control-background flex justify-center items-center";
 
 const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 	(
