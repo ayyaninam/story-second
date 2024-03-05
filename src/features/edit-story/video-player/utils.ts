@@ -4,6 +4,7 @@ import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
 import {
 	VoiceType,
+	AspectRatios,
 	StoryOutputTypes,
 	DisplayAspectRatios,
 } from "@/utils/enums";

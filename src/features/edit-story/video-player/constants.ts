@@ -104,6 +104,7 @@ export const VIDEO_HEIGHT: Record<RemotionVariant, number> = {
 	split: 1280,
 };
 export const VIDEO_FPS = 30;
+export const SILENT_DURATION = 0.4; // in seconds
 export const INCREASED_LAST_PAGE_DURATION = 2; // in seconds
 
 export const bigZIndexTrick = 40000;

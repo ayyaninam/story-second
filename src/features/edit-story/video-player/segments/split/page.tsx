@@ -9,6 +9,7 @@ import {
 	Img,
 } from "remotion";
 import {
+	SILENT_DURATION,
 	VIDEO_FPS,
 	bigZIndexTrick,
 	RemotionPageSegment,
@@ -17,6 +18,7 @@ import {
 	RemotionPlayerInputProps,
 	INCREASED_LAST_PAGE_DURATION,
 } from "../../constants";
+import { Premount } from "../../../components/premount";
 
 const container: CSSProperties = {
 	backgroundColor: "#000000",
@@ -59,7 +61,7 @@ export const SegmentSplitPage = ({
 		[]
 	);
 
-	const startAudioFrom = 0;
+	const startAudioFrom = VIDEO_FPS * SILENT_DURATION;
 
 	const percentageTextToShow = interpolate(
 		frame,
@@ -136,9 +138,9 @@ export const SegmentSplitPage = ({
 			)}
 
 			{inputProps.enableAudio && segment.audioURL && (
-				<Sequence from={startAudioFrom}>
+				<Premount for={startAudioFrom}>
 					<Audio src={segment.audioURL} />
-				</Sequence>
+				</Premount>
 			)}
 		</AbsoluteFill>
 	);
