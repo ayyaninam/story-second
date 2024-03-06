@@ -105,7 +105,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
 		});
 		await queryClient.prefetchQuery({
-			queryFn: async () => await api.user.get(session?.accessToken),
+			queryFn: async () => await api.user.get(),
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 			queryKey: [QueryKeys.USER],
 		});
