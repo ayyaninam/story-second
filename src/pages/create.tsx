@@ -146,7 +146,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			throw new Error("Invalid response from server, no genre or id provided");
 
 		// get storyType using output_type and StoryOutputTypes
-		const storyType = output_type as StoryOutputTypes;
+		const storyType = Number(output_type) as StoryOutputTypes;
 
 		console.log("Redirecting to", Routes.ViewStory(storyType, genre, id));
 		return {
