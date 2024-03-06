@@ -86,7 +86,7 @@ export default function ImageLoader({
 					style={style}
 					className={`relative w-max-full h-max-full rounded-t-lg ${roundedClassName ? roundedClassName : "lg:rounded-tr-none lg:rounded-bl-lg"} ${className} `}
 				>
-					<div className="absolute flex h-full w-full justify-center items-end z-[100]">
+					<div className="absolute flex h-full w-full justify-center items-end z-[1]">
 						<div
 							className="px-4 py-1 text-white border-[0.5px] max-w-[80%] mb-16"
 							style={{

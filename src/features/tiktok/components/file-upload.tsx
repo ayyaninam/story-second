@@ -2,6 +2,7 @@ import video from "@/api/routes/video";
 import TailwindSpinner from "@/features/tiktok/components/tw-spinner";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
+import toast from "react-hot-toast";
 
 export default function FileUpload({
 	setVideoFileId,
@@ -30,7 +31,9 @@ export default function FileUpload({
 				});
 				console.log(uploadData.data.objectKey);
 				setVideoFileId(uploadData.data.objectKey ?? "");
-			}
+			} else {
+        toast.error("Please upload a valid video file");
+      }
 		}
 		setIsVideoUploading(false);
 	};

@@ -5,7 +5,6 @@ import {
   DownloadCloudIcon,
   DownloadIcon,
   Edit,
-  Heart,
   HelpCircle,
   LogOutIcon,
   Share2,
@@ -16,7 +15,7 @@ import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
@@ -26,12 +25,13 @@ import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import Routes from "@/routes";
 import { SessionType } from "@/hooks/useSaveSessionToken";
-import isBrowser from "@/utils/isBrowser";
 import StoryScreenBgBlur from "@/components/ui/story-screen-bg-blur";
 import useWebstoryContext from "../edit-story/providers/WebstoryContext";
 import toast from "react-hot-toast";
 import StoryLogo from "../../../public/auth-prompt/story-logo";
 import Link from "next/link";
+import GenericModal from "@/components/ui/generic-modal";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -55,6 +55,7 @@ export default function PublishedStory({
   const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
   const [isVideoDownloading, setIsVideoDownloading] = useState(false);
 
+  const {invalidateUser} = useUpdateUser();
   // Queries
   const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
     queryFn: () =>
@@ -69,6 +70,7 @@ export default function PublishedStory({
     // Disable once all the videoKeys are obtained
     // enabled: enableQuery,
   });
+  const queryClient = useQueryClient()
 
   const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
     queryFn: () => api.webstory.interactions(Webstory.data?.id as string),
@@ -170,6 +172,25 @@ export default function PublishedStory({
       toast.success("Video is being rendered. Please check again in 2 minutes");
     }
   };
+
+  const handleCopyVideo = async () => {
+    const newStory = await CopyVideo.mutateAsync({
+      id: storyData.id!,
+      accessToken: session.accessToken,
+    });
+
+    if (newStory) {
+      invalidateUser();
+      router.push(
+        Routes.ViewStory(
+          newStory.storyType,
+          newStory.topLevelCategory!,
+          newStory.slug!
+        )
+      );
+      toast.success("Video added to your library");
+    }
+  }
 
   const numVideoSegmentsReady = Webstory.data?.scenes
     ?.flatMap((el) => el.videoSegments)
@@ -349,30 +370,19 @@ export default function PublishedStory({
                     {/*  />*/}
                     {/*  Like video*/}
                     {/*</Button>*/}
-                    { !(User?.data?.data?.id === Webstory.data?.user?.id && Webstory.data?.storyType !== 2) && (
-                      <Button
-                      className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-                      variant="outline"
-                      onClick={async (e) => {
-                        const newStory = await CopyVideo.mutateAsync({
-                          id: storyData.id!,
-                          accessToken: session.accessToken,
-                        });
 
-                        if (newStory) {
-                          router.push(
-                            Routes.ViewStory(
-                              newStory.storyType,
-                              newStory.topLevelCategory!,
-                              newStory.slug!
-                            )
-                          );
-                          toast.success("Video added to your library");
+                    { !(User?.data?.data?.id === Webstory.data?.user?.id && Webstory.data?.storyType !== 2) && (
+                      <GenericModal
+                        title="Duplicate Video"
+                        description="We'll add a video to your library with the same plot that you can make your own and edit! This action will cost 1 video credit"
+                        buttonText={
+                          <span className="flex flex-row">
+                            <Video className="mr-1 h-4 w-4 md:h-5 md:w-5" />
+                            Make a video like this
+                          </span>
                         }
-                      }}
-                    >
-                      <Video className="mr-1 h-4 w-4 md:h-5 md:w-5" /> Make a video like this
-                    </Button>
+                        confirmAction={handleCopyVideo}
+                      />
                     )}
                     { (User?.data?.data?.id === Webstory.data?.user?.id && Webstory.data?.storyType !== 2) && (
                       <Button
@@ -526,11 +536,6 @@ export default function PublishedStory({
               style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
               onClick={() => router.push(Routes.Generate())}
             >
-              <div className={`flex gap-x-2.5 px-3 items-center`}>
-                <Video className="mr-1 h-3 w-3" /> Make a video like this
-              </div>
-            </span>
-            <span className="rounded-full text-xs text-muted-foreground">
               <div
                 className={`flex text-sm gap-x-2.5 px-3 items-center hover:cursor-pointer hover:text-gray-600 transition-colors duration-200  ease-in-out`}
                 onClick={() => router.push(Routes.Generate())}
@@ -539,9 +544,11 @@ export default function PublishedStory({
               </div>
             </span>
           </div>
-          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-row gap-x-3 text-sm text-muted-foreground">
+          <Link
+            href="/feed"
+            className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-row gap-x-3 text-sm text-muted-foreground">
             © 2024 Story.com - All rights reserved
-          </div>
+          </Link>
           {!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
             <div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
               <span

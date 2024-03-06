@@ -6,7 +6,7 @@ import {
 	StoryStatus,
 } from "../reducers/edit-reducer";
 import { mainSchema } from "@/api/schema";
-import React, { useRef, useState } from "react";
+import React, { use, useCallback, useMemo, useRef, useState } from "react";
 import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
@@ -19,6 +19,8 @@ import { useMutation } from "@tanstack/react-query";
 import CategorySelect from "@/components/ui/CategorySelect";
 import { useUpdateCategory } from "../mutations/UpdateCategory";
 import StoryScreen from "@/features/edit-story/story-screen";
+import { CallbackListener } from "@remotion/player";
+import { filterSelectedKeysFromObject } from "../utils/storydraft";
 
 type HoveredThumbs = {
 	thumbs: string[];
@@ -78,6 +80,32 @@ const SceneEditorView = ({
 	}>();
 
 	const UpdateCategory = useUpdateCategory();
+
+	const onPlay = useCallback(() => {
+		setIsPlaying(true);
+	}, []);
+	const onPause = useCallback(() => {
+		setIsPlaying(false);
+	}, []);
+	const onSeeked: CallbackListener<"seeked"> = useCallback((e) => {
+		setSeekedFrame(e.detail.frame);
+	}, []);
+	const onEnded = useCallback(() => {
+		setIsPlaying(false);
+		setSeekedFrame(0);
+	}, []);
+
+	const filteredWebstoryData = useMemo(() => {
+		return filterSelectedKeysFromObject({
+			originalObject: WebstoryData!,
+			keysToBeFiltered: ["renderedVideoKey"],
+		});
+	}, [
+		filterSelectedKeysFromObject({
+			originalObject: WebstoryData!,
+			keysToBeFiltered: ["renderedVideoKey"],
+		}),
+	]);
 
 	return (
 		<>
@@ -211,21 +239,12 @@ const SceneEditorView = ({
 									playerClassName="lg:rounded-lg"
 									roundedClassName="lg:rounded-lg"
 									ref={videoPlayerRef}
-									Webstory={WebstoryData}
+									Webstory={filteredWebstoryData}
 									isError={isError}
-									onPlay={() => {
-										setIsPlaying(true);
-									}}
-									onPause={() => {
-										setIsPlaying(false);
-									}}
-									onSeeked={(e) => {
-										setSeekedFrame(e.detail.frame);
-									}}
-									onEnded={() => {
-										setIsPlaying(false);
-										setSeekedFrame(0);
-									}}
+									onPlay={onPlay}
+									onPause={onPause}
+									onSeeked={onSeeked}
+									onEnded={onEnded}
 								/>
 							</div>
 						</div>

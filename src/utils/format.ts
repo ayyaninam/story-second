@@ -9,11 +9,11 @@ class Format {
 	}
 
 	public static GetImageUrl(key: string) {
-		return `https://ik.imagekit.io/storybird/staging/${key}`;
+		return `${env.NEXT_PUBLIC_IMAGEKIT_URL}/${key}`;
 	}
 
 	public static GetVideoUrl(key: string) {
-		return `https://ik.imagekit.io/storybird/staging/${key}`;
+    return `${env.NEXT_PUBLIC_IMAGEKIT_URL}/${key}`;
 	}
 
 	public static GetPublicBucketObjectUrl(object: string) {

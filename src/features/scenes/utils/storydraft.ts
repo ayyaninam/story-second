@@ -367,3 +367,18 @@ export function updateArray(oldArray: any[], newArray: any[]): any[] {
   }
   return oldArray;
 }
+
+export function filterSelectedKeysFromObject<T extends object>({
+  originalObject,
+  keysToBeFiltered,
+}: {
+  originalObject: T;
+  keysToBeFiltered: (keyof T)[];
+}) {
+  if (!originalObject) return originalObject;
+  const newObject = { ...originalObject };
+  keysToBeFiltered.forEach((key) => {
+    delete newObject[key];
+  });
+  return newObject;
+}

@@ -21,6 +21,7 @@ import ImageRegenerationLoader from "./ImageRegenerationLoader";
 import { CheckIcon, Lock, ScrollText, Sparkle, X, Plus } from "lucide-react";
 import { getImageCost } from "@/utils/credit-cost";
 import {useMediaQuery} from "usehooks-ts";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 function RegenerationPopupHeader({
   title,
@@ -234,6 +235,8 @@ function ImageRegenerationPopup({
     setRegenerateImages(true);
   }, [handleSubmitEditSegments]);
 
+  const {invalidateUser} = useUpdateUser();
+
   const generateAlternateImageOptions = useCallback(async () => {
     const prevImageStatus = segment.imageStatus;
     dispatch({
@@ -273,6 +276,7 @@ function ImageRegenerationPopup({
           alternateImageKeys: regeneratedImages.target_paths,
         },
       });
+      invalidateUser();
       setIsRegeneratingImages(false);
       setSelectedImageKey(regeneratedImages.target_paths?.[0]);
     } catch (error) {
