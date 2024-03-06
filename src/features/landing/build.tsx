@@ -1,19 +1,18 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { useEffect, useRef, useState } from "react";
-import { createRoot } from "react-dom/client";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import React, {useEffect, useRef, useState} from "react";
+import {createRoot} from "react-dom/client";
 import {
-	AspectRatios,
-	DisplayAspectRatios,
-	StoryImageStyles,
-	StoryInputTypes,
-	StoryLanguages,
-	StoryLengths,
-	StoryOutputTypes,
+  DisplayAspectRatios,
+  StoryImageStyles,
+  StoryInputTypes,
+  StoryLanguages,
+  StoryLengths,
+  StoryOutputTypes,
 } from "@/utils/enums";
 import Routes from "@/routes";
 import FileUpload from "./components/file-upload";
-import { CreateInitialStoryQueryParams } from "@/types";
-import { ImageRatios } from "@/utils/image-ratio";
+import {CreateInitialStoryQueryParams} from "@/types";
+import {ImageRatios} from "@/utils/image-ratio";
 
 const queryClient = new QueryClient();
 
@@ -60,7 +59,7 @@ const App = () => {
 				language: options.language,
 				length: options.length,
 				prompt: prompt,
-				image_resolution: ImageRatios["9x16"].enumValue,
+				image_resolution: outputType == StoryOutputTypes.Story ? ImageRatios["1x1"].enumValue : ImageRatios["16x9"].enumValue,
 				input_type: StoryInputTypes.Text,
 				output_type: outputType,
 				video_key: "",
