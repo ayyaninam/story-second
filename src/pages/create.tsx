@@ -150,7 +150,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 
     // get storyType using output_type and StoryOutputTypes
-    const storyType = output_type as StoryOutputTypes;
+    const storyType = video_key ? StoryOutputTypes.SplitScreen : StoryOutputTypes.Video;
 
 		console.log("Redirecting to", Routes.ViewStory(storyType, genre, id));
 		return {
