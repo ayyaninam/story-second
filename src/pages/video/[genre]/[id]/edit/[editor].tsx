@@ -6,24 +6,24 @@ import ScriptLayout from "@/features/scenes/ScriptLayout";
 import StoryboardLayout from "@/features/scenes/StoryboardLayout";
 import PageLayout from "@/components/layouts/PageLayout";
 import editStoryReducer, {
-	EditStoryAction,
-	EditStoryDraft,
+    EditStoryAction,
+    EditStoryDraft,
 } from "@/features/scenes/reducers/edit-reducer";
 import {
-	WebstoryToStoryDraft,
-	filterSelectedKeysFromObject,
-	getAllTextsFromVideoStory,
-	getEverythingExceptTextFromVideoStory,
+    WebstoryToStoryDraft,
+    filterSelectedKeysFromObject,
+    getAllTextsFromVideoStory,
+    getEverythingExceptTextFromVideoStory,
 } from "@/features/scenes/utils/storydraft";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import { QueryKeys } from "@/lib/queryKeys";
 import { StoryOutputTypes } from "@/utils/enums";
 import { getSession } from "@auth0/nextjs-auth0";
 import {
-	QueryClient,
-	dehydrate,
-	useQuery,
-	useQueryClient,
+    QueryClient,
+    dehydrate,
+    useQuery,
+    useQueryClient,
 } from "@tanstack/react-query";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { notFound } from "next/navigation";
@@ -33,118 +33,113 @@ import { useImmerReducer } from "use-immer";
 import EditAccentStyles from "@/features/scenes/edit-accent-style";
 
 const EditorPage = ({
-	dehydratedState,
-	session,
-	storyData,
+    dehydratedState,
+    session,
+    storyData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-	useSaveSessionToken(session.accessToken);
-	const router = useRouter();
-	const queryClient = useQueryClient();
+    useSaveSessionToken(session.accessToken);
+    const router = useRouter();
+    const queryClient = useQueryClient();
 
-	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
-		queryFn: () =>
-			api.video.get(
-				router.query.genre!.toString(),
-				router.query.id!.toString(),
-				storyData.storyType
-			),
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.STORY, router.asPath],
-		initialData: storyData,
-		refetchInterval: 1000,
-		// Disable once all the videoKeys are obtained
-	});
+    const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
+        queryFn: () =>
+            api.video.get(
+                router.query.genre!.toString(),
+                router.query.id!.toString(),
+                storyData.storyType
+            ),
+        // eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+        queryKey: [QueryKeys.STORY, router.asPath],
+        initialData: storyData,
+        refetchInterval: 1000,
+        // Disable once all the videoKeys are obtained
+    });
 
-	const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
-		editStoryReducer,
-		WebstoryToStoryDraft(Webstory.data!)
-	);
+    const [story, dispatch] = useImmerReducer<EditStoryDraft, EditStoryAction>(
+        editStoryReducer,
+        WebstoryToStoryDraft(Webstory.data!)
+    );
 
-	// useEffect(() => {
-	//   dispatch({
-	//     type: "reset_text",
-	//     draft: WebstoryToStoryDraft(Webstory.data),
-	//   });
-	// }, [getAllTextsFromVideoStory(Webstory.data)]);
+    useEffect(() => {
+        dispatch({
+            type: "reset_text",
+            draft: WebstoryToStoryDraft(Webstory.data),
+        });
+    }, [getAllTextsFromVideoStory(Webstory.data)]);
 
-	useEffect(() => {
-		dispatch({
-			type: "reset",
-			draft: WebstoryToStoryDraft(Webstory.data),
-		});
-	}, []);
+    useEffect(() => {
+        dispatch({
+            type: "reset_all_except_text",
+            draft: WebstoryToStoryDraft(Webstory.data),
+        });
+    }, [getEverythingExceptTextFromVideoStory(Webstory.data)]);
 
-	console.log({
-		testing123: getEverythingExceptTextFromVideoStory(Webstory.data),
-		testing1234: Webstory.data,
-	});
-
-	if (router.query.editor === "script") {
-		return (
-			<WebStoryProvider initialValue={storyData}>
-				<EditAccentStyles />
-				<ScriptLayout {...{ story, dispatch }} />
-			</WebStoryProvider>
-		);
-	} else if (router.query.editor === "storyboard") {
-		return (
-			<WebStoryProvider initialValue={storyData}>
-				<EditAccentStyles />
-				<StoryboardLayout {...{ story, dispatch }} />
-			</WebStoryProvider>
-		);
-	} else if (router.query.editor === "scenes") {
-		return (
-			<WebStoryProvider initialValue={storyData}>
-				<EditAccentStyles />
-				<ScenesLayout {...{ story, dispatch }} />
-			</WebStoryProvider>
-		);
-	}
-	return notFound();
+    if (router.query.editor === "script") {
+        return (
+            <WebStoryProvider initialValue={storyData}>
+                <EditAccentStyles />
+                <ScriptLayout {...{ story, dispatch }} />
+            </WebStoryProvider>
+        );
+    } else if (router.query.editor === "storyboard") {
+        return (
+            <WebStoryProvider initialValue={storyData}>
+                <EditAccentStyles />
+                <StoryboardLayout {...{ story, dispatch }} />
+            </WebStoryProvider>
+        );
+    } else if (router.query.editor === "scenes") {
+        return (
+            <WebStoryProvider initialValue={storyData}>
+                <EditAccentStyles />
+                <ScenesLayout {...{ story, dispatch }} />
+            </WebStoryProvider>
+        );
+    }
+    return notFound();
 };
 
 EditorPage.getLayout = function getLayout(page: ReactElement) {
-	return <PageLayout pageIndex={1}>{page}</PageLayout>;
+    return <PageLayout pageIndex={1}>{page}</PageLayout>;
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-	const session = await getSession(ctx.req, ctx.res);
+    const session = await getSession(ctx.req, ctx.res);
 
-	// @ts-expect-error Not typing correctly
-	const { genre, id, editor } = ctx.params;
-	if (!genre || !id || !["scenes", "script", "storyboard"].includes(editor)) {
-		return {
-			notFound: true,
-		};
-	}
+    // @ts-expect-error Not typing correctly
+    const { genre, id, editor } = ctx.params;
+    if (!genre || !id || !["scenes", "script", "storyboard"].includes(editor)) {
+        return {
+            notFound: true,
+        };
+    }
 
-	const queryClient = new QueryClient();
-	const storyData = await queryClient.fetchQuery({
-		queryFn: async () =>
-			await api.video.get(genre, id, StoryOutputTypes.SplitScreen),
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
-	});
-	if (session?.accessToken) {
-		await queryClient.prefetchQuery({
-			queryFn: async () =>
-				await api.webstory.interactions(
-					storyData?.id as string,
-					session?.accessToken
-				),
-			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-			queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
-		});
-	}
+    const queryClient = new QueryClient();
+    const storyData = await queryClient.fetchQuery({
+        queryFn: async () =>
+            await api.video.get(genre, id, StoryOutputTypes.SplitScreen),
+        // eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+        queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
+    });
+    if (session?.accessToken) {
+        await queryClient.prefetchQuery({
+            queryFn: async () =>
+                await api.webstory.interactions(
+                    storyData?.id as string,
+                    session?.accessToken
+                ),
+            // eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+            queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
+        });
+    }
 
-	return {
-		props: {
-			session: { ...session },
-			storyData,
-			dehydratedState: dehydrate(queryClient),
-		},
-	};
+    return {
+        props: {
+            session: { ...session },
+            storyData,
+            dehydratedState: dehydrate(queryClient),
+        },
+    };
 };
 
 export default EditorPage;

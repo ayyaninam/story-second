@@ -190,59 +190,57 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			break;
 		}
 		case "reset_text": {
-			// draft.title = action.draft.title;
-			// draft.scenes = action.draft.scenes.map((scene) => {
-			// 	const draftScene = draft.scenes.find((el) => el.id === scene.id);
-			// 	if (draftScene) {
-			// 		return {
-			// 			...draftScene,
-			// 			description: scene.description,
-			// 			segments: scene.segments.map((segment) => {
-			// 				const draftSegment = draftScene.segments.find(
-			// 					(el) => el.id === segment.id
-			// 				);
-			// 				if (draftSegment) {
-			// 					return {
-			// 						...draftSegment,
-			// 						textContent: segment.textContent,
-			// 						textStatus: segment.textStatus,
-			// 					};
-			// 				}
-			// 				return segment;
-			// 			}),
-			// 		};
-			// 	}
-			// 	return scene;
-			// });
-			// return draft;
-			recursivelyUpdateOverlappingKeys(draft, action.draft);
+			draft.title = action.draft.title;
+			draft.scenes = action.draft.scenes.map((scene) => {
+				const draftScene = draft.scenes.find((el) => el.id === scene.id);
+				if (draftScene) {
+					return {
+						...draftScene,
+						description: scene.description,
+						segments: scene.segments.map((segment) => {
+							const draftSegment = draftScene.segments.find(
+								(el) => el.id === segment.id
+							);
+							if (draftSegment) {
+								return {
+									...draftSegment,
+									textContent: segment.textContent,
+									textStatus: segment.textStatus,
+								};
+							}
+							return segment;
+						}),
+					};
+				}
+				return scene;
+			});
 			return draft;
 		}
 		case "reset_all_except_text": {
-			// action.draft.title = draft.title;
-			// action.draft.scenes = action.draft.scenes.map((scene) => {
-			// 	const draftScene = draft.scenes.find((el) => el.id === scene.id);
-			// 	if (draftScene) {
-			// 		return {
-			// 			...scene,
-			// 			description: draftScene.description,
-			// 			segments: scene.segments.map((segment) => {
-			// 				const draftSegment = draftScene.segments.find(
-			// 					(el) => el.id === segment.id
-			// 				);
-			// 				if (draftSegment) {
-			// 					return {
-			// 						...segment,
-			// 						textContent: draftSegment.textContent,
-			// 						textStatus: draftSegment.textStatus,
-			// 					};
-			// 				}
-			// 				return segment;
-			// 			}),
-			// 		};
-			// 	}
-			// 	return scene;
-			// });
+			action.draft.title = draft.title;
+			action.draft.scenes = action.draft.scenes.map((scene) => {
+				const draftScene = draft.scenes.find((el) => el.id === scene.id);
+				if (draftScene) {
+					return {
+						...scene,
+						description: draftScene.description,
+						segments: scene.segments.map((segment) => {
+							const draftSegment = draftScene.segments.find(
+								(el) => el.id === segment.id
+							);
+							if (draftSegment) {
+								return {
+									...segment,
+									textContent: draftSegment.textContent,
+									textStatus: draftSegment.textStatus,
+								};
+							}
+							return segment;
+						}),
+					};
+				}
+				return scene;
+			});
 
 			/* Only update the keys that are present in the new draft,
 			 facing issues with direct update because there are few keys that are not present in the new draft.
