@@ -224,44 +224,6 @@ const App = () => {
 									<rect width="14" height="12" x="2" y="6" rx="2" ry="2" />
 								</svg>
 							</label>
-							<input
-								type="radio"
-								name="Book"
-								id="book"
-								style={{ appearance: "none" }}
-								onClick={() => setOutputType(StoryOutputTypes.Story)}
-							/>
-							<label
-								htmlFor="book"
-								style={{
-									cursor: "pointer",
-									backgroundColor:
-										outputType === StoryOutputTypes.Story ? "white" : "#F1F5F9",
-									padding: "4px 8px",
-									borderRadius: "4px",
-									margin: "auto",
-								}}
-							>
-								<svg
-									className="iconButton"
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke={
-										outputType === StoryOutputTypes.Story
-											? "#020617"
-											: "#64748B"
-									}
-									strokeWidth="1"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								>
-									<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-									<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-								</svg>
-							</label>
 						</div>
 						<FileUpload
 							setVideoFileId={setVideoFileId}
