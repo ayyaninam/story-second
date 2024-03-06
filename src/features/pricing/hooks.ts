@@ -6,6 +6,7 @@ import { mainSchema } from "@/api/schema";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import { SubscriptionPlan } from "@/utils/enums";
+import {env} from "@/env.mjs";
 
 export const useStripeSetup = () => {
 	const [stripe, setStripe] = useState<Stripe>();
@@ -44,7 +45,7 @@ export const useStripeSetup = () => {
 
 	const onAddCard = async () => {
 		try {
-			const base_url = "http://localhost:3000/"; // todo: think how this is working, or when do it get used
+			const base_url = env.NEXT_PUBLIC_BASE_URL;
 			const { error } = (await confirmSetup(`${base_url}/pricing`)) || {};
 			if (error) {
 				console.error("Confirm Setup failed: ", error);
