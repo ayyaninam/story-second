@@ -7,6 +7,7 @@ import {
 	StoryOutputTypes,
 } from "@/utils/enums";
 import { GetServerSideProps } from "next";
+import toast from "react-hot-toast";
 
 const redirectToHomepage = {
 	redirect: {
@@ -129,6 +130,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 					Routes.Landing("There was an error creating the story")
 				);
 			});
+    if ("error" in story) {
+      toast.error(story?.error as string);
+      return {
+        redirect: {
+          destination: Routes.ToSubscriptionPage(),
+          permanent: false,
+        },
+      };
+    }
 		console.log("Story created: ", story)
 		const { url } = story;
 
