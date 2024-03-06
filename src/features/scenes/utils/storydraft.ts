@@ -417,11 +417,12 @@ export function getAllTextsFromVideoStory(
 	return allTexts.join(" ");
 }
 
-export async function getEverythingExceptTextFromVideoStory(
+export function getEverythingExceptTextFromVideoStory(
 	story: mainSchema["ReturnVideoStoryDTO"]
 ) {
-	const everythingExceptText: mainSchema["ReturnVideoStoryDTO"] =
-		await JSON.parse(JSON.stringify(story));
+	const everythingExceptText: mainSchema["ReturnVideoStoryDTO"] = JSON.parse(
+		JSON.stringify(story)
+	);
 
 	storyTextKeys.forEach((storyKey) => {
 		delete everythingExceptText[storyKey];
@@ -436,5 +437,5 @@ export async function getEverythingExceptTextFromVideoStory(
 			});
 		});
 	});
-	return everythingExceptText;
+	return JSON.stringify(everythingExceptText);
 }
