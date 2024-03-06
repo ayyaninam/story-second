@@ -1,12 +1,11 @@
 import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
 import { mainSchema, mlSchema } from "../schema";
 import { getJwt } from "@/utils/jwt";
-import { CreateInitialStoryQueryParams } from "@/types";
 
 const webstory = {
 	create: async (
-		params: CreateInitialStoryQueryParams,
-		token?: string
+		formData: FormData,
+		token: string
 	): Promise<{
 		title: string;
 		englishTitle: string;
@@ -16,9 +15,9 @@ const webstory = {
 		image_style: number;
 		url: string;
 	}> => {
-		return await mlFetcher(token || getJwt())
+		return await mlFetcher(token)
 			.post(`create`, {
-				body: JSON.stringify(params),
+				body: formData,
 			})
 			.json();
 	},
