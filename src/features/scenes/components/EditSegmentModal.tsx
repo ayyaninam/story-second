@@ -24,6 +24,7 @@ import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegmen
 import { mainSchema } from "@/api/schema";
 import { cn } from "@/utils";
 import { StoryImageStyles } from "@/utils/enums";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 const EditSegmentModal = ({
   open,
@@ -52,6 +53,7 @@ const EditSegmentModal = ({
   const [regeratingImages, setRegeneratingImages] = useState(
     Array(scene?.segments?.length).fill(false)
   );
+  const { invalidateUser } = useUpdateUser();
   const [imageRegenerationSegmentDetails, setImageRegenerationSegmentDetails] =
     useState<{
       sceneIndex: number;
@@ -77,6 +79,8 @@ const EditSegmentModal = ({
         story_type: story.type,
         scene_id: scene.id,
       });
+
+      invalidateUser();
     },
   });
 
