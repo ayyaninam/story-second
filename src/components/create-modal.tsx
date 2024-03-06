@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
+import toast from "react-hot-toast";
+import { HTTPError } from "ky";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -26,17 +28,25 @@ import {
 	StoryLengths,
 	StoryOutputTypes,
 } from "@/utils/enums";
-import Routes from "@/routes";
 import {
 	LanguageSelect,
 	VideoRatioSelect,
 } from "@/features/generate/components/selection-constants";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { publicProxyApiFetcher } from "@/lib/fetcher";
 import useEventLogger from "@/utils/analytics";
 
-const GenerateModalContent: React.FC<{ className?: string }> = ({
-	className = "",
-}) => {
+/**
+ * Story generation form.
+ * @todo Migrate to individual states React Hook Form to take advantage of validation and form states.
+ */
+const GenerateModalContent: React.FC<{
+	className?: string;
+	/**
+	 * if true, escape iframe
+	 */
+	fromLanding?: boolean;
+}> = ({ className = "", fromLanding = false }) => {
 	const eventLogger = useEventLogger();
 
 	const [value, setValue] = useState<TabType>(TabType.Video);
@@ -87,7 +97,36 @@ const GenerateModalContent: React.FC<{ className?: string }> = ({
 			params["image_resolution"] = ImageRatios["9x8"].enumValue;
 		}
 
-		const response = Routes.CreateStoryFromRoute(params);
+		const form = new FormData();
+		Object.entries(params).forEach(([key, value]) => {
+			form.append(key, value.toString());
+		});
+
+		try {
+			const json: { storyPath: string } = await publicProxyApiFetcher
+				.post("api/story/create", { body: form })
+				.json();
+
+			invalidateUser();
+
+			if (json.storyPath == null) {
+				toast.error("An unexpected error has occurred. Please try again.");
+			} else {
+				// Ok! Send the user to the story page
+				redirect(json.storyPath, fromLanding);
+			}
+		} catch (error) {
+			if (error instanceof HTTPError) {
+				if (error.response.status === 401) {
+					redirect("/auth/login?returnTo=/generate", fromLanding);
+				} else {
+					toast.error("Unable to generate your story. Please try again.");
+					console.error(error.message, error.response.status);
+				}
+			}
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -198,7 +237,7 @@ const GenerateModalContent: React.FC<{ className?: string }> = ({
 									disabled={isSubmitDisabled}
 									className="flex gap-2 items-center w-full"
 									variant="default"
-									onClick={() => onSubmit()}
+									onClick={onSubmit}
 								>
 									<Sparkles className="h-4 w-4" />
 									{isLoading ? "Generating" : "Generate"}
@@ -213,3 +252,15 @@ const GenerateModalContent: React.FC<{ className?: string }> = ({
 };
 
 export default GenerateModalContent;
+
+/**
+ * Why not `useRouter.push()`?
+ * This component is used in both legacy pages and app dir, where the router API has changed.
+ */
+const redirect = (dest: string, escapeIFrame: boolean) => {
+	if (escapeIFrame) {
+		window.parent.location.href = dest;
+	} else {
+		window.location.href = dest;
+	}
+};

@@ -21,7 +21,7 @@ export const LandingPrompt: React.FC = () => {
 	);
 	return activated ? (
 		<QueryClientProvider client={queryClient}>
-			<GenerateModalContent className="relative h-full" />
+			<GenerateModalContent className="relative h-full" fromLanding />
 		</QueryClientProvider>
 	) : (
 		<form

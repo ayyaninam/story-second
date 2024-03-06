@@ -1,11 +1,10 @@
 import clsx from "clsx";
-import "@/styles/globals.css";
 import localFont from "next/font/local";
+import { Toaster } from "react-hot-toast";
+import "@/styles/globals.css";
 
 /**
  * Layout for the Embedding group of pages.
- * @param param0
- * @returns
  */
 export default function RootLayout({
 	children,
@@ -16,6 +15,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={clsx(randFont.className, "prompt-embedded-page")}>
 				{children}
+				<Toaster />
 			</body>
 		</html>
 	);
