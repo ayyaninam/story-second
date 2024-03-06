@@ -25,7 +25,7 @@ const container: CSSProperties = {
 const subtitleContainer: CSSProperties = {
 	justifyContent: "flex-start",
 	alignItems: "center",
-	paddingTop: "500px",
+	paddingTop: "525px",
 	textAlign: "center",
 };
 
@@ -50,9 +50,10 @@ const SegmentPage = ({
 
 	const storyTextStyle: CSSProperties = useMemo(
 		() => ({
-			fontSize: 48,
-			width: 650,
+			fontSize: 40,
+			width: 625,
 			letterSpacing: -1,
+			lineHeight: 1.2,
 			color: "#fff",
 			"-webkit-text-stroke": "2px #000",
 			textShadow: "0.04em 0.04em 0.04em black",
