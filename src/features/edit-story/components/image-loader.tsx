@@ -67,7 +67,7 @@ export default function ImageLoader({
 		} else if ((VideosGenerated?.length ?? 0) < NumSegments) {
 			return `Animated ${VideosGenerated?.length}/${NumSegments} scenes`;
 		} else {
-			return "Wrapping up";
+			return "Loading Your Video";
 		}
 	};
 
