@@ -112,7 +112,7 @@ function GalleryImage({
 							onClick={(e) => {
 								e.stopPropagation();
 								const categoryId = story.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all";
-								router.push(`${Routes.ViewStory(story.storyType, categoryId, story.slug as string)}/share`);
+								router.push(`${Routes.ViewStory(story.storyType, categoryId, story.slug as string)}`);
 							}}
 						>
 							<ShareIcon />
