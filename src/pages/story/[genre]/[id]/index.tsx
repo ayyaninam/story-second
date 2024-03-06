@@ -1,63 +1,121 @@
-import { useMediaQuery } from "usehooks-ts";
-import cn from "@/utils/cn";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+
 import api from "@/api";
-import Book from "@/components/ui/story-book";
-import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
-import { WebStory } from "@/components/ui/story-book/constants";
+import {
+	GetServerSidePropsContext,
+	InferGetServerSidePropsType,
+} from "next";
+import { getSession } from "@auth0/nextjs-auth0";
+import React, {ReactElement} from "react";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
+import {
+	HydrationBoundary,
+	QueryClient,
+	dehydrate,
+} from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
+import Format from "@/utils/format";
+import {NextSeo} from "next-seo";
+import PageLayout from "@/components/layouts/PageLayout";
+import StoryBookPage from "@/features/story/story-page";
 
-const StoryBookPage = () => {
-	const router = useRouter();
-	const { genre, id } = router.query;
-	const isDesktop = useMediaQuery("(min-width: 1280px)");
-
-	const [story, setStory] = useState<WebStory | null>(null);
-
-	useEffect(() => {
-		const fetchStory = async () => {
-			if (!genre || !id) {
-				return;
-			}
-
-			const story = await api.storybook.getStory({
-				topLevelCategory: genre as string,
-				slug: id as string,
-			});
-
-			if (story) {
-				setStory(story);
-			}
-		};
-
-		void fetchStory();
-	}, [genre, id]);
-
-	const handleBack = () => {
-		router.back();
-	};
-
+export default function PublishPage({
+																			storyData,
+																			session,
+																			dehydratedState,
+																		}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+	useSaveSessionToken(session.accessToken);
 	return (
-		<div className="flex flex-col w-full items-center">
-			<div className="w-full flex flex-col items-center">
-				<div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-center">
-					<h1 className="text-black dark:text-white text-4xl font-semibold max-w-xs sm:max-w-none md:text-6xl !leading-tight">
-						Book
-					</h1>
-
-					<div>
-						<span onClick={() => handleBack()}>Go Back</span>
-					</div>
-
-					<div className={cn("mt-40", isDesktop ? "w-[1000px]" : "w-[80vw]")}>
-						{story && <Book story={story} />}
-					</div>
-
-					<ModeToggle />
-				</div>
-			</div>
-		</div>
+		<HydrationBoundary state={dehydratedState}>
+			<NextSeo
+				title={storyData?.storyTitle || undefined}
+				description={storyData?.summary || "Find your videos, trends, storybooks, all in one place"}
+				openGraph={{
+					images: [
+						{
+							url: storyData?.coverImage ? Format.GetImageUrl(storyData.coverImage) : '/og-assets/og-story.png',
+							width: 1200,
+							height: 630,
+							alt: storyData?.storyTitle || "Story.com",
+						},
+					],
+				}}
+			/>
+			{/* declare css variables */}
+			<style jsx global>{`
+				:root {
+					--menu-item-border-color: rgba(206, 122, 255, 0.3);
+					--menu-item-selected-background-color: radial-gradient(
+						88.31% 100% at 0% 50%,
+						rgba(187, 85, 247, 0.5) 25.5%,
+						rgba(102, 129, 255, 0) 100%
+					);
+					--menu-item-selected-border-color: rgba(206, 122, 255, 0.2);
+					--stepper-box-shadow: 0px 4px 4px 0px rgba(187, 85, 247, 0.4);
+					--accent-color-50: #faf5ff;
+					--accent-color-100: #f3e8ff;
+					--accent-color-200: #e9d5ff;
+					--accent-color-300: #d8b4fe;
+					--accent-color-400: #c084fc;
+					--accent-color-500: #a855f7;
+					--accent-color-600: #9333ea;
+					--accent-color-700: #7e22ce;
+					--accent-color-800: #6b21a8;
+					--accent-color-900: #581c87;
+					--accent-color-950: #3b0764;
+				}
+			`}</style>
+			<StoryBookPage storyData={storyData} />
+		</HydrationBoundary>
 	);
+}
+
+PublishPage.getLayout = function getLayout(page: ReactElement) {
+	return <PageLayout pageIndex={1}>{page}</PageLayout>;
 };
 
-export default StoryBookPage;
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+	const session = await getSession(ctx.req, ctx.res);
+
+	// @ts-expect-error Not typing correctly
+	const { genre, id } = ctx.params;
+	if (!genre || !id) {
+		return {
+			notFound: true,
+		};
+	}
+
+	const queryClient = new QueryClient();
+	const storyData = await queryClient.fetchQuery({
+		queryFn: async () =>
+			await api.storybook.getStory({
+				topLevelCategory: genre as string,
+				slug: id as string,
+			}),
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
+	});
+	if (session?.accessToken) {
+		await queryClient.prefetchQuery({
+			queryFn: async () =>
+				await api.webstory.interactions(
+					storyData?.id as string,
+					session?.accessToken
+				),
+			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+			queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
+		});
+		await queryClient.prefetchQuery({
+			queryFn: async () => await api.user.get(),
+			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+			queryKey: [QueryKeys.USER],
+		});
+	}
+
+	return {
+		props: {
+			session: { ...session },
+			storyData: storyData || null,
+			dehydratedState: dehydrate(queryClient),
+		},
+	};
+};

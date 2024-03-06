@@ -19,6 +19,7 @@ import {ImageRatios} from "@/utils/image-ratio";
 import {DisplayAspectRatios, StoryInputTypes, StoryLanguages, StoryLengths, StoryOutputTypes} from "@/utils/enums";
 import Routes from "@/routes";
 import {LanguageSelect, VideoRatioSelect} from "@/features/generate/components/selection-constants";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 const GenerateModalContent: FC = () => {
   const [value, setValue] = useState<TabType>(TabType.Video);
@@ -33,6 +34,7 @@ const GenerateModalContent: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
 
+  const {invalidateUser} = useUpdateUser();
   const onSubmit = async () => {
     const videoRatio = tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
     setIsLoading(true);
@@ -57,6 +59,7 @@ const GenerateModalContent: FC = () => {
 
     const response = Routes.CreateStoryFromRoute(params);
     Router.push(response).then(() => {
+      invalidateUser();
       setIsLoading(false);
     }).catch(error => {
       console.error('Navigation error:', error);
@@ -93,7 +96,7 @@ const GenerateModalContent: FC = () => {
                   <TooltipTrigger asChild>
                     <ToggleGroupItem
                       value={tab.text.toLowerCase()}
-                      className={`w-full h-fit lg:h-7 py-1 px-3 flex flex-col lg:flex-row gap-4 text-slate-400 rounded-sm ${value === tab.text.toLowerCase() ? "bg-white shadow" : ""}`}
+                      className={`w-full h-fit lg:h-7 py-1 px-3 flex flex-col lg:flex-row gap-4 text-slate-700 rounded-sm ${value === tab.text.toLowerCase() ? "bg-white shadow" : ""}`}
                     >
                       <Icon className={`w-4 h-4 ${value === tab.text.toLowerCase() ? "text-accent-600" : ""}`} />
                       {tab.text}

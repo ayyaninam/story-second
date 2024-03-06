@@ -1,6 +1,4 @@
 import api from "@/api";
-import { mainSchema } from "@/api/schema";
-import { env } from "@/env.mjs";
 import EditStory from "@/features/edit-story";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import PageLayout from "@/components/layouts/PageLayout";
@@ -8,9 +6,7 @@ import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import Routes from "@/routes";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
 import { StoryOutputTypes } from "@/utils/enums";
-import { getAccessToken, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import {
-	GetServerSideProps,
 	GetServerSidePropsContext,
 	InferGetServerSidePropsType,
 } from "next";
