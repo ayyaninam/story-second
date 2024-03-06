@@ -393,7 +393,7 @@ const sceneTextKeys: (keyof components["schemas"]["ReturnSceneDTO"])[] = [
 	"sceneDescription",
 ];
 const videoSegmentTextKeys: (keyof components["schemas"]["ReturnVideoSegmentDTO"])[] =
-	["textContent", "imagePrompt"];
+	["textContent"];
 
 export function getAllTextsFromVideoStory(
 	story: mainSchema["ReturnVideoStoryDTO"]
