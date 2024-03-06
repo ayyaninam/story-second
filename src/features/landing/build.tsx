@@ -63,7 +63,7 @@ const App = () => {
 				input_type: StoryInputTypes.Text,
 				output_type: outputType,
 				video_key: "",
-				display_resolution: DisplayAspectRatios["576x1024"],
+				display_resolution: DisplayAspectRatios["1024x576"],
 			};
 
 			if (videoFileId) {
