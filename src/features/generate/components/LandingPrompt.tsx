@@ -24,17 +24,20 @@ export const LandingPrompt: React.FC = () => {
 			<GenerateModalContent className="relative h-full" fromLanding />
 		</QueryClientProvider>
 	) : (
-		<form
-			className="bg-white p-2 rounded-md w-full flex items-center cursor-pointer pointer-events-auto "
-			onClick={() => {
-				setActivated(true);
-			}}
-		>
-			<input
-				className="cursor-pointer w-full outline-none ring-0 border-none"
-				placeholder="Tell your story..."
-			/>
-			<LandingSubmitButton />
-		</form>
+		<div className="px-4 lg:px-0">
+			<form
+				className="bg-white p-4 rounded-md w-full flex items-center cursor-pointer pointer-events-auto "
+				onClick={(e) => {
+					setActivated(true);
+					e.preventDefault();
+				}}
+			>
+				<input
+					className="cursor-pointer w-full outline-none ring-0 border-none"
+					placeholder="Tell your story..."
+				/>
+				<LandingSubmitButton />
+			</form>
+		</div>
 	);
 };

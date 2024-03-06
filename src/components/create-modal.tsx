@@ -140,7 +140,7 @@ const GenerateModalContent: React.FC<{
 					backdropFilter: "blur(3.7341220378875732px)",
 				}}
 			>
-				<div className="flex flex-col bg-white items-center p-2 gap-2 rounded-lg h-[calc(100vh-152px)] lg:h-fit overflow-auto">
+				<div className="flex flex-col bg-white items-center p-2 gap-2 rounded-lg lg:h-fit overflow-auto">
 					<ToggleGroup
 						type="single"
 						className="grid grid-cols-3 bg-slate-100 p-0.5 rounded-md w-full lg:w-fit"

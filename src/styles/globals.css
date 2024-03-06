@@ -173,18 +173,20 @@
 }
 
 @media (max-width: 1280px) {
-  .intercom-lightweight-app-launcher {
-    bottom: 80px !important;
-  }
+	.intercom-lightweight-app-launcher {
+		bottom: 80px !important;
+	}
 
-  /*localhost*/
-  .intercom-dfosxs {
-    bottom: 80px !important;
-  }
+	/*localhost*/
+	.intercom-dfosxs {
+		bottom: 80px !important;
+	}
 
-  iframe[name='intercom-notifications-frame'] {
-    bottom: 124px !important;
-  }
+	iframe[name="intercom-notifications-frame"] {
+		bottom: 124px !important;
+	}
+}
+
 .prompt-embedded-page {
 	background: transparent !important;
 }
