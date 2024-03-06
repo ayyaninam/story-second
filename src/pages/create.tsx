@@ -2,11 +2,9 @@ import api from "@/api";
 import Routes from "@/routes";
 import { CreateInitialStoryQueryParams } from "@/types";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
-import {
-	DisplayAspectRatios,
-	StoryOutputTypes,
-} from "@/utils/enums";
+import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { GetServerSideProps } from "next";
+import toast from "react-hot-toast";
 
 const redirectToHomepage = {
 	redirect: {
@@ -129,7 +127,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 					Routes.Landing("There was an error creating the story")
 				);
 			});
-		console.log("Story created: ", story)
+		if ("error" in story) {
+			toast.error(story?.error as string);
+			return {
+				redirect: {
+					destination: Routes.ToSubscriptionPage(),
+					permanent: false,
+				},
+			};
+		}
+		console.log("Story created: ", story);
 		const { url } = story;
 
 		const [genre, id] = url.split("/");
@@ -138,10 +145,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		if (!genre || !id)
 			throw new Error("Invalid response from server, no genre or id provided");
 
-		// If a video key has been passed in we know it's a split screen story
-		const storyType = video_key
-			? StoryOutputTypes.SplitScreen
-			: StoryOutputTypes.Video;
+		// get storyType using output_type and StoryOutputTypes
+		const storyType = Number(output_type) as StoryOutputTypes;
 
 		console.log("Redirecting to", Routes.ViewStory(storyType, genre, id));
 		return {

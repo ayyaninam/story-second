@@ -48,6 +48,7 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import {boolean} from "zod";
+import useUpdateUser from "@/hooks/useUpdateUser";
 const images = [
 	{
 		key: StoryImageStyles.Auto,
@@ -204,6 +205,7 @@ const Footer = ({
 						})) ?? Promise.resolve()
 				);
 				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
+				invalidateUser()
 			}
 			router.push(
 				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
@@ -381,6 +383,8 @@ const Footer = ({
 		},
 	};
 
+  const { invalidateUser } = useUpdateUser();
+
 	const [selectedScenesGenButton, setSelectedScenesGenButton] = useState<
 		ScenesGenButtonType | undefined
 	>();
@@ -477,6 +481,7 @@ const Footer = ({
 						variant="outline"
 						onClick={async () => {
 							await RegenerateAllImagesMutation.mutateAsync();
+              invalidateUser();
 						}}
 						className={cn("stroke-muted text-muted-foreground")}
 						disabled={
@@ -500,6 +505,7 @@ const Footer = ({
 					<Button
 						onClick={async () => {
 							await GenerateVideoScenesMutation.mutateAsync();
+              invalidateUser();
 						}}
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={
@@ -524,6 +530,7 @@ const Footer = ({
 						variant="outline"
 						onClick={async () => {
 							await RegenerateAllScenesMutation.mutateAsync();
+              invalidateUser();
 						}}
 						className={cn("stroke-muted text-muted-foreground")}
 						disabled={
