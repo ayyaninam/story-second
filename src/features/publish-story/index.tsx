@@ -371,7 +371,7 @@ export default function PublishedStory({
                     {/*  Like video*/}
                     {/*</Button>*/}
 
-                    { !(User?.data?.data?.id === Webstory.data?.user?.id) && Webstory.data?.storyType === 1&& (
+                    { !(User?.data?.data?.id === Webstory.data?.user?.id) && Webstory.data?.storyType === 1&& Webstory.data?.imagesDone && (
                       <GenericModal
                         title="Duplicate Video"
                         description="We'll add a video to your library with the same plot that you can make your own and edit! This action will cost 1 video credit"
