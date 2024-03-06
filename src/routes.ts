@@ -42,9 +42,9 @@ class Routes {
 		}
 		return `${this.authpage}?returnTo=${encodeURIComponent(returnUrl)}`;
 	}
-  static ToSubscriptionPage() {
-    return `/account?step=payment`;
-  }
+	static ToSubscriptionPage() {
+		return `/account?step=payment`;
+	}
 	static Logout(returnTo = "/feed") {
 		return `/auth/logout?returnTo=${returnTo}`;
 	}
@@ -64,7 +64,7 @@ class Routes {
 		return `/${this.StoryTypeToPath(type)}/${genre}/${id}/edit/scenes`;
 	}
 	private static StoryTypeToPath(type: StoryOutputTypes) {
-		switch (type) {
+		switch (Number(type)) {
 			case StoryOutputTypes.SplitScreen:
 				return "trends";
 			case StoryOutputTypes.Video:
