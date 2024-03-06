@@ -15,7 +15,7 @@ import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
@@ -32,6 +32,7 @@ import StoryLogo from "../../../public/auth-prompt/story-logo";
 import Link from "next/link";
 import GenericModal from "@/components/ui/generic-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { DisplayAspectRatios } from "@/utils/enums";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -55,7 +56,7 @@ export default function PublishedStory({
   const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
   const [isVideoDownloading, setIsVideoDownloading] = useState(false);
 
-  const {invalidateUser} = useUpdateUser();
+  const { invalidateUser } = useUpdateUser();
   // Queries
   const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
     queryFn: () =>
@@ -70,7 +71,7 @@ export default function PublishedStory({
     // Disable once all the videoKeys are obtained
     // enabled: enableQuery,
   });
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
     queryFn: () => api.webstory.interactions(Webstory.data?.id as string),
@@ -190,7 +191,7 @@ export default function PublishedStory({
       );
       toast.success("Video added to your library");
     }
-  }
+  };
 
   const numVideoSegmentsReady = Webstory.data?.scenes
     ?.flatMap((el) => el.videoSegments)
@@ -287,7 +288,9 @@ export default function PublishedStory({
                 ImageRatio.width === 3 && "md:max-w-[900px]",
                 ImageRatio.width === 4 && "md:max-w-[1280px]",
                 ImageRatio.width === 9 && "md:max-w-[780px]",
-                ImageRatio.width === 16 && "md:max-w-[1620px]"
+                ImageRatio.width === 16 && "md:max-w-[1620px]",
+                ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+                  "lg:flex-col 2xl:flex-row"
               )}
             >
               <div className="relative w-full rounded-tl-lg rounded-bl-lg">
@@ -299,17 +302,17 @@ export default function PublishedStory({
                   seekedFrame={seekedFrame}
                 />
                 {/* NOTE: Incase the above code doesn't work, try replacing it with the following:
-								 <div
-									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
-								>
-									<StoryScreen
-										Webstory={Webstory.data}
-										isError={Webstory.isError}
-										isPlaying={isPlaying}
-										seekedFrame={seekedFrame}
-										isMuted={true}
-									/>
-								</div> */}
+                 <div
+                  className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
+                >
+                  <StoryScreen
+                    Webstory={Webstory.data}
+                    isError={Webstory.isError}
+                    isPlaying={isPlaying}
+                    seekedFrame={seekedFrame}
+                    isMuted={true}
+                  />
+                </div> */}
                 <div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
                   <StoryScreen
                     playerClassName="rounded-tl-lg rounded-bl-lg"
@@ -334,7 +337,11 @@ export default function PublishedStory({
 
               {/* </Loading> */}
               <div
-                className={`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`}
+                className={cn(
+                  `p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`,
+                  ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+                    "lg:max-w-[100%] 2xl:max-w-sm"
+                )}
               >
                 <div className="relative space-y-2">
                   <div className="flex gap-x-1 text-muted-foreground items-center text-sm">
@@ -371,36 +378,40 @@ export default function PublishedStory({
                     {/*  Like video*/}
                     {/*</Button>*/}
 
-                    { !(User?.data?.data?.id === Webstory.data?.user?.id) && Webstory.data?.storyType === 1&& Webstory.data?.imagesDone && (
-                      <GenericModal
-                        title="Duplicate Video"
-                        description="We'll add a video to your library with the same plot that you can make your own and edit! This action will cost 1 video credit"
-                        buttonText={
-                          <span className="flex flex-row">
-                            <Video className="mr-1 h-4 w-4 md:h-5 md:w-5" />
-                            Make a video like this
-                          </span>
-                        }
-                        confirmAction={handleCopyVideo}
-                      />
-                    )}
-                    { (User?.data?.data?.id === Webstory.data?.user?.id && Webstory.data?.storyType !== 2) && (
-                      <Button
-                        className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-                        variant="outline"
-                        onClick={() =>
-                          router.push(
-                            Routes.EditScript(
-                              storyData.storyType,
-                              storyData.topLevelCategory!,
-                              storyData.slug!
+                    {!(User?.data?.data?.id === Webstory.data?.user?.id) &&
+                      Webstory.data?.storyType === 1 &&
+                      Webstory.data?.imagesDone && (
+                        <GenericModal
+                          title="Duplicate Video"
+                          description="We'll add a video to your library with the same plot that you can make your own and edit! This action will cost 1 video credit"
+                          buttonText={
+                            <span className="flex flex-row">
+                              <Video className="mr-1 h-4 w-4 md:h-5 md:w-5" />
+                              Make a video like this
+                            </span>
+                          }
+                          confirmAction={handleCopyVideo}
+                        />
+                      )}
+                    {User?.data?.data?.id === Webstory.data?.user?.id &&
+                      Webstory.data?.storyType !== 2 && (
+                        <Button
+                          className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+                          variant="outline"
+                          onClick={() =>
+                            router.push(
+                              Routes.EditScript(
+                                storyData.storyType,
+                                storyData.topLevelCategory!,
+                                storyData.slug!
+                              )
                             )
-                          )
-                        }
-                      >
-                        <Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Video
-                      </Button>
-                    )}
+                          }
+                        >
+                          <Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                          Edit Video
+                        </Button>
+                      )}
 
                     {(numVideoSegmentsReady ?? 0) <
                       (numTotalVideoSegments ?? 0) ||
@@ -468,7 +479,13 @@ export default function PublishedStory({
                       </Button>
                     )}
                 </div>
-                <div className="lg:hidden my-2.5 bg-slate-200 self-stretch h-px" />
+                <div
+                  className={cn(
+                    "lg:hidden my-2.5 bg-slate-200 self-stretch h-px",
+                    ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+                      "lg:flex 2xl:hidden"
+                  )}
+                />
                 <div className="flex gap-x-2.5">
                   {isLoading ? (
                     <Skeleton className="w-[44px] h-[44px] rounded-full" />
@@ -516,18 +533,18 @@ export default function PublishedStory({
                 </div>
               </div>
               {/* 
-								<p>
-													{(Webstory.data.user?.videoCount ?? 0) +
-														(Webstory.data.user?.storyCount ?? 0)}{" "}
-													Stories
-												</p>
-												<p className="text-slate-300"> • </p>
-								<a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
+                <p>
+                          {(Webstory.data.user?.videoCount ?? 0) +
+                            (Webstory.data.user?.storyCount ?? 0)}{" "}
+                          Stories
+                        </p>
+                        <p className="text-slate-300"> • </p>
+                <a
+                          className="p-0 m-0 text-muted-foreground font-normal"
+                          href="#"
+                        >
+                          See all
+                        </a> */}
             </div>
           </div>
           <div className="absolute bottom-10 left-4 items-center flex flex-row gap-x-1">
@@ -546,7 +563,8 @@ export default function PublishedStory({
           </div>
           <Link
             href="/feed"
-            className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-row gap-x-3 text-sm text-muted-foreground">
+            className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-row gap-x-3 text-sm text-muted-foreground"
+          >
             © 2024 Story.com - All rights reserved
           </Link>
           {!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
