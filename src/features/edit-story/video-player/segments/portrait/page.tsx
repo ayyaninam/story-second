@@ -14,7 +14,6 @@ import {
 	RemotionSegment,
 	PREMOUNT_FRAMES,
 	RemotionPlayerInputProps,
-	INCREASED_LAST_PAGE_DURATION,
 } from "../../constants";
 import LogoWatermark from "./components/LogoWatermark";
 import { AudioWithPremount } from "../../../components/audio-with-premount";
@@ -26,7 +25,7 @@ const container: CSSProperties = {
 const subtitleContainer: CSSProperties = {
 	justifyContent: "flex-start",
 	alignItems: "center",
-	paddingTop: "1000px",
+	paddingTop: "950px",
 	textAlign: "center",
 };
 
@@ -55,46 +54,13 @@ export const SegmentPortraitPage = ({
 			width: 500,
 			color: "#fff",
 			"-webkit-text-stroke": "2px #000",
+			textShadow: "0.04em 0.04em 0.04em black",
 			fontWeight: 900,
 		}),
 		[]
 	);
 
 	const startAudioFrom = VIDEO_FPS * SILENT_DURATION;
-
-	const percentageTextToShow = interpolate(
-		frame,
-		[
-			startAudioFrom,
-			Math.max(
-				startAudioFrom + 1,
-				startAudioFrom +
-					segment.contentDuration -
-					(!nextSegment ? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS : 0)
-			), // to avoid crashing on [N,N]
-		],
-		[0, 1],
-		{
-			extrapolateLeft: "clamp",
-			extrapolateRight: "clamp",
-		}
-	);
-
-	const storyText = useMemo(() => {
-		if (!segment.storyText) {
-			return "";
-		}
-
-		const numberOfWordsToShow = 4;
-
-		const words = segment.storyText.toLowerCase().split(" ");
-
-		const startIndex =
-			Math.floor(percentageTextToShow * (words.length / numberOfWordsToShow)) *
-			numberOfWordsToShow;
-
-		return words.slice(startIndex, startIndex + numberOfWordsToShow).join(" ");
-	}, [percentageTextToShow, segment.storyText]);
 
 	const isFadeTransitionNext = nextSegment?.type === "transition";
 
@@ -134,7 +100,7 @@ export const SegmentPortraitPage = ({
 
 			{inputProps.enableSubtitles && (
 				<AbsoluteFill style={subtitleContainer}>
-					<p style={storyTextStyle}>{storyText}</p>
+					<p style={storyTextStyle}>{segment.storyText}</p>
 				</AbsoluteFill>
 			)}
 
