@@ -23,7 +23,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import { mainSchema } from "@/api/schema";
 import { cn } from "@/utils";
-import { StoryImageStyles } from "@/utils/enums";
+import { StoryImageStyles, AllowanceType } from "@/utils/enums";
+import { usePaymentHandler } from "@/utils/payment";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import useUpdateUser from "@/hooks/useUpdateUser";
 
 const EditSegmentModal = ({
@@ -49,7 +51,9 @@ const EditSegmentModal = ({
 	handleSubmitEditSegments: () => void;
 	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
 }) => {
+	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
 	const [webstory] = useWebstoryContext();
+	const { paymentHandler } = usePaymentHandler();
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
@@ -72,15 +76,19 @@ const EditSegmentModal = ({
 				updatedStory: story,
 			});
 
-			const regeneratedImages = await api.video.regenerateAllImages({
-				// @ts-expect-error
-				image_style: scene.settings?.style ?? StoryImageStyles.Realistic,
-				story_id: story.id,
-				story_type: story.type,
-				scene_id: scene.id,
+			const regeneratedImages = await paymentHandler({
+				paymentRequest: api.video.regenerateAllImages({
+					// @ts-expect-error
+					image_style: scene.settings?.style ?? StoryImageStyles.Realistic,
+					story_id: story.id,
+					story_type: story.type,
+					scene_id: scene.id,
+				}),
+				credits: 2,
+				openSubscriptionModal: () => setOpenCreditsDialog(true),
 			});
 
-			invalidateUser();
+			// invalidateUser(); starting to delete theset
 		},
 	});
 
@@ -173,6 +181,13 @@ const EditSegmentModal = ({
 						</DialogClose>
 					</div>
 				</DialogContent>
+
+				<CheckoutDialog
+					variant="credits"
+					allowanceType={AllowanceType.Credits}
+					open={openCreditsDialog}
+					setOpen={setOpenCreditsDialog}
+				/>
 			</Dialog>
 		);
 	}
