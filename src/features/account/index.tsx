@@ -175,12 +175,12 @@ const AccountsPage = () => {
 								>
 									Billing
 								</ToggleGroupItem>
-								<ToggleGroupItem
-									value="preferences"
-									className="justify-center sm:justify-start text-center sm:text-left w-full"
-								>
-									Notification Preferences
-								</ToggleGroupItem>
+								{/*<ToggleGroupItem*/}
+								{/*	value="preferences"*/}
+								{/*	className="justify-center sm:justify-start text-center sm:text-left w-full"*/}
+								{/*>*/}
+								{/*	Notification Preferences*/}
+								{/*</ToggleGroupItem>*/}
 							</ToggleGroup>
 						</div>
 						{isPending ? (
@@ -206,11 +206,11 @@ const AccountsPage = () => {
 
 									{step === "payment" && <Billing />}
 
-									{step === "preferences" && (
-										<>
-											<PreferencesForm form={preferenceForm} />
-										</>
-									)}
+									{/*{step === "preferences" && (*/}
+									{/*	<>*/}
+									{/*		<PreferencesForm form={preferenceForm} />*/}
+									{/*	</>*/}
+									{/*)}*/}
 								</div>
 							</div>
 						)}
