@@ -15,7 +15,7 @@ import {
 	tabs,
 	videoRatios,
 } from "@/features/generate/constants";
-import Router, {useRouter} from "next/router";
+import Router, { useRouter } from "next/router";
 import FileUpload from "@/features/tiktok/components/file-upload";
 import { CreateInitialStoryQueryParams } from "@/types";
 import { ImageRatios } from "@/utils/image-ratio";
@@ -38,7 +38,7 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import useEventLogger from "@/utils/analytics";
 
 const GenerateModalContent: FC = () => {
-  const eventLogger = useEventLogger();
+	const eventLogger = useEventLogger();
 
 	const { paymentHandler } = usePaymentHandler();
 	const [value, setValue] = useState<TabType>(TabType.Video);
@@ -63,7 +63,8 @@ const GenerateModalContent: FC = () => {
 
 	const { invalidateUser } = useUpdateUser();
 	const onSubmit = async () => {
-		eventLogger("generate_story")const videoRatio =
+		eventLogger("generate_story");
+		const videoRatio =
 			tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
 		setIsLoading(true);
 
