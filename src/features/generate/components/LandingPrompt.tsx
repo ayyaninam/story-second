@@ -28,8 +28,12 @@ export const LandingPrompt: React.FC = () => {
 			<form
 				className="bg-white p-4 rounded-md w-full flex items-center cursor-pointer pointer-events-auto "
 				onClick={(e) => {
-					setActivated(true);
 					e.preventDefault();
+					if (window.parent.screen.width < 1024) {
+						window.parent.location.href = "/generate";
+					} else {
+						setActivated(true);
+					}
 				}}
 			>
 				<input
