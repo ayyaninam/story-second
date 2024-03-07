@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -25,6 +25,7 @@ import {
 	StoryLanguages,
 	StoryLengths,
 	StoryOutputTypes,
+	AllowanceType,
 } from "@/utils/enums";
 import Routes from "@/routes";
 import {
@@ -32,14 +33,19 @@ import {
 	VideoRatioSelect,
 } from "@/features/generate/components/selection-constants";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { usePaymentHandler } from "@/utils/payment";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import useEventLogger from "@/utils/analytics";
 
 const GenerateModalContent: FC = () => {
 	const eventLogger = useEventLogger();
 
+	const { paymentHandler } = usePaymentHandler();
 	const [value, setValue] = useState<TabType>(TabType.Video);
 	const [input, setInput] = useState("");
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
+	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
+	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
 
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
 		videoRatios[0]?.value.toString() || ""
@@ -61,10 +67,13 @@ const GenerateModalContent: FC = () => {
 		const videoRatio =
 			tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
 		setIsLoading(true);
+
+		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
+			?.enumValue as StoryOutputTypes;
+
 		const params: CreateInitialStoryQueryParams = {
 			input_type: StoryInputTypes.Text,
-			output_type: tabs.find((tab) => tab.text.toLowerCase() === value)
-				?.enumValue as StoryOutputTypes,
+			output_type: outputType,
 			prompt: input,
 
 			length: selectedVideoLength,
@@ -83,6 +92,36 @@ const GenerateModalContent: FC = () => {
 			params["output_type"] = StoryOutputTypes.SplitScreen;
 			params["video_key"] = videoFileId;
 			params["image_resolution"] = ImageRatios["9x8"].enumValue;
+		}
+
+		const isStoryBook = outputType === StoryOutputTypes.Story;
+
+		let isGood = false;
+		if (isStoryBook) {
+			await paymentHandler({
+				paymentRequest: Promise.resolve(),
+				variant: "story book",
+				storybookCredits: 1,
+				openModal: () => {
+					isGood = false;
+					setOpenStoryBooksDialog(true);
+				},
+			});
+		} else {
+			await paymentHandler({
+				paymentRequest: Promise.resolve(),
+				variant: "video credits",
+				videoCredits: 1,
+				openModal: () => {
+					isGood = false;
+					setOpenCreditsDialog(true);
+				},
+			});
+		}
+
+		if (!isGood) {
+			setIsLoading(false);
+			return;
 		}
 
 		const response = Routes.CreateStoryFromRoute(params);
@@ -151,16 +190,14 @@ const GenerateModalContent: FC = () => {
 						</TooltipProvider>
 					</ToggleGroup>
 
-					{value !== TabType.Trends && (
-						<Textarea
-							autoFocus={false}
-							maxLength={3000}
-							rows={4}
-							className="max-h-fit border-border focus:border-0 focus:ring-0 text-md"
-							onChange={(e) => setInput(e.target.value)}
-							placeholder={`What's your story?`}
-						/>
-					)}
+					{value !== TabType.Trends && (<Textarea
+						autoFocus={false}
+						maxLength={3000}
+						rows={4}
+						className="max-h-fit border-border focus:border-0 focus:ring-0 text-md"
+						onChange={(e) => setInput(e.target.value)}
+						placeholder={`What's your story?`}
+					/>)}
 
 					<div className="flex flex-col lg:flex-row items-start lg:items-center lg:px-2 gap-1 w-full">
 						<div className="flex flex-grow gap-4 w-4/5">
@@ -218,6 +255,20 @@ const GenerateModalContent: FC = () => {
 					</div>
 				</div>
 			</div>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.Videos}
+				open={openCreditsDialog}
+				setOpen={setOpenCreditsDialog}
+			/>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.StoryBooks}
+				open={openStoryBooksDialog}
+				setOpen={setOpenStoryBooksDialog}
+			/>
 		</div>
 	);
 };
