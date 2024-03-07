@@ -37,7 +37,7 @@ const getCost = {
 
 const allowanceStructure = {
 	[AllowanceType.Credits]: {
-		name: "Credits",
+		name: "",
 	},
 	[AllowanceType.Videos]: {
 		name: "Video",
