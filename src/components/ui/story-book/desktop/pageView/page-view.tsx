@@ -1,4 +1,6 @@
 import React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import ImageView from "./image-view";
 import TextView from "./text-view";
 import { Page, WebStory } from "../../constants";
@@ -11,6 +13,10 @@ interface PageViewProps {
 }
 
 export const PageView = ({ story, page, changePage }: PageViewProps) => {
+	if (!page) {
+		return <Skeleton className="h-[350px] w-[250px] m-1" />;
+	}
+
 	const canChangePage =
 		page.pageNumber > 1 &&
 		(page.variant === "image" ||
