@@ -16,7 +16,7 @@ import {DefaultSeo, DefaultSeoProps} from "next-seo";
 import {env} from "@/env.mjs";
 import Script from "next/script";
 import { GoogleAnalytics, event } from "nextjs-google-analytics";
-import useLogEvent from "@/utils/analytics";
+import useEventLogger from "@/utils/analytics";
 
 const randFont = localFont({
 	variable: "--font-rand",

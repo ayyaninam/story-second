@@ -16,15 +16,12 @@ import PageLayout from "@/components/layouts/PageLayout";
 import { NextSeo } from "next-seo";
 import { genreOptions } from "@/constants/feed-constants";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
-import useLogEvent from "@/utils/analytics";
 
 function Feed({
   dehydratedState,
   session,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   useSaveSessionToken(session.accessToken);
-  const eventLogger = useLogEvent();
-  eventLogger("test_onclick");
   return (
     <HydrationBoundary state={dehydratedState}>
       <NextSeo

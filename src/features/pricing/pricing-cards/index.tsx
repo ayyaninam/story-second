@@ -14,6 +14,7 @@ import cn from "@/utils/cn";
 import { SubscriptionPeriod, SubscriptionPlan } from "@/utils/enums";
 import PricingCard, { PricingCardProps } from "./pricing-card";
 import { pricingValues } from "@/features/pricing/constants";
+import useEventLogger from "@/utils/analytics";
 
 export interface PricingTierFrequency {
 	id: string;
@@ -65,6 +66,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 	);
 
 	const router = useRouter();
+	const eventLogger = useEventLogger();
 	const { user, isLoading } = useUser();
 
 	const openLoginWhenNotLoggedIn = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -185,6 +187,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 						<RadioGroup
 							defaultValue={frequency.value}
 							onValueChange={(value: string) => {
+								eventLogger("pricing_frequency_changed"); // # TODO: log what frequency was changed to
 								setFrequency(frequencies.find((f) => f.value === value)!);
 							}}
 							className="grid gap-x-1 rounded-full p-1 text-center text-xs font-semibold leading-5 bg-white dark:bg-black ring-1 ring-inset ring-gray-200/30 dark:ring-gray-800"
@@ -237,6 +240,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								className="w-full transition-none group-hover:border-2"
 								size="sm"
 								onClick={(e) => {
+									eventLogger("pricing_free_plan_clicked");
 									Router.push(Routes.Generate()).then();
 								}}
 								disabled={getDisabledButton(SubscriptionPlan.Free)}
@@ -410,13 +414,13 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 									</>
 								))}
 								<div className="self-end font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px] mt-1">
-									if you want more than professional,{" "}
-									<Link
-										href="/contact-us"
-										className="font-medium text-accent-700 dark:text-blue-500 hover:underline"
-									>
-										contact us
-									</Link>
+									if you want more than professional, please contact us
+									{/*# TODO: open intercom chat modal*/}
+									{/*<Link*/}
+									{/*	href="#"*/}
+									{/*	className="font-medium text-accent-700 dark:text-blue-500 hover:underline"*/}
+									{/*>*/}
+									{/*</Link>*/}
 								</div>
 							</div>
 						</div>

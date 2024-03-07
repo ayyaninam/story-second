@@ -7,6 +7,7 @@ import Routes from "@/routes";
 import { useRouter } from "next/router";
 import ShareIcon from "./svgs/share-icon";
 import PlayIcon from "./svgs/play-icon";
+import useEventLogger from "@/utils/analytics";
 
 
 function GalleryImage({

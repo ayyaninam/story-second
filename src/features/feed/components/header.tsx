@@ -18,6 +18,7 @@ import {Plus} from "lucide-react";
 import Routes from "@/routes";
 import {useMediaQuery} from "usehooks-ts";
 import FeedIcon from "@/components/icons/side-nav/FeedIcon";
+import useEventLogger from "@/utils/analytics";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -53,6 +54,7 @@ export const FeedHeader = ({
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
+  const eventLogger = useEventLogger();
 
 	const sort = router.query.sort as string || "desc";
 	const setSort = (sort: string) => {
@@ -139,6 +141,9 @@ export const FeedHeader = ({
 						className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 						variant="default"
 						onClick={() => {
+              eventLogger("create_new_clicked", {
+                sourceUrl: router.asPath,
+              })
 							router.push(Routes.Generate());
 						}}
 					>
