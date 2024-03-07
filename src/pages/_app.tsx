@@ -5,7 +5,7 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from "@tanstack/react-query";
-import type { AppProps } from "next/app";
+import type {AppProps, NextWebVitalsMetric} from "next/app";
 import {UserProvider, useUser} from "@auth0/nextjs-auth0/client";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "react-hot-toast";
@@ -15,6 +15,8 @@ import { NextPage } from "next/types";
 import {DefaultSeo, DefaultSeoProps} from "next-seo";
 import {env} from "@/env.mjs";
 import Script from "next/script";
+import { GoogleAnalytics, event } from "nextjs-google-analytics";
+import useLogEvent from "@/utils/analytics";
 
 const randFont = localFont({
 	variable: "--font-rand",
@@ -190,12 +192,15 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 				},
 			})
 	);
-
 	// Use the layout defined at the page level, if available else use page directly
 	const getLayout = Component.getLayout ?? ((page) => page);
-
 	return (
 		<QueryClientProvider client={queryClient}>
+      <GoogleAnalytics
+        gaMeasurementId="G-XXN8XDQZQW"
+        strategy="lazyOnload"
+        trackPageViews={{ ignoreHashChange: true }}
+      />
 			<Script id={"intercom-1"}>
 				{`
 					window.intercomSettings = {
@@ -233,6 +238,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
 
 // Disable console logs in production
-if (process.env.VERCEL_ENV === "production") {
+if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === "production") {
 	console.log = function () {};
 }
