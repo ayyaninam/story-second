@@ -24,8 +24,8 @@ class Routes {
 		return "/feed";
 	}
 
-	static Generate() {
-		return "/generate";
+	static Generate(message?: string) {
+		return "/generate" + (message ? `?message=${message}` : "");
 	}
 
 	static CreateStoryFromRoute(params: CreateInitialStoryQueryParams) {
