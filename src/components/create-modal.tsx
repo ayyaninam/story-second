@@ -97,36 +97,7 @@ const GenerateModalContent: React.FC<{
 			params["image_resolution"] = ImageRatios["9x8"].enumValue;
 		}
 
-		const form = new FormData();
-		Object.entries(params).forEach(([key, value]) => {
-			form.append(key, value.toString());
-		});
-
-		try {
-			const json: { storyPath: string } = await publicProxyApiFetcher
-				.post("api/story/create", { body: form })
-				.json();
-
-			invalidateUser();
-
-			if (json.storyPath == null) {
-				toast.error("An unexpected error has occurred. Please try again.");
-			} else {
-				// Ok! Send the user to the story page
-				redirect(json.storyPath, fromLanding);
-			}
-		} catch (error) {
-			if (error instanceof HTTPError) {
-				if (error.response.status === 401) {
-					redirect("/auth/login?returnTo=/generate", fromLanding);
-				} else {
-					toast.error("Unable to generate your story. Please try again.");
-					console.error(error.message, error.response.status);
-				}
-			}
-		} finally {
-			setIsLoading(false);
-		}
+		await submitToBackend(params, invalidateUser, fromLanding, setIsLoading);
 	};
 
 	return (
@@ -254,8 +225,63 @@ const GenerateModalContent: React.FC<{
 export default GenerateModalContent;
 
 /**
- * Why not `useRouter.push()`?
- * This component is used in both legacy pages and app dir, where the router API has changed.
+ * Submit form data to the backend
+ * @param params form data
+ * @param invalidateUser
+ * @param fromLanding true if the user is coming from the landing page
+ * @param setIsLoading form submitting state
+ */
+export const submitToBackend = async (
+	params: CreateInitialStoryQueryParams,
+	invalidateUser: () => Promise<void>,
+	fromLanding: boolean,
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+	const form = new FormData();
+	Object.entries(params).forEach(([key, value]) => {
+		form.append(key, value.toString());
+	});
+
+	try {
+		const json: { storyPath: string } = await publicProxyApiFetcher
+			.post("api/story/create", { body: form })
+			.json();
+
+		invalidateUser();
+
+		if (json.storyPath == null) {
+			toast.error("An unexpected error has occurred. Please try again.");
+		} else {
+			// Ok! Send the user to the story page
+			redirect(json.storyPath, fromLanding);
+		}
+	} catch (error) {
+		if (error instanceof HTTPError) {
+			switch (error.response.status) {
+				case 401: {
+					redirect("/auth/login?returnTo=/generate", fromLanding);
+					break;
+				}
+				case 402: {
+					toast.error("Not enough balance to create story.");
+					break;
+				}
+				default: {
+					toast.error("Unable to generate your story. Please try again.");
+					console.error(error.message, error.response.status);
+				}
+			}
+		}
+	} finally {
+		setIsLoading(false);
+	}
+};
+
+/**
+ * Redirect user to `/generate` page.  Why not `useRouter.push()`?
+ * This prompt component is used in both Next.js's legacy pages and the newer app dir in which
+ * the router API has changed.  So we can't import both versions.
+ *
  */
 const redirect = (dest: string, escapeIFrame: boolean) => {
 	if (escapeIFrame) {

@@ -39,8 +39,11 @@ const postHandler: AppRouteHandlerFn = async (request: NextRequest) => {
 	// If the url is not in the expected format, respond with an error
 	if (!genre || !id) {
 		return NextResponse.json(
-			{ message: "Invalid response from server, no genre or id provided" },
-			{ status: 500 }
+			{},
+			{
+				status: 500,
+				statusText: "Invalid response from server, no genre or id provided",
+			}
 		);
 	}
 
