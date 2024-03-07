@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import { useMediaQuery } from "usehooks-ts";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { WebStory } from "@/components/ui/story-book/constants";
 import api from "@/api";
-import StoryBookComponent from "@/features/story/components/book-component";
 import Navbar from "@/features/story/components/Navbar";
+import Book from "@/components/ui/story-book";
 
 const StoryBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 	const router = useRouter();
@@ -31,23 +31,22 @@ const StoryBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 
 		const intervalId = setInterval(async () => {
 			if (story && !story.storyDone) {
-				await fetchStory();
-			} else {
+			await fetchStory();
+		}else {
 				clearInterval(intervalId);
 			}
 		}, 2000);
 
 		void fetchStory();
-
-		return () => clearInterval(intervalId);
+	return () => clearInterval(intervalId);
 	}, [genre, id]);
 
 	return (
-		<div
-			className={`bg-reverse items-center overflow-y-scroll md:overflow-hidden`}
-		>
+		<div className="bg-reverse items-center overflow-y-scroll md:overflow-hidden h-[calc(100vh-20px)]">
 			<Navbar WebstoryData={story} />
-			<StoryBookComponent story={story} />
+			<div className="flex justify-center items-center h-full">
+				{story && <Book story={story} />}
+			</div>
 		</div>
 	);
 };

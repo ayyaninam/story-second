@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AnimatedPage } from "./animated-page";
 import { PageView } from "./pageView/page-view";
 import {
@@ -19,6 +20,7 @@ const DesktopBook = ({ story }: BookProps) => {
 	const [animatedPages, setAnimatedPages] = useState<[Page, Page]>();
 	const [currentPages, setCurrentPages] = useState<[Page, Page]>();
 	const [turnDirection, setTurnDirection] = useState<TurnDirection>();
+	const [loading, setLoading] = useState(false);
 
 	const changePage = useCallback(
 		(isNext: boolean) => {
@@ -108,26 +110,44 @@ const DesktopBook = ({ story }: BookProps) => {
 	}
 
 	return (
-		<div className="flex aspect-[3/2] w-full flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
-			<div className={styles.bookWrapper}>
-				<PageView
-					story={story}
-					page={currentPages[0]}
-					changePage={() => changePage(false)}
-				/>
-				<PageView
-					story={story}
-					page={currentPages[1]}
-					changePage={() => changePage(true)}
-				/>
+		<div className="w-[1200px] mb-[200px]">
+			<div className="flex aspect-[3/2] flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
+				<div className={styles.bookWrapper}>
+					{loading ? (
+						<>
+							<div className="w-[50%] flex flex-col gap-2 justify-center items-center bg-white border border-neutral-300">
+								<Skeleton className="h-4 w-[400px]" />
+								<Skeleton className="h-4 w-[400px]" />
+								<Skeleton className="h-4 w-[400px]" />
+								<Skeleton className="h-4 w-[400px]" />
+							</div>
+							<div className="w-[50%] flex justify-center items-center bg-white border border-neutral-300">
+								<Skeleton className="w-10/12 aspect-square rounded-xl" />
+							</div>
+						</>
+					) : (
+						<>
+							<PageView
+								story={story}
+								page={currentPages[0]}
+								changePage={() => changePage(false)}
+							/>
+							<PageView
+								story={story}
+								page={currentPages[1]}
+								changePage={() => changePage(true)}
+							/>
 
-				{animatedPages && (
-					<AnimatedPage
-						story={story}
-						pages={animatedPages}
-						turnDirection={turnDirection}
-					/>
-				)}
+							{animatedPages && (
+								<AnimatedPage
+									story={story}
+									pages={animatedPages}
+									turnDirection={turnDirection}
+								/>
+							)}
+						</>
+					)}
+				</div>
 			</div>
 		</div>
 	);

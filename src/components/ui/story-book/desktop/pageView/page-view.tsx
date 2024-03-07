@@ -13,15 +13,6 @@ interface PageViewProps {
 }
 
 export const PageView = ({ story, page, changePage }: PageViewProps) => {
-	if (!page) {
-		return (
-			<div className="flex flex-col items-center justify-center">
-				<Skeleton className="h-[350px] w-[250px] m-1" />
-				<div>Loading, please wait...</div>
-			</div>
-		);
-	}
-
 	const canChangePage =
 		page.pageNumber > 1 &&
 		(page.variant === "image" ||
