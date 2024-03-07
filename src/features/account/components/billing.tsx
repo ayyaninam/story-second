@@ -90,7 +90,7 @@ const Billing = () => {
 	return (
 		<div>
 			<span className="font-medium text-[#181d25] text-2xl">
-				{userHasPaidSubscription ? plan?.itemMonthly : "$0"}
+				{userHasPaidSubscription ? plan?.itemMonthly || "$0" : "$0"}
 			</span>
 			<span className="font-light text-[#485e6a] text-[22px] leading-[33px] ml-1">
 				/mo
@@ -98,16 +98,14 @@ const Billing = () => {
 
 			<div className="font-medium text-[15px] text-accent-500 leading-[20px]">
 				{userHasPaidSubscription
-					? `${plan?.title} ${subscriptionPeriod === SubscriptionPeriod.Annual ? "Annually" : "Monthly"}`
+					? `${plan?.title || "Custom Plan"} ${subscriptionPeriod === SubscriptionPeriod.Annual ? "Annually" : "Monthly"}`
 					: "Free plan"}
 			</div>
 
 			{userHasPaidSubscription && (
 				<div className="flex flex-row gap-2 mt-2">
 					<UpgradeSubscriptionDialog>
-						<Button
-							className="font-medium text-white bg-accent-600 hover:bg-accent-700 text-[15px] leading-[20px]"
-						>
+						<Button className="font-medium text-white bg-accent-600 hover:bg-accent-700 text-[15px] leading-[20px]">
 							Change plan
 						</Button>
 					</UpgradeSubscriptionDialog>

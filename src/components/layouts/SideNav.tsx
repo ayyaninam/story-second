@@ -224,10 +224,8 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 							<>
 								{/*<p className="font-medium text-sm">{SubscriptionConstants[subscriptionDetails.subscriptionPlan as number].name} Plan</p>*/}
 								<p className="font-medium text-sm">
-									{
-										SubscriptionConstants[subscriptionDetails.subscriptionPlan]
-											?.name
-									}{" "}
+									{SubscriptionConstants[subscriptionDetails.subscriptionPlan]
+										?.name || "Custom"}{" "}
 									Plan
 								</p>
 
@@ -241,7 +239,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 													"0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
 											}}
 										>
-											{`${subscriptionDetails.videoGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.videos}`}
+											{`${subscriptionDetails.videoGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.videos || 0}`}
 										</span>
 										<span>Videos</span>
 									</div>
@@ -254,7 +252,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 													"0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
 											}}
 										>
-											{`${subscriptionDetails.storyGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.stories}`}
+											{`${subscriptionDetails.storyGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.stories || 0}`}
 										</span>
 										<span>Storybooks</span>
 									</div>
@@ -267,7 +265,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 													"0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
 											}}
 										>
-											{subscriptionDetails.credits}
+											{subscriptionDetails.credits || 0}
 										</span>
 										<span>Credits</span>
 									</div>
