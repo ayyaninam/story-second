@@ -131,7 +131,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			toast.error(story?.error as string);
 			return {
 				redirect: {
-					destination: Routes.ToSubscriptionPage(),
+					destination: Routes.ToSubscriptionPage("Not enough balance to create a story"),
 					permanent: false,
 				},
 			};
@@ -159,7 +159,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		if (e instanceof AuthError) {
 			return {
 				redirect: {
-					destination: e.redirect,
+					destination: Routes.ToAuthPage(Routes.defaultRedirect),
 					permanent: false,
 				},
 			};
