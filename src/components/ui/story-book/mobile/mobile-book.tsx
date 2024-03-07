@@ -46,7 +46,7 @@ const MobileBook = ({ story }: BookProps) => {
 	}
 
 	return (
-		<div className="w-full gap-4 flex flex-col overflow-y-scroll h-screen mt-16">
+		<div className="w-screen gap-4 flex flex-col overflow-y-scroll h-screen mt-16">
 			{pageArray.map((item) => (
 				<div
 					key={item.pageNumber}
