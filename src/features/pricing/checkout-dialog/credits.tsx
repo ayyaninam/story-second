@@ -19,25 +19,25 @@ import CheckoutDialogContent from "./content";
 
 const getCost = {
 	[SubscriptionPlan.Basic]: {
-		[AllowanceType.Videos]: 7,
+		[AllowanceType.Videos]: 4,
 		[AllowanceType.StoryBooks]: 2,
-		[AllowanceType.Credits]: -1, // to be defined
+		[AllowanceType.Credits]: 0.01,
 	},
 	[SubscriptionPlan.Pro]: {
-		[AllowanceType.Videos]: 6,
+		[AllowanceType.Videos]: 3,
 		[AllowanceType.StoryBooks]: 1.5,
-		[AllowanceType.Credits]: -1, // to be defined
+		[AllowanceType.Credits]: 0.01,
 	},
 	[SubscriptionPlan.Premium]: {
-		[AllowanceType.Videos]: 5,
+		[AllowanceType.Videos]: 2,
 		[AllowanceType.StoryBooks]: 1,
-		[AllowanceType.Credits]: -1, // to be defined
+		[AllowanceType.Credits]: 0.01,
 	},
 };
 
 const allowanceStructure = {
 	[AllowanceType.Credits]: {
-		name: "Credits",
+		name: "",
 	},
 	[AllowanceType.Videos]: {
 		name: "Video",
@@ -47,8 +47,11 @@ const allowanceStructure = {
 	},
 };
 
-const quantityValues = [5, 10, 20, 50] as const;
-type QuantityValue = (typeof quantityValues)[number];
+const storyBooksQuantityValues = [1, 2, 5, 10] as const;
+const videoQuantityValues = [1, 2, 5, 10] as const;
+const creditQuantityValues = [100, 200, 500, 1000] as const;
+
+// type QuantityValue = (typeof quantityValues)[number];
 
 export interface CreditsCheckoutDialogProps {
 	allowanceType: AllowanceType;
@@ -62,7 +65,13 @@ const CreditsCheckoutDialog = ({
 	const { user, updateUserDataAfter1Second } = useUser();
 	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
 
-	const [quantity, setQuantity] = useState<QuantityValue>(10);
+	const [quantity, setQuantity] = useState(
+		allowanceType === AllowanceType.StoryBooks
+			? 1
+			: allowanceType === AllowanceType.Videos
+				? 1
+				: 200
+	);
 	const [amount, setAmount] = useState(0);
 	const [itemCost, setItemCost] = useState(0);
 
@@ -70,6 +79,13 @@ const CreditsCheckoutDialog = ({
 	const [stripeLoaded, setStripeLoaded] = useState(false);
 	const [userWantsToChangePayment, setUserWantsToChangePayment] =
 		useState(false);
+
+	const quantityValues =
+		allowanceType === AllowanceType.StoryBooks
+			? storyBooksQuantityValues
+			: allowanceType === AllowanceType.Videos
+				? videoQuantityValues
+				: creditQuantityValues;
 
 	const userHasCard = user ? getUserHasCard(user) : false;
 	const userSubscriptionPlan: SubscriptionPlan | undefined =
@@ -180,9 +196,7 @@ const CreditsCheckoutDialog = ({
 					<span>Buy</span>
 					<Select
 						value={String(quantity)}
-						onValueChange={(newValue) =>
-							setQuantity(Number(newValue) as QuantityValue)
-						}
+						onValueChange={(newValue) => setQuantity(Number(newValue))}
 					>
 						<SelectTrigger className="w-[60px] font-normal">
 							<SelectValue aria-label={String(quantity)}>
@@ -201,7 +215,7 @@ const CreditsCheckoutDialog = ({
 				</>
 			}
 			sideLabel="Order #40950"
-			description="TODO add a description here"
+			description=""
 			items={[
 				{
 					id: uuidv4(),

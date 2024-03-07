@@ -9,14 +9,28 @@ type CheckoutDialogProps =
 	| ({
 			variant: "credits";
 			children?: ReactNode;
+			open?: boolean;
+			setOpen?: (open: boolean) => void;
 	  } & Omit<CreditsCheckoutDialogProps, "onClose">)
 	| ({
 			variant: "subscription";
 			children?: ReactNode;
+			open?: boolean;
+			setOpen?: (open: boolean) => void;
 	  } & Omit<SubscriptionCheckoutDialogProps, "onClose">);
 
 const CheckoutDialog = (props: CheckoutDialogProps) => {
-	const [open, setOpen] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
+
+	const open = props.open ?? openDialog;
+
+	const setOpen = (open: boolean) => {
+		if (props.setOpen) {
+			props.setOpen(open);
+		} else {
+			setOpenDialog(open);
+		}
+	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>

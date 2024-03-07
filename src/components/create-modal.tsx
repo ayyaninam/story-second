@@ -96,7 +96,7 @@ const GenerateModalContent: FC = () => {
 
 		const isStoryBook = outputType === StoryOutputTypes.Story;
 
-		let isGood = false;
+		let isGood = true;
 		if (isStoryBook) {
 			await paymentHandler({
 				paymentRequest: Promise.resolve(),
