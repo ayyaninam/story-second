@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
@@ -27,7 +27,6 @@ import {
 	ScenesGenButtonType,
 	StoryImageStyles,
 	VoiceType,
-	AllowanceType,
 } from "@/utils/enums";
 import clsx from "clsx";
 import api from "@/api";
@@ -50,9 +49,6 @@ import TooltipComponent from "@/components/ui/tooltip-component";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import { boolean } from "zod";
 import useUpdateUser from "@/hooks/useUpdateUser";
-import { usePaymentHandler } from "@/utils/payment";
-import CheckoutDialog from "@/features/pricing/checkout-dialog";
-
 const images = [
 	{
 		key: StoryImageStyles.Auto,
@@ -116,8 +112,6 @@ const Footer = ({
 	view: "script" | "storyboard" | "scene" | "preview";
 }) => {
 	const router = useRouter();
-	const { paymentHandler } = usePaymentHandler();
-	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
 
 	const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -247,16 +241,11 @@ const Footer = ({
 				),
 				status: StoryStatus.PENDING,
 			});
-			await paymentHandler({
-				paymentRequest: api.video.regenerateAllImages({
-					// @ts-expect-error
-					image_style: story.settings?.style ?? StoryImageStyles.Realistic,
-					story_id: story.id,
-					story_type: story.type,
-				}),
-				credits: regenAllImagesCreditCost,
-				variant: "credits",
-				openModal: () => setOpenCreditsDialog(true),
+			api.video.regenerateAllImages({
+				// @ts-expect-error
+				image_style: story.settings?.style ?? StoryImageStyles.Realistic,
+				story_id: story.id,
+				story_type: story.type,
 			});
 			router.push(
 				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
@@ -719,13 +708,6 @@ const Footer = ({
 				)}
 			</div>
 			<FooterRightButtons />
-
-			<CheckoutDialog
-				variant="credits"
-				allowanceType={AllowanceType.Credits}
-				open={openCreditsDialog}
-				setOpen={setOpenCreditsDialog}
-			/>
 		</div>
 	);
 };
