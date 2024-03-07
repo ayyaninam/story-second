@@ -20,6 +20,7 @@ import {useQuery} from "@tanstack/react-query";
 import {QueryKeys} from "@/lib/queryKeys";
 import api from "@/api";
 import {useMediaQuery} from "usehooks-ts";
+import useEventLogger from "@/utils/analytics";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -66,6 +67,7 @@ export const LibraryHeader = ({
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
+  const eventLogger = useEventLogger();
 
 	const sort = router.query.sort as string || "desc";
 	const setSort = (sort: string) => {
@@ -174,6 +176,9 @@ export const LibraryHeader = ({
 						variant="default"
 						style={createNewButton}
 						onClick={() => {
+              eventLogger("create_new_clicked", {
+                sourceUrl: router.asPath,
+              })
 							router.push(Routes.Generate());
 						}}
 					>
