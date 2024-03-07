@@ -12,7 +12,7 @@ import {
   tabs,
   videoRatios,
 } from "@/features/generate/constants";
-import Router from "next/router";
+import Router, {useRouter} from "next/router";
 import FileUpload from "@/features/tiktok/components/file-upload";
 import {CreateInitialStoryQueryParams} from "@/types";
 import {ImageRatios} from "@/utils/image-ratio";
@@ -20,8 +20,11 @@ import {DisplayAspectRatios, StoryInputTypes, StoryLanguages, StoryLengths, Stor
 import Routes from "@/routes";
 import {LanguageSelect, VideoRatioSelect} from "@/features/generate/components/selection-constants";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import useEventLogger from "@/utils/analytics";
 
 const GenerateModalContent: FC = () => {
+  const eventLogger = useEventLogger();
+
   const [value, setValue] = useState<TabType>(TabType.Video);
   const [input, setInput] = useState("");
   const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
@@ -36,6 +39,7 @@ const GenerateModalContent: FC = () => {
 
   const {invalidateUser} = useUpdateUser();
   const onSubmit = async () => {
+    eventLogger("generate_story")
     const videoRatio = tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
     setIsLoading(true);
     const params: CreateInitialStoryQueryParams = {

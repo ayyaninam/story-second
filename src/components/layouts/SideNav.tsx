@@ -10,17 +10,19 @@ import RightPlay from "@/components/icons/right-play";
 import Format from "@/utils/format";
 import StoryLogoFullWhite from "@/components/brand-logos/primary-white";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
-import {Skeleton} from "@/components/ui/skeleton";
-import {useQuery} from "@tanstack/react-query";
-import {QueryKeys} from "@/lib/queryKeys";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
 import api from "@/api";
-import {useEffect, useState} from "react";
-import {SubscriptionConstants} from "@/constants/subscription-constants";
-import {userInfo} from "os";
-import {mainSchema} from "@/api/schema";
-import {calculateDaysBetweenDates} from "@/utils/daytime";
-import {boolean} from "zod";
-
+import { useEffect, useState } from "react";
+import { SubscriptionConstants } from "@/constants/subscription-constants";
+import { userInfo } from "os";
+import { mainSchema } from "@/api/schema";
+import { calculateDaysBetweenDates } from "@/utils/daytime";
+import { boolean } from "zod";
+import useEventLogger from "@/utils/analytics";
+import { router } from "next/client";
+import { useRouter } from "next/router";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
@@ -100,16 +102,23 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 		boxShadow: "0px -0.8px 9.6px 0px rgba(255, 255, 255, 0.12) inset",
 	};
 
-	const { data, isPending, refetch } = useQuery({
+	const router = useRouter();
+	const eventLogger = useEventLogger();
+
+	const { data, isPending } = useQuery({
 		queryKey: [QueryKeys.USER],
 		queryFn: () => api.user.get(),
 	});
 
-
 	const [userName, setUserName] = useState("Story.com");
-	const [subscriptionDetails, setSubscriptionDetails] = useState<mainSchema["UserSubscriptionDTO"]|null>(null);
+	const [subscriptionDetails, setSubscriptionDetails] = useState<
+		mainSchema["UserSubscriptionDTO"] | null
+	>(null);
 	useEffect(() => {
-		setUserName(data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName || "Story.com");
+		setUserName(
+			data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName ||
+				"Story.com"
+		);
 		setSubscriptionDetails(data?.data?.subscription || null);
 	}, [data]);
 
@@ -117,16 +126,19 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 		<div className="hidden w-[18rem] xl:flex xl:flex-col xl:justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
-					{(!isPending && data?.data) ? (
+					{!isPending && data?.data ? (
 						<>
 							<Avatar className="h-8 w-8 border-[1px] border-gray-200">
 								<AvatarImage src={data?.data?.profilePicture || ""} />
 								<AvatarFallback>
-									 {Format.AvatarName(data?.data?.name?.split(" ")[0] || "S", data?.data?.lastName)}
+									{Format.AvatarName(
+										data?.data?.name?.split(" ")[0] || "S",
+										data?.data?.lastName
+									)}
 								</AvatarFallback>
 							</Avatar>
-								{/*# TODO: enable profile pages when ready*/}
-								{/*# TODO: replace with userDetails*/}
+							{/*# TODO: enable profile pages when ready*/}
+							{/*# TODO: replace with userDetails*/}
 							<Link
 								href={"/account"}
 								// href={"/" + user?.nickname || ""}
@@ -138,7 +150,11 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 										style={userHandlerStyle}
 									>
 										<RightPlay size={6} />
-										<span>{(data?.data?.profileName?.length || 0) > 7 ? "/"+data?.data?.profileName : "story.com/"+data?.data?.profileName}</span>
+										<span>
+											{(data?.data?.profileName?.length || 0) > 7
+												? "/" + data?.data?.profileName
+												: "story.com/" + data?.data?.profileName}
+										</span>
 									</span>
 								</span>
 							</Link>
@@ -203,64 +219,81 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 					</Link>
 				</div>
 				<div className="my-2 mx-3 space-y-2">
-					{(subscriptionDetails !== null && subscriptionDetails !== undefined) && (
-						<>
-							{/*<p className="font-medium text-sm">{SubscriptionConstants[subscriptionDetails.subscriptionPlan as number].name} Plan</p>*/}
-							<p className="font-medium text-sm">{SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.name} Plan</p>
+					{subscriptionDetails !== null &&
+						subscriptionDetails !== undefined && (
+							<>
+								{/*<p className="font-medium text-sm">{SubscriptionConstants[subscriptionDetails.subscriptionPlan as number].name} Plan</p>*/}
+								<p className="font-medium text-sm">
+									{
+										SubscriptionConstants[subscriptionDetails.subscriptionPlan]
+											?.name
+									}{" "}
+									Plan
+								</p>
 
-							<div className="grid grid-cols-2 gap-1 text-sm pr-4">
-								<div className="flex gap-x-2 items-center">
-									<span
-										className="p-1.5 rounded-sm"
-										style={{
-											background: "rgba(255, 255, 255, 0.05)",
-											boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
-										}}
-									>
-										{`${subscriptionDetails.videoGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.videos}`}
-									</span>
-									<span>Videos</span>
+								<div className="grid grid-cols-2 gap-1 text-sm pr-4">
+									<div className="flex gap-x-2 items-center">
+										<span
+											className="p-1.5 rounded-sm"
+											style={{
+												background: "rgba(255, 255, 255, 0.05)",
+												boxShadow:
+													"0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+											}}
+										>
+											{`${subscriptionDetails.videoGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.videos}`}
+										</span>
+										<span>Videos</span>
+									</div>
+									<div className="flex gap-x-2 items-center">
+										<span
+											className="p-1.5 rounded-sm"
+											style={{
+												background: "rgba(255, 255, 255, 0.05)",
+												boxShadow:
+													"0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+											}}
+										>
+											{`${subscriptionDetails.storyGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.stories}`}
+										</span>
+										<span>Storybooks</span>
+									</div>
+									<div className="flex gap-x-2 items-center">
+										<span
+											className="p-1.5 rounded-sm"
+											style={{
+												background: "rgba(255, 255, 255, 0.05)",
+												boxShadow:
+													"0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+											}}
+										>
+											{subscriptionDetails.credits}
+										</span>
+										<span>Credits</span>
+									</div>
+									<div className="flex gap-x-2 items-center text-nowrap">
+										<span
+											className="p-1.5 rounded-sm"
+											style={{
+												background: "rgba(255, 255, 255, 0.05)",
+												boxShadow:
+													"0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
+											}}
+										>
+											{/*convert subscriptionDetails.endDate to days left*/}
+											{calculateDaysBetweenDates(
+												new Date().toString(),
+												new Date(
+													subscriptionDetails.nextRefreshDate || Date()
+												).toString()
+											)}
+											d
+										</span>
+										<span>Until Reset</span>
+									</div>
 								</div>
-								<div className="flex gap-x-2 items-center">
-									<span
-										className="p-1.5 rounded-sm"
-										style={{
-											background: "rgba(255, 255, 255, 0.05)",
-											boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
-										}}
-									>
-										{`${subscriptionDetails.storyGenerations}/${SubscriptionConstants[subscriptionDetails.subscriptionPlan]?.stories}`}
-									</span>
-									<span>Storybooks</span>
-								</div>
-								<div className="flex gap-x-2 items-center">
-									<span
-										className="p-1.5 rounded-sm"
-										style={{
-											background: "rgba(255, 255, 255, 0.05)",
-											boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
-										}}
-									>
-										{subscriptionDetails.credits}
-									</span>
-									<span>Credits</span>
-								</div>
-								<div className="flex gap-x-2 items-center text-nowrap">
-									<span
-										className="p-1.5 rounded-sm"
-										style={{
-											background: "rgba(255, 255, 255, 0.05)",
-											boxShadow: "0px 0px 0px 1px rgba(255, 255, 255, 0.06) inset",
-										}}
-									>
-										{/*convert subscriptionDetails.endDate to days left*/}
-										{calculateDaysBetweenDates(new Date().toString(), new Date(subscriptionDetails.nextRefreshDate || Date()).toString())}d
-									</span>
-									<span>Until Reset</span>
-								</div>
-							</div>
-						</>
-					)}
+							</>
+						)}
 
 					<div className="flex gap-x-2.5 items-center">
 						{/*# TODO: enable if plans have turbo mode*/}
@@ -281,34 +314,38 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						variant="outline"
 						className="min-w-full rounded-lg py-1.5 text-white font-normal hover:text-accent-300"
 						style={selectedStyle}
+						onClick={() =>
+							eventLogger("upgrade_subscription_clicked", {
+								sourceUrl: router.asPath,
+							})
+						}
 					>
 						Upgrade Subscription
 					</Button>
 				</UpgradeSubscriptionDialog>
-				{ data?.data
-					? <Link
-							href={"/auth/logout"}
+				{data?.data ? (
+					<Link href={"/auth/logout"}>
+						<Button
+							variant="outline"
+							className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-pink-700"
+							style={logoutStyle}
+							onClick={() => eventLogger("logout_clicked")}
 						>
-							<Button
-								variant="outline"
-								className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-pink-700"
-								style={logoutStyle}
-								>
-								Logout
-							</Button>
-						</Link>
-					: <Link
-							href={"/auth/login"}
+							Logout
+						</Button>
+					</Link>
+				) : (
+					<Link href={"/auth/login"}>
+						<Button
+							variant="outline"
+							className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-accent-300"
+							style={loginStyle}
+							onClick={() => eventLogger("login_clicked")}
 						>
-							<Button
-								variant="outline"
-								className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-accent-300"
-								style={loginStyle}
-								>
-								Login
-							</Button>
-						</Link>
-				}
+							Login
+						</Button>
+					</Link>
+				)}
 			</div>
 		</div>
 	);
