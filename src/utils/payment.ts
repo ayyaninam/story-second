@@ -59,13 +59,13 @@ export const usePaymentHandler = () => {
 		} else {
 			if (variant === "video credits") {
 				toast.error(
-					"User does not have enough video credits to perform this action"
+					"You do not have enough video credits to perform this action"
 				);
 			} else if (variant === "credits") {
-				toast.error("User does not have enough credits to perform this action");
+				toast.error("You do not have enough credits to perform this action");
 			} else if (variant === "story book") {
 				toast.error(
-					"User does not have enough story book credits to perform this action"
+					"You do not have enough story book credits to perform this action"
 				);
 			}
 			openModal();
