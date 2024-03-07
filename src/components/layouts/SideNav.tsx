@@ -123,7 +123,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	}, [data]);
 
 	return (
-		<div className="hidden w-[18rem] xl:flex xl:flex-col xl:justify-between">
+		<div className="hidden w-[18rem] lg:flex lg:flex-col lg:justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
 					{!isPending && data?.data ? (
