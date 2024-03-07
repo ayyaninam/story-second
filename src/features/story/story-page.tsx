@@ -40,7 +40,7 @@ const StoryBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 		void fetchStory();
 
 		return () => clearInterval(intervalId);
-	}, [genre, id, story]);
+	}, [genre, id]);
 
 	return (
 		<div
