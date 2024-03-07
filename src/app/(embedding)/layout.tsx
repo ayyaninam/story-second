@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "@/styles/globals.css";
 
 /**
@@ -14,7 +15,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={clsx(randFont.className, "prompt-embedded-page")}>
-				{children}
+				<UserProvider>{children}</UserProvider>
 				<Toaster />
 			</body>
 		</html>
