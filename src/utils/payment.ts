@@ -18,17 +18,31 @@ export const usePaymentHandler = () => {
 	const paymentHandler = async ({
 		paymentRequest,
 		credits,
+		videoCredits,
+		storyCredits,
+		variant,
 		openModal,
 	}: {
 		paymentRequest: Promise<unknown>;
-		credits: number;
+		credits?: number;
+		videoCredits?: number;
+		storyCredits?: number;
+		variant: "credits" | "video credits" | "story book";
 		openModal: () => void;
 	}): Promise<unknown> => {
 		if (!subscription) {
 			throw new Error("user does not have the subscription object");
 		}
 		const userCredits = subscription.credits ?? 0;
-		const enoughBalance = userCredits >= credits;
+		const userVideoCredits = subscription.videoGenerations ?? 0;
+		const userStoryCredits = subscription.storyGenerations ?? 0;
+		const enoughBalance =
+			variant === "credits"
+				? // @ts-ignore
+					userCredits >= credits
+				: variant === "video credits" // @ts-ignore
+					? userVideoCredits >= videoCredits // @ts-ignore
+					: userStoryCredits >= storyCredits;
 
 		if (enoughBalance) {
 			const data = await paymentRequest;
@@ -43,7 +57,17 @@ export const usePaymentHandler = () => {
 
 			return data;
 		} else {
-			toast.error("User does not have enough credits to perform this action");
+			if (variant === "video credits") {
+				toast.error(
+					"User does not have enough video credits to perform this action"
+				);
+			} else if (variant === "credits") {
+				toast.error("User does not have enough credits to perform this action");
+			} else if (variant === "story book") {
+				toast.error(
+					"User does not have enough story book credits to perform this action"
+				);
+			}
 			openModal();
 		}
 	};

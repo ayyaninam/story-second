@@ -85,10 +85,9 @@ const EditSegmentModal = ({
 					scene_id: scene.id,
 				}),
 				credits: 2,
-				openSubscriptionModal: () => setOpenCreditsDialog(true),
+				variant: "credits",
+				openModal: () => setOpenCreditsDialog(true),
 			});
-
-			// invalidateUser(); starting to delete theset
 		},
 	});
 
