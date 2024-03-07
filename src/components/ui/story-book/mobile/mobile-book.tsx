@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { WebStory } from "../constants";
 import Image from "next/image";
 import Format from "@/utils/format";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BookProps {
 	story: WebStory;
@@ -37,8 +38,15 @@ const MobileBook = ({ story }: BookProps) => {
 		setPageArray(pArray);
 	}, [story.scenes]);
 
+	console.log(pageArray);
+	console.log(pageArray.length === 0);
+
+	if (pageArray.length === 0) {
+		return <Skeleton className="h-[350px] w-[250px] m-1" />;
+	}
+
 	return (
-		<div className="w-full gap-4 flex flex-col">
+		<div className="w-full gap-4 flex flex-col overflow-y-scroll h-screen mt-16">
 			{pageArray.map((item) => (
 				<div
 					key={item.pageNumber}
