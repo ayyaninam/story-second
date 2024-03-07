@@ -47,7 +47,7 @@ import { cn } from "@/utils";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
-import {boolean} from "zod";
+import { boolean } from "zod";
 import useUpdateUser from "@/hooks/useUpdateUser";
 const images = [
 	{
@@ -143,13 +143,12 @@ const Footer = ({
 	const ungeneratedAudios = story.scenes?.flatMap((scene) =>
 		scene.segments
 			?.map((el, index) => ({ ...el, sceneId: scene.id }))
-			?.filter(
-				(segment) =>
-					!segment.audioKey
-			)
+			?.filter((segment) => !segment.audioKey)
 	);
-	console.log(story.scenes.flatMap((el) => el.segments.map((el) => el.audioKey)))
-	console.log("ungeneratedAudio", ungeneratedAudios)
+	console.log(
+		story.scenes.flatMap((el) => el.segments.map((el) => el.audioKey))
+	);
+	console.log("ungeneratedAudio", ungeneratedAudios);
 	const regenUngeneratedImagesCost = getImageCost(ungeneratedImages.length);
 
 	const numImages = story.scenes.flatMap((el) => el.segments);
@@ -205,7 +204,7 @@ const Footer = ({
 						})) ?? Promise.resolve()
 				);
 				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
-				invalidateUser()
+				invalidateUser();
 			}
 			router.push(
 				Routes.EditStoryboard(story.type, story.topLevelCategory, story.slug)
@@ -383,7 +382,7 @@ const Footer = ({
 		},
 	};
 
-  const { invalidateUser } = useUpdateUser();
+	const { invalidateUser } = useUpdateUser();
 
 	const [selectedScenesGenButton, setSelectedScenesGenButton] = useState<
 		ScenesGenButtonType | undefined
@@ -481,7 +480,7 @@ const Footer = ({
 						variant="outline"
 						onClick={async () => {
 							await RegenerateAllImagesMutation.mutateAsync();
-              invalidateUser();
+							invalidateUser();
 						}}
 						className={cn("stroke-muted text-muted-foreground")}
 						disabled={
@@ -505,7 +504,7 @@ const Footer = ({
 					<Button
 						onClick={async () => {
 							await GenerateVideoScenesMutation.mutateAsync();
-              invalidateUser();
+							invalidateUser();
 						}}
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 						disabled={
@@ -530,7 +529,7 @@ const Footer = ({
 						variant="outline"
 						onClick={async () => {
 							await RegenerateAllScenesMutation.mutateAsync();
-              invalidateUser();
+							invalidateUser();
 						}}
 						className={cn("stroke-muted text-muted-foreground")}
 						disabled={
@@ -665,7 +664,7 @@ const Footer = ({
             /> */}
 							<div
 								ref={scrollRef}
-								className="flex 2xl:overflow-x-visible overflow-x-hidden "
+								className="flex 2lg:overflow-x-visible overflow-x-hidden "
 							>
 								<div className="flex gap-x-1 py-1">
 									<TooltipProvider>
