@@ -61,14 +61,13 @@ function LibraryGalleryComponent({
 						}}
 					>
 						{galleryDetails.header.buttonText}
-						<RightArrow fill="#0D9488"/>
+						<RightArrow fill="#0D9488" />
 					</Button>
 				)}
-
 			</div>
 			<div
 				className={
-					"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 grid-flow-row"
+					"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:grid-cols-5 gap-4 grid-flow-row"
 				}
 			>
 				{areThumbnailsLoading ? (
