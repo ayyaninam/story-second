@@ -129,9 +129,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			});
 		if ("error" in story) {
 			toast.error(story?.error as string);
+			console.log("Error creating story: ", story?.error);
 			return {
 				redirect: {
-					destination: Routes.ToSubscriptionPage("Not enough balance to create a story"),
+					destination: Routes.ToSubscriptionPage(story?.error as string),
 					permanent: false,
 				},
 			};
@@ -143,7 +144,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 		// If the url is not in the expected format, redirect to home
 		if (!genre || !id)
-			throw new Error("Invalid response from server, no genre or id provided");
+			return {
+				redirect: {
+					destination: Routes.Generate(
+						"Invalid response from server, please try again"
+					),
+					permanent: false,
+				},
+			};
 
 		// get storyType using output_type and StoryOutputTypes
 		const storyType = Number(output_type) as StoryOutputTypes;
@@ -166,7 +174,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		}
 		return {
 			redirect: {
-				destination: Routes.defaultRedirect,
+				destination: Routes.Generate("Internal server error, please try again"),
 				permanent: false,
 			},
 		};
