@@ -42,8 +42,8 @@ class Routes {
 		}
 		return `${this.authpage}?returnTo=${encodeURIComponent(returnUrl)}`;
 	}
-	static ToSubscriptionPage() {
-		return `/account?step=payment`;
+	static ToSubscriptionPage(message = "") {
+		return `/account?step=payment${message ? "&message=" + message : ""}`;
 	}
 	static Logout(returnTo = "/feed") {
 		return `/auth/logout?returnTo=${returnTo}`;

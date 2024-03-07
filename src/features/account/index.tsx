@@ -16,6 +16,7 @@ import { NextSeo } from "next-seo";
 import user from "@/api/routes/user";
 import { AccountsHeader } from "@/features/account/components/header";
 import Billing from "@/features/account/components/billing";
+import toast from "react-hot-toast";
 
 const profileSchema = z.object({
   profileName: z
@@ -60,7 +61,14 @@ type Account = z.infer<typeof profileSchema>;
 
 const AccountsPage = () => {
   const router = useRouter();
-  const { step = "profile" } = router.query ?? {};
+  const { step = "profile", message } = router.query ?? {};
+
+  useEffect(() => {
+    if (message) {
+      toast.dismiss();
+      toast.error(message as string);
+    }
+  }, []);
 
   const { data, isPending, refetch } = useQuery({
     queryKey: [QueryKeys.USER],
