@@ -3,7 +3,7 @@ import React, { CSSProperties } from "react";
 import AiStar from "./svgs/ai-star";
 import RightArrow from "./svgs/right-arrow";
 import BookScroll from "./svgs/book-scroll";
-import {cn} from "@/utils";
+import { cn } from "@/utils";
 import toast from "react-hot-toast";
 
 const heroSectionContainer: CSSProperties = {
@@ -13,7 +13,11 @@ const heroSectionContainer: CSSProperties = {
 	boxShadow: "0px 1px 2px 0px rgba(20, 21, 26, 0.05)",
 };
 
-function FeedHeroSection({ randomThumbnail = "" } : { randomThumbnail?: string | null } ) {
+function FeedHeroSection({
+	randomThumbnail = "",
+}: {
+	randomThumbnail?: string | null;
+}) {
 	return (
 		<div className="w-full flex items-center justify-center gap-2 pb-6">
 			<div
@@ -43,7 +47,7 @@ function FeedHeroSection({ randomThumbnail = "" } : { randomThumbnail?: string |
 							className="bg-accent-600 hover:bg-accent-700 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-accent-700 text-background"
 							onClick={() => {
 								// TODO: Integrate this with prompt box
-								toast.success("Coming soon!")
+								toast.success("Coming soon!");
 							}}
 						>
 							<AiStar />
@@ -55,7 +59,7 @@ function FeedHeroSection({ randomThumbnail = "" } : { randomThumbnail?: string |
 							className="bg-white hover:bg-gray-100 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-[#DEE0E3] text-primary"
 							onClick={() => {
 								// TODO: Integrate this with prompt box
-								toast.success("Coming soon!")
+								toast.success("Coming soon!");
 							}}
 						>
 							<BookScroll />
@@ -77,10 +81,7 @@ function FeedHeroSection({ randomThumbnail = "" } : { randomThumbnail?: string |
 								backgroundPosition: "center",
 								borderRadius: "8px",
 							}}
-						>
-
-						</div>
-
+						></div>
 					)}
 				</div>
 			</div>

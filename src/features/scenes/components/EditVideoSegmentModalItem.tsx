@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { DisplayAspectRatios } from "@/utils/enums";
 import { RefreshCcw } from "lucide-react";
-import {getImageCost, getVideoCost} from "@/utils/credit-cost";
+import { getImageCost, getVideoCost } from "@/utils/credit-cost";
 
 function RegenerateSegmentBar({
 	segment,

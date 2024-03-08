@@ -8,17 +8,15 @@ import {
 } from "@/components/ui/select";
 import { getGenreNameFromSlug } from "../utils";
 
-
 export const GenreTabSwitcher = ({
-																	 selectedGenre,
-																	 setSelectedGenre,
-																	 genreOptions,
-																 }: {
+	selectedGenre,
+	setSelectedGenre,
+	genreOptions,
+}: {
 	selectedGenre: string;
 	setSelectedGenre: (genre: string) => void;
 	genreOptions: { id: string; value: string }[];
 }) => {
-
 	const showExtraSelectedTab = useMemo(
 		() =>
 			!genreOptions

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React, {CSSProperties} from "react";
+import React, { CSSProperties } from "react";
 import { HeaderTabSwitcher } from "./orientation-tab-switcher";
 import { GenreTabSwitcher } from "./genre-tab-switcher";
 import {
@@ -12,11 +12,15 @@ import {
 } from "@/components/ui/select";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
-import { genreOptions, SORTING_OPTIONS, VIDEO_ORIENTATIONS} from "@/constants/feed-constants";
-import {MobileSelector} from "@/components/ui/mobile-selector";
-import {Plus} from "lucide-react";
+import {
+	genreOptions,
+	SORTING_OPTIONS,
+	VIDEO_ORIENTATIONS,
+} from "@/constants/feed-constants";
+import { MobileSelector } from "@/components/ui/mobile-selector";
+import { Plus } from "lucide-react";
 import Routes from "@/routes";
-import {useMediaQuery} from "usehooks-ts";
+import { useMediaQuery } from "usehooks-ts";
 import FeedIcon from "@/components/icons/side-nav/FeedIcon";
 import useEventLogger from "@/utils/analytics";
 
@@ -54,9 +58,9 @@ export const FeedHeader = ({
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
-  const eventLogger = useEventLogger();
+	const eventLogger = useEventLogger();
 
-	const sort = router.query.sort as string || "desc";
+	const sort = (router.query.sort as string) || "desc";
 	const setSort = (sort: string) => {
 		router.push(
 			{
@@ -82,29 +86,87 @@ export const FeedHeader = ({
 				style={theme ? mainHeaderContainer[theme] : mainHeaderContainer.light}
 			>
 				<div className="flex items-start w-[250px]">
-          <div style={{width: 32, height: 32, position: 'relative', boxShadow: '0px 2.999999761581421px 10.999999046325684px rgba(54.89, 55.76, 117.32, 0.12)'}}>
-            <div style={{width: 32, height: 32, left: 0, top: 0, position: 'absolute', background: 'linear-gradient(0deg, #3A54CB 0%, #3A54CB 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%)', boxShadow: '0px -0.800000011920929px 9.600000381469727px rgba(255, 255, 255, 0.12) inset', borderRadius: 8}} />
-            <div style={{width: 28, height: 28, left: 2, top: 2, position: 'absolute', background: 'linear-gradient(192deg, #6060A6 0%, #F0D2FC 100%)', boxShadow: '0px 0.3720930516719818px 1.4883722066879272px rgba(0, 0, 0, 0.25) inset', borderRadius: 9999}} />
-            <div style={{width: 28, height: 28, left: 2, top: 2, position: 'absolute', background: 'linear-gradient(180deg, #001824 0%, #4941C5 100%)', boxShadow: '0px 0.2499999850988388px 0.9999999403953552px rgba(0, 0, 0, 0.25) inset', borderRadius: 9999, border: '0.40px #1B244B solid'}} />
-            <div style={{width: 19, height: 19, left: 6, top: 6, position: 'absolute'}}>
-              <FeedIcon />
-            </div>
-          </div>
+					<div
+						style={{
+							width: 32,
+							height: 32,
+							position: "relative",
+							boxShadow:
+								"0px 2.999999761581421px 10.999999046325684px rgba(54.89, 55.76, 117.32, 0.12)",
+						}}
+					>
+						<div
+							style={{
+								width: 32,
+								height: 32,
+								left: 0,
+								top: 0,
+								position: "absolute",
+								background:
+									"linear-gradient(0deg, #3A54CB 0%, #3A54CB 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%)",
+								boxShadow:
+									"0px -0.800000011920929px 9.600000381469727px rgba(255, 255, 255, 0.12) inset",
+								borderRadius: 8,
+							}}
+						/>
+						<div
+							style={{
+								width: 28,
+								height: 28,
+								left: 2,
+								top: 2,
+								position: "absolute",
+								background: "linear-gradient(192deg, #6060A6 0%, #F0D2FC 100%)",
+								boxShadow:
+									"0px 0.3720930516719818px 1.4883722066879272px rgba(0, 0, 0, 0.25) inset",
+								borderRadius: 9999,
+							}}
+						/>
+						<div
+							style={{
+								width: 28,
+								height: 28,
+								left: 2,
+								top: 2,
+								position: "absolute",
+								background: "linear-gradient(180deg, #001824 0%, #4941C5 100%)",
+								boxShadow:
+									"0px 0.2499999850988388px 0.9999999403953552px rgba(0, 0, 0, 0.25) inset",
+								borderRadius: 9999,
+								border: "0.40px #1B244B solid",
+							}}
+						/>
+						<div
+							style={{
+								width: 19,
+								height: 19,
+								left: 6,
+								top: 6,
+								position: "absolute",
+							}}
+						>
+							<FeedIcon />
+						</div>
+					</div>
 					<div className="pl-[12px] flex flex-col items-start">
 						<span className="text-slate-950 text-base font-bold">Feed</span>
-						<span className="text-accent-700 text-sm font-normal">Inspiration Board</span>
+						<span className="text-accent-700 text-sm font-normal">
+							Inspiration Board
+						</span>
 					</div>
 				</div>
-				{ isMobile ? <MobileSelector
-					selectedTab={selectedOrientationTab}
-					setSelectedTab={setSelectedOrientationTab}
-					tabs={Object.values(VIDEO_ORIENTATIONS)}
+				{isMobile ? (
+					<MobileSelector
+						selectedTab={selectedOrientationTab}
+						setSelectedTab={setSelectedOrientationTab}
+						tabs={Object.values(VIDEO_ORIENTATIONS)}
 					/>
-					: <HeaderTabSwitcher
-					selectedTab={selectedOrientationTab}
-					setSelectedTab={setSelectedOrientationTab}
-				/>
-				}
+				) : (
+					<HeaderTabSwitcher
+						selectedTab={selectedOrientationTab}
+						setSelectedTab={setSelectedOrientationTab}
+					/>
+				)}
 				<div className="flex items-center gap-4">
 					{/*<Button*/}
 					{/*	className={`px-4 py-1.5 text-sm font-medium flex gap-2 items-center h-fit`}*/}
@@ -137,18 +199,20 @@ export const FeedHeader = ({
 					{/*	</svg>*/}
 					{/*	Tutorial*/}
 					{/*</Button>*/}
-					{!isMobile && (<Button
-						className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
-						variant="default"
-						onClick={() => {
-              eventLogger("create_new_clicked", {
-                sourceUrl: router.asPath,
-              })
-							router.push(Routes.Generate());
-						}}
-					>
-						<Plus className="h-4 w-4" /> Create New
-					</Button>)}
+					{!isMobile && (
+						<Button
+							className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
+							variant="default"
+							onClick={() => {
+								eventLogger("create_new_clicked", {
+									sourceUrl: router.asPath,
+								});
+								router.push(Routes.Generate());
+							}}
+						>
+							<Plus className="h-4 w-4" /> Create New
+						</Button>
+					)}
 				</div>
 			</div>
 			<div
@@ -181,46 +245,44 @@ export const FeedHeader = ({
 					{/*	className="w-full bg-white border-none p-0 focus-visible:outline-none focus-visible:border-none focus-visible:ring-offset-none focus-visible:ring-0 focus-visible:ring-none text-slate-950"*/}
 					{/*/>*/}
 				</div>
-				{ isMobile ? <div className="flex flex-row w-full gap-4">
-					<MobileSelector
-						selectedTab={selectedGenre}
-						setSelectedTab={setSelectedGenre}
-						tabs={genreOptions}
-					/>
-					<MobileSelector
-						selectedTab={sort}
-						setSelectedTab={setSort}
-						tabs={sortOptions}
-					/>
+				{isMobile ? (
+					<div className="flex flex-row w-full gap-4">
+						<MobileSelector
+							selectedTab={selectedGenre}
+							setSelectedTab={setSelectedGenre}
+							tabs={genreOptions}
+						/>
+						<MobileSelector
+							selectedTab={sort}
+							setSelectedTab={setSort}
+							tabs={sortOptions}
+						/>
 					</div>
-				: <>
-					<GenreTabSwitcher
-						selectedGenre={selectedGenre}
-						setSelectedGenre={setSelectedGenre}
-						genreOptions={genreOptions}
-					/>
-					<div className="flex h-[40px] w-[180px] gap-2 items-center">
-						<Select
-							onValueChange={setSort}
-							defaultValue={sort}
-						>
-							<SelectTrigger className="max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
-								<div className="text-accent-600">
-									<SelectValue placeholder="Sort by" />
-								</div>
-							</SelectTrigger>
-							<SelectContent className="bg-white text-[#000000] border-muted">
-								{sortOptions.map((option) => (
-									<SelectItem value={option.id} key={option.id}>
-										{option.value}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
+				) : (
+					<>
+						<GenreTabSwitcher
+							selectedGenre={selectedGenre}
+							setSelectedGenre={setSelectedGenre}
+							genreOptions={genreOptions}
+						/>
+						<div className="flex h-[40px] w-[180px] gap-2 items-center">
+							<Select onValueChange={setSort} defaultValue={sort}>
+								<SelectTrigger className="max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
+									<div className="text-accent-600">
+										<SelectValue placeholder="Sort by" />
+									</div>
+								</SelectTrigger>
+								<SelectContent className="bg-white text-[#000000] border-muted">
+									{sortOptions.map((option) => (
+										<SelectItem value={option.id} key={option.id}>
+											{option.value}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</div>
 					</>
-				}
-
+				)}
 			</div>
 		</div>
 	);

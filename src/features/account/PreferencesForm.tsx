@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import clsx from "clsx";
 import { useCallback } from "react";
-import {FormProvider, UseFormReturn} from "react-hook-form";
+import { FormProvider, UseFormReturn } from "react-hook-form";
 
 const PreferenceInput = ({
 	name,
@@ -49,8 +49,7 @@ const PreferenceInput = ({
 };
 
 export const PreferencesForm = ({ form }: { form: UseFormReturn<any> }) => {
-	const onSubmit = useCallback((values: any) => {
-	}, []);
+	const onSubmit = useCallback((values: any) => {}, []);
 	return (
 		<>
 			<FormProvider {...form}>

@@ -11,7 +11,6 @@ function AuthPromptMobile({ onLogIn, onSignUp }: AuthPromptProps) {
 			}}
 		>
 			<div className="flex flex-col items-center justify-center space-y-2 w-[100%] h-[95%] bg-white text-slate-900 shadow-2xl">
-
 				<div className="pb-2 text-lg font-semibold">Get Started</div>
 				<Button
 					className={`p-1 w-[60%] shadow-sm bg-purple-600 text-xs text-white`}

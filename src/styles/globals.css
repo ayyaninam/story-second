@@ -45,15 +45,15 @@
 		--radius: 0.5rem;
 
 		/*Defaults - in case someone forgets to add them in page level*/
-		--accent-color-50: #F8FAFC;
-		--accent-color-100: #F1F6F9;
-		--accent-color-200: #E1EAEF;
-		--accent-color-300: #CBD9E1;
-		--accent-color-400: #94ABB8;
-		--accent-color-500: #657D8B;
-		--accent-color-600: #485E6A;
+		--accent-color-50: #f8fafc;
+		--accent-color-100: #f1f6f9;
+		--accent-color-200: #e1eaef;
+		--accent-color-300: #cbd9e1;
+		--accent-color-400: #94abb8;
+		--accent-color-500: #657d8b;
+		--accent-color-600: #485e6a;
 		--accent-color-700: #344956;
-		--accent-color-800: #1F323D;
+		--accent-color-800: #1f323d;
 		--accent-color-900: #031926;
 		--accent-color-950: #021017;
 	}
@@ -107,11 +107,11 @@
 }
 
 @layer base {
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+	input[type="number"]::-webkit-inner-spin-button,
+	input[type="number"]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 }
 
 .filled-bar-background {
@@ -173,16 +173,16 @@
 }
 
 @media (max-width: 1024px) {
-  .intercom-lightweight-app-launcher {
-    bottom: 80px !important;
-  }
+	.intercom-lightweight-app-launcher {
+		bottom: 80px !important;
+	}
 
-  /*localhost*/
-  .intercom-dfosxs {
-    bottom: 80px !important;
-  }
+	/*localhost*/
+	.intercom-dfosxs {
+		bottom: 80px !important;
+	}
 
-  iframe[name='intercom-notifications-frame'] {
-    bottom: 124px !important;
-  }
+	iframe[name="intercom-notifications-frame"] {
+		bottom: 124px !important;
+	}
 }

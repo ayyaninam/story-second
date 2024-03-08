@@ -1,15 +1,14 @@
 import { GetServerSideProps } from "next";
 import Routes from "@/routes";
 
-
 export const getServerSideProps: GetServerSideProps = async () => {
-  const returnTo = Routes.Feed();
-  return {
-    redirect: {
-      destination: returnTo,
-      permanent: false,
-    },
-  };
+	const returnTo = Routes.Feed();
+	return {
+		redirect: {
+			destination: returnTo,
+			permanent: false,
+		},
+	};
 };
 
 // Disabled: just redirect to /feed
@@ -25,5 +24,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
 // };
 
 export default function Page() {
-  return null;
+	return null;
 }

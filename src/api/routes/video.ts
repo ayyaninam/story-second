@@ -1,8 +1,8 @@
-import {authFetcher, mlFetcher, publicFetcher} from "@/lib/fetcher";
-import {mainSchema, mlSchema} from "../schema";
-import {getJwt} from "@/utils/jwt";
-import {StoryOutputTypes} from "@/utils/enums";
-import {RegenerateVideoSegments} from "@/types";
+import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
+import { mainSchema, mlSchema } from "../schema";
+import { getJwt } from "@/utils/jwt";
+import { StoryOutputTypes } from "@/utils/enums";
+import { RegenerateVideoSegments } from "@/types";
 
 const video = {
 	getUploadUrl: async (
@@ -173,21 +173,20 @@ const video = {
 		if (!data.data) return null;
 		return data?.data;
 	},
-  copyVideo: async ({
-                   id,
-                   accessToken,
-                 }: {
-    id: string;
-    accessToken?: string;
-  }): Promise<mainSchema["ReturnVideoStoryDTO"] | null> => {
-    const data: mainSchema["ReturnVideoStoryDTOApiResponse"] = await authFetcher(
-      accessToken ?? getJwt()
-    )
-      .post(`api/Video/CopyVideo/${id}`)
-      .json();
-    if (!data.data) return null;
-    return data?.data;
-  },
+	copyVideo: async ({
+		id,
+		accessToken,
+	}: {
+		id: string;
+		accessToken?: string;
+	}): Promise<mainSchema["ReturnVideoStoryDTO"] | null> => {
+		const data: mainSchema["ReturnVideoStoryDTOApiResponse"] =
+			await authFetcher(accessToken ?? getJwt())
+				.post(`api/Video/CopyVideo/${id}`)
+				.json();
+		if (!data.data) return null;
+		return data?.data;
+	},
 };
 
 export default video;

@@ -1,12 +1,13 @@
-import {useQueryClient} from "@tanstack/react-query";
-import {QueryKeys} from "@/lib/queryKeys";
+import { useQueryClient } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
 
 const useUpdateUser = () => {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-  return {
-    invalidateUser: () => queryClient.invalidateQueries({ queryKey: [QueryKeys.USER] }),
-  }
+	return {
+		invalidateUser: () =>
+			queryClient.invalidateQueries({ queryKey: [QueryKeys.USER] }),
+	};
 };
 
 export default useUpdateUser;

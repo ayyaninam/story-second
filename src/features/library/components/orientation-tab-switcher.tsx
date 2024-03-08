@@ -37,7 +37,9 @@ export const HeaderTabSwitcher = ({
 					<div
 						className={cn(
 							"ease-linear duration-300 transition-all",
-							orientation.id === selectedTab ? "text-accent-600" : "text-accent-600"
+							orientation.id === selectedTab
+								? "text-accent-600"
+								: "text-accent-600"
 						)}
 					>
 						{orientation.icon}

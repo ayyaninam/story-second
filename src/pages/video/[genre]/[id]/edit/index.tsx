@@ -6,10 +6,7 @@ import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import Routes from "@/routes";
 import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
 import { StoryOutputTypes } from "@/utils/enums";
-import {
-	GetServerSidePropsContext,
-	InferGetServerSidePropsType,
-} from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { ReactElement } from "react";
 import EditAccentStyles from "@/features/scenes/edit-accent-style";
 

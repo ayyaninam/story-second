@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import {useMediaQuery} from "usehooks-ts";
+import { useMediaQuery } from "usehooks-ts";
 
 const activeStyles =
 	"border border-accent-500 bg-accent-100 text-accent-900 stepper-box-shadow";
@@ -27,7 +27,7 @@ export default function Stepper({
 	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
 }) {
 	const router = useRouter();
-  const isMobile = useMediaQuery("(max-width: 640px)");
+	const isMobile = useMediaQuery("(max-width: 640px)");
 	const [currentHover, setCurrentHover] = useState<StepperStep>(step);
 	const [disableNavToScenes, setDisableNavToScenes] = useState(true);
 	const [disableNavToPreview, setDisableNavToPreview] = useState(true);
@@ -78,65 +78,66 @@ export default function Stepper({
 				Script
 			</Badge>
 			<ChevronRight className="w-4 h-4 opacity-50" />
-      <Badge
-        onMouseEnter={() => {
-          setCurrentHover(StepperStep.Storyboard);
-        }}
-        onMouseLeave={() => {
-          setCurrentHover(step);
-        }}
-        onClick={() =>
-          router.push(
-            Routes.EditStoryboard(
-              WebstoryData.storyType,
-              WebstoryData.topLevelCategory!,
-              WebstoryData.slug!
-            )
-          )
-        }
-        variant="outline"
-        className={clsx(baseStyles, {
-          [activeStyles]:
-            step === StepperStep.Storyboard ||
-            currentHover === StepperStep.Storyboard,
-        })}
-      >
-        <LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
-        Storyboard
-      </Badge>
-      <ChevronRight className="w-4 h-4 opacity-50" />
-      {!isMobile && (
-        <>
-          <Badge
-            variant="outline"
-            onMouseEnter={() => {
-              if (!disableNavToScenes) setCurrentHover(StepperStep.Scenes);
-            }}
-            onMouseLeave={() => {
-              if (!disableNavToScenes) setCurrentHover(step);
-            }}
-            onClick={() => {
-              if (!disableNavToScenes)
-                router.push(
-                  Routes.EditScenes(
-                    WebstoryData.storyType,
-                    WebstoryData.topLevelCategory!,
-                    WebstoryData.slug!
-                  )
-                );
-            }}
-            className={clsx(baseStyles, {
-              [activeStyles]:
-                step === StepperStep.Scenes || currentHover === StepperStep.Scenes,
-              "opacity-60": disableNavToScenes,
-            })}
-          >
-            <Film className="stroke-accent-600 mr-1 h-4 w-4" />
-            Scenes
-          </Badge>
-          <ChevronRight className="w-4 h-4 opacity-50" />
-        </>
-      )}
+			<Badge
+				onMouseEnter={() => {
+					setCurrentHover(StepperStep.Storyboard);
+				}}
+				onMouseLeave={() => {
+					setCurrentHover(step);
+				}}
+				onClick={() =>
+					router.push(
+						Routes.EditStoryboard(
+							WebstoryData.storyType,
+							WebstoryData.topLevelCategory!,
+							WebstoryData.slug!
+						)
+					)
+				}
+				variant="outline"
+				className={clsx(baseStyles, {
+					[activeStyles]:
+						step === StepperStep.Storyboard ||
+						currentHover === StepperStep.Storyboard,
+				})}
+			>
+				<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
+				Storyboard
+			</Badge>
+			<ChevronRight className="w-4 h-4 opacity-50" />
+			{!isMobile && (
+				<>
+					<Badge
+						variant="outline"
+						onMouseEnter={() => {
+							if (!disableNavToScenes) setCurrentHover(StepperStep.Scenes);
+						}}
+						onMouseLeave={() => {
+							if (!disableNavToScenes) setCurrentHover(step);
+						}}
+						onClick={() => {
+							if (!disableNavToScenes)
+								router.push(
+									Routes.EditScenes(
+										WebstoryData.storyType,
+										WebstoryData.topLevelCategory!,
+										WebstoryData.slug!
+									)
+								);
+						}}
+						className={clsx(baseStyles, {
+							[activeStyles]:
+								step === StepperStep.Scenes ||
+								currentHover === StepperStep.Scenes,
+							"opacity-60": disableNavToScenes,
+						})}
+					>
+						<Film className="stroke-accent-600 mr-1 h-4 w-4" />
+						Scenes
+					</Badge>
+					<ChevronRight className="w-4 h-4 opacity-50" />
+				</>
+			)}
 			<Badge
 				variant="outline"
 				onMouseEnter={() => {

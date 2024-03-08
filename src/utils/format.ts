@@ -13,7 +13,7 @@ class Format {
 	}
 
 	public static GetVideoUrl(key: string) {
-    return `${env.NEXT_PUBLIC_IMAGEKIT_URL}/${key}`;
+		return `${env.NEXT_PUBLIC_IMAGEKIT_URL}/${key}`;
 	}
 
 	public static GetPublicBucketObjectUrl(object: string) {
@@ -30,7 +30,10 @@ class Format {
 			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 			.join(" ");
 	}
-	public static AvatarName(firstName: string | null | undefined, lastName: string | null | undefined) {
+	public static AvatarName(
+		firstName: string | null | undefined,
+		lastName: string | null | undefined
+	) {
 		if (!firstName) return "";
 		if (lastName) {
 			return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();

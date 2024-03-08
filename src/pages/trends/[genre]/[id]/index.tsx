@@ -4,47 +4,47 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { StoryOutputTypes } from "@/utils/enums";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import { getSession } from "@auth0/nextjs-auth0";
-import React, {ReactElement} from "react";
+import React, { ReactElement } from "react";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
+	HydrationBoundary,
+	QueryClient,
+	dehydrate,
 } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import Format from "@/utils/format";
-import {NextSeo} from "next-seo";
+import { NextSeo } from "next-seo";
 import PageLayout from "@/components/layouts/PageLayout";
 
 export default function PublishPage({
-  storyData,
-  session,
-  dehydratedState,
+	storyData,
+	session,
+	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  useSaveSessionToken(session.accessToken);
-  return (
-    <HydrationBoundary state={dehydratedState}>
-      <NextSeo
-        title={storyData?.storyTitle || undefined}
-        description={
-          storyData?.summary ||
-          "Find your videos, trends, storybooks, all in one place"
-        }
-        openGraph={{
-          images: [
-            {
-              url: storyData?.coverImage
-                ? Format.GetImageUrl(storyData.coverImage)
-                : "/og-assets/og-story.png",
-              width: 1200,
-              height: 630,
-              alt: storyData?.storyTitle || "Story.com",
-            },
-          ],
-        }}
-      />
-      {/* declare css variables */}
-      <style jsx global>{`
+	useSaveSessionToken(session.accessToken);
+	return (
+		<HydrationBoundary state={dehydratedState}>
+			<NextSeo
+				title={storyData?.storyTitle || undefined}
+				description={
+					storyData?.summary ||
+					"Find your videos, trends, storybooks, all in one place"
+				}
+				openGraph={{
+					images: [
+						{
+							url: storyData?.coverImage
+								? Format.GetImageUrl(storyData.coverImage)
+								: "/og-assets/og-story.png",
+							width: 1200,
+							height: 630,
+							alt: storyData?.storyTitle || "Story.com",
+						},
+					],
+				}}
+			/>
+			{/* declare css variables */}
+			<style jsx global>{`
 				:root {
 					--menu-item-border-color: rgba(206, 122, 255, 0.3);
 					--menu-item-selected-background-color: radial-gradient(
@@ -67,11 +67,11 @@ export default function PublishPage({
 					--accent-color-950: #3b0764;
 				}
 			`}</style>
-      <WebStoryProvider initialValue={storyData}>
-        <PublishedStory storyData={storyData} session={session} />
-      </WebStoryProvider>
-    </HydrationBoundary>
-  );
+			<WebStoryProvider initialValue={storyData}>
+				<PublishedStory storyData={storyData} session={session} />
+			</WebStoryProvider>
+		</HydrationBoundary>
+	);
 }
 
 PublishPage.getLayout = function getLayout(page: ReactElement) {
@@ -79,45 +79,45 @@ PublishPage.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const session = await getSession(ctx.req, ctx.res);
+	const session = await getSession(ctx.req, ctx.res);
 
-  // @ts-expect-error Not typing correctly
-  const { genre, id } = ctx.params;
-  if (!genre || !id) {
-    return {
-      notFound: true,
-    };
-  }
+	// @ts-expect-error Not typing correctly
+	const { genre, id } = ctx.params;
+	if (!genre || !id) {
+		return {
+			notFound: true,
+		};
+	}
 
-  const queryClient = new QueryClient();
-  const storyData = await queryClient.fetchQuery({
-    queryFn: async () =>
-      await api.video.get(genre, id, StoryOutputTypes.SplitScreen),
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-    queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
-  });
-  if (session?.accessToken) {
-    await queryClient.prefetchQuery({
-      queryFn: async () =>
-        await api.webstory.interactions(
-          storyData?.id as string,
-          session?.accessToken
-        ),
-      // eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-      queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
-    });
-    await queryClient.prefetchQuery({
-      queryFn: async () => await api.user.get(),
-      // eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-      queryKey: [QueryKeys.USER],
-    });
-  }
+	const queryClient = new QueryClient();
+	const storyData = await queryClient.fetchQuery({
+		queryFn: async () =>
+			await api.video.get(genre, id, StoryOutputTypes.SplitScreen),
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
+	});
+	if (session?.accessToken) {
+		await queryClient.prefetchQuery({
+			queryFn: async () =>
+				await api.webstory.interactions(
+					storyData?.id as string,
+					session?.accessToken
+				),
+			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+			queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
+		});
+		await queryClient.prefetchQuery({
+			queryFn: async () => await api.user.get(),
+			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+			queryKey: [QueryKeys.USER],
+		});
+	}
 
-  return {
-    props: {
-      session: { ...session },
-      storyData,
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
+	return {
+		props: {
+			session: { ...session },
+			storyData,
+			dehydratedState: dehydrate(queryClient),
+		},
+	};
 };

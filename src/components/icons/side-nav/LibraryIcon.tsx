@@ -1,4 +1,10 @@
-const LibraryIcon = ({ className, size=20 }: { className?: string, size?: number }) => {
+const LibraryIcon = ({
+	className,
+	size = 20,
+}: {
+	className?: string;
+	size?: number;
+}) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

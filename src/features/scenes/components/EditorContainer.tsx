@@ -9,7 +9,7 @@ import {
 	Upload,
 } from "lucide-react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
-import {env} from "@/env.mjs";
+import { env } from "@/env.mjs";
 
 const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 	switch (view) {
@@ -88,21 +88,21 @@ const EditorContainer: FC<{
 				</Badge>
 			</div>
 			{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
-			<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
-				<span
-					className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
-					style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-				>
-					<ModeToggle />
-				</span>
+				<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
+					<span
+						className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
+						style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+					>
+						<ModeToggle />
+					</span>
 
-				<span
-					className="rounded-full w-8 h-8 bg-popover p-1.5"
-					style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-				>
-					<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
-				</span>
-			</div>
+					<span
+						className="rounded-full w-8 h-8 bg-popover p-1.5"
+						style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+					>
+						<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
+					</span>
+				</div>
 			)}
 		</div>
 	);

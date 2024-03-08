@@ -6,7 +6,7 @@ import { mainSchema } from "@/api/schema";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import { SubscriptionPlan } from "@/utils/enums";
-import {env} from "@/env.mjs";
+import { env } from "@/env.mjs";
 
 export const useStripeSetup = () => {
 	const [stripe, setStripe] = useState<Stripe>();
