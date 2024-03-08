@@ -14,6 +14,7 @@ type CheckoutDialogProps =
 	  } & Omit<CreditsCheckoutDialogProps, "onClose">)
 	| ({
 			variant: "subscription";
+			isUpgradePlan?: boolean;
 			children?: ReactNode;
 			open?: boolean;
 			setOpen?: (open: boolean) => void;
@@ -45,6 +46,7 @@ const CheckoutDialog = (props: CheckoutDialogProps) => {
 					<SubscriptionCheckoutDialog
 						plan={props.plan}
 						period={props.period}
+						isUpgradePlan={props.isUpgradePlan}
 						onClose={() => setOpen(false)}
 					/>
 				) : null}
