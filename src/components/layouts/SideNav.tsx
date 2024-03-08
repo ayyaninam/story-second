@@ -133,7 +133,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 								<AvatarFallback>
 									{Format.AvatarName(
 										data?.data?.name?.split(" ")[0] || "S",
-										data?.data?.lastName
+										data?.data?.lastName || ""
 									)}
 								</AvatarFallback>
 							</Avatar>
