@@ -60,25 +60,35 @@ const StripeElement = ({
 const LoadingIndicator = () => <div></div>;
 
 export default function StripeForm({
-	clientSecret,
 	setupStripe,
+	onLoadStripe,
 }: {
-	clientSecret: string;
 	setupStripe: SetupStripe;
+	onLoadStripe?: () => void;
 }) {
+	const [clientSecret, setClientSecret] = useState("");
 	const [ready, setReady] = useState(false);
 	const [error, setError] = useState(false);
 
 	useEffect(() => {
+		if (clientSecret) return;
+
+		(async () => {
+			try {
+				setClientSecret((await api.payment.addCard()).data!);
+			} catch (e: any) {
+				console.error(e);
+				setError(true);
+			}
+		})();
+	}, [clientSecret]);
+
+	useEffect(() => {
 		if (ready) {
-			// onLoadStripe?.();
+			onLoadStripe?.();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ready]);
-
-	useEffect(() => {
-		console.log("rerender");
-	});
 
 	return (
 		<div className="flex w-full flex-col relative min-h-[280px]">
