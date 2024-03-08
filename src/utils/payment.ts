@@ -32,27 +32,7 @@ export const useUserCanUseCredits = () => {
 		success?: boolean;
 	}> => {
 		if (!subscription) {
-			throw new Error("user does not have the subscription object");
-		}
-
-		if (subscription.subscriptionPlan === SubscriptionPlan.Free) {
-			toast.success(
-				"You're on a free plan, please upgrade to a paid plan to continue",
-				{
-					icon: "🔒",
-				}
-			);
-			return { error: "not paid subscription", success: false };
-		}
-		if (subscription.subscriptionPlan === SubscriptionPlan.Custom) {
-			toast.success(
-				"You're on a custom plan, please upgrade to a regular plan to continue",
-				{
-					icon: "🔒",
-				}
-			);
-			console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-			return { error: "using custom plan", success: false };
+			throw new Error("No subscription found - please contact our support!");
 		}
 
 		const userCredits = subscription.credits ?? 0;
@@ -80,6 +60,26 @@ export const useUserCanUseCredits = () => {
 			}
 
 			return { error: "not enough credits", success: false };
+		}
+
+		if (subscription.subscriptionPlan === SubscriptionPlan.Free) {
+			toast.success(
+				"You're on a free plan, please upgrade to a paid plan to continue",
+				{
+					icon: "🔒",
+				}
+			);
+			return { error: "not paid subscription", success: false };
+		}
+		if (subscription.subscriptionPlan === SubscriptionPlan.Custom) {
+			toast.success(
+				"You're on a custom plan, please upgrade to a regular plan to continue",
+				{
+					icon: "🔒",
+				}
+			);
+			console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+			return { error: "using custom plan", success: false };
 		}
 
 		return {
