@@ -47,39 +47,38 @@ export const useUserCanUseCredits = () => {
 					: userStoryCredits >= storybookCredits;
 
 		if (!enoughBalance) {
+			if (subscription.subscriptionPlan === SubscriptionPlan.Free) {
+				toast.success(
+					"You're on a free plan, please upgrade to a paid plan to continue",
+					{
+						icon: "🔒",
+					}
+				);
+				return { error: "not paid subscription", success: false };
+			}
+			if (subscription.subscriptionPlan === SubscriptionPlan.Custom) {
+				toast.success(
+					"You're on a custom plan, please upgrade to a regular plan to continue",
+					{
+						icon: "🔒",
+					}
+				);
+				console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+				return { error: "using custom plan", success: false };
+			}
 			if (variant === "video credits") {
 				toast.error(
-					"You do not have enough video credits to perform this action"
+					"You do not have enough Video credits to perform this action"
 				);
 			} else if (variant === "credits") {
 				toast.error("You do not have enough credits to perform this action");
 			} else if (variant === "story book") {
 				toast.error(
-					"You do not have enough story book credits to perform this action"
+					"You do not have enough StoryBook credits to perform this action"
 				);
 			}
 
 			return { error: "not enough credits", success: false };
-		}
-
-		if (subscription.subscriptionPlan === SubscriptionPlan.Free) {
-			toast.success(
-				"You're on a free plan, please upgrade to a paid plan to continue",
-				{
-					icon: "🔒",
-				}
-			);
-			return { error: "not paid subscription", success: false };
-		}
-		if (subscription.subscriptionPlan === SubscriptionPlan.Custom) {
-			toast.success(
-				"You're on a custom plan, please upgrade to a regular plan to continue",
-				{
-					icon: "🔒",
-				}
-			);
-			console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-			return { error: "using custom plan", success: false };
 		}
 
 		return {
