@@ -5,10 +5,12 @@ import { useRouter } from "next/router";
 import { useMediaQuery } from "usehooks-ts";
 import { useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import useEventLogger from "@/utils/analytics";
 
 export default function LoginPage() {
 	const isMobile = useMediaQuery("(max-width: 768px)");
 	const router = useRouter();
+	const eventLogger = useEventLogger();
 	const returnTo =
 		router.query.returnTo === "/auth/login"
 			? Routes.defaultRedirect
@@ -25,11 +27,15 @@ export default function LoginPage() {
 	// }, [isLoading]);
 
 	const onLogIn = () => {
+		eventLogger("login_page_login_clicked");
 		router.push(Routes.Login(returnTo));
 	};
 	const onSignUp = () => {
+		eventLogger("login_page_signup_clicked");
 		router.push(Routes.Signup(returnTo));
 	};
+
+	eventLogger("login_page_viewed");
 
 	return (
 		<>

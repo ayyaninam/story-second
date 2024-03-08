@@ -8,6 +8,7 @@ import { SubscriptionPlan, SubscriptionPeriod } from "@/utils/enums";
 import { useStripeSetup, useUser } from "../hooks";
 import CheckoutDialogContent from "./content";
 import { pricingValues } from "@/features/pricing/constants";
+import useEventLogger from "@/utils/analytics";
 
 type Item = {
 	description: string;
@@ -127,6 +128,7 @@ const SubscriptionCheckoutDialog = ({
 	onClose,
 }: SubscriptionCheckoutDialogProps) => {
 	const { user, updateUserDataAfter1Second } = useUser();
+	const eventLogger = useEventLogger();
 	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
 
 	const [stripeLoaded, setStripeLoaded] = useState(false);
@@ -143,6 +145,10 @@ const SubscriptionCheckoutDialog = ({
 	const submitButtonText = `Pay ${total}`;
 
 	const onCreateSubscription = async () => {
+		eventLogger("create_subscription_initiated", {
+			subscriptionPlan: plan,
+			subscriptionPeriod: period,
+		});
 		if (submitting) return;
 
 		setSubmitting(true);
@@ -155,7 +161,15 @@ const SubscriptionCheckoutDialog = ({
 
 		try {
 			if (!userHasCard || userWantsToChangePayment) {
-				await onAddCard();
+				eventLogger("add_card_initiated");
+				const response = await onAddCard();
+				if (!response) {
+					eventLogger("add_card_failed");
+					console.error("Add Card failed");
+					toast.error("Add Card failed");
+					return;
+				}
+				eventLogger("add_card_successful");
 			}
 
 			const { succeeded, data, status } = await api.payment.createSubscription({
@@ -163,6 +177,7 @@ const SubscriptionCheckoutDialog = ({
 				subscriptionPeriod: period,
 			});
 			if (!succeeded) {
+				eventLogger("create_subscription_failed");
 				console.error(`Create Subscription backend failed, status = ${status}`);
 				toast.error("Create Subscription backend failed");
 				return;
@@ -208,6 +223,10 @@ const SubscriptionCheckoutDialog = ({
 					});
 
 				if (confirmSucceeded) {
+					eventLogger("create_subscription_successful", {
+						subscriptionPlan: plan,
+						subscriptionPeriod: period,
+					});
 					handleSubscriptionSuccessful();
 				} else {
 					toast.error("Internal Server Error: please contact support.");

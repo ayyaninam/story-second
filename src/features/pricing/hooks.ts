@@ -50,13 +50,14 @@ export const useStripeSetup = () => {
 			if (error) {
 				console.error("Confirm Setup failed: ", error);
 				toast.error("Confirm Setup failed");
-				return;
+				return false;
 			}
-
 			toast.success("Added card successfully");
+			return true;
 		} catch (e: any) {
 			console.error("Error Adding Card: ", e.message);
 			toast.error("Error Adding Card");
+			return false;
 		}
 	};
 
