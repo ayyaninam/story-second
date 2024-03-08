@@ -33,7 +33,12 @@ export const useUserCanUseCredits = () => {
 		}
 
 		if (subscription.subscriptionPlan === SubscriptionPlan.Free) {
-			toast.error("You do not have a paid subscription");
+			toast.success(
+				"You're on a free plan, please upgrade to a paid plan to continue",
+				{
+					icon: "🔒",
+				}
+			);
 			return { error: "not paid subscription", success: false };
 		}
 		if (subscription.subscriptionPlan === SubscriptionPlan.Custom) {
