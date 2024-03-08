@@ -44,6 +44,7 @@ import { useMutation } from "@tanstack/react-query";
 import api from "@/api";
 import { getImageCost } from "@/utils/credit-cost";
 import { cn } from "@/utils";
+import useEventLogger from "@/utils/analytics";
 
 export default function EditSegmentModalItem({
 	segment,
@@ -79,6 +80,7 @@ export default function EditSegmentModalItem({
 	handleSubmitEditSegments: () => void;
 }) {
 	const [isChecked, setIsChecked] = useState(false);
+	const eventLogger = useEventLogger();
 
 	const UploadImage = useMutation({ mutationFn: api.video.uploadSegmentImage });
 
@@ -233,6 +235,7 @@ export default function EditSegmentModalItem({
 										className="flex py-1 gap-1 text-white h-fit  border-border border-[1px] rounded-md items-center"
 										variant="default"
 										onClick={() => {
+											eventLogger("regenerate_single_image");
 											setImageRegenerationSegmentDetails({
 												sceneIndex: sceneIndex,
 												segmentIndex: segmentIndex,

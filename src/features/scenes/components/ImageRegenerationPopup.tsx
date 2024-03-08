@@ -22,6 +22,7 @@ import { CheckIcon, Lock, ScrollText, Sparkle, X, Plus } from "lucide-react";
 import { getImageCost } from "@/utils/credit-cost";
 import { useMediaQuery } from "usehooks-ts";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import useEventLogger from "@/utils/analytics";
 
 function RegenerationPopupHeader({
 	title,
@@ -205,6 +206,7 @@ function ImageRegenerationPopup({
 		} | null>
 	>;
 }) {
+	const eventLogger = useEventLogger();
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
 	const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
 	const [regenerateImage, setRegenerateImages] = useState(false);
@@ -225,6 +227,7 @@ function ImageRegenerationPopup({
 
 	const triggerRegenerationOfImages = useCallback(async () => {
 		setIsRegeneratingImages(true);
+		eventLogger("regenerate_single_image_popover");
 		if (imageRegenerationSegmentDetails) {
 			setImageRegenerationSegmentDetails({
 				...imageRegenerationSegmentDetails,

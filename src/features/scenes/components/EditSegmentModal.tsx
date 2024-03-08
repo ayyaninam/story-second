@@ -25,6 +25,7 @@ import { mainSchema } from "@/api/schema";
 import { cn } from "@/utils";
 import { StoryImageStyles } from "@/utils/enums";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import useEventLogger from "@/utils/analytics";
 
 const EditSegmentModal = ({
 	open,
@@ -53,6 +54,7 @@ const EditSegmentModal = ({
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
+	const eventLogger = useEventLogger();
 	const { invalidateUser } = useUpdateUser();
 	const [imageRegenerationSegmentDetails, setImageRegenerationSegmentDetails] =
 		useState<{
@@ -137,9 +139,10 @@ const EditSegmentModal = ({
 							className="w-[50%] p-2 flex gap-1 text-accent-600 items-center"
 							variant="outline"
 							disabled={RegenerateSceneImages.isPending}
-							onClick={() =>
-								RegenerateSceneImages.mutateAsync(story.scenes?.[sceneId]!)
-							}
+							onClick={() => {
+								eventLogger("regenerate_scene_images");
+								RegenerateSceneImages.mutateAsync(story.scenes?.[sceneId]!);
+							}}
 						>
 							<RefreshCw
 								width={16}

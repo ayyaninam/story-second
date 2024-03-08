@@ -49,6 +49,7 @@ import TooltipComponent from "@/components/ui/tooltip-component";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import { boolean } from "zod";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import useEventLogger from "@/utils/analytics";
 const images = [
 	{
 		key: StoryImageStyles.Auto,
@@ -112,6 +113,7 @@ const Footer = ({
 	view: "script" | "storyboard" | "scene" | "preview";
 }) => {
 	const router = useRouter();
+	const eventLogger = useEventLogger();
 
 	const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -479,6 +481,7 @@ const Footer = ({
 					<Button
 						variant="outline"
 						onClick={async () => {
+							eventLogger("regenerate_all_images");
 							await RegenerateAllImagesMutation.mutateAsync();
 							invalidateUser();
 						}}
@@ -528,6 +531,7 @@ const Footer = ({
 					<Button
 						variant="outline"
 						onClick={async () => {
+							eventLogger("regenerate_all_videos");
 							await RegenerateAllScenesMutation.mutateAsync();
 							invalidateUser();
 						}}
@@ -686,6 +690,7 @@ const Footer = ({
 														)}
 														role="button"
 														onClick={() => {
+															eventLogger("image_style_changed");
 															if (areImagesActive)
 																updateImageStyle(
 																	Number(key) as unknown as StoryImageStyles

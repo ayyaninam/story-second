@@ -21,6 +21,7 @@ import { useUpdateCategory } from "../mutations/UpdateCategory";
 import StoryScreen from "@/features/edit-story/story-screen";
 import { CallbackListener } from "@remotion/player";
 import { filterSelectedKeysFromObject } from "../utils/storydraft";
+import useEventLogger from "@/utils/analytics";
 
 type HoveredThumbs = {
 	thumbs: string[];
@@ -66,7 +67,7 @@ const SceneEditorView = ({
 	isError?: boolean;
 }) => {
 	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
-
+	const eventLogger = useEventLogger();
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
 
@@ -205,15 +206,16 @@ const SceneEditorView = ({
 																	<div className="visible flex gap-x-1 p-2">
 																		<span
 																			className="hover:bg-gray-100 cursor-pointer rounded-sm p-1"
-																			onClick={() =>
+																			onClick={() => {
+																				eventLogger("edit_video_modal_clicked");
 																				setEditSegmentsModalState({
 																					open: true,
 																					scene: scene,
 																					sceneId: sceneIndex,
 																					dispatch,
 																					story,
-																				})
-																			}
+																				});
+																			}}
 																		>
 																			<Settings2 className="w-4 h-4 stroke-slate-500" />
 																		</span>
