@@ -3,13 +3,18 @@ import AuthPromptMobile from "@/features/auth-prompt/mobile";
 import Routes from "@/routes";
 import { useRouter } from "next/router";
 import { useMediaQuery } from "usehooks-ts";
-import {useEffect} from "react";
-import {useUser} from "@auth0/nextjs-auth0/client";
+import { useEffect } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import useEventLogger from "@/utils/analytics";
 
 export default function LoginPage() {
 	const isMobile = useMediaQuery("(max-width: 768px)");
 	const router = useRouter();
-	const returnTo = router.query.returnTo === "/auth/login" ? Routes.defaultRedirect : router.query.returnTo as string || Routes.defaultRedirect;
+	const eventLogger = useEventLogger();
+	const returnTo =
+		router.query.returnTo === "/auth/login"
+			? Routes.defaultRedirect
+			: (router.query.returnTo as string) || Routes.defaultRedirect;
 
 	// Disabled: This is causing a fake login redirect
 	// useEffect(() => {
@@ -22,26 +27,32 @@ export default function LoginPage() {
 	// }, [isLoading]);
 
 	const onLogIn = () => {
+		eventLogger("login_page_login_clicked");
 		router.push(Routes.Login(returnTo));
 	};
 	const onSignUp = () => {
+		eventLogger("login_page_signup_clicked");
 		router.push(Routes.Signup(returnTo));
 	};
 
-  return (
-    <>
-      <style jsx global>{`
-        :root {
-          .intercom-launcher {
-              display: none;
-          }
-        }
-      `}
-      </style>
-      {isMobile
-        ? <AuthPromptMobile onLogIn={onLogIn} onSignUp={onSignUp} />
-        : <AuthPrompt onLogIn={onLogIn} onSignUp={onSignUp}></AuthPrompt>
-      }
-    </>
-  )
+	eventLogger("login_page_viewed");
+
+	return (
+		<>
+			<style jsx global>
+				{`
+					:root {
+						.intercom-launcher {
+							display: none;
+						}
+					}
+				`}
+			</style>
+			{isMobile ? (
+				<AuthPromptMobile onLogIn={onLogIn} onSignUp={onSignUp} />
+			) : (
+				<AuthPrompt onLogIn={onLogIn} onSignUp={onSignUp}></AuthPrompt>
+			)}
+		</>
+	);
 }

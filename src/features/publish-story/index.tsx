@@ -421,17 +421,11 @@ export default function PublishedStory({
 														id: storyData.id!,
 														accessToken: session.accessToken,
 													});
-													if (!presignedUrl) return;
-													let link = document.createElement("a");
-
-													link.href = presignedUrl;
-
-													link.download = `download.mp4`;
-													link.target = "_blank";
-
-													document.body.appendChild(link);
-													link.click();
-													document.body.removeChild(link);
+													if (!presignedUrl) {
+														setIsVideoDownloading(false);
+														return;
+													}
+													window.location.href = presignedUrl;
 													setIsVideoDownloading(false);
 												}}
 												className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"

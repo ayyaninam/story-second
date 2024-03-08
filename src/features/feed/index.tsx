@@ -20,7 +20,7 @@ function FeedPage() {
 		);
 	};
 
-	const selectedGenre = router.query.genre as string || "all";
+	const selectedGenre = (router.query.genre as string) || "all";
 	const setSelectedGenre = (genre: string) => {
 		router.push(
 			{
@@ -40,9 +40,7 @@ function FeedPage() {
 				setSelectedGenre={setSelectedGenre}
 			/>
 			{selectedOrientationTab === VIDEO_ORIENTATIONS.ALL.id ? (
-				<FeedHomePage
-					setSelectedOrientationTab={setSelectedOrientationTab}
-				/>
+				<FeedHomePage setSelectedOrientationTab={setSelectedOrientationTab} />
 			) : (
 				<FeedGalleryPage
 					key={selectedOrientationTab}

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React, {CSSProperties, useEffect, useState} from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import { HeaderTabSwitcher } from "./orientation-tab-switcher";
 import { GenreTabSwitcher } from "./genre-tab-switcher";
 import {
@@ -12,14 +12,18 @@ import {
 } from "@/components/ui/select";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
-import { genreOptions, SORTING_OPTIONS, VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
-import {MobileSelector} from "@/components/ui/mobile-selector";
-import {Plus} from "lucide-react";
+import {
+	genreOptions,
+	SORTING_OPTIONS,
+	VIDEO_ORIENTATIONS,
+} from "@/constants/feed-constants";
+import { MobileSelector } from "@/components/ui/mobile-selector";
+import { Plus } from "lucide-react";
 import Routes from "@/routes";
-import {useQuery} from "@tanstack/react-query";
-import {QueryKeys} from "@/lib/queryKeys";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
 import api from "@/api";
-import {useMediaQuery} from "usehooks-ts";
+import { useMediaQuery } from "usehooks-ts";
 import useEventLogger from "@/utils/analytics";
 
 const mainHeaderContainer: {
@@ -67,9 +71,9 @@ export const LibraryHeader = ({
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
-  const eventLogger = useEventLogger();
+	const eventLogger = useEventLogger();
 
-	const sort = router.query.sort as string || "desc";
+	const sort = (router.query.sort as string) || "desc";
 	const setSort = (sort: string) => {
 		router.push(
 			{
@@ -87,11 +91,14 @@ export const LibraryHeader = ({
 		queryFn: () => api.user.get(),
 	});
 
-	console.log(data)
+	console.log(data);
 
 	const [userName, setUserName] = useState("Story.com");
 	useEffect(() => {
-		setUserName(data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName || "Story.com");
+		setUserName(
+			data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName ||
+				"Story.com"
+		);
 	}, [data]);
 
 	return (
@@ -116,29 +123,30 @@ export const LibraryHeader = ({
 					<div className="pl-[12px] flex flex-col items-start">
 						<span className="text-slate-950 text-base font-bold">Library</span>
 						<span className="text-accent-700 text-sm font-normal flex lg:flex-row flex-col">
-															{data?.data?.videoCount! > 0 && (
-																<p>{data?.data?.videoCount} Videos</p>
-															)}
-							{data?.data?.videoCount! > 0 &&
-								data?.data?.storyCount! > 0 && (
-									<p className="text-slate-300 hidden lg:block"> • </p>
-								)}
+							{data?.data?.videoCount! > 0 && (
+								<p>{data?.data?.videoCount} Videos</p>
+							)}
+							{data?.data?.videoCount! > 0 && data?.data?.storyCount! > 0 && (
+								<p className="text-slate-300 hidden lg:block"> • </p>
+							)}
 							{data?.data?.storyCount! > 0 && (
 								<p>{data?.data?.storyCount} Stories</p>
 							)}
-														</span>
+						</span>
 					</div>
 				</div>
-				{ isMobile ? <MobileSelector
+				{isMobile ? (
+					<MobileSelector
 						selectedTab={selectedOrientationTab}
 						setSelectedTab={setSelectedOrientationTab}
 						tabs={Object.values(VIDEO_ORIENTATIONS)}
 					/>
-					: <HeaderTabSwitcher
+				) : (
+					<HeaderTabSwitcher
 						selectedTab={selectedOrientationTab}
 						setSelectedTab={setSelectedOrientationTab}
 					/>
-				}
+				)}
 				<div className="hidden lg:flex items-center gap-4">
 					{/*<Button*/}
 					{/*	className={`px-4 py-1.5 text-sm font-medium flex gap-2 items-center h-fit`}*/}
@@ -171,19 +179,20 @@ export const LibraryHeader = ({
 					{/*	</svg>*/}
 					{/*	Tutorial*/}
 					{/*</Button>*/}
-					{!isMobile && (<Button
-						className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
-						variant="default"
-						style={createNewButton}
-						onClick={() => {
-              eventLogger("create_new_clicked", {
-                sourceUrl: router.asPath,
-              })
-							router.push(Routes.Generate());
-						}}
-					>
-						<Plus className="h-4 w-4" /> Create New
-					</Button>
+					{!isMobile && (
+						<Button
+							className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
+							variant="default"
+							style={createNewButton}
+							onClick={() => {
+								eventLogger("create_new_clicked", {
+									sourceUrl: router.asPath,
+								});
+								router.push(Routes.Generate());
+							}}
+						>
+							<Plus className="h-4 w-4" /> Create New
+						</Button>
 					)}
 				</div>
 			</div>
@@ -217,7 +226,8 @@ export const LibraryHeader = ({
 					{/*	className="w-full bg-white border-none p-0 focus-visible:outline-none focus-visible:border-none focus-visible:ring-offset-none focus-visible:ring-0 focus-visible:ring-none text-slate-950"*/}
 					{/*/>*/}
 				</div>
-				{ isMobile ? <div className="flex flex-row w-full gap-4">
+				{isMobile ? (
+					<div className="flex flex-row w-full gap-4">
 						<MobileSelector
 							selectedTab={selectedGenre}
 							setSelectedTab={setSelectedGenre}
@@ -229,17 +239,15 @@ export const LibraryHeader = ({
 							tabs={sortOptions}
 						/>
 					</div>
-					: <>
+				) : (
+					<>
 						<GenreTabSwitcher
 							selectedGenre={selectedGenre}
 							setSelectedGenre={setSelectedGenre}
 							genreOptions={genreOptions}
 						/>
 						<div className="flex h-[40px] w-[180px] gap-2 items-center">
-							<Select
-								onValueChange={setSort}
-								defaultValue={sort}
-							>
+							<Select onValueChange={setSort} defaultValue={sort}>
 								<SelectTrigger className="max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
 									<div className="text-accent-600">
 										<SelectValue placeholder="Sort by" />
@@ -255,7 +263,7 @@ export const LibraryHeader = ({
 							</Select>
 						</div>
 					</>
-				}
+				)}
 			</div>
 		</div>
 	);

@@ -8,10 +8,10 @@ import { getServerSidePropsStub } from "@/utils/getServerSidePropsStub";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
 export default function ProfilePage() {
-  return <AccountsPage />;
+	return <AccountsPage />;
 }
 ProfilePage.getLayout = function getLayout(page: ReactElement) {
-  return <PageLayout pageIndex={3}>{page}</PageLayout>;
+	return <PageLayout pageIndex={3}>{page}</PageLayout>;
 };
 
 export const getServerSideProps = withPageAuthRequired();

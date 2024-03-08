@@ -23,10 +23,10 @@ function FeedHomePage({
 	const filterOptions = useDebounce(
 		useMemo<FeedPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
-			const sort = router.query.sort as string || "desc";
+			const sort = (router.query.sort as string) || "desc";
 			return {
 				CurrentPage: parseInt(page),
-				topLevelCategory: router.query.genre as string || "all",
+				topLevelCategory: (router.query.genre as string) || "all",
 				isDescending: sort === "desc",
 			};
 		}, [router.query.page, router.query.genre, router.query.sort]),
@@ -46,7 +46,11 @@ function FeedHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.WIDE_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [
+			QueryKeys.WIDE_VIDEOS,
+			filterOptions.topLevelCategory,
+			filterOptions.isDescending,
+		],
 		initialData: queryClient.getQueryData([
 			QueryKeys.WIDE_VIDEOS,
 			filterOptions.topLevelCategory,
@@ -69,7 +73,11 @@ function FeedHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.VERTICAL_VIDEOS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [
+			QueryKeys.VERTICAL_VIDEOS,
+			filterOptions.topLevelCategory,
+			filterOptions.isDescending,
+		],
 		initialData: queryClient.getQueryData([
 			QueryKeys.VERTICAL_VIDEOS,
 			filterOptions.topLevelCategory,
@@ -88,7 +96,11 @@ function FeedHomePage({
 				},
 			}),
 		staleTime: 3000,
-		queryKey: [QueryKeys.STORY_BOOKS, filterOptions.topLevelCategory, filterOptions.isDescending],
+		queryKey: [
+			QueryKeys.STORY_BOOKS,
+			filterOptions.topLevelCategory,
+			filterOptions.isDescending,
+		],
 		initialData: queryClient.getQueryData([
 			QueryKeys.STORY_BOOKS,
 			filterOptions.topLevelCategory,
@@ -110,7 +122,11 @@ function FeedHomePage({
 					},
 				}),
 			staleTime: 3000,
-			queryKey: [QueryKeys.TIK_TOK, filterOptions.topLevelCategory, filterOptions.isDescending],
+			queryKey: [
+				QueryKeys.TIK_TOK,
+				filterOptions.topLevelCategory,
+				filterOptions.isDescending,
+			],
 			initialData: queryClient.getQueryData([
 				QueryKeys.TIK_TOK,
 				filterOptions.topLevelCategory,
@@ -148,22 +164,22 @@ function FeedHomePage({
 				{Object.values(VIDEO_ORIENTATIONS)
 					.filter((orientation) => segregatedStories[orientation.id]?.length)
 					.map((orientation) =>
-					orientation.id !== VIDEO_ORIENTATIONS.ALL.id &&
-					EXPLORE_HOME_GALLERY_DATA[orientation.id] ? (
-						<FeedGalleryComponent
-							setSelectedOrientationTab={setSelectedOrientationTab}
-							key={orientation.id}
-							galleryDetails={EXPLORE_HOME_GALLERY_DATA[orientation.id]!}
-							thumbnails={segregatedStories[orientation.id] || []}
-							areThumbnailsLoading={[
-								wideVideoList,
-								verticalVideoList,
-								storyBooksList,
-								trendsVideosList,
-							].some((query) => query.isLoading)}
-						/>
-					) : null
-				)}
+						orientation.id !== VIDEO_ORIENTATIONS.ALL.id &&
+						EXPLORE_HOME_GALLERY_DATA[orientation.id] ? (
+							<FeedGalleryComponent
+								setSelectedOrientationTab={setSelectedOrientationTab}
+								key={orientation.id}
+								galleryDetails={EXPLORE_HOME_GALLERY_DATA[orientation.id]!}
+								thumbnails={segregatedStories[orientation.id] || []}
+								areThumbnailsLoading={[
+									wideVideoList,
+									verticalVideoList,
+									storyBooksList,
+									trendsVideosList,
+								].some((query) => query.isLoading)}
+							/>
+						) : null
+					)}
 			</div>
 		</div>
 	);

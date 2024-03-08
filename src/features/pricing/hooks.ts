@@ -6,7 +6,7 @@ import { mainSchema } from "@/api/schema";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import { SubscriptionPlan } from "@/utils/enums";
-import {env} from "@/env.mjs";
+import { env } from "@/env.mjs";
 
 export const useStripeSetup = () => {
 	const [stripe, setStripe] = useState<Stripe>();
@@ -50,13 +50,14 @@ export const useStripeSetup = () => {
 			if (error) {
 				console.error("Confirm Setup failed: ", error);
 				toast.error("Confirm Setup failed");
-				return;
+				return false;
 			}
-
 			toast.success("Added card successfully");
+			return true;
 		} catch (e: any) {
 			console.error("Error Adding Card: ", e.message);
 			toast.error("Error Adding Card");
+			return false;
 		}
 	};
 

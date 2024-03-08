@@ -9,11 +9,11 @@ interface BookProps {
 
 const Book = ({ story }: BookProps) => {
 	const isMobile = useMediaQuery("(max-width: 768px)");
-	return (
-		isMobile
-			? <MobileBook story={story}/>
-			: <DesktopBook story={story}/>
-	)
-}
+	return isMobile ? (
+		<MobileBook story={story} />
+	) : (
+		<DesktopBook story={story} />
+	);
+};
 
 export default Book;

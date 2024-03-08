@@ -365,8 +365,8 @@ const config = {
 				},
 				loader: {
 					start: "hsl(var(--loader-start))",
-					end: "hsl(var(--loader-end))"
-				}
+					end: "hsl(var(--loader-end))",
+				},
 			},
 			backgroundImage: {
 				"accent-button":

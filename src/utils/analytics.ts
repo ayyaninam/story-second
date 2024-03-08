@@ -11,6 +11,9 @@ export type AnalyticsEvent =
 	| "create_video"
 	| "login_clicked"
 	| "logout_clicked"
+	| "login_page_viewed"
+	| "login_page_login_clicked"
+	| "login_page_signup_clicked"
 	| "download_video_clicked"
 	| "copy_video_clicked"
 	| "test_onclick"
@@ -22,7 +25,13 @@ export type AnalyticsEvent =
 	| "pricing_frequency_changed"
 	| "pricing_free_plan_clicked"
 	| "upgrade_subscription_dialog_opened"
-	| "upgrade_subscription_dialog_closed";
+	| "upgrade_subscription_dialog_closed"
+	| "create_subscription_initiated"
+	| "add_card_initiated"
+	| "add_card_successful"
+	| "add_card_failed"
+	| "create_subscription_successful"
+	| "create_subscription_failed";
 const useEventLogger = () => {
 	const { user } = useUser();
 

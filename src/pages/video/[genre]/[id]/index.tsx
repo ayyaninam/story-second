@@ -9,7 +9,7 @@ import {
 import { StoryOutputTypes } from "@/utils/enums";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
 import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
-import React, {ReactElement, useEffect} from "react";
+import React, { ReactElement, useEffect } from "react";
 import { setJwt } from "@/utils/jwt";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import {
@@ -18,7 +18,7 @@ import {
 	dehydrate,
 } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
-import {NextSeo} from "next-seo";
+import { NextSeo } from "next-seo";
 import Format from "@/utils/format";
 import PageLayout from "@/components/layouts/PageLayout";
 import Library from "@/pages/library";
@@ -33,11 +33,16 @@ export default function PublishPage({
 		<HydrationBoundary state={dehydratedState}>
 			<NextSeo
 				title={storyData?.storyTitle || undefined}
-				description={storyData?.summary || "Find your videos, trends, storybooks, all in one place"}
+				description={
+					storyData?.summary ||
+					"Find your videos, trends, storybooks, all in one place"
+				}
 				openGraph={{
 					images: [
 						{
-							url: storyData?.coverImage ? Format.GetImageUrl(storyData.coverImage) : '/og-assets/og-story.png',
+							url: storyData?.coverImage
+								? Format.GetImageUrl(storyData.coverImage)
+								: "/og-assets/og-story.png",
 							width: 1200,
 							height: 630,
 							alt: storyData?.storyTitle || "Story.com",
@@ -118,8 +123,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 				dehydratedState: dehydrate(queryClient),
 			},
 		};
-	}
-	catch (error: any) {
+	} catch (error: any) {
 		return {
 			notFound: true,
 		};
