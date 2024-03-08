@@ -27,7 +27,7 @@ import { useRouter } from "next/router";
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
 	{
-		icon: <FeedIcon />,
+		icon: <FeedIcon size={24} />,
 		text: "Feed",
 		shortcut: "E",
 		redirectUrl: "/feed",
@@ -49,7 +49,7 @@ export const menuItems = [
 		},
 	},
 	{
-		icon: <LibraryIcon />,
+		icon: <LibraryIcon size={24} />,
 		text: "Library",
 		shortcut: "L",
 		redirectUrl: "/library",
@@ -60,7 +60,7 @@ export const menuItems = [
 		},
 	},
 	{
-		icon: <CircleUserRoundIcon />,
+		icon: <CircleUserRoundIcon size={24} />,
 		text: "Account",
 		shortcut: "S",
 		redirectUrl: "/account",

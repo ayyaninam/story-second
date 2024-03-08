@@ -147,7 +147,7 @@ const GenerateModalContent: FC = () => {
 	return (
 		<div className="mt-24 w-full flex flex-col items-center">
 			<div
-				className={`flex flex-col w-4/5 gap-4 p-4`}
+				className={`flex flex-col w-4/5 gap-4 p-1`}
 				style={{
 					borderRadius: "12px",
 					border: "0.622px solid rgba(255, 255, 255, 0.64)",
@@ -203,7 +203,7 @@ const GenerateModalContent: FC = () => {
 							autoFocus={false}
 							maxLength={3000}
 							rows={4}
-							className="max-h-fit border-border focus:border-0 focus:ring-0 text-md"
+							className="max-h-fit border-border focus-visible:ring-[1px] text-md"
 							onChange={(e) => setInput(e.target.value)}
 							placeholder={`What's your story?`}
 						/>
