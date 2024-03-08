@@ -10,6 +10,7 @@ import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { DisplayAspectRatios } from "@/utils/enums";
 import { RefreshCcw } from "lucide-react";
 import { getImageCost, getVideoCost } from "@/utils/credit-cost";
+import useEventLogger from "@/utils/analytics";
 
 function RegenerateSegmentBar({
 	segment,
@@ -24,6 +25,7 @@ function RegenerateSegmentBar({
 	regeneratingImage: boolean;
 	displayResolution: DisplayAspectRatios;
 }) {
+	const eventLogger = useEventLogger();
 	return (
 		<div className="flex w-full items-center rounded-sm justify-between">
 			<div
@@ -60,7 +62,10 @@ function RegenerateSegmentBar({
 			<Button
 				className="flex flex-col p-6 min-w-[175px] text-background bg-accent-600"
 				disabled={segment.videoStatus === StoryStatus.PENDING}
-				onClick={() => onRegenerateVideo()}
+				onClick={() => {
+					eventLogger("regenerate_single_video");
+					onRegenerateVideo();
+				}}
 			>
 				{segment.videoStatus === StoryStatus.PENDING
 					? "Loading"

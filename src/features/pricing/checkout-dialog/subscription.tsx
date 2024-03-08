@@ -24,12 +24,15 @@ type SubscriptionDetail = {
 };
 
 type SubscriptionStructure = Record<
-	Exclude<SubscriptionPlan, SubscriptionPlan.Free>,
+	Exclude<SubscriptionPlan, SubscriptionPlan.Free | SubscriptionPlan.Custom>,
 	Record<SubscriptionPeriod, SubscriptionDetail>
 >;
 
 const generateSubscriptionDetail = (
-	plan: Exclude<SubscriptionPlan, SubscriptionPlan.Free>,
+	plan: Exclude<
+		SubscriptionPlan,
+		SubscriptionPlan.Free | SubscriptionPlan.Custom
+	>,
 	period: SubscriptionPeriod,
 	description: string
 ): SubscriptionDetail => {
@@ -117,7 +120,10 @@ const pricingStructure: SubscriptionStructure = {
 };
 
 export interface SubscriptionCheckoutDialogProps {
-	plan: Exclude<SubscriptionPlan, SubscriptionPlan.Free>;
+	plan: Exclude<
+		SubscriptionPlan,
+		SubscriptionPlan.Free | SubscriptionPlan.Custom
+	>;
 	period: SubscriptionPeriod;
 	onClose: () => void;
 }

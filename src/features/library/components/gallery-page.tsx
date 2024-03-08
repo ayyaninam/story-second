@@ -99,7 +99,7 @@ const LibraryGalleryPage: React.FC<{ orientation: VideoOrientation }> = ({
 	}
 
 	return (
-		<div className="flex flex-col gap-4 max-w-[1440px] mx-auto px-6 p-10">
+		<div className="flex flex-col gap-4 max-w-[1440px] mx-auto px-3 lg:px-6 p-10">
 			<LibraryGalleryComponent
 				galleryDetails={galleryDetails}
 				isIndependentGalleryPage

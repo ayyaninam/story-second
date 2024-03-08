@@ -18,6 +18,11 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { useUserCanUseCredits } from "@/utils/payment";
+import { getVideoCost } from "@/utils/credit-cost";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
+import { AllowanceType } from "@/utils/enums";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 const SceneEditSegmentModal = ({
 	open,
@@ -35,11 +40,31 @@ const SceneEditSegmentModal = ({
 	story: EditStoryDraft;
 }) => {
 	const [webstory] = useWebstoryContext();
+	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
 	const { invalidateUser } = useUpdateUser();
+
+	const { userCanUseCredits } = useUserCanUseCredits();
 	const handleRegenerateVideo = async (segmentIndex: number) => {
+		const { error } = await userCanUseCredits({
+			variant: "credits",
+			credits: getVideoCost(1),
+		});
+
+		if (error) {
+			if (error === "using custom plan" || error === "not paid subscription") {
+				setOpenSubscriptionDialog(true);
+			}
+			if (error === "not enough credits") {
+				setOpenCreditsDialog(true);
+			}
+
+			return;
+		}
+
 		const segment = story.scenes[sceneId ?? 0]?.segments[segmentIndex]!;
 		dispatch({
 			type: "edit_segment",
@@ -107,6 +132,18 @@ const SceneEditSegmentModal = ({
 						</Button>
 					</div>
 				</DialogContent>
+
+				<CheckoutDialog
+					variant="credits"
+					allowanceType={AllowanceType.Credits}
+					open={openCreditsDialog}
+					setOpen={setOpenCreditsDialog}
+				/>
+
+				<UpgradeSubscriptionDialog
+					open={openSubscriptionDialog}
+					setOpen={setOpenSubscriptionDialog}
+				/>
 			</Dialog>
 		);
 	}
