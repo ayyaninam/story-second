@@ -15,7 +15,7 @@ import {
 	tabs,
 	videoRatios,
 } from "@/features/generate/constants";
-import Router, { useRouter } from "next/router";
+import Router from "next/router";
 import FileUpload from "@/features/tiktok/components/file-upload";
 import { CreateInitialStoryQueryParams } from "@/types";
 import { ImageRatios } from "@/utils/image-ratio";
@@ -33,19 +33,21 @@ import {
 	VideoRatioSelect,
 } from "@/features/generate/components/selection-constants";
 import useUpdateUser from "@/hooks/useUpdateUser";
-import { usePaymentHandler } from "@/utils/payment";
+import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import useEventLogger from "@/utils/analytics";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 const GenerateModalContent: FC = () => {
 	const eventLogger = useEventLogger();
 
-	const { paymentHandler } = usePaymentHandler();
+	const { userCanUseCredits } = useUserCanUseCredits();
 	const [value, setValue] = useState<TabType>(TabType.Video);
 	const [input, setInput] = useState("");
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
 	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
 		videoRatios[0]?.value.toString() || ""
@@ -96,32 +98,38 @@ const GenerateModalContent: FC = () => {
 
 		const isStoryBook = outputType === StoryOutputTypes.Story;
 
-		let isGood = true;
 		if (isStoryBook) {
-			await paymentHandler({
-				paymentRequest: Promise.resolve(),
+			const { error } = await userCanUseCredits({
 				variant: "story book",
 				storybookCredits: 1,
-				openModal: () => {
-					isGood = false;
-					setOpenStoryBooksDialog(true);
-				},
 			});
+
+			if (error) {
+				if (error === "not enough credits") {
+					setOpenStoryBooksDialog(true);
+				} else if (error === "not paid subscription") {
+					setOpenSubscriptionDialog(true);
+				}
+
+				setIsLoading(false);
+				return;
+			}
 		} else {
-			await paymentHandler({
-				paymentRequest: Promise.resolve(),
+			const { error } = await userCanUseCredits({
 				variant: "video credits",
 				videoCredits: 1,
-				openModal: () => {
-					isGood = false;
-					setOpenCreditsDialog(true);
-				},
 			});
-		}
 
-		if (!isGood) {
-			setIsLoading(false);
-			return;
+			if (error) {
+				if (error === "not enough credits") {
+					setOpenCreditsDialog(true);
+				} else if (error === "not paid subscription") {
+					setOpenSubscriptionDialog(true);
+				}
+
+				setIsLoading(false);
+				return;
+			}
 		}
 
 		const response = Routes.CreateStoryFromRoute(params);
@@ -190,14 +198,16 @@ const GenerateModalContent: FC = () => {
 						</TooltipProvider>
 					</ToggleGroup>
 
-					{value !== TabType.Trends && (<Textarea
-						autoFocus={false}
-						maxLength={3000}
-						rows={4}
-						className="max-h-fit border-border focus:border-0 focus:ring-0 text-md"
-						onChange={(e) => setInput(e.target.value)}
-						placeholder={`What's your story?`}
-					/>)}
+					{value !== TabType.Trends && (
+						<Textarea
+							autoFocus={false}
+							maxLength={3000}
+							rows={4}
+							className="max-h-fit border-border focus:border-0 focus:ring-0 text-md"
+							onChange={(e) => setInput(e.target.value)}
+							placeholder={`What's your story?`}
+						/>
+					)}
 
 					<div className="flex flex-col lg:flex-row items-start lg:items-center lg:px-2 gap-1 w-full">
 						<div className="flex flex-grow gap-4 w-4/5">
@@ -268,6 +278,11 @@ const GenerateModalContent: FC = () => {
 				allowanceType={AllowanceType.StoryBooks}
 				open={openStoryBooksDialog}
 				setOpen={setOpenStoryBooksDialog}
+			/>
+
+			<UpgradeSubscriptionDialog
+				open={openSubscriptionDialog}
+				setOpen={setOpenSubscriptionDialog}
 			/>
 		</div>
 	);

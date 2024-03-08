@@ -11,14 +11,28 @@ import PricingCards from "@/features/pricing/pricing-cards";
 import useEventLogger, { AnalyticsEvent } from "@/utils/analytics";
 
 interface UpgradeSubscriptionDialogProps {
-	children: React.ReactNode;
+	children?: React.ReactNode;
+	open?: boolean;
+	setOpen?: (open: boolean) => void;
 }
 
 const UpgradeSubscriptionDialog = ({
 	children,
+	open: propOpen,
+	setOpen: setPropOpen,
 }: UpgradeSubscriptionDialogProps) => {
-	const [open, setOpen] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
 	const eventLogger = useEventLogger();
+
+	const open = propOpen ?? openDialog;
+
+	const setOpen = (open: boolean) => {
+		if (setPropOpen) {
+			setPropOpen(open);
+		} else {
+			setOpenDialog(open);
+		}
+	};
 
 	return (
 		<Dialog

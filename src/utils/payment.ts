@@ -1,13 +1,12 @@
 import toast from "react-hot-toast";
-import useUpdateUser from "@/hooks/useUpdateUser";
+// import useUpdateUser from "@/hooks/useUpdateUser";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 
 import api from "@/api";
+import { SubscriptionPlan } from "@/utils/enums";
 
-export const usePaymentHandler = () => {
-	const { invalidateUser } = useUpdateUser();
-
+export const useUserCanUseCredits = () => {
 	const { data } = useQuery({
 		queryKey: [QueryKeys.USER],
 		queryFn: () => api.user.get(),
@@ -15,24 +14,29 @@ export const usePaymentHandler = () => {
 
 	const subscription = data?.data?.subscription;
 
-	const paymentHandler = async ({
-		paymentRequest,
+	const userCanUseCredits = async ({
 		credits,
 		videoCredits,
 		storybookCredits,
 		variant,
-		openModal,
 	}: {
-		paymentRequest: Promise<unknown>;
 		credits?: number;
 		videoCredits?: number;
 		storybookCredits?: number;
 		variant: "credits" | "video credits" | "story book";
-		openModal: () => void;
-	}): Promise<unknown> => {
+	}): Promise<{
+		error?: "not paid subscription" | "not enough credits";
+		success?: boolean;
+	}> => {
 		if (!subscription) {
 			throw new Error("user does not have the subscription object");
 		}
+
+		if (subscription.subscriptionPlan === SubscriptionPlan.Free) {
+			toast.error("You do not have a paid subscription");
+			return { error: "not paid subscription", success: false };
+		}
+
 		const userCredits = subscription.credits ?? 0;
 		const userVideoCredits = subscription.videoGenerations ?? 0;
 		const userStoryCredits = subscription.storyGenerations ?? 0;
@@ -44,19 +48,7 @@ export const usePaymentHandler = () => {
 					? userVideoCredits >= videoCredits // @ts-ignore
 					: userStoryCredits >= storybookCredits;
 
-		if (enoughBalance) {
-			const data = await paymentRequest;
-			await invalidateUser();
-
-			// todo: type it better
-			// @ts-ignore
-			if (data?.error) {
-				// @ts-ignore
-				toast.error(data.error);
-			}
-
-			return data;
-		} else {
+		if (!enoughBalance) {
 			if (variant === "video credits") {
 				toast.error(
 					"You do not have enough video credits to perform this action"
@@ -68,9 +60,70 @@ export const usePaymentHandler = () => {
 					"You do not have enough story book credits to perform this action"
 				);
 			}
-			openModal();
+
+			return { error: "not enough credits", success: false };
 		}
+
+		return {
+			success: true,
+		};
 	};
 
-	return { paymentHandler };
+	return { userCanUseCredits };
 };
+
+// todo: implement this
+// export const usePaymentHandler = () => {
+// 	const { invalidateUser } = useUpdateUser();
+// 	const { userCanUseCredits } = useUserCanUseCredits();
+//
+// 	const paymentHandler = async ({
+// 		paymentRequest,
+// 		credits,
+// 		videoCredits,
+// 		storybookCredits,
+// 		variant,
+// 		onNotPaidSubscription,
+// 		onNotEnoughCredits,
+// 	}: {
+// 		paymentRequest: () => Promise<unknown>;
+// 		credits?: number;
+// 		videoCredits?: number;
+// 		storybookCredits?: number;
+// 		variant: "credits" | "video credits" | "story book";
+// 		onNotEnoughCredits: () => void;
+// 	}): Promise<{ data?: unknown; error: boolean }> => {
+// 		const canUseCredits = await userCanUseCredits({
+// 			credits,
+// 			videoCredits,
+// 			storybookCredits,
+// 			variant,
+// 			onNotPaidSubscription,
+// 			onNotEnoughCredits,
+// 		});
+//
+// 		if (!canUseCredits) {
+// 			return {
+// 				error: true,
+// 			};
+// 		}
+//
+// 		const data = await paymentRequest();
+// 		await invalidateUser();
+//
+// 		// todo: type it better
+// 		// @ts-ignore
+// 		const error = data?.error;
+// 		if (error) {
+// 			// @ts-ignore
+// 			toast.error(error);
+// 		}
+//
+// 		return {
+// 			data,
+// 			error: !!error,
+// 		};
+// 	};
+//
+// 	return { paymentHandler };
+// };
