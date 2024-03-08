@@ -235,16 +235,20 @@ export default function MobileGeneratePage() {
 							)}
 						</div>
 					</div>
-					<Textarea
-						autoFocus
-						maxLength={1000}
-						className="h-full border-border focus:border-0"
-						onChange={(e) => setInput(e.target.value)}
-					/>
-					<div className="flex justify-between text-xs text-slate-600">
-						<span>{input.length}/1000 characters</span>
-						<span>Next, edit the script & choose a style.</span>
-					</div>
+					{tabIndex !== 1 && (
+						<>
+							<Textarea
+								autoFocus
+								maxLength={1000}
+								className="h-full border-border focus:border-0"
+								onChange={(e) => setInput(e.target.value)}
+							/>
+							<div className="flex justify-between text-xs text-slate-600">
+								<span>{input.length}/1000 characters</span>
+								<span>Next, edit the script & choose a style.</span>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 			<div className="px-4 py-1 flex w-full justify-between gap-2">
