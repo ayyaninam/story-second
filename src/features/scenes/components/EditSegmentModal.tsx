@@ -23,9 +23,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import { mainSchema } from "@/api/schema";
 import { cn } from "@/utils";
-import { StoryImageStyles } from "@/utils/enums";
+import { StoryImageStyles, AllowanceType } from "@/utils/enums";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import useEventLogger from "@/utils/analytics";
+import { useUserCanUseCredits } from "@/utils/payment";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 const EditSegmentModal = ({
 	open,
@@ -65,9 +68,31 @@ const EditSegmentModal = ({
 		} | null>(null);
 
 	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
+
+	const { userCanUseCredits } = useUserCanUseCredits();
+	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 	const RegenerateSceneImages = useMutation({
 		mutationFn: async (scene: Scene) => {
 			if (!scene) return;
+
+			const { error } = await userCanUseCredits({
+				variant: "credits",
+				credits: getImageCost(scene.segments.length),
+			});
+
+			if (error) {
+				if (error === "not enough credits") {
+					setOpenCreditsDialog(true);
+				} else if (
+					error === "not paid subscription" ||
+					error === "using custom plan"
+				) {
+					setOpenSubscriptionDialog(true);
+				}
+
+				return;
+			}
 
 			const newStory = await SaveEdits.mutateAsync({
 				prevStory: WebstoryData,
@@ -176,6 +201,18 @@ const EditSegmentModal = ({
 						</DialogClose>
 					</div>
 				</DialogContent>
+
+				<CheckoutDialog
+					variant="credits"
+					allowanceType={AllowanceType.Credits}
+					open={openCreditsDialog}
+					setOpen={setOpenCreditsDialog}
+				/>
+
+				<UpgradeSubscriptionDialog
+					open={openSubscriptionDialog}
+					setOpen={setOpenSubscriptionDialog}
+				/>
 			</Dialog>
 		);
 	}

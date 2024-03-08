@@ -140,6 +140,9 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 				variant="subscription"
 				plan={SubscriptionPlan.Premium}
 				period={period}
+				isUpgradePlan={
+					getButtonText(SubscriptionPlan.Premium) === "Upgrade Plan"
+				}
 			>
 				<Button
 					variant="outline"
@@ -242,6 +245,7 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								onClick={(e) => {
 									eventLogger("pricing_free_plan_clicked");
 									Router.push(Routes.Generate()).then();
+									onClickFreePlan();
 								}}
 								disabled={getDisabledButton(SubscriptionPlan.Free)}
 							>
@@ -281,6 +285,9 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								variant="subscription"
 								plan={SubscriptionPlan.Basic}
 								period={period}
+								isUpgradePlan={
+									getButtonText(SubscriptionPlan.Basic) === "Upgrade Plan"
+								}
 							>
 								<Button
 									variant="outline"
@@ -322,6 +329,9 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								variant="subscription"
 								plan={SubscriptionPlan.Pro}
 								period={period}
+								isUpgradePlan={
+									getButtonText(SubscriptionPlan.Pro) === "Upgrade Plan"
+								}
 							>
 								<Button
 									variant="outline"
@@ -360,6 +370,9 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								variant="subscription"
 								plan={SubscriptionPlan.Premium}
 								period={period}
+								isUpgradePlan={
+									getButtonText(SubscriptionPlan.Premium) === "Upgrade Plan"
+								}
 							>
 								<Button
 									variant="outline"

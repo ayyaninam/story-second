@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import { capitalize } from "lodash";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import api from "@/api";
@@ -125,18 +126,19 @@ export interface SubscriptionCheckoutDialogProps {
 		SubscriptionPlan.Free | SubscriptionPlan.Custom
 	>;
 	period: SubscriptionPeriod;
+	isUpgradePlan?: boolean;
 	onClose: () => void;
 }
 
 const SubscriptionCheckoutDialog = ({
 	plan,
 	period,
+	isUpgradePlan,
 	onClose,
 }: SubscriptionCheckoutDialogProps) => {
 	const { user, updateUserDataAfter1Second } = useUser();
 	const eventLogger = useEventLogger();
-	const { setupStripe, clearStripe, onAddCard, confirmPayment } =
-		useStripeSetup();
+	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
 
 	const [stripeLoaded, setStripeLoaded] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
@@ -151,14 +153,14 @@ const SubscriptionCheckoutDialog = ({
 
 	const submitButtonText = `Pay ${total}`;
 
-	useEffect(() => {
-		return () => {
-			clearStripe();
-		};
-	}, []);
-
-	const onCreateSubscription = async () => {
-		eventLogger("create_subscription_initiated", {
+	const onUpdateSubscription = async ({
+		name,
+		createOrUpgradeEndpoint,
+	}: {
+		name: "create" | "upgrade";
+		createOrUpgradeEndpoint: typeof api.payment.upgradeSubscription;
+	}) => {
+		eventLogger(`${name}_subscription_initiated`, {
 			subscriptionPlan: plan,
 			subscriptionPeriod: period,
 		});
@@ -185,14 +187,16 @@ const SubscriptionCheckoutDialog = ({
 				eventLogger("add_card_successful");
 			}
 
-			const { succeeded, data, status } = await api.payment.createSubscription({
+			const { succeeded, data, status } = await createOrUpgradeEndpoint({
 				subscriptionPlan: plan,
 				subscriptionPeriod: period,
 			});
 			if (!succeeded) {
-				eventLogger("create_subscription_failed");
-				console.error(`Create Subscription backend failed, status = ${status}`);
-				toast.error("Create Subscription backend failed");
+				eventLogger(`${name}_subscription_failed`);
+				console.error(
+					`${capitalize(name)} Subscription backend failed, status = ${status}`
+				);
+				toast.error(`${capitalize(name)} Subscription backend failed`);
 				return;
 			}
 
@@ -236,7 +240,7 @@ const SubscriptionCheckoutDialog = ({
 					});
 
 				if (confirmSucceeded) {
-					eventLogger("create_subscription_successful", {
+					eventLogger(`${name}_subscription_successful`, {
 						subscriptionPlan: plan,
 						subscriptionPeriod: period,
 					});
@@ -250,6 +254,20 @@ const SubscriptionCheckoutDialog = ({
 			toast.error("Error Paying Subscription");
 		} finally {
 			setSubmitting(false);
+		}
+	};
+
+	const onSubmit = async () => {
+		if (isUpgradePlan) {
+			await onUpdateSubscription({
+				name: "upgrade",
+				createOrUpgradeEndpoint: api.payment.upgradeSubscription,
+			});
+		} else {
+			await onUpdateSubscription({
+				name: "create",
+				createOrUpgradeEndpoint: api.payment.createSubscription,
+			});
 		}
 	};
 
@@ -285,7 +303,7 @@ const SubscriptionCheckoutDialog = ({
 			}
 			submitButtonText={submitButtonText}
 			buttonProps={{
-				onClick: () => onCreateSubscription(),
+				onClick: () => onSubmit(),
 				disabled: !stripeLoaded || submitting,
 			}}
 		/>
