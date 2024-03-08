@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { AnimatedPage } from "./animated-page";
 import { PageView } from "./pageView/page-view";
 import {
@@ -20,7 +19,6 @@ const DesktopBook = ({ story }: BookProps) => {
 	const [animatedPages, setAnimatedPages] = useState<[Page, Page]>();
 	const [currentPages, setCurrentPages] = useState<[Page, Page]>();
 	const [turnDirection, setTurnDirection] = useState<TurnDirection>();
-	const [loading, setLoading] = useState(false);
 
 	const changePage = useCallback(
 		(isNext: boolean) => {
@@ -59,7 +57,7 @@ const DesktopBook = ({ story }: BookProps) => {
 		// if (story.storySegments.length <= 1) index = 0; code from storybird
 		setPageIndex(index);
 
-		const pArray: Page[] =
+		let pArray: Page[] =
 			story.scenes
 				?.flatMap((scene) => scene.storySegments)
 				.flatMap((item) => {
@@ -86,19 +84,44 @@ const DesktopBook = ({ story }: BookProps) => {
 					];
 				}) ?? [];
 
-		const pageArray: Page[] = [
-			...pArray,
-			{
-				variant: "the-end-left",
-				index: pArray.length,
-				pageNumber: pNum++,
-			},
-			{
-				variant: "the-end-right",
-				index: pArray.length,
-				pageNumber: pNum++,
-			},
-		];
+		// when page begins loading
+		pArray =
+			pArray.length === 0
+				? [
+						{
+							variant: "text",
+							textContent: null,
+							index: 0,
+							pageNumber: pNum++,
+						},
+						{
+							variant: "image",
+							textContent: "",
+							imageKey: "",
+							imageRegenerating: false,
+							imageAltText: "",
+							index: 0,
+							pageNumber: pNum++,
+						},
+					]
+				: pArray;
+
+		const theEnd: [Page, Page] | [] = story.storyDone
+			? [
+					{
+						variant: "the-end-left",
+						index: pArray.length,
+						pageNumber: pNum++,
+					},
+					{
+						variant: "the-end-right",
+						index: pArray.length,
+						pageNumber: pNum++,
+					},
+				]
+			: [];
+
+		const pageArray: Page[] = [...pArray, ...theEnd];
 		setPageArray(pageArray);
 		// @ts-ignore
 		setCurrentPages([pArray[index], pArray[index + 1]]);
@@ -109,43 +132,32 @@ const DesktopBook = ({ story }: BookProps) => {
 		return null;
 	}
 
+	const canGoPrevPage = currentPages[0].pageNumber - 1 >= 1;
+	const canGoNextPage = currentPages[1].pageNumber + 2 <= pageArray.length;
+
 	return (
 		<div className="w-[1200px] mb-[200px]">
 			<div className="flex aspect-[3/2] flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
 				<div className={styles.bookWrapper}>
-					{loading ? (
-						<>
-							<div className="w-[50%] flex flex-col gap-2 justify-center items-center bg-white border border-neutral-300">
-								<Skeleton className="h-4 w-[400px]" />
-								<Skeleton className="h-4 w-[400px]" />
-								<Skeleton className="h-4 w-[400px]" />
-								<Skeleton className="h-4 w-[400px]" />
-							</div>
-							<div className="w-[50%] flex justify-center items-center bg-white border border-neutral-300">
-								<Skeleton className="w-10/12 aspect-square rounded-xl" />
-							</div>
-						</>
-					) : (
-						<>
-							<PageView
-								story={story}
-								page={currentPages[0]}
-								changePage={() => changePage(false)}
-							/>
-							<PageView
-								story={story}
-								page={currentPages[1]}
-								changePage={() => changePage(true)}
-							/>
+					<PageView
+						story={story}
+						page={currentPages[0]}
+						canChangePage={canGoPrevPage}
+						changePage={() => changePage(false)}
+					/>
+					<PageView
+						story={story}
+						page={currentPages[1]}
+						canChangePage={canGoNextPage}
+						changePage={() => changePage(true)}
+					/>
 
-							{animatedPages && (
-								<AnimatedPage
-									story={story}
-									pages={animatedPages}
-									turnDirection={turnDirection}
-								/>
-							)}
-						</>
+					{animatedPages && (
+						<AnimatedPage
+							story={story}
+							pages={animatedPages}
+							turnDirection={turnDirection}
+						/>
 					)}
 				</div>
 			</div>

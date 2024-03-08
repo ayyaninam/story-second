@@ -1,45 +1,34 @@
 import { useRouter } from "next/router";
-import { useMediaQuery } from "usehooks-ts";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { WebStory } from "@/components/ui/story-book/constants";
 import api from "@/api";
 import Navbar from "@/features/story/components/Navbar";
 import Book from "@/components/ui/story-book";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
 
 const StoryBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 	const router = useRouter();
 	const { genre, id } = router.query;
-	const isDesktop = useMediaQuery("(min-width: 1280px)");
 
-	const [story, setStory] = useState<WebStory | null>(storyData || null);
-
-	useEffect(() => {
-		const fetchStory = async () => {
-			if (!genre || !id) {
-				return;
-			}
-
-			const storyResponse = await api.storybook.getStory({
+	const Webstory = useQuery({
+		queryFn: () =>
+			api.storybook.getStory({
 				topLevelCategory: genre as string,
 				slug: id as string,
-			});
-
-			if (storyResponse) {
-				setStory(storyResponse);
+			}),
+		queryKey: [QueryKeys.STORY, genre, id],
+		initialData: storyData,
+		refetchInterval: (data) => {
+			if (data?.state?.data?.storyDone) {
+				return false;
 			}
-		};
+			return 2000;
+		},
+		enabled: !!genre && !!id,
+	});
 
-		const intervalId = setInterval(async () => {
-			if (story && !story.storyDone) {
-			await fetchStory();
-		}else {
-				clearInterval(intervalId);
-			}
-		}, 2000);
-
-		void fetchStory();
-	return () => clearInterval(intervalId);
-	}, [genre, id]);
+	const story = Webstory.data;
 
 	return (
 		<div className="bg-reverse items-center overflow-y-scroll md:overflow-hidden h-[calc(100vh-20px)]">
