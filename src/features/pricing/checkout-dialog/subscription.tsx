@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import api from "@/api";
 import StripeForm from "@/features/pricing/stripe-form";
@@ -8,6 +8,8 @@ import { SubscriptionPlan, SubscriptionPeriod } from "@/utils/enums";
 import { useStripeSetup, useUser } from "../hooks";
 import CheckoutDialogContent from "./content";
 import { pricingValues } from "@/features/pricing/constants";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
 
 type Item = {
 	description: string;
@@ -127,7 +129,8 @@ const SubscriptionCheckoutDialog = ({
 	onClose,
 }: SubscriptionCheckoutDialogProps) => {
 	const { user, updateUserDataAfter1Second } = useUser();
-	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
+	const { setupStripe, clearStripe, onAddCard, confirmPayment } =
+		useStripeSetup();
 
 	const [stripeLoaded, setStripeLoaded] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
@@ -221,6 +224,23 @@ const SubscriptionCheckoutDialog = ({
 		}
 	};
 
+	const {
+		data,
+		isPending: isLoading,
+		refetch,
+	} = useQuery({
+		queryKey: [],
+		queryFn: () => api.payment.addCard(),
+	});
+
+	const clientSecret = data?.data;
+
+	useEffect(() => {
+		return () => {
+			clearStripe();
+		};
+	}, []);
+
 	return (
 		<CheckoutDialogContent
 			title={title}
@@ -244,10 +264,13 @@ const SubscriptionCheckoutDialog = ({
 						</div>
 					)}
 					<div hidden={showPaymentCard}>
-						<StripeForm
-							setupStripe={setupStripe}
-							onLoadStripe={() => setStripeLoaded(true)}
-						/>
+						{clientSecret && (
+							<StripeForm
+								clientSecret={clientSecret}
+								setupStripe={setupStripe}
+								// onLoadStripe={() => setStripeLoaded(true)}
+							/>
+						)}
 					</div>
 				</>
 			}

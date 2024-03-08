@@ -17,6 +17,12 @@ export const useStripeSetup = () => {
 		setElements(elements);
 	};
 
+	const clearStripe = () => {
+		console.log("clear");
+		setStripe(undefined);
+		setElements(undefined);
+	};
+
 	const confirmPayment = async (paymentIntentClientSecret: string) => {
 		if (!stripe || !paymentIntentClientSecret) {
 			throw new Error("Stripe.js has not loaded yet.");
@@ -60,7 +66,7 @@ export const useStripeSetup = () => {
 		}
 	};
 
-	return { setupStripe, confirmPayment, onAddCard, confirmSetup };
+	return { setupStripe, clearStripe, confirmPayment, onAddCard, confirmSetup };
 };
 
 export const useUser = () => {

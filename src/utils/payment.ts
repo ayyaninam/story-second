@@ -25,7 +25,10 @@ export const useUserCanUseCredits = () => {
 		storybookCredits?: number;
 		variant: "credits" | "video credits" | "story book";
 	}): Promise<{
-		error?: "not paid subscription" | "not enough credits";
+		error?:
+			| "not paid subscription"
+			| "not enough credits"
+			| "using custom plan";
 		success?: boolean;
 	}> => {
 		if (!subscription) {
@@ -43,7 +46,8 @@ export const useUserCanUseCredits = () => {
 					icon: "🔒",
 				}
 			);
-			return { error: "not paid subscription", success: false };
+			console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+			return { error: "using custom plan", success: false };
 		}
 
 		const userCredits = subscription.credits ?? 0;
