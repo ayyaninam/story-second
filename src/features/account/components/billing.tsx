@@ -19,17 +19,11 @@ interface BillingInfoProps {
 const BillingInfo = ({ userIsEditing, setUserIsEditing }: BillingInfoProps) => {
 	const { user, updateUserDataAfter1Second } = useUser();
 
-	const { setupStripe, clearStripe, onAddCard } = useStripeSetup();
+	const { setupStripe, onAddCard } = useStripeSetup();
 	const [stripeLoaded, setStripeLoaded] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
 
 	const userHasCard = user ? getUserHasCard(user) : false;
-
-	useEffect(() => {
-		return () => {
-			clearStripe();
-		};
-	}, []);
 
 	const handleAddCard = async () => {
 		setSubmitting(true);
