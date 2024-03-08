@@ -9,13 +9,13 @@ interface BasePage {
 
 export interface TextPage extends BasePage {
 	variant: "text";
-	textContent: string;
+	textContent: string | null;
 }
 
 export interface ImagePage extends BasePage {
 	variant: "image";
 	textContent: string;
-	imageKey: string;
+	imageKey: string | null;
 	imageRegenerating: boolean;
 	imageAltText: string | null;
 }
