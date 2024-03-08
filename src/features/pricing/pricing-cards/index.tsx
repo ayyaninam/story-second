@@ -80,28 +80,34 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 	const userSubscriptionPlan = user?.subscription?.subscriptionPlan;
 	const userSubscriptionPeriod = user?.subscription?.subscriptionPeriod;
 
-	const isCurrentPlan = (plan: SubscriptionPlan) =>
+	const _isCurrentPlan = (plan: SubscriptionPlan) =>
 		userSubscriptionPlan === plan && userSubscriptionPeriod === period;
 
-	const isUpgradePlan = (plan: SubscriptionPlan) =>
-		userSubscriptionPlan !== SubscriptionPlan.Free &&
-		Object.values(SubscriptionPlan).indexOf(plan) >
-			Object.values(SubscriptionPlan).indexOf(userSubscriptionPlan);
+	const _isUpgradePlan = (plan: SubscriptionPlan) => {
+		if (userSubscriptionPlan === SubscriptionPlan.Free) {
+			return false;
+		}
 
-	const isDowngradePlan = (plan: SubscriptionPlan) =>
-		userSubscriptionPlan !== SubscriptionPlan.Free &&
-		Object.values(SubscriptionPlan).indexOf(plan) <
-			Object.values(SubscriptionPlan).indexOf(userSubscriptionPlan);
+		if (period === userSubscriptionPeriod) {
+			return (
+				Object.values(SubscriptionPlan).indexOf(plan) >
+				Object.values(SubscriptionPlan).indexOf(userSubscriptionPlan)
+			);
+		}
+		return (
+			period === SubscriptionPeriod.Annual &&
+			userSubscriptionPeriod === SubscriptionPeriod.Monthly
+		);
+	};
 
 	const getButtonText = (plan: SubscriptionPlan) => {
 		if (userSubscriptionPlan) {
-			if (isCurrentPlan(plan)) {
+			if (_isCurrentPlan(plan)) {
 				return "Current Plan";
-			} else if (isUpgradePlan(plan)) {
+			} else if (_isUpgradePlan(plan)) {
 				return "Upgrade Plan";
-			} else if (isDowngradePlan(plan)) {
-				return "Downgrade Plan";
 			}
+			return "Downgrade Plan";
 		}
 
 		switch (plan) {
@@ -115,6 +121,13 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 				return "Get Started For Free";
 		}
 	};
+
+	const isCurrentPlan = (plan: SubscriptionPlan) =>
+		getButtonText(plan) === "Current Plan";
+	const isUpgradePlan = (plan: SubscriptionPlan) =>
+		getButtonText(plan) === "Upgrade Plan";
+	const isDowngradePlan = (plan: SubscriptionPlan) =>
+		getButtonText(plan) === "Downgrade Plan";
 
 	const getButtonStyles = (plan: SubscriptionPlan) => {
 		if (
