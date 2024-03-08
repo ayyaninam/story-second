@@ -31,9 +31,9 @@ const StoryBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 	const story = Webstory.data;
 
 	return (
-		<div className="bg-reverse items-center overflow-y-scroll md:overflow-hidden h-[calc(100vh-20px)]">
+		<div className="bg-reverse flex flex-col h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)]">
 			<Navbar WebstoryData={story} />
-			<div className="flex justify-center items-center h-full">
+			<div className="flex justify-center items-center flex-grow px-2">
 				{story && <Book story={story} />}
 			</div>
 		</div>

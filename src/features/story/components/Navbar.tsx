@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 
 import GenerateIcon from "@/components/icons/dashboard/generate-icon";
-import Router, {useRouter} from "next/router";
+import Router, { useRouter } from "next/router";
 import Routes from "@/routes";
 import useEventLogger from "@/utils/analytics";
 
@@ -15,10 +15,10 @@ export default function Navbar({
 }: {
 	WebstoryData?: mainSchema["ReturnWebStoryDTO"] | null;
 }) {
-  const router = useRouter();
-  const eventLogger = useEventLogger();
+	const router = useRouter();
+	const eventLogger = useEventLogger();
 	return (
-		<div className="flex justify-between bg-background rounded-tl-lg rounded-tr-lg border-b-[0.5px] border-border p-4">
+		<div className="flex flex-row justify-between items-center bg-background rounded-tl-lg rounded-tr-lg border-b-[0.5px] border-border p-4">
 			<div className="flex gap-x-2.5 items-center">
 				<GenerateIcon />
 				<div className="items-center">
@@ -48,14 +48,14 @@ export default function Navbar({
 					</div>
 				</div>
 			</div>
-			<div className="hidden md:block text-muted-foreground space-x-2 items-center">
+			<div className="text-muted-foreground space-x-2">
 				<Button
 					className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 					variant="default"
 					onClick={() => {
-            eventLogger("create_new_clicked", {
-              sourceUrl: router.asPath,
-            })
+						eventLogger("create_new_clicked", {
+							sourceUrl: router.asPath,
+						});
 						Router.push(Routes.Generate());
 					}}
 				>
