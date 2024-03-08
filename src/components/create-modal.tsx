@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -15,7 +15,7 @@ import {
 	tabs,
 	videoRatios,
 } from "@/features/generate/constants";
-import Router, { useRouter } from "next/router";
+import Router from "next/router";
 import FileUpload from "@/features/tiktok/components/file-upload";
 import { CreateInitialStoryQueryParams } from "@/types";
 import { ImageRatios } from "@/utils/image-ratio";
@@ -25,6 +25,7 @@ import {
 	StoryLanguages,
 	StoryLengths,
 	StoryOutputTypes,
+	AllowanceType,
 } from "@/utils/enums";
 import Routes from "@/routes";
 import {
@@ -32,14 +33,21 @@ import {
 	VideoRatioSelect,
 } from "@/features/generate/components/selection-constants";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { useUserCanUseCredits } from "@/utils/payment";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import useEventLogger from "@/utils/analytics";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 const GenerateModalContent: FC = () => {
 	const eventLogger = useEventLogger();
 
+	const { userCanUseCredits } = useUserCanUseCredits();
 	const [value, setValue] = useState<TabType>(TabType.Video);
 	const [input, setInput] = useState("");
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
+	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
+	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
 		videoRatios[0]?.value.toString() || ""
@@ -61,10 +69,13 @@ const GenerateModalContent: FC = () => {
 		const videoRatio =
 			tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
 		setIsLoading(true);
+
+		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
+			?.enumValue as StoryOutputTypes;
+
 		const params: CreateInitialStoryQueryParams = {
 			input_type: StoryInputTypes.Text,
-			output_type: tabs.find((tab) => tab.text.toLowerCase() === value)
-				?.enumValue as StoryOutputTypes,
+			output_type: outputType,
 			prompt: input,
 
 			length: selectedVideoLength,
@@ -83,6 +94,42 @@ const GenerateModalContent: FC = () => {
 			params["output_type"] = StoryOutputTypes.SplitScreen;
 			params["video_key"] = videoFileId;
 			params["image_resolution"] = ImageRatios["9x8"].enumValue;
+		}
+
+		const isStoryBook = outputType === StoryOutputTypes.Story;
+
+		if (isStoryBook) {
+			const { error } = await userCanUseCredits({
+				variant: "story book",
+				storybookCredits: 1,
+			});
+
+			if (error) {
+				if (error === "not enough credits") {
+					setOpenStoryBooksDialog(true);
+				} else if (error === "not paid subscription") {
+					setOpenSubscriptionDialog(true);
+				}
+
+				setIsLoading(false);
+				return;
+			}
+		} else {
+			const { error } = await userCanUseCredits({
+				variant: "video credits",
+				videoCredits: 1,
+			});
+
+			if (error) {
+				if (error === "not enough credits") {
+					setOpenCreditsDialog(true);
+				} else if (error === "not paid subscription") {
+					setOpenSubscriptionDialog(true);
+				}
+
+				setIsLoading(false);
+				return;
+			}
 		}
 
 		const response = Routes.CreateStoryFromRoute(params);
@@ -218,6 +265,25 @@ const GenerateModalContent: FC = () => {
 					</div>
 				</div>
 			</div>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.Videos}
+				open={openCreditsDialog}
+				setOpen={setOpenCreditsDialog}
+			/>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.StoryBooks}
+				open={openStoryBooksDialog}
+				setOpen={setOpenStoryBooksDialog}
+			/>
+
+			<UpgradeSubscriptionDialog
+				open={openSubscriptionDialog}
+				setOpen={setOpenSubscriptionDialog}
+			/>
 		</div>
 	);
 };
