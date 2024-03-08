@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { PopoverContent } from "@/components/ui/popover";
 import { cn } from "@/utils";
-import { AspectRatios, StoryImageStyles } from "@/utils/enums";
+import { AspectRatios, StoryImageStyles, AllowanceType } from "@/utils/enums";
 import Format from "@/utils/format";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import Image from "next/image";
@@ -23,6 +23,9 @@ import { getImageCost } from "@/utils/credit-cost";
 import { useMediaQuery } from "usehooks-ts";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import useEventLogger from "@/utils/analytics";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
+import { useUserCanUseCredits } from "@/utils/payment";
 
 function RegenerationPopupHeader({
 	title,
@@ -210,6 +213,8 @@ function ImageRegenerationPopup({
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
 	const [isRegeneratingImages, setIsRegeneratingImages] = useState(false);
 	const [regenerateImage, setRegenerateImages] = useState(false);
+	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 
 	const loading =
 		segment.alternateImagesStatus === StoryStatus.PENDING ||
@@ -225,7 +230,26 @@ function ImageRegenerationPopup({
 	const segmentSettings =
 		imageRegenerationSegmentDetails?.segmentSettings || segment.settings;
 
+	const { userCanUseCredits } = useUserCanUseCredits();
+
 	const triggerRegenerationOfImages = useCallback(async () => {
+		const { error } = await userCanUseCredits({
+			credits: getImageCost(4),
+			variant: "credits",
+		});
+
+		console.log(error);
+
+		if (error) {
+			if (error === "using custom plan" || error === "not paid subscription") {
+				setOpenSubscriptionDialog(true);
+			}
+			if (error === "not enough credits") {
+				setOpenStoryBooksDialog(true);
+			}
+			return;
+		}
+
 		setIsRegeneratingImages(true);
 		eventLogger("regenerate_single_image_popover");
 		if (imageRegenerationSegmentDetails) {
@@ -556,6 +580,18 @@ function ImageRegenerationPopup({
 					triggerRegenerationOfImages();
 				}}
 				loading={false}
+			/>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.Credits}
+				open={openStoryBooksDialog}
+				setOpen={setOpenStoryBooksDialog}
+			/>
+
+			<UpgradeSubscriptionDialog
+				open={openSubscriptionDialog}
+				setOpen={setOpenSubscriptionDialog}
 			/>
 		</PopoverContent>
 	);

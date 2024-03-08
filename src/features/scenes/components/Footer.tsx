@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
@@ -27,6 +27,7 @@ import {
 	ScenesGenButtonType,
 	StoryImageStyles,
 	VoiceType,
+	AllowanceType,
 } from "@/utils/enums";
 import clsx from "clsx";
 import api from "@/api";
@@ -49,6 +50,9 @@ import TooltipComponent from "@/components/ui/tooltip-component";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import { boolean } from "zod";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { useUserCanUseCredits } from "@/utils/payment";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import useEventLogger from "@/utils/analytics";
 const images = [
 	{
@@ -160,6 +164,9 @@ const Footer = ({
 
 	const regenRemVideosCreditCost = getVideoCost(ungeneratedVideos.length);
 
+	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+
 	const updateImageStyle = useCallback(
 		(style: StoryImageStyles) => {
 			dispatch({ type: "update_image_style", style: style });
@@ -226,8 +233,29 @@ const Footer = ({
 		},
 	});
 
+	const { userCanUseCredits } = useUserCanUseCredits();
+
 	const RegenerateAllImagesMutation = useMutation({
 		mutationFn: async () => {
+			const { error } = await userCanUseCredits({
+				variant: "credits",
+				credits: regenAllImagesCreditCost,
+			});
+
+			if (error) {
+				if (
+					error === "using custom plan" ||
+					error === "not paid subscription"
+				) {
+					setOpenSubscriptionDialog(true);
+				}
+				if (error === "not enough credits") {
+					setOpenCreditsDialog(true);
+				}
+
+				return;
+			}
+
 			await SaveEdits.mutateAsync({
 				updatedStory: story,
 				prevStory: WebstoryData,
@@ -321,6 +349,25 @@ const Footer = ({
 
 	const RegenerateAllScenesMutation = useMutation({
 		mutationFn: async () => {
+			const { error } = await userCanUseCredits({
+				variant: "credits",
+				credits: regenAllVideosCreditCost,
+			});
+
+			if (error) {
+				if (
+					error === "using custom plan" ||
+					error === "not paid subscription"
+				) {
+					setOpenSubscriptionDialog(true);
+				}
+				if (error === "not enough credits") {
+					setOpenCreditsDialog(true);
+				}
+
+				return;
+			}
+
 			await SaveEdits.mutateAsync({
 				updatedStory: story,
 				prevStory: WebstoryData,
@@ -713,6 +760,18 @@ const Footer = ({
 				)}
 			</div>
 			<FooterRightButtons />
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.Credits}
+				open={openCreditsDialog}
+				setOpen={setOpenCreditsDialog}
+			/>
+
+			<UpgradeSubscriptionDialog
+				open={openSubscriptionDialog}
+				setOpen={setOpenSubscriptionDialog}
+			/>
 		</div>
 	);
 };
