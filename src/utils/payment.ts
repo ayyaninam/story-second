@@ -36,6 +36,15 @@ export const useUserCanUseCredits = () => {
 			toast.error("You do not have a paid subscription");
 			return { error: "not paid subscription", success: false };
 		}
+		if (subscription.subscriptionPlan === SubscriptionPlan.Custom) {
+			toast.success(
+				"You're on a custom plan, please upgrade to a regular plan to continue",
+				{
+					icon: "🔒",
+				}
+			);
+			return { error: "not paid subscription", success: false };
+		}
 
 		const userCredits = subscription.credits ?? 0;
 		const userVideoCredits = subscription.videoGenerations ?? 0;

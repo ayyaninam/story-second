@@ -107,6 +107,7 @@ export enum SubscriptionPlan {
 	Basic,
 	Pro,
 	Premium,
+	Custom,
 }
 
 export enum SubscriptionPeriod {
