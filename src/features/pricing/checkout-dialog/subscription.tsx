@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import api from "@/api";
 import StripeForm from "@/features/pricing/stripe-form";
@@ -135,7 +135,8 @@ const SubscriptionCheckoutDialog = ({
 }: SubscriptionCheckoutDialogProps) => {
 	const { user, updateUserDataAfter1Second } = useUser();
 	const eventLogger = useEventLogger();
-	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
+	const { setupStripe, clearStripe, onAddCard, confirmPayment } =
+		useStripeSetup();
 
 	const [stripeLoaded, setStripeLoaded] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
@@ -149,6 +150,12 @@ const SubscriptionCheckoutDialog = ({
 		pricingStructure[plan][period];
 
 	const submitButtonText = `Pay ${total}`;
+
+	useEffect(() => {
+		return () => {
+			clearStripe();
+		};
+	}, []);
 
 	const onCreateSubscription = async () => {
 		eventLogger("create_subscription_initiated", {
