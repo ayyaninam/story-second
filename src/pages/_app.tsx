@@ -5,15 +5,15 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from "@tanstack/react-query";
-import type {AppProps, NextWebVitalsMetric} from "next/app";
-import {UserProvider, useUser} from "@auth0/nextjs-auth0/client";
+import type { AppProps, NextWebVitalsMetric } from "next/app";
+import { UserProvider, useUser } from "@auth0/nextjs-auth0/client";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "react-hot-toast";
 import { ReactElement, ReactNode, useState } from "react";
 import { NextPage } from "next/types";
 
-import {DefaultSeo, DefaultSeoProps} from "next-seo";
-import {env} from "@/env.mjs";
+import { DefaultSeo, DefaultSeoProps } from "next-seo";
+import { env } from "@/env.mjs";
 import Script from "next/script";
 import { GoogleAnalytics, event } from "nextjs-google-analytics";
 import useEventLogger from "@/utils/analytics";
@@ -161,7 +161,8 @@ type AppPropsWithLayout = AppProps & {
 const defaultSeoProps: DefaultSeoProps = {
 	defaultTitle: "Story.com | Tell Your Story",
 	titleTemplate: "%s | Story.com",
-	description: "Unlock your imagination with Story.com. Everyone has a story to tell, what is your story?",
+	description:
+		"Unlock your imagination with Story.com. Everyone has a story to tell, what is your story?",
 	openGraph: {
 		type: "website",
 		locale: "en_US",
@@ -178,7 +179,7 @@ const defaultSeoProps: DefaultSeoProps = {
 	},
 	twitter: {
 		cardType: "summary_large_image",
-	}
+	},
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
@@ -196,11 +197,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 	const getLayout = Component.getLayout ?? ((page) => page);
 	return (
 		<QueryClientProvider client={queryClient}>
-      <GoogleAnalytics
-        gaMeasurementId="G-XXN8XDQZQW"
-        strategy="lazyOnload"
-        trackPageViews={{ ignoreHashChange: true }}
-      />
+			<GoogleAnalytics
+				gaMeasurementId="G-XXN8XDQZQW"
+				strategy="lazyOnload"
+				trackPageViews={{ ignoreHashChange: true }}
+			/>
 			<Script id={"intercom-1"}>
 				{`
 					window.intercomSettings = {
@@ -235,7 +236,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 		</QueryClientProvider>
 	);
 }
-
 
 // Disable console logs in production
 if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === "production") {

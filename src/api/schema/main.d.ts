@@ -3,7284 +3,7426 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/api/Admin/Login": {
-    /** Admin login. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["LoginDTO"];
-          "application/json": components["schemas"]["LoginDTO"];
-          "text/json": components["schemas"]["LoginDTO"];
-          "application/*+json": components["schemas"]["LoginDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/User": {
-    /** Get all user accounts with search. */
-    get: {
-      parameters: {
-        query?: {
-          Pattern?: string;
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/UserInfo/{id}": {
-    /** Get user info by id. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminUserInfoDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminUserInfoDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminUserInfoDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/User/{id}": {
-    /** Delete a user. */
-    delete: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/WebStory": {
-    /** Get all web stories with search. */
-    get: {
-      parameters: {
-        query?: {
-          Pattern?: string;
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/Requests/{id}": {
-    /** Get one request by id. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/Requests/Slug/{slug}": {
-    /** Get one request by slug. */
-    get: {
-      parameters: {
-        path: {
-          slug: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/DeletePublishedStory/{id}": {
-    /** Delete a published story by id. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/GetAllStoryItems": {
-    /** Get all story items. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnStoryItemDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnStoryItemDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnStoryItemDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/{id}/GetSingleStoryItem/{CreditSpendType}": {
-    /** Get a single story item. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-          CreditSpendType: components["schemas"]["CreditSpendType"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnStoryItemDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnStoryItemDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnStoryItemDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/GetAllAmazonRequests": {
-    /** Get all Amazon book publish requests. */
-    get: {
-      parameters: {
-        query?: {
-          AmazonPublishLifecycle?: number;
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminAmazonBookDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminAmazonBookDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminAmazonBookDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/GetOneAmazonRequest/{id}": {
-    /** Get one Amazon book publish request. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminAmazonBookDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminAmazonBookDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminAmazonBookDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/UpdateAmazonRequestStatus/{id}": {
-    /** Update an Amazon book publish request status. */
-    patch: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["UpdateAmazonStatusDTO"];
-          "application/json": components["schemas"]["UpdateAmazonStatusDTO"];
-          "text/json": components["schemas"]["UpdateAmazonStatusDTO"];
-          "application/*+json": components["schemas"]["UpdateAmazonStatusDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/ManualAmazonPDFRegeneration/{id}": {
-    /** Manually triggers regeneration of a specific Amazon book PDF. */
-    patch: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/GetAllBookOrders": {
-    /** Get all RPI book orders. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentTab?: number;
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminBookOrderDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminBookOrderDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminBookOrderDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/GetOneBookOrder/{id}": {
-    /** Get one RPI book order request. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminBookOrderDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminBookOrderDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminBookOrderDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/ManualBookOrderRegeneration/{id}": {
-    /** Regenerate the pdf for a given book order. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["BooleanApiResponse"];
-            "application/json": components["schemas"]["BooleanApiResponse"];
-            "text/json": components["schemas"]["BooleanApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/DiscountCode": {
-    /** Get all discount codes. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminDiscountCodeDTOListApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminDiscountCodeDTOListApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminDiscountCodeDTOListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-    /** Create a new discount code. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["CreateDiscountCodeDTO"];
-          "application/json": components["schemas"]["CreateDiscountCodeDTO"];
-          "text/json": components["schemas"]["CreateDiscountCodeDTO"];
-          "application/*+json": components["schemas"]["CreateDiscountCodeDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/DiscountCode/{id}/Active": {
-    /** Toggle a discount code's active status. */
-    patch: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["UpdateDiscountCodeIsActiveDTO"];
-          "application/json": components["schemas"]["UpdateDiscountCodeIsActiveDTO"];
-          "text/json": components["schemas"]["UpdateDiscountCodeIsActiveDTO"];
-          "application/*+json": components["schemas"]["UpdateDiscountCodeIsActiveDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/DiscountCode/{id}/Expiry": {
-    /** Update a discount code expiry date. */
-    patch: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["UpdateDiscountCodeExpiryDateDTO"];
-          "application/json": components["schemas"]["UpdateDiscountCodeExpiryDateDTO"];
-          "text/json": components["schemas"]["UpdateDiscountCodeExpiryDateDTO"];
-          "application/*+json": components["schemas"]["UpdateDiscountCodeExpiryDateDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/ReportedStories": {
-    /** Get all reported stories. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnStoryReportDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnStoryReportDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnStoryReportDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/ReportedStories/{id}": {
-    /** Get one reported story. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnStoryReportDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnStoryReportDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnStoryReportDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/ReportedStories/{id}/Resolve": {
-    /** Resolve reports for a reported story. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/ReportedComments": {
-    /** Get all reported comments. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnCommentReportDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnCommentReportDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnCommentReportDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/DeleteComment/{id}": {
-    /** Delete a comment by id. */
-    delete: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/ReportedComment/{id}/Resolve": {
-    /** Resolve reports for a reported comment. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/ManualImageRegeneration": {
-    /** Manual triggers regeneration of a specific image. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["ManualImageRegenerationDTO"];
-          "application/json": components["schemas"]["ManualImageRegenerationDTO"];
-          "text/json": components["schemas"]["ManualImageRegenerationDTO"];
-          "application/*+json": components["schemas"]["ManualImageRegenerationDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["BooleanApiResponse"];
-            "application/json": components["schemas"]["BooleanApiResponse"];
-            "text/json": components["schemas"]["BooleanApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/GetStoryByASIN/{asin}": {
-    /** Get a story by ASIN. */
-    get: {
-      parameters: {
-        path: {
-          asin: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/UpdateAmazonRoyalty": {
-    /** Update Amazon book royalties. */
-    put: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["UpdateAmazonBookRoyaltyDTO"];
-          "application/json": components["schemas"]["UpdateAmazonBookRoyaltyDTO"];
-          "text/json": components["schemas"]["UpdateAmazonBookRoyaltyDTO"];
-          "application/*+json": components["schemas"]["UpdateAmazonBookRoyaltyDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/BulkUpdateAmazonRoyalties": {
-    /** Bulk update Amazon book royalties from an Excel file. */
-    post: {
-      requestBody?: {
-        content: {
-          "multipart/form-data": {
-            /** Format: binary */
-            file?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Admin/AddCredits": {
-    /** Add tokens to a user account. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["AddCreditsDTO"];
-          "application/json": components["schemas"]["AddCreditsDTO"];
-          "text/json": components["schemas"]["AddCreditsDTO"];
-          "application/*+json": components["schemas"]["AddCreditsDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Amazon/{id}/Payment": {
-    /** Make payment for an amazon request */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["AmazonRequestPaymentTypeDTO"];
-          "application/json": components["schemas"]["AmazonRequestPaymentTypeDTO"];
-          "text/json": components["schemas"]["AmazonRequestPaymentTypeDTO"];
-          "application/*+json": components["schemas"]["AmazonRequestPaymentTypeDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Amazon/AllAmazonBooksRevenue": {
-    /** Get all amazon books revenue */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["AmazonBooksRevenueDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["AmazonBooksRevenueDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["AmazonBooksRevenueDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Amazon/PregenerateAmazonSummary": {
-    /** Pre-generate amazon summary */
-    post: {
-      parameters: {
-        query?: {
-          id?: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Library": {
-    /**
-     * Get public stories
-     * @description Get a list of public stories based on pagination parameters
-     */
-    get: operations["GetPublicStories"];
-  };
-  "/api/Library/Categories": {
-    /**
-     * Get all categories
-     * @description Get a list of all categories in order of decreasing story count
-     */
-    get: operations["GetAllCategories"];
-  };
-  "/api/Library/{topLevelCategory}": {
-    /**
-     * Get stories under the specified category
-     * @description Get stories under the specified category based on pagination parameters
-     */
-    get: operations["GetStoriesByTopLevelCategory"];
-  };
-  "/api/Library/Story/{id}": {
-    /**
-     * Get one public story by id. Depricated API, returns category/slug url.
-     * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
-     */
-    get: operations["GetOnePublicStoryById"];
-  };
-  "/api/Library/Slug/{slug}": {
-    /**
-     * Get one public story by slug
-     * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
-     */
-    get: operations["GetOnePublicStoryBySlug"];
-  };
-  "/api/Library/{topLevelCategory}/{slug}": {
-    /**
-     * Get one public story by category and slug
-     * @description Get a single public story by its category and slug
-     */
-    get: operations["GetOnePublicStoryByCategoryAndSlug"];
-  };
-  "/api/Library/{id}/Suggested": {
-    /**
-     * Get suggested stories
-     * @description Get a list of suggested stories based on the provided story id
-     */
-    get: operations["GetSuggestedStories"];
-  };
-  "/api/Library/ActiveContests": {
-    /**
-     * Get active contests
-     * @description Get a list of active contests
-     */
-    get: operations["GetActiveContests"];
-  };
-  "/api/Library/Contest/{id}": {
-    /**
-     * Get contest by id
-     * @description Get a contest by its id
-     */
-    get: operations["GetContestById"];
-  };
-  "/api/Library/{id}/Like": {
-    /**
-     * Like a Web Story
-     * @description Like the given Web Story by its id.
-     */
-    patch: operations["LikeStory"];
-  };
-  "/api/Library/AllSlugs": {
-    /**
-     * Get all slugs
-     * @description Get a list of all slugs
-     */
-    get: operations["GetAllSlugs"];
-  };
-  "/api/Payment/AddCard": {
-    /** Add a new card to the user's account */
-    post: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/SyncCards": {
-    /** Synchronize cards between the user's account and stripe */
-    post: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/RemoveCard": {
-    /** Remove a card from the user's account */
-    post: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/GetShippingPricing/{quantity}": {
-    /** Gets shipping pricing for a given quantity */
-    get: {
-      parameters: {
-        path: {
-          quantity: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ShippingPricesApiResponse"];
-            "application/json": components["schemas"]["ShippingPricesApiResponse"];
-            "text/json": components["schemas"]["ShippingPricesApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/DiscountCodeDetails": {
-    /** Gets discount code details */
-    get: {
-      parameters: {
-        query?: {
-          code?: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnDiscountCodeDetailsDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnDiscountCodeDetailsDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnDiscountCodeDetailsDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/PayoutAccount": {
-    /** Creates a Stripe Connect express account for receiving payouts. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["CreatePayoutAccountDTO"];
-          "application/json": components["schemas"]["CreatePayoutAccountDTO"];
-          "text/json": components["schemas"]["CreatePayoutAccountDTO"];
-          "application/*+json": components["schemas"]["CreatePayoutAccountDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/AccountUpdate": {
-    /** Updates a Stripe Connect express account with its payout accounts. */
-    put: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/SetupLink": {
-    /** Handle refresh URL for Stripe Connect account setup. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/AccountLink": {
-    /** Gets the user's Stripe Connect login link. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/CheckStripeConnectAccount": {
-    /** Gets the user's Stripe Connect account details. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StripeConnectAccountStatusApiResponse"];
-            "application/json": components["schemas"]["StripeConnectAccountStatusApiResponse"];
-            "text/json": components["schemas"]["StripeConnectAccountStatusApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/WithdrawAmazonBalance": {
-    /** Send the user's unclaimed royalties for processing on StoryBird. */
-    post: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/Scribble/{id}": {
-    /** Gets the user's Scribble access token. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringStringDictionaryApiResponse"];
-            "application/json": components["schemas"]["StringStringDictionaryApiResponse"];
-            "text/json": components["schemas"]["StringStringDictionaryApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/VerifyPurchaseCredits": {
-    /** Confirm a payment for credits purchase. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["ConfirmPaymentDTO"];
-          "application/json": components["schemas"]["ConfirmPaymentDTO"];
-          "text/json": components["schemas"]["ConfirmPaymentDTO"];
-          "application/*+json": components["schemas"]["ConfirmPaymentDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/CreateSubscription": {
-    /** Create a subscription for the user. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["CreateSubscriptionDTO"];
-          "application/json": components["schemas"]["CreateSubscriptionDTO"];
-          "text/json": components["schemas"]["CreateSubscriptionDTO"];
-          "application/*+json": components["schemas"]["CreateSubscriptionDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["InternalTransactionDTOApiResponse"];
-            "application/json": components["schemas"]["InternalTransactionDTOApiResponse"];
-            "text/json": components["schemas"]["InternalTransactionDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/CancelSubscription": {
-    /** Cancel a subscription for the user. */
-    post: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/ConfirmSubscription": {
-    /** Confirm a payment for credits purchase. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["ConfirmSubscriptionDTO"];
-          "application/json": components["schemas"]["ConfirmSubscriptionDTO"];
-          "text/json": components["schemas"]["ConfirmSubscriptionDTO"];
-          "application/*+json": components["schemas"]["ConfirmSubscriptionDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Payment/RefillAllowance": {
-    /** Buy video credits. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["AdditionalCreditsDTO"];
-          "application/json": components["schemas"]["AdditionalCreditsDTO"];
-          "text/json": components["schemas"]["AdditionalCreditsDTO"];
-          "application/*+json": components["schemas"]["AdditionalCreditsDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/generate_story": {
-    /**
-     * Generate a story from plugin
-     * @description Generate a new story based on the provided prompt
-     */
-    post: operations["PluginGenerateStory"];
-  };
-  "/.well-known/ai-plugin.json": {
-    /**
-     * ChatGPT Plugin manifest
-     * @description  Get ai-plugin.json for ChatGPT
-     */
-    get: operations["GetAIPluginJson"];
-  };
-  "/.well-known/openapi.yaml": {
-    /**
-     * Get OpenAPI YAML
-     * @description Get the openapi.yaml file
-     */
-    get: operations["GetOpenApiYaml"];
-  };
-  "/.well-known/logo.png": {
-    /**
-     * Get logo
-     * @description Get the logo.png file
-     */
-    get: operations["GetLogo"];
-  };
-  "/api/StoryBook": {
-    /**
-     * Get public stories
-     * @description Get a list of public stories based on pagination parameters
-     */
-    get: operations["GetPublicStories"];
-  };
-  "/api/StoryBook/Categories": {
-    /**
-     * Get all categories
-     * @description Get a list of all categories in order of decreasing story count
-     */
-    get: operations["GetAllCategories"];
-  };
-  "/api/StoryBook/{topLevelCategory}": {
-    /**
-     * Get stories under the specified category
-     * @description Get stories under the specified category based on pagination parameters
-     */
-    get: operations["GetStoriesByTopLevelCategory"];
-  };
-  "/api/StoryBook/GetUrl/{id}": {
-    /**
-     * Get one public story by id. Depricated API, returns category/slug url.
-     * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
-     */
-    get: operations["GetOnePublicStoryById"];
-  };
-  "/api/StoryBook/Slug/{slug}": {
-    /**
-     * Get one public story by slug
-     * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
-     */
-    get: operations["GetOnePublicStoryBySlug"];
-  };
-  "/api/StoryBook/{topLevelCategory}/{slug}": {
-    /**
-     * Get one public story by category and slug
-     * @description Get a single public story by its category and slug
-     */
-    get: operations["GetOnePublicStoryByCategoryAndSlug"];
-  };
-  "/api/StoryBook/{id}/Suggested": {
-    /**
-     * Get suggested stories
-     * @description Get a list of suggested stories based on the provided story id
-     */
-    get: operations["GetSuggestedStories"];
-  };
-  "/api/TextToSpeech/DefaultAudio/{id}": {
-    /**
-     * Generate audio
-     * @description Generate a new audio using generic voice IDs
-     */
-    post: operations["GenerateGenericAudio"];
-  };
-  "/api/TextToSpeech/{id}/RegenAudio/{index}": {
-    /** Regenerate an audio for a story by its ID and index */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-          index: number;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["GenerateGenericAudioDTO"];
-          "application/json": components["schemas"]["GenerateGenericAudioDTO"];
-          "text/json": components["schemas"]["GenerateGenericAudioDTO"];
-          "application/*+json": components["schemas"]["GenerateGenericAudioDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["BooleanApiResponse"];
-            "application/json": components["schemas"]["BooleanApiResponse"];
-            "text/json": components["schemas"]["BooleanApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/TextToSpeech/{id}/CloneNewVoice": {
-    /** Clone a new audio for a story with user voice recording. (Submit blank audio file and name if user has a recording saved in database) */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Audio file
-             */
-            AudioFile?: string;
-            /** @description Name of the voice recording */
-            Name?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/TextToSpeech/{id}/RegenCustomAudio/{index}": {
-    /** Regenerate an audio for a story by its ID and index using user recording */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-          index: number;
-        };
-      };
-      requestBody?: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Audio file
-             */
-            AudioFile?: string;
-            /** @description Name of the voice recording */
-            Name?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/TextToSpeech/DefaultAudioSample/{id}": {
-    /**
-     * Generate audio sample
-     * @description Generate audio sample for first two segments for Video preview
-     */
-    post: operations["GenerateGenericAudioSample"];
-  };
-  "/api/User/Register": {
-    /** Registers a new user, unless they already exist. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["RegisterUserDTO"];
-          "application/json": components["schemas"]["RegisterUserDTO"];
-          "text/json": components["schemas"]["RegisterUserDTO"];
-          "application/*+json": components["schemas"]["RegisterUserDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["UserInfoDTOApiResponse"];
-            "application/json": components["schemas"]["UserInfoDTOApiResponse"];
-            "text/json": components["schemas"]["UserInfoDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User": {
-    /** Gets the user's account information. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["UserInfoDTOApiResponse"];
-            "application/json": components["schemas"]["UserInfoDTOApiResponse"];
-            "text/json": components["schemas"]["UserInfoDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/{profileName}": {
-    /** Gets the user's account information. */
-    get: {
-      parameters: {
-        path: {
-          profileName: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["OtherUserInfoDTOApiResponse"];
-            "application/json": components["schemas"]["OtherUserInfoDTOApiResponse"];
-            "text/json": components["schemas"]["OtherUserInfoDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/PhoneNumber": {
-    /** Updates the current user's phone number. */
-    patch: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["UpdatePhoneNumberDTO"];
-          "application/json": components["schemas"]["UpdatePhoneNumberDTO"];
-          "text/json": components["schemas"]["UpdatePhoneNumberDTO"];
-          "application/*+json": components["schemas"]["UpdatePhoneNumberDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/ContactUs": {
-    /** Sends contact us email. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["EmailContactUsVariables"];
-          "application/json": components["schemas"]["EmailContactUsVariables"];
-          "text/json": components["schemas"]["EmailContactUsVariables"];
-          "application/*+json": components["schemas"]["EmailContactUsVariables"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/EmailNotificationPreferences": {
-    /** Update user's email notification preferences. */
-    put: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["EmailNotificationPreferencesDTO"];
-          "application/json": components["schemas"]["EmailNotificationPreferencesDTO"];
-          "text/json": components["schemas"]["EmailNotificationPreferencesDTO"];
-          "application/*+json": components["schemas"]["EmailNotificationPreferencesDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/RequestVerification": {
-    /** Request a new verification email. */
-    post: {
-      parameters: {
-        query?: {
-          redirectUrl?: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/VerifyEmail": {
-    /** Verify a user's email address. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["VerifyEmailDTO"];
-          "application/json": components["schemas"]["VerifyEmailDTO"];
-          "text/json": components["schemas"]["VerifyEmailDTO"];
-          "application/*+json": components["schemas"]["VerifyEmailDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/BookOrders": {
-    /** Get user's book orders. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnOwnBookOrderDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnOwnBookOrderDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnOwnBookOrderDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/Details": {
-    /** Update user details. */
-    patch: {
-      requestBody?: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Name
-             * @description The user's name.
-             */
-            Name?: string;
-            /**
-             * LastName
-             * @description The user's Last Name.
-             */
-            LastName?: string;
-            /**
-             * DateOfBirth
-             * Format: date-time
-             * @description The user's date of birth.
-             */
-            DateOfBirth?: string;
-            /**
-             * PhoneNumber
-             * @description The user's phone number.
-             */
-            PhoneNumber?: string;
-            /**
-             * ProfileName
-             * @description The user's unique profile name.
-             */
-            ProfileName?: string;
-            /**
-             * Bio
-             * @description The user's bio.
-             */
-            Bio?: string;
-            /**
-             * ProfilePicture
-             * Format: binary
-             * @description The user's profile picture.
-             */
-            ProfilePicture?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/DeleteAccount": {
-    /** Delete user account. */
-    delete: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/PurchaseCredits": {
-    /** Purchase credits. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["PurchaseAccountCreditDTO"];
-          "application/json": components["schemas"]["PurchaseAccountCreditDTO"];
-          "text/json": components["schemas"]["PurchaseAccountCreditDTO"];
-          "application/*+json": components["schemas"]["PurchaseAccountCreditDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["InternalTransactionDTOApiResponse"];
-            "application/json": components["schemas"]["InternalTransactionDTOApiResponse"];
-            "text/json": components["schemas"]["InternalTransactionDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/TokenBalance": {
-    /** Get user's token balance. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnUserTokenInfoDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnUserTokenInfoDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnUserTokenInfoDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/Transactions": {
-    /** Get user's token transactions. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["TokenTransactionDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["TokenTransactionDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["TokenTransactionDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/{id}/PDFPayment": {
-    /** Make payment for PDF and get PDF file. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["PaymentTypeDTO"];
-          "application/json": components["schemas"]["PaymentTypeDTO"];
-          "text/json": components["schemas"]["PaymentTypeDTO"];
-          "application/*+json": components["schemas"]["PaymentTypeDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/{id}/VideoPayment": {
-    /** Make payment for Video and get the downloadable PDF file. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["DownloadVideoDTO"];
-          "application/json": components["schemas"]["DownloadVideoDTO"];
-          "text/json": components["schemas"]["DownloadVideoDTO"];
-          "application/*+json": components["schemas"]["DownloadVideoDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/{id}/Payments": {
-    /** Get user's payment statuses for a particular webstory. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["CheckPaymentStatusDTO"];
-          "application/json": components["schemas"]["CheckPaymentStatusDTO"];
-          "text/json": components["schemas"]["CheckPaymentStatusDTO"];
-          "application/*+json": components["schemas"]["CheckPaymentStatusDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["Int32BooleanDictionaryApiResponse"];
-            "application/json": components["schemas"]["Int32BooleanDictionaryApiResponse"];
-            "text/json": components["schemas"]["Int32BooleanDictionaryApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/GetAllUsers": {
-    /** Get all users. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/UpdateKYC": {
-    /** Update user's KYC details. */
-    post: {
-      requestBody?: {
-        content: {
-          "multipart/form-data": {
-            /** @description Address line of the user */
-            Address?: string;
-            /** @description Country of the user */
-            Country?: string;
-            /**
-             * Format: binary
-             * @description Photo ID of the user in file format
-             */
-            PhotoID?: string;
-            /** @description Name of the type of Photo ID */
-            PhotoIDType?: string;
-            /** @description Unique number of the Photo ID */
-            PhotoIDNumber?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["UserInfoDTOApiResponse"];
-            "application/json": components["schemas"]["UserInfoDTOApiResponse"];
-            "text/json": components["schemas"]["UserInfoDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/ToggleDefaultStoryPrivacy": {
-    /** Update user's default story privacy settings. */
-    put: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/User/StoryBooks/{topLevelCategory}": {
-    /**
-     * Get user stories under the specified category
-     * @description Get user's stories under the specified category based on pagination parameters
-     */
-    get: operations["GetUserStoriesByTopLevelCategory"];
-  };
-  "/api/User/Videos/{topLevelCategory}": {
-    /**
-     * Get user videos under the specified category
-     * @description Get user's videos under the specified category based on pagination parameters
-     */
-    get: operations["GetUserVideosByTopLevelCategory"];
-  };
-  "/api/Video/PreSignedUrl": {
-    get: {
-      parameters: {
-        query?: {
-          fileName?: string;
-          contentType?: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["UploadToS3DTOApiResponse"];
-            "application/json": components["schemas"]["UploadToS3DTOApiResponse"];
-            "text/json": components["schemas"]["UploadToS3DTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/Video/{topLevelCategory}": {
-    /**
-     * Get stories under the specified category
-     * @description Get stories under the specified category based on pagination parameters
-     */
-    get: operations["GetStoriesByTopLevelCategory"];
-  };
-  "/api/Video/{topLevelCategory}/{slug}": {
-    /**
-     * Get one public story by category and slug
-     * @description Get a single public story by its category and slug
-     */
-    get: operations["GetOnePublicStoryByCategoryAndSlug"];
-  };
-  "/api/Video/{id}/Suggested": {
-    /**
-     * Get suggested stories
-     * @description Get a list of suggested stories based on the provided story id
-     */
-    get: operations["GetSuggestedStories"];
-  };
-  "/api/Video/{id}/RenderVideo": {
-    /**
-     * Render a video
-     * @description Render a video based on the provided story id
-     */
-    put: operations["RenderVideo"];
-  };
-  "/api/Video/CopyVideo/{id}": {
-    /**
-     * Copy a video
-     * @description Copy a video based on the provided story id
-     */
-    post: operations["CopyVideo"];
-  };
-  "/api/WebStory/NoAuth": {
-    /** Request a new anonymous story based on the provided parameters */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["RequestStoryDTO"];
-          "application/json": components["schemas"]["RequestStoryDTO"];
-          "text/json": components["schemas"]["RequestStoryDTO"];
-          "application/*+json": components["schemas"]["RequestStoryDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnAnonymousStoryDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnAnonymousStoryDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnAnonymousStoryDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory": {
-    /** Get a list of the current user's stories based on pagination parameters */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnOwnWebStoryDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnOwnWebStoryDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnOwnWebStoryDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-    /** Request a new story based on the provided parameters */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["RequestStoryDTO"];
-          "application/json": components["schemas"]["RequestStoryDTO"];
-          "text/json": components["schemas"]["RequestStoryDTO"];
-          "application/*+json": components["schemas"]["RequestStoryDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/View/{profileName}": {
-    /** Get a list of the other user's stories based on pagination parameters */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-        path: {
-          profileName: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{topLevelCategory}/{slug}": {
-    /**
-     * Get one public story by slug
-     * @description Get a single public story by its slug
-     */
-    get: operations["GetOnePublicStoryBySlug"];
-  };
-  "/api/WebStory/{id}/RegenerateImage/{index}": {
-    /** Regenerate an image for a story by its ID and index */
-    put: {
-      parameters: {
-        path: {
-          id: string;
-          index: number;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["RegenerateImageDTO"];
-          "application/json": components["schemas"]["RegenerateImageDTO"];
-          "text/json": components["schemas"]["RegenerateImageDTO"];
-          "application/*+json": components["schemas"]["RegenerateImageDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["BooleanApiResponse"];
-            "application/json": components["schemas"]["BooleanApiResponse"];
-            "text/json": components["schemas"]["BooleanApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/RegenerateCoverImage": {
-    /** Regenerate a cover image for a story by its ID */
-    put: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["BooleanApiResponse"];
-            "application/json": components["schemas"]["BooleanApiResponse"];
-            "text/json": components["schemas"]["BooleanApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/OrderBook": {
-    /** Order a book for a WebStory by its id. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["RequestBookOrderDTO"];
-          "application/json": components["schemas"]["RequestBookOrderDTO"];
-          "text/json": components["schemas"]["RequestBookOrderDTO"];
-          "application/*+json": components["schemas"]["RequestBookOrderDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/OrderBookNoAuth": {
-    /** Order a book for a WebStory without auth. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["RequestBookOrderNoAuthDTO"];
-          "application/json": components["schemas"]["RequestBookOrderNoAuthDTO"];
-          "text/json": components["schemas"]["RequestBookOrderNoAuthDTO"];
-          "application/*+json": components["schemas"]["RequestBookOrderNoAuthDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnNoAuthBookResultApiResponse"];
-            "application/json": components["schemas"]["ReturnNoAuthBookResultApiResponse"];
-            "text/json": components["schemas"]["ReturnNoAuthBookResultApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/Report": {
-    /** Report a Web Story by its id. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["ReportStoryDTO"];
-          "application/json": components["schemas"]["ReportStoryDTO"];
-          "text/json": components["schemas"]["ReportStoryDTO"];
-          "application/*+json": components["schemas"]["ReportStoryDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/Interactions": {
-    /** Get the user's interactions with a Web Story by its id. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnStoryInteractionDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnStoryInteractionDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnStoryInteractionDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/UpdateStoryPrivacy": {
-    /** Update multiple user stories' privacy settings. */
-    post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["UpdateMultipleStoriesPrivacyDTO"];
-          "application/json": components["schemas"]["UpdateMultipleStoriesPrivacyDTO"];
-          "text/json": components["schemas"]["UpdateMultipleStoriesPrivacyDTO"];
-          "application/*+json": components["schemas"]["UpdateMultipleStoriesPrivacyDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["BooleanApiResponse"];
-            "application/json": components["schemas"]["BooleanApiResponse"];
-            "text/json": components["schemas"]["BooleanApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/RegenerateParagraph/{index}": {
-    /** Regenerate a paragraph for a story by its ID and index */
-    put: {
-      parameters: {
-        path: {
-          id: string;
-          index: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/EditParagraph": {
-    /** Edit a story segment. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["EditStorySegmentDTO"];
-          "application/json": components["schemas"]["EditStorySegmentDTO"];
-          "text/json": components["schemas"]["EditStorySegmentDTO"];
-          "application/*+json": components["schemas"]["EditStorySegmentDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/EditStory": {
-    /** Edit a story segment. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["EditCompleteStoryDTO"];
-          "application/json": components["schemas"]["EditCompleteStoryDTO"];
-          "text/json": components["schemas"]["EditCompleteStoryDTO"];
-          "application/*+json": components["schemas"]["EditCompleteStoryDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/EditTitle": {
-    /** Edit a story title. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["EditStoryTitleDTO"];
-          "application/json": components["schemas"]["EditStoryTitleDTO"];
-          "text/json": components["schemas"]["EditStoryTitleDTO"];
-          "application/*+json": components["schemas"]["EditStoryTitleDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/EditSummary": {
-    /** Edit summary of the story. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["EditStorySummaryDTO"];
-          "application/json": components["schemas"]["EditStorySummaryDTO"];
-          "text/json": components["schemas"]["EditStorySummaryDTO"];
-          "application/*+json": components["schemas"]["EditStorySummaryDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/AddParagraph": {
-    /** Add a new story segment. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["AddParagraphDTO"];
-          "application/json": components["schemas"]["AddParagraphDTO"];
-          "text/json": components["schemas"]["AddParagraphDTO"];
-          "application/*+json": components["schemas"]["AddParagraphDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnWebStoryDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnWebStoryDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnWebStoryDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/DeleteParagraph/{index}": {
-    /** Delete a story segment. */
-    delete: {
-      parameters: {
-        path: {
-          id: string;
-          index: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/Claim/{token}": {
-    /** Get claim validity for a story with no author. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-          token: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["BooleanApiResponse"];
-            "application/json": components["schemas"]["BooleanApiResponse"];
-            "text/json": components["schemas"]["BooleanApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-    /** Claim a story with no author. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-          token: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/ClaimUnclaimed": {
-    /** Claim an unclaimed story with no author. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/Delete/{token}": {
-    /** Delete a story with no author. */
-    delete: {
-      parameters: {
-        path: {
-          id: string;
-          token: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/Delete": {
-    /** Delete a story by its id. */
-    delete: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/AmazonMarketplaces": {
-    /** Get Amazon publishing marketplaces. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["AmazonMarketplaceStringDictionaryApiResponse"];
-            "application/json": components["schemas"]["AmazonMarketplaceStringDictionaryApiResponse"];
-            "text/json": components["schemas"]["AmazonMarketplaceStringDictionaryApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/ValidateBookMetadata/{id}": {
-    /** Validate AmazonBook Metadata. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["AmazonBookMetaDataDTO"];
-          "application/json": components["schemas"]["AmazonBookMetaDataDTO"];
-          "text/json": components["schemas"]["AmazonBookMetaDataDTO"];
-          "application/*+json": components["schemas"]["AmazonBookMetaDataDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/SaveBookMetadata/{id}": {
-    /** Save AmazonBook Metadata. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["AmazonBookMetaDataDTO"];
-          "application/json": components["schemas"]["AmazonBookMetaDataDTO"];
-          "text/json": components["schemas"]["AmazonBookMetaDataDTO"];
-          "application/*+json": components["schemas"]["AmazonBookMetaDataDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/BookMetadata/{id}/Categories": {
-    /** Get AmazonBook Metadata Categories. */
-    get: {
-      parameters: {
-        query?: {
-          amazonMarketplace?: components["schemas"]["AmazonMarketplace"];
-        };
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringObjectDictionaryListApiResponse"];
-            "application/json": components["schemas"]["StringObjectDictionaryListApiResponse"];
-            "text/json": components["schemas"]["StringObjectDictionaryListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/GetMetaData/{id}": {
-    /** Get AmazonBook Metadata. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnBookMetaDataDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnBookMetaDataDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnBookMetaDataDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/GetAllUserAmazonRequests": {
-    /** Get all Amazon book requests. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnUserAmazonBookDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnUserAmazonBookDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnUserAmazonBookDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/Comments": {
-    /** Get all comments on a story. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnStoryCommentDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnStoryCommentDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnStoryCommentDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{id}/Comment": {
-    /** Add a comment on a story. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["CommentTextDTO"];
-          "application/json": components["schemas"]["CommentTextDTO"];
-          "text/json": components["schemas"]["CommentTextDTO"];
-          "application/*+json": components["schemas"]["CommentTextDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{storyId}/EditComment/{commentId}": {
-    /** Edit a comment on a story. */
-    put: {
-      parameters: {
-        path: {
-          storyId: string;
-          commentId: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["CommentTextDTO"];
-          "application/json": components["schemas"]["CommentTextDTO"];
-          "text/json": components["schemas"]["CommentTextDTO"];
-          "application/*+json": components["schemas"]["CommentTextDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/{storyId}/DeleteComment/{commentId}": {
-    /** Delete a comment on a story. */
-    delete: {
-      parameters: {
-        path: {
-          storyId: string;
-          commentId: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/ReportComment/{commentId}": {
-    /** Report a comment on a story. */
-    post: {
-      parameters: {
-        path: {
-          commentId: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["ReportCommentDTO"];
-          "application/json": components["schemas"]["ReportCommentDTO"];
-          "text/json": components["schemas"]["ReportCommentDTO"];
-          "application/*+json": components["schemas"]["ReportCommentDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/GetSingleAmazonRequest/{id}": {
-    /** Get single Amazon book request. */
-    get: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnUserAmazonBookDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnUserAmazonBookDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnUserAmazonBookDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/GetAllUserItems": {
-    /** Get all User's Story Items. */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/GetSingleUserItem/{id}": {
-    /** Get single user story item. */
-    get: {
-      parameters: {
-        query?: {
-          creditSpendType?: components["schemas"]["CreditSpendType"];
-          storyItemSubType?: components["schemas"]["StoryItemSubType"];
-        };
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnUserStoryItemsDTOApiResponse"];
-            "application/json": components["schemas"]["ReturnUserStoryItemsDTOApiResponse"];
-            "text/json": components["schemas"]["ReturnUserStoryItemsDTOApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/SaveStorySegmentImage/{id}": {
-    /** Save Scribble Image. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "multipart/form-data": {
-            /** Format: binary */
-            Image?: string;
-            /** Format: int32 */
-            Index?: number;
-          };
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/ContestEnroll/{id}": {
-    /** Enroll in a contest. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["EnrollStoryInContestDTO"];
-          "application/json": components["schemas"]["EnrollStoryInContestDTO"];
-          "text/json": components["schemas"]["EnrollStoryInContestDTO"];
-          "application/*+json": components["schemas"]["EnrollStoryInContestDTO"];
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/UpscaleImages/{id}": {
-    /** Upscale images. */
-    post: {
-      parameters: {
-        path: {
-          id: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["StringApiResponse"];
-            "application/json": components["schemas"]["StringApiResponse"];
-            "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/GetAllCategories": {
-    /** Get all categories. */
-    get: {
-      responses: {
-        /** @description Success */
-        200: {
-          content: never;
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
+	"/api/Admin/Login": {
+		/** Admin login. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["LoginDTO"];
+					"application/json": components["schemas"]["LoginDTO"];
+					"text/json": components["schemas"]["LoginDTO"];
+					"application/*+json": components["schemas"]["LoginDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/User": {
+		/** Get all user accounts with search. */
+		get: {
+			parameters: {
+				query?: {
+					Pattern?: string;
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/UserInfo/{id}": {
+		/** Get user info by id. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminUserInfoDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminUserInfoDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminUserInfoDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/User/{id}": {
+		/** Delete a user. */
+		delete: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/WebStory": {
+		/** Get all web stories with search. */
+		get: {
+			parameters: {
+				query?: {
+					Pattern?: string;
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminWebStoryDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/Requests/{id}": {
+		/** Get one request by id. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/Requests/Slug/{slug}": {
+		/** Get one request by slug. */
+		get: {
+			parameters: {
+				path: {
+					slug: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/DeletePublishedStory/{id}": {
+		/** Delete a published story by id. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/GetAllStoryItems": {
+		/** Get all story items. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnStoryItemDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnStoryItemDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnStoryItemDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/{id}/GetSingleStoryItem/{CreditSpendType}": {
+		/** Get a single story item. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+					CreditSpendType: components["schemas"]["CreditSpendType"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnStoryItemDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnStoryItemDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnStoryItemDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/GetAllAmazonRequests": {
+		/** Get all Amazon book publish requests. */
+		get: {
+			parameters: {
+				query?: {
+					AmazonPublishLifecycle?: number;
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminAmazonBookDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminAmazonBookDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminAmazonBookDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/GetOneAmazonRequest/{id}": {
+		/** Get one Amazon book publish request. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminAmazonBookDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminAmazonBookDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminAmazonBookDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/UpdateAmazonRequestStatus/{id}": {
+		/** Update an Amazon book publish request status. */
+		patch: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["UpdateAmazonStatusDTO"];
+					"application/json": components["schemas"]["UpdateAmazonStatusDTO"];
+					"text/json": components["schemas"]["UpdateAmazonStatusDTO"];
+					"application/*+json": components["schemas"]["UpdateAmazonStatusDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/ManualAmazonPDFRegeneration/{id}": {
+		/** Manually triggers regeneration of a specific Amazon book PDF. */
+		patch: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/GetAllBookOrders": {
+		/** Get all RPI book orders. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentTab?: number;
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminBookOrderDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminBookOrderDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminBookOrderDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/GetOneBookOrder/{id}": {
+		/** Get one RPI book order request. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminBookOrderDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminBookOrderDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminBookOrderDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/ManualBookOrderRegeneration/{id}": {
+		/** Regenerate the pdf for a given book order. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["BooleanApiResponse"];
+						"application/json": components["schemas"]["BooleanApiResponse"];
+						"text/json": components["schemas"]["BooleanApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/DiscountCode": {
+		/** Get all discount codes. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminDiscountCodeDTOListApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminDiscountCodeDTOListApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminDiscountCodeDTOListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+		/** Create a new discount code. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["CreateDiscountCodeDTO"];
+					"application/json": components["schemas"]["CreateDiscountCodeDTO"];
+					"text/json": components["schemas"]["CreateDiscountCodeDTO"];
+					"application/*+json": components["schemas"]["CreateDiscountCodeDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/DiscountCode/{id}/Active": {
+		/** Toggle a discount code's active status. */
+		patch: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["UpdateDiscountCodeIsActiveDTO"];
+					"application/json": components["schemas"]["UpdateDiscountCodeIsActiveDTO"];
+					"text/json": components["schemas"]["UpdateDiscountCodeIsActiveDTO"];
+					"application/*+json": components["schemas"]["UpdateDiscountCodeIsActiveDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/DiscountCode/{id}/Expiry": {
+		/** Update a discount code expiry date. */
+		patch: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["UpdateDiscountCodeExpiryDateDTO"];
+					"application/json": components["schemas"]["UpdateDiscountCodeExpiryDateDTO"];
+					"text/json": components["schemas"]["UpdateDiscountCodeExpiryDateDTO"];
+					"application/*+json": components["schemas"]["UpdateDiscountCodeExpiryDateDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminDiscountCodeDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/ReportedStories": {
+		/** Get all reported stories. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnStoryReportDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnStoryReportDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnStoryReportDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/ReportedStories/{id}": {
+		/** Get one reported story. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnStoryReportDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnStoryReportDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnStoryReportDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/ReportedStories/{id}/Resolve": {
+		/** Resolve reports for a reported story. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/ReportedComments": {
+		/** Get all reported comments. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnCommentReportDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnCommentReportDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnCommentReportDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/DeleteComment/{id}": {
+		/** Delete a comment by id. */
+		delete: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/ReportedComment/{id}/Resolve": {
+		/** Resolve reports for a reported comment. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/ManualImageRegeneration": {
+		/** Manual triggers regeneration of a specific image. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["ManualImageRegenerationDTO"];
+					"application/json": components["schemas"]["ManualImageRegenerationDTO"];
+					"text/json": components["schemas"]["ManualImageRegenerationDTO"];
+					"application/*+json": components["schemas"]["ManualImageRegenerationDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["BooleanApiResponse"];
+						"application/json": components["schemas"]["BooleanApiResponse"];
+						"text/json": components["schemas"]["BooleanApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/GetStoryByASIN/{asin}": {
+		/** Get a story by ASIN. */
+		get: {
+			parameters: {
+				path: {
+					asin: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAdminWebStoryDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/UpdateAmazonRoyalty": {
+		/** Update Amazon book royalties. */
+		put: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["UpdateAmazonBookRoyaltyDTO"];
+					"application/json": components["schemas"]["UpdateAmazonBookRoyaltyDTO"];
+					"text/json": components["schemas"]["UpdateAmazonBookRoyaltyDTO"];
+					"application/*+json": components["schemas"]["UpdateAmazonBookRoyaltyDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/BulkUpdateAmazonRoyalties": {
+		/** Bulk update Amazon book royalties from an Excel file. */
+		post: {
+			requestBody?: {
+				content: {
+					"multipart/form-data": {
+						/** Format: binary */
+						file?: string;
+					};
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: never;
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Admin/AddCredits": {
+		/** Add tokens to a user account. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["AddCreditsDTO"];
+					"application/json": components["schemas"]["AddCreditsDTO"];
+					"text/json": components["schemas"]["AddCreditsDTO"];
+					"application/*+json": components["schemas"]["AddCreditsDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Amazon/{id}/Payment": {
+		/** Make payment for an amazon request */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["AmazonRequestPaymentTypeDTO"];
+					"application/json": components["schemas"]["AmazonRequestPaymentTypeDTO"];
+					"text/json": components["schemas"]["AmazonRequestPaymentTypeDTO"];
+					"application/*+json": components["schemas"]["AmazonRequestPaymentTypeDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Amazon/AllAmazonBooksRevenue": {
+		/** Get all amazon books revenue */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["AmazonBooksRevenueDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["AmazonBooksRevenueDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["AmazonBooksRevenueDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Amazon/PregenerateAmazonSummary": {
+		/** Pre-generate amazon summary */
+		post: {
+			parameters: {
+				query?: {
+					id?: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: never;
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Library": {
+		/**
+		 * Get public stories
+		 * @description Get a list of public stories based on pagination parameters
+		 */
+		get: operations["GetPublicStories"];
+	};
+	"/api/Library/Categories": {
+		/**
+		 * Get all categories
+		 * @description Get a list of all categories in order of decreasing story count
+		 */
+		get: operations["GetAllCategories"];
+	};
+	"/api/Library/{topLevelCategory}": {
+		/**
+		 * Get stories under the specified category
+		 * @description Get stories under the specified category based on pagination parameters
+		 */
+		get: operations["GetStoriesByTopLevelCategory"];
+	};
+	"/api/Library/Story/{id}": {
+		/**
+		 * Get one public story by id. Depricated API, returns category/slug url.
+		 * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
+		 */
+		get: operations["GetOnePublicStoryById"];
+	};
+	"/api/Library/Slug/{slug}": {
+		/**
+		 * Get one public story by slug
+		 * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
+		 */
+		get: operations["GetOnePublicStoryBySlug"];
+	};
+	"/api/Library/{topLevelCategory}/{slug}": {
+		/**
+		 * Get one public story by category and slug
+		 * @description Get a single public story by its category and slug
+		 */
+		get: operations["GetOnePublicStoryByCategoryAndSlug"];
+	};
+	"/api/Library/{id}/Suggested": {
+		/**
+		 * Get suggested stories
+		 * @description Get a list of suggested stories based on the provided story id
+		 */
+		get: operations["GetSuggestedStories"];
+	};
+	"/api/Library/ActiveContests": {
+		/**
+		 * Get active contests
+		 * @description Get a list of active contests
+		 */
+		get: operations["GetActiveContests"];
+	};
+	"/api/Library/Contest/{id}": {
+		/**
+		 * Get contest by id
+		 * @description Get a contest by its id
+		 */
+		get: operations["GetContestById"];
+	};
+	"/api/Library/{id}/Like": {
+		/**
+		 * Like a Web Story
+		 * @description Like the given Web Story by its id.
+		 */
+		patch: operations["LikeStory"];
+	};
+	"/api/Library/AllSlugs": {
+		/**
+		 * Get all slugs
+		 * @description Get a list of all slugs
+		 */
+		get: operations["GetAllSlugs"];
+	};
+	"/api/Payment/AddCard": {
+		/** Add a new card to the user's account */
+		post: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/SyncCards": {
+		/** Synchronize cards between the user's account and stripe */
+		post: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/RemoveCard": {
+		/** Remove a card from the user's account */
+		post: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/GetShippingPricing/{quantity}": {
+		/** Gets shipping pricing for a given quantity */
+		get: {
+			parameters: {
+				path: {
+					quantity: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ShippingPricesApiResponse"];
+						"application/json": components["schemas"]["ShippingPricesApiResponse"];
+						"text/json": components["schemas"]["ShippingPricesApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/DiscountCodeDetails": {
+		/** Gets discount code details */
+		get: {
+			parameters: {
+				query?: {
+					code?: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnDiscountCodeDetailsDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnDiscountCodeDetailsDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnDiscountCodeDetailsDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/PayoutAccount": {
+		/** Creates a Stripe Connect express account for receiving payouts. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["CreatePayoutAccountDTO"];
+					"application/json": components["schemas"]["CreatePayoutAccountDTO"];
+					"text/json": components["schemas"]["CreatePayoutAccountDTO"];
+					"application/*+json": components["schemas"]["CreatePayoutAccountDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: never;
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/AccountUpdate": {
+		/** Updates a Stripe Connect express account with its payout accounts. */
+		put: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: never;
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/SetupLink": {
+		/** Handle refresh URL for Stripe Connect account setup. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: never;
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/AccountLink": {
+		/** Gets the user's Stripe Connect login link. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: never;
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/CheckStripeConnectAccount": {
+		/** Gets the user's Stripe Connect account details. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StripeConnectAccountStatusApiResponse"];
+						"application/json": components["schemas"]["StripeConnectAccountStatusApiResponse"];
+						"text/json": components["schemas"]["StripeConnectAccountStatusApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/WithdrawAmazonBalance": {
+		/** Send the user's unclaimed royalties for processing on StoryBird. */
+		post: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/Scribble/{id}": {
+		/** Gets the user's Scribble access token. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringStringDictionaryApiResponse"];
+						"application/json": components["schemas"]["StringStringDictionaryApiResponse"];
+						"text/json": components["schemas"]["StringStringDictionaryApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/VerifyPurchaseCredits": {
+		/** Confirm a payment for credits purchase. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["ConfirmPaymentDTO"];
+					"application/json": components["schemas"]["ConfirmPaymentDTO"];
+					"text/json": components["schemas"]["ConfirmPaymentDTO"];
+					"application/*+json": components["schemas"]["ConfirmPaymentDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/CreateSubscription": {
+		/** Create a subscription for the user. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["CreateSubscriptionDTO"];
+					"application/json": components["schemas"]["CreateSubscriptionDTO"];
+					"text/json": components["schemas"]["CreateSubscriptionDTO"];
+					"application/*+json": components["schemas"]["CreateSubscriptionDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["InternalTransactionDTOApiResponse"];
+						"application/json": components["schemas"]["InternalTransactionDTOApiResponse"];
+						"text/json": components["schemas"]["InternalTransactionDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/CancelSubscription": {
+		/** Cancel a subscription for the user. */
+		post: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/ConfirmSubscription": {
+		/** Confirm a payment for credits purchase. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["ConfirmSubscriptionDTO"];
+					"application/json": components["schemas"]["ConfirmSubscriptionDTO"];
+					"text/json": components["schemas"]["ConfirmSubscriptionDTO"];
+					"application/*+json": components["schemas"]["ConfirmSubscriptionDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Payment/RefillAllowance": {
+		/** Buy video credits. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["AdditionalCreditsDTO"];
+					"application/json": components["schemas"]["AdditionalCreditsDTO"];
+					"text/json": components["schemas"]["AdditionalCreditsDTO"];
+					"application/*+json": components["schemas"]["AdditionalCreditsDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/generate_story": {
+		/**
+		 * Generate a story from plugin
+		 * @description Generate a new story based on the provided prompt
+		 */
+		post: operations["PluginGenerateStory"];
+	};
+	"/.well-known/ai-plugin.json": {
+		/**
+		 * ChatGPT Plugin manifest
+		 * @description  Get ai-plugin.json for ChatGPT
+		 */
+		get: operations["GetAIPluginJson"];
+	};
+	"/.well-known/openapi.yaml": {
+		/**
+		 * Get OpenAPI YAML
+		 * @description Get the openapi.yaml file
+		 */
+		get: operations["GetOpenApiYaml"];
+	};
+	"/.well-known/logo.png": {
+		/**
+		 * Get logo
+		 * @description Get the logo.png file
+		 */
+		get: operations["GetLogo"];
+	};
+	"/api/StoryBook": {
+		/**
+		 * Get public stories
+		 * @description Get a list of public stories based on pagination parameters
+		 */
+		get: operations["GetPublicStories"];
+	};
+	"/api/StoryBook/Categories": {
+		/**
+		 * Get all categories
+		 * @description Get a list of all categories in order of decreasing story count
+		 */
+		get: operations["GetAllCategories"];
+	};
+	"/api/StoryBook/{topLevelCategory}": {
+		/**
+		 * Get stories under the specified category
+		 * @description Get stories under the specified category based on pagination parameters
+		 */
+		get: operations["GetStoriesByTopLevelCategory"];
+	};
+	"/api/StoryBook/GetUrl/{id}": {
+		/**
+		 * Get one public story by id. Depricated API, returns category/slug url.
+		 * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
+		 */
+		get: operations["GetOnePublicStoryById"];
+	};
+	"/api/StoryBook/Slug/{slug}": {
+		/**
+		 * Get one public story by slug
+		 * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
+		 */
+		get: operations["GetOnePublicStoryBySlug"];
+	};
+	"/api/StoryBook/{topLevelCategory}/{slug}": {
+		/**
+		 * Get one public story by category and slug
+		 * @description Get a single public story by its category and slug
+		 */
+		get: operations["GetOnePublicStoryByCategoryAndSlug"];
+	};
+	"/api/StoryBook/{id}/Suggested": {
+		/**
+		 * Get suggested stories
+		 * @description Get a list of suggested stories based on the provided story id
+		 */
+		get: operations["GetSuggestedStories"];
+	};
+	"/api/TextToSpeech/DefaultAudio/{id}": {
+		/**
+		 * Generate audio
+		 * @description Generate a new audio using generic voice IDs
+		 */
+		post: operations["GenerateGenericAudio"];
+	};
+	"/api/TextToSpeech/{id}/RegenAudio/{index}": {
+		/** Regenerate an audio for a story by its ID and index */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+					index: number;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["GenerateGenericAudioDTO"];
+					"application/json": components["schemas"]["GenerateGenericAudioDTO"];
+					"text/json": components["schemas"]["GenerateGenericAudioDTO"];
+					"application/*+json": components["schemas"]["GenerateGenericAudioDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["BooleanApiResponse"];
+						"application/json": components["schemas"]["BooleanApiResponse"];
+						"text/json": components["schemas"]["BooleanApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/TextToSpeech/{id}/CloneNewVoice": {
+		/** Clone a new audio for a story with user voice recording. (Submit blank audio file and name if user has a recording saved in database) */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"multipart/form-data": {
+						/**
+						 * Format: binary
+						 * @description Audio file
+						 */
+						AudioFile?: string;
+						/** @description Name of the voice recording */
+						Name?: string;
+					};
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/TextToSpeech/{id}/RegenCustomAudio/{index}": {
+		/** Regenerate an audio for a story by its ID and index using user recording */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+					index: number;
+				};
+			};
+			requestBody?: {
+				content: {
+					"multipart/form-data": {
+						/**
+						 * Format: binary
+						 * @description Audio file
+						 */
+						AudioFile?: string;
+						/** @description Name of the voice recording */
+						Name?: string;
+					};
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/TextToSpeech/DefaultAudioSample/{id}": {
+		/**
+		 * Generate audio sample
+		 * @description Generate audio sample for first two segments for Video preview
+		 */
+		post: operations["GenerateGenericAudioSample"];
+	};
+	"/api/User/Register": {
+		/** Registers a new user, unless they already exist. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["RegisterUserDTO"];
+					"application/json": components["schemas"]["RegisterUserDTO"];
+					"text/json": components["schemas"]["RegisterUserDTO"];
+					"application/*+json": components["schemas"]["RegisterUserDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["UserInfoDTOApiResponse"];
+						"application/json": components["schemas"]["UserInfoDTOApiResponse"];
+						"text/json": components["schemas"]["UserInfoDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User": {
+		/** Gets the user's account information. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["UserInfoDTOApiResponse"];
+						"application/json": components["schemas"]["UserInfoDTOApiResponse"];
+						"text/json": components["schemas"]["UserInfoDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/{profileName}": {
+		/** Gets the user's account information. */
+		get: {
+			parameters: {
+				path: {
+					profileName: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["OtherUserInfoDTOApiResponse"];
+						"application/json": components["schemas"]["OtherUserInfoDTOApiResponse"];
+						"text/json": components["schemas"]["OtherUserInfoDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/PhoneNumber": {
+		/** Updates the current user's phone number. */
+		patch: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["UpdatePhoneNumberDTO"];
+					"application/json": components["schemas"]["UpdatePhoneNumberDTO"];
+					"text/json": components["schemas"]["UpdatePhoneNumberDTO"];
+					"application/*+json": components["schemas"]["UpdatePhoneNumberDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/ContactUs": {
+		/** Sends contact us email. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["EmailContactUsVariables"];
+					"application/json": components["schemas"]["EmailContactUsVariables"];
+					"text/json": components["schemas"]["EmailContactUsVariables"];
+					"application/*+json": components["schemas"]["EmailContactUsVariables"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/EmailNotificationPreferences": {
+		/** Update user's email notification preferences. */
+		put: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["EmailNotificationPreferencesDTO"];
+					"application/json": components["schemas"]["EmailNotificationPreferencesDTO"];
+					"text/json": components["schemas"]["EmailNotificationPreferencesDTO"];
+					"application/*+json": components["schemas"]["EmailNotificationPreferencesDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/RequestVerification": {
+		/** Request a new verification email. */
+		post: {
+			parameters: {
+				query?: {
+					redirectUrl?: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/VerifyEmail": {
+		/** Verify a user's email address. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["VerifyEmailDTO"];
+					"application/json": components["schemas"]["VerifyEmailDTO"];
+					"text/json": components["schemas"]["VerifyEmailDTO"];
+					"application/*+json": components["schemas"]["VerifyEmailDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/BookOrders": {
+		/** Get user's book orders. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnOwnBookOrderDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnOwnBookOrderDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnOwnBookOrderDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/Details": {
+		/** Update user details. */
+		patch: {
+			requestBody?: {
+				content: {
+					"multipart/form-data": {
+						/**
+						 * Name
+						 * @description The user's name.
+						 */
+						Name?: string;
+						/**
+						 * LastName
+						 * @description The user's Last Name.
+						 */
+						LastName?: string;
+						/**
+						 * DateOfBirth
+						 * Format: date-time
+						 * @description The user's date of birth.
+						 */
+						DateOfBirth?: string;
+						/**
+						 * PhoneNumber
+						 * @description The user's phone number.
+						 */
+						PhoneNumber?: string;
+						/**
+						 * ProfileName
+						 * @description The user's unique profile name.
+						 */
+						ProfileName?: string;
+						/**
+						 * Bio
+						 * @description The user's bio.
+						 */
+						Bio?: string;
+						/**
+						 * ProfilePicture
+						 * Format: binary
+						 * @description The user's profile picture.
+						 */
+						ProfilePicture?: string;
+					};
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/DeleteAccount": {
+		/** Delete user account. */
+		delete: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/PurchaseCredits": {
+		/** Purchase credits. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["PurchaseAccountCreditDTO"];
+					"application/json": components["schemas"]["PurchaseAccountCreditDTO"];
+					"text/json": components["schemas"]["PurchaseAccountCreditDTO"];
+					"application/*+json": components["schemas"]["PurchaseAccountCreditDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["InternalTransactionDTOApiResponse"];
+						"application/json": components["schemas"]["InternalTransactionDTOApiResponse"];
+						"text/json": components["schemas"]["InternalTransactionDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/TokenBalance": {
+		/** Get user's token balance. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnUserTokenInfoDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnUserTokenInfoDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnUserTokenInfoDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/Transactions": {
+		/** Get user's token transactions. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["TokenTransactionDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["TokenTransactionDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["TokenTransactionDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/{id}/PDFPayment": {
+		/** Make payment for PDF and get PDF file. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["PaymentTypeDTO"];
+					"application/json": components["schemas"]["PaymentTypeDTO"];
+					"text/json": components["schemas"]["PaymentTypeDTO"];
+					"application/*+json": components["schemas"]["PaymentTypeDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/{id}/VideoPayment": {
+		/** Make payment for Video and get the downloadable PDF file. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["DownloadVideoDTO"];
+					"application/json": components["schemas"]["DownloadVideoDTO"];
+					"text/json": components["schemas"]["DownloadVideoDTO"];
+					"application/*+json": components["schemas"]["DownloadVideoDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/{id}/Payments": {
+		/** Get user's payment statuses for a particular webstory. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["CheckPaymentStatusDTO"];
+					"application/json": components["schemas"]["CheckPaymentStatusDTO"];
+					"text/json": components["schemas"]["CheckPaymentStatusDTO"];
+					"application/*+json": components["schemas"]["CheckPaymentStatusDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["Int32BooleanDictionaryApiResponse"];
+						"application/json": components["schemas"]["Int32BooleanDictionaryApiResponse"];
+						"text/json": components["schemas"]["Int32BooleanDictionaryApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/GetAllUsers": {
+		/** Get all users. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: never;
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/UpdateKYC": {
+		/** Update user's KYC details. */
+		post: {
+			requestBody?: {
+				content: {
+					"multipart/form-data": {
+						/** @description Address line of the user */
+						Address?: string;
+						/** @description Country of the user */
+						Country?: string;
+						/**
+						 * Format: binary
+						 * @description Photo ID of the user in file format
+						 */
+						PhotoID?: string;
+						/** @description Name of the type of Photo ID */
+						PhotoIDType?: string;
+						/** @description Unique number of the Photo ID */
+						PhotoIDNumber?: string;
+					};
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["UserInfoDTOApiResponse"];
+						"application/json": components["schemas"]["UserInfoDTOApiResponse"];
+						"text/json": components["schemas"]["UserInfoDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/ToggleDefaultStoryPrivacy": {
+		/** Update user's default story privacy settings. */
+		put: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/User/StoryBooks/{topLevelCategory}": {
+		/**
+		 * Get user stories under the specified category
+		 * @description Get user's stories under the specified category based on pagination parameters
+		 */
+		get: operations["GetUserStoriesByTopLevelCategory"];
+	};
+	"/api/User/Videos/{topLevelCategory}": {
+		/**
+		 * Get user videos under the specified category
+		 * @description Get user's videos under the specified category based on pagination parameters
+		 */
+		get: operations["GetUserVideosByTopLevelCategory"];
+	};
+	"/api/Video/PreSignedUrl": {
+		get: {
+			parameters: {
+				query?: {
+					fileName?: string;
+					contentType?: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["UploadToS3DTOApiResponse"];
+						"application/json": components["schemas"]["UploadToS3DTOApiResponse"];
+						"text/json": components["schemas"]["UploadToS3DTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/Video/{topLevelCategory}": {
+		/**
+		 * Get stories under the specified category
+		 * @description Get stories under the specified category based on pagination parameters
+		 */
+		get: operations["GetStoriesByTopLevelCategory"];
+	};
+	"/api/Video/{topLevelCategory}/{slug}": {
+		/**
+		 * Get one public story by category and slug
+		 * @description Get a single public story by its category and slug
+		 */
+		get: operations["GetOnePublicStoryByCategoryAndSlug"];
+	};
+	"/api/Video/{id}/Suggested": {
+		/**
+		 * Get suggested stories
+		 * @description Get a list of suggested stories based on the provided story id
+		 */
+		get: operations["GetSuggestedStories"];
+	};
+	"/api/Video/{id}/RenderVideo": {
+		/**
+		 * Render a video
+		 * @description Render a video based on the provided story id
+		 */
+		put: operations["RenderVideo"];
+	};
+	"/api/Video/CopyVideo/{id}": {
+		/**
+		 * Copy a video
+		 * @description Copy a video based on the provided story id
+		 */
+		post: operations["CopyVideo"];
+	};
+	"/api/WebStory/NoAuth": {
+		/** Request a new anonymous story based on the provided parameters */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["RequestStoryDTO"];
+					"application/json": components["schemas"]["RequestStoryDTO"];
+					"text/json": components["schemas"]["RequestStoryDTO"];
+					"application/*+json": components["schemas"]["RequestStoryDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnAnonymousStoryDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnAnonymousStoryDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnAnonymousStoryDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory": {
+		/** Get a list of the current user's stories based on pagination parameters */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnOwnWebStoryDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnOwnWebStoryDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnOwnWebStoryDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+		/** Request a new story based on the provided parameters */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["RequestStoryDTO"];
+					"application/json": components["schemas"]["RequestStoryDTO"];
+					"text/json": components["schemas"]["RequestStoryDTO"];
+					"application/*+json": components["schemas"]["RequestStoryDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/View/{profileName}": {
+		/** Get a list of the other user's stories based on pagination parameters */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+				path: {
+					profileName: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{topLevelCategory}/{slug}": {
+		/**
+		 * Get one public story by slug
+		 * @description Get a single public story by its slug
+		 */
+		get: operations["GetOnePublicStoryBySlug"];
+	};
+	"/api/WebStory/{id}/RegenerateImage/{index}": {
+		/** Regenerate an image for a story by its ID and index */
+		put: {
+			parameters: {
+				path: {
+					id: string;
+					index: number;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["RegenerateImageDTO"];
+					"application/json": components["schemas"]["RegenerateImageDTO"];
+					"text/json": components["schemas"]["RegenerateImageDTO"];
+					"application/*+json": components["schemas"]["RegenerateImageDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["BooleanApiResponse"];
+						"application/json": components["schemas"]["BooleanApiResponse"];
+						"text/json": components["schemas"]["BooleanApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/RegenerateCoverImage": {
+		/** Regenerate a cover image for a story by its ID */
+		put: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["BooleanApiResponse"];
+						"application/json": components["schemas"]["BooleanApiResponse"];
+						"text/json": components["schemas"]["BooleanApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/OrderBook": {
+		/** Order a book for a WebStory by its id. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["RequestBookOrderDTO"];
+					"application/json": components["schemas"]["RequestBookOrderDTO"];
+					"text/json": components["schemas"]["RequestBookOrderDTO"];
+					"application/*+json": components["schemas"]["RequestBookOrderDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/OrderBookNoAuth": {
+		/** Order a book for a WebStory without auth. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["RequestBookOrderNoAuthDTO"];
+					"application/json": components["schemas"]["RequestBookOrderNoAuthDTO"];
+					"text/json": components["schemas"]["RequestBookOrderNoAuthDTO"];
+					"application/*+json": components["schemas"]["RequestBookOrderNoAuthDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnNoAuthBookResultApiResponse"];
+						"application/json": components["schemas"]["ReturnNoAuthBookResultApiResponse"];
+						"text/json": components["schemas"]["ReturnNoAuthBookResultApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/Report": {
+		/** Report a Web Story by its id. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["ReportStoryDTO"];
+					"application/json": components["schemas"]["ReportStoryDTO"];
+					"text/json": components["schemas"]["ReportStoryDTO"];
+					"application/*+json": components["schemas"]["ReportStoryDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/Interactions": {
+		/** Get the user's interactions with a Web Story by its id. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnStoryInteractionDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnStoryInteractionDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnStoryInteractionDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/UpdateStoryPrivacy": {
+		/** Update multiple user stories' privacy settings. */
+		post: {
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["UpdateMultipleStoriesPrivacyDTO"];
+					"application/json": components["schemas"]["UpdateMultipleStoriesPrivacyDTO"];
+					"text/json": components["schemas"]["UpdateMultipleStoriesPrivacyDTO"];
+					"application/*+json": components["schemas"]["UpdateMultipleStoriesPrivacyDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["BooleanApiResponse"];
+						"application/json": components["schemas"]["BooleanApiResponse"];
+						"text/json": components["schemas"]["BooleanApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/RegenerateParagraph/{index}": {
+		/** Regenerate a paragraph for a story by its ID and index */
+		put: {
+			parameters: {
+				path: {
+					id: string;
+					index: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/EditParagraph": {
+		/** Edit a story segment. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["EditStorySegmentDTO"];
+					"application/json": components["schemas"]["EditStorySegmentDTO"];
+					"text/json": components["schemas"]["EditStorySegmentDTO"];
+					"application/*+json": components["schemas"]["EditStorySegmentDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/EditStory": {
+		/** Edit a story segment. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["EditCompleteStoryDTO"];
+					"application/json": components["schemas"]["EditCompleteStoryDTO"];
+					"text/json": components["schemas"]["EditCompleteStoryDTO"];
+					"application/*+json": components["schemas"]["EditCompleteStoryDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/EditTitle": {
+		/** Edit a story title. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["EditStoryTitleDTO"];
+					"application/json": components["schemas"]["EditStoryTitleDTO"];
+					"text/json": components["schemas"]["EditStoryTitleDTO"];
+					"application/*+json": components["schemas"]["EditStoryTitleDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/EditSummary": {
+		/** Edit summary of the story. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["EditStorySummaryDTO"];
+					"application/json": components["schemas"]["EditStorySummaryDTO"];
+					"text/json": components["schemas"]["EditStorySummaryDTO"];
+					"application/*+json": components["schemas"]["EditStorySummaryDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/AddParagraph": {
+		/** Add a new story segment. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["AddParagraphDTO"];
+					"application/json": components["schemas"]["AddParagraphDTO"];
+					"text/json": components["schemas"]["AddParagraphDTO"];
+					"application/*+json": components["schemas"]["AddParagraphDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnWebStoryDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnWebStoryDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnWebStoryDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/DeleteParagraph/{index}": {
+		/** Delete a story segment. */
+		delete: {
+			parameters: {
+				path: {
+					id: string;
+					index: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/Claim/{token}": {
+		/** Get claim validity for a story with no author. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+					token: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["BooleanApiResponse"];
+						"application/json": components["schemas"]["BooleanApiResponse"];
+						"text/json": components["schemas"]["BooleanApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+		/** Claim a story with no author. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+					token: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/ClaimUnclaimed": {
+		/** Claim an unclaimed story with no author. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/Delete/{token}": {
+		/** Delete a story with no author. */
+		delete: {
+			parameters: {
+				path: {
+					id: string;
+					token: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/Delete": {
+		/** Delete a story by its id. */
+		delete: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/AmazonMarketplaces": {
+		/** Get Amazon publishing marketplaces. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["AmazonMarketplaceStringDictionaryApiResponse"];
+						"application/json": components["schemas"]["AmazonMarketplaceStringDictionaryApiResponse"];
+						"text/json": components["schemas"]["AmazonMarketplaceStringDictionaryApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/ValidateBookMetadata/{id}": {
+		/** Validate AmazonBook Metadata. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["AmazonBookMetaDataDTO"];
+					"application/json": components["schemas"]["AmazonBookMetaDataDTO"];
+					"text/json": components["schemas"]["AmazonBookMetaDataDTO"];
+					"application/*+json": components["schemas"]["AmazonBookMetaDataDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/SaveBookMetadata/{id}": {
+		/** Save AmazonBook Metadata. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["AmazonBookMetaDataDTO"];
+					"application/json": components["schemas"]["AmazonBookMetaDataDTO"];
+					"text/json": components["schemas"]["AmazonBookMetaDataDTO"];
+					"application/*+json": components["schemas"]["AmazonBookMetaDataDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/BookMetadata/{id}/Categories": {
+		/** Get AmazonBook Metadata Categories. */
+		get: {
+			parameters: {
+				query?: {
+					amazonMarketplace?: components["schemas"]["AmazonMarketplace"];
+				};
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringObjectDictionaryListApiResponse"];
+						"application/json": components["schemas"]["StringObjectDictionaryListApiResponse"];
+						"text/json": components["schemas"]["StringObjectDictionaryListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/GetMetaData/{id}": {
+		/** Get AmazonBook Metadata. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnBookMetaDataDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnBookMetaDataDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnBookMetaDataDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/GetAllUserAmazonRequests": {
+		/** Get all Amazon book requests. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnUserAmazonBookDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnUserAmazonBookDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnUserAmazonBookDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/Comments": {
+		/** Get all comments on a story. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnStoryCommentDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnStoryCommentDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnStoryCommentDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{id}/Comment": {
+		/** Add a comment on a story. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["CommentTextDTO"];
+					"application/json": components["schemas"]["CommentTextDTO"];
+					"text/json": components["schemas"]["CommentTextDTO"];
+					"application/*+json": components["schemas"]["CommentTextDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{storyId}/EditComment/{commentId}": {
+		/** Edit a comment on a story. */
+		put: {
+			parameters: {
+				path: {
+					storyId: string;
+					commentId: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["CommentTextDTO"];
+					"application/json": components["schemas"]["CommentTextDTO"];
+					"text/json": components["schemas"]["CommentTextDTO"];
+					"application/*+json": components["schemas"]["CommentTextDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/{storyId}/DeleteComment/{commentId}": {
+		/** Delete a comment on a story. */
+		delete: {
+			parameters: {
+				path: {
+					storyId: string;
+					commentId: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/ReportComment/{commentId}": {
+		/** Report a comment on a story. */
+		post: {
+			parameters: {
+				path: {
+					commentId: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["ReportCommentDTO"];
+					"application/json": components["schemas"]["ReportCommentDTO"];
+					"text/json": components["schemas"]["ReportCommentDTO"];
+					"application/*+json": components["schemas"]["ReportCommentDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/GetSingleAmazonRequest/{id}": {
+		/** Get single Amazon book request. */
+		get: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnUserAmazonBookDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnUserAmazonBookDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnUserAmazonBookDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/GetAllUserItems": {
+		/** Get all User's Story Items. */
+		get: {
+			parameters: {
+				query?: {
+					CurrentPage?: number;
+					PageSize?: number;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
+						"application/json": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
+						"text/json": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/GetSingleUserItem/{id}": {
+		/** Get single user story item. */
+		get: {
+			parameters: {
+				query?: {
+					creditSpendType?: components["schemas"]["CreditSpendType"];
+					storyItemSubType?: components["schemas"]["StoryItemSubType"];
+				};
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["ReturnUserStoryItemsDTOApiResponse"];
+						"application/json": components["schemas"]["ReturnUserStoryItemsDTOApiResponse"];
+						"text/json": components["schemas"]["ReturnUserStoryItemsDTOApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/SaveStorySegmentImage/{id}": {
+		/** Save Scribble Image. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"multipart/form-data": {
+						/** Format: binary */
+						Image?: string;
+						/** Format: int32 */
+						Index?: number;
+					};
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/ContestEnroll/{id}": {
+		/** Enroll in a contest. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			requestBody?: {
+				content: {
+					"application/json-patch+json": components["schemas"]["EnrollStoryInContestDTO"];
+					"application/json": components["schemas"]["EnrollStoryInContestDTO"];
+					"text/json": components["schemas"]["EnrollStoryInContestDTO"];
+					"application/*+json": components["schemas"]["EnrollStoryInContestDTO"];
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/UpscaleImages/{id}": {
+		/** Upscale images. */
+		post: {
+			parameters: {
+				path: {
+					id: string;
+				};
+			};
+			responses: {
+				/** @description Success */
+				200: {
+					content: {
+						"text/plain": components["schemas"]["StringApiResponse"];
+						"application/json": components["schemas"]["StringApiResponse"];
+						"text/json": components["schemas"]["StringApiResponse"];
+					};
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
+	"/api/WebStory/GetAllCategories": {
+		/** Get all categories. */
+		get: {
+			responses: {
+				/** @description Success */
+				200: {
+					content: never;
+				};
+				/** @description Unauthorized */
+				401: {
+					content: never;
+				};
+			};
+		};
+	};
 }
 
 export type webhooks = Record<string, never>;
 
 export interface components {
-  schemas: {
-    /** @description DTO used to add credits to a user account from admin panel */
-    AddCreditsDTO: {
-      /**
-       * Email
-       * @description The email address of the user.
-       */
-      email: string;
-      /**
-       * Amount
-       * Format: double
-       * @description The amount of credits to add.
-       */
-      amount: number;
-    };
-    /** @description DTO used to add a paragraph to a WebStory. */
-    AddParagraphDTO: {
-      /**
-       * ParagraphContent
-       * @description The content of the paragraph to add.
-       */
-      textContent?: string | null;
-      /**
-       * Index
-       * Format: int32
-       * @description The index of the paragraph to add.
-       */
-      index?: number;
-      /**
-       * GenerateParagraph
-       * @description Whether to automatically generate a new paragraph or not.
-       */
-      generateParagraph?: boolean;
-      imageStyle?: components["schemas"]["ImageStyles"];
-    };
-    /** @description Request body for buying additional credits. */
-    AdditionalCreditsDTO: {
-      allowanceType?: components["schemas"]["AllowanceType"];
-      /**
-       * Format: int32
-       * @description The amount of credits to buy.
-       */
-      quantity?: number;
-    };
-    /**
-     * Format: int32
-     * @description The type of allowance.
-     * @enum {integer}
-     */
-    AllowanceType: StoryBooks | Videos | Credits;
-    AmazonBook: {
-      coverPDFUrl?: string | null;
-      gutsPDFUrl?: string | null;
-      authorFirstName?: string | null;
-      authorLastName?: string | null;
-      amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
-      amazonUrl?: string | null;
-      /** Format: date-time */
-      amazonPublishDate?: string | null;
-      amazonRejectReason?: string | null;
-      asin?: string | null;
-      /** Format: date-time */
-      created?: string;
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-    };
-    /** @description DTO used to save metadata to DB. */
-    AmazonBookMetaDataDTO: {
-      /** @description The title of the book. */
-      title?: string | null;
-      /** @description The subtitle of the book. */
-      subtitle?: string | null;
-      /** @description The Prefix of the author of the book. */
-      prefix?: string | null;
-      /** @description The First name of the author of the book. */
-      firstName?: string | null;
-      /** @description The Middle name of the author of the book. */
-      middleName?: string | null;
-      /** @description The Last name of the author of the book. */
-      lastName?: string | null;
-      /** @description The Suffix of the author of the book. */
-      suffix?: string | null;
-      /** @description GPT generated summary of the book. */
-      summary?: string | null;
-      /** @description Categories */
-      categories?: {
-          [key: string]: unknown;
-        }[] | null;
-      /** @description Comma separated 7 keywords */
-      seoKeywords?: string | null;
-      /** @description Age group minimum. */
-      ageGroupMin?: string | null;
-      /** @description Age group maximum. */
-      ageGroupMax?: string | null;
-      amazonMarketplace?: components["schemas"]["AmazonMarketplace"];
-      amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
-    };
-    AmazonBookRoyalty: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      asin?: string | null;
-      /** Format: int32 */
-      totalSales?: number;
-      /** Format: double */
-      lifetimeRoyalties?: number;
-      /** Format: double */
-      unclaimedRoyalties?: number;
-      /** Format: double */
-      processingRoyalties?: number;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      amazonRoyaltyTransactions?: components["schemas"]["AmazonRoyaltyTransaction"][] | null;
-    };
-    /** @description Represents the latest snapshot of one amazon book's royalty. */
-    AmazonBooksRevenueDTO: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      webStoryId?: string;
-      storyTitle?: string | null;
-      topLevelCategory?: string | null;
-      slug?: string | null;
-      /** Format: int32 */
-      totalSales?: number;
-      /** Format: double */
-      lifetimeRoyalty?: number;
-      /** Format: double */
-      unclaimedRoyalty?: number;
-      amazonUrl?: string | null;
-    };
-    /** @description Represents a paged list of items. */
-    AmazonBooksRevenueDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["AmazonBooksRevenueDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    AmazonBooksRevenueDTOPagedListApiResponse: {
-      data?: components["schemas"]["AmazonBooksRevenueDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    AmazonKdpMetaData: {
-      /** Format: uuid */
-      id?: string;
-      title?: string | null;
-      subtitle?: string | null;
-      prefix?: string | null;
-      firstName?: string | null;
-      middleName?: string | null;
-      lastName?: string | null;
-      suffix?: string | null;
-      summary?: string | null;
-      categories?: string | null;
-      seoKeywords?: string | null;
-      ageGroupMin?: string | null;
-      ageGroupMax?: string | null;
-      amazonMarketplace?: string | null;
-      /** Format: date-time */
-      created?: string;
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    AmazonMarketplace: US | CA | MX | BR | DE | FR | IT | ES | AU | IN | JP | NL | UK;
-    /** @description Represents the standard response format for API requests. */
-    AmazonMarketplaceStringDictionaryApiResponse: {
-      data?: ({
-        [key: string]: string | null;
-      }) | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /**
-     * Format: int32
-     * @description Represents the lifecycle state of an Amazon published book.
-     * @enum {integer}
-     */
-    AmazonPublishLifecycle: Requested | Processing | Published | Rejected | PDFOnly;
-    /** @description Represents the amazon request payment type of a storybook. */
-    AmazonRequestPaymentTypeDTO: {
-      creditSpendType?: components["schemas"]["CreditSpendType"];
-    };
-    AmazonRoyaltyTransaction: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      asin?: string | null;
-      /** Format: double */
-      royaltyAdded?: number;
-      /** Format: double */
-      royaltyWithdrawn?: number;
-      /** Format: uuid */
-      transferId?: string | null;
-      stripePayoutId?: string | null;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      /** Format: uuid */
-      amazonBookRoyaltyId?: string;
-      amazonBookRoyalty?: components["schemas"]["AmazonBookRoyalty"];
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    ApiResponseStatus: Success | Unauthorized | NotFound | BadRequest | ServerError | Forbidden | PaymentRequired | OkNoContent;
-    BookOrder: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      coverPDFUrl?: string | null;
-      gutsPDFUrl?: string | null;
-      authorFirstName?: string | null;
-      authorLastName?: string | null;
-      /** Format: int32 */
-      quantity?: number;
-      bookOrderLifecycle?: components["schemas"]["BookOrderLifecycle"];
-      orderReference?: string | null;
-      /** Format: double */
-      orderPrice?: number;
-      /** Format: double */
-      shippingPrice?: number;
-      /** Format: double */
-      totalPrice?: number;
-      paymentIntentId?: string | null;
-      noAuth?: boolean;
-      paid?: boolean;
-      name?: string | null;
-      address1?: string | null;
-      address2?: string | null;
-      city?: string | null;
-      postal?: string | null;
-      country?: string | null;
-      phone?: string | null;
-      email?: string | null;
-      state?: string | null;
-      shippingClassification?: components["schemas"]["ShippingClassification"];
-      shippingMethodName?: string | null;
-      trackingNumber?: string | null;
-      dispatchDateUTC?: string | null;
-      estimatedDeliveryUTC?: string | null;
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-      /** Format: uuid */
-      discountCodeId?: string | null;
-      discountCode?: components["schemas"]["DiscountCode"];
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    BookOrderLifecycle: Requested | Generating | ReadyToSubmit | RPIReceived | RPIPrinting | RPIShipped | Delivered | Failed;
-    /** @description Represents the standard response format for API requests. */
-    BooleanApiResponse: {
-      data?: boolean;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    Characters: {
-      /** Format: uuid */
-      webStoryId?: string;
-      /** Format: int32 */
-      characterId?: number;
-      characterName?: string | null;
-      characterDescription?: string | null;
-      characterImage?: string | null;
-      /** Format: date-time */
-      created?: string;
-      webStory?: components["schemas"]["WebStory"];
-    };
-    CheckPaymentStatusDTO: {
-      /** @description The type of payment */
-      creditSpendType?: components["schemas"]["CreditSpendType"][] | null;
-    };
-    CommentReport: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      commentReportReason?: components["schemas"]["CommentReportReason"];
-      otherReason?: string | null;
-      isResolved?: boolean;
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-      /** Format: uuid */
-      commentId?: string;
-      storyComment?: components["schemas"]["StoryComment"];
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    CommentReportReason: InappropriateText | HateSpeech | Irrelevant | Other;
-    /** @description DTO used to add a new Comment to a WebStory. */
-    CommentTextDTO: {
-      /**
-       * CommentText
-       * @description The text content of the comment.
-       */
-      commentText?: string;
-    };
-    ConfirmPaymentDTO: {
-      paymentIntentId?: string | null;
-      /** Format: float */
-      amount?: number;
-      allowanceType?: components["schemas"]["AllowanceType"];
-      /** Format: int32 */
-      quantity?: number;
-    };
-    /** @description Request body for confirming a subscription. */
-    ConfirmSubscriptionDTO: {
-      /** @description The payment intent id. */
-      paymentIntentId?: string | null;
-      /** @description The Subscription id. */
-      subscriptionId?: string | null;
-      subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
-      subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
-    };
-    /** @description Admin panel DiscountCode object. */
-    CreateDiscountCodeDTO: {
-      /**
-       * Code
-       * @description The actual code of the DiscountCode that is given to users.
-       */
-      code: string;
-      /**
-       * DiscountPercentage
-       * Format: int32
-       * @description The discount percentage of the DiscountCode as an integer.
-       */
-      discountPercentage: number;
-      /**
-       * IsActive
-       * @description Whether or not the DiscountCode is active and can be used.
-       */
-      isActive: boolean;
-      /**
-       * ExpirationDate
-       * Format: date-time
-       * @description The expiration date of the DiscountCode, after which the code will not work.
-       */
-      expirationDate: string;
-      discountCodeType: components["schemas"]["DiscountCodeType"];
-    };
-    /** @description Request body for payout account. */
-    CreatePayoutAccountDTO: {
-      individualBusinessType?: boolean;
-      firstName?: string | null;
-      lastName?: string | null;
-      companyName?: string | null;
-      phoneNumber?: string | null;
-      country?: string | null;
-    };
-    /** @description Request body for creating a subscription. */
-    CreateSubscriptionDTO: {
-      subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
-      subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
-    };
-    CreditPurchase: {
-      /** Format: uuid */
-      id?: string;
-      creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
-      /** Format: double */
-      amount?: number;
-      /** Format: int32 */
-      creditsIssued?: number;
-      /** Format: int32 */
-      creditsRemaining?: number;
-      /** Format: date-time */
-      dateIssued?: string;
-      /** Format: date-time */
-      expiryDate?: string;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-    };
-    /** @description DTO used to return User's Token balance and earliest expiry tokens. */
-    CreditPurchaseDTO: {
-      /** Format: uuid */
-      id?: string;
-      creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
-      /** Format: double */
-      amount?: number;
-      /** Format: int32 */
-      creditsIssued?: number;
-      /** Format: int32 */
-      creditsRemaining?: number;
-      /** Format: date-time */
-      dateIssued?: string;
-      /** Format: date-time */
-      expiryDate?: string;
-      /** Format: uuid */
-      userId?: string;
-    };
-    /**
-     * Format: int32
-     * @description The type of credit purchase. (Note: Gift Purchase will be rejected on PurchaseCredits API)
-     * @enum {integer}
-     */
-    CreditPurchaseType: Gift | Teaser | Leaflet | Anthology | Library | Supplement;
-    CreditSpend: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      creditSpendType?: components["schemas"]["CreditSpendType"];
-      /** Format: int32 */
-      creditsSpent?: number;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-    };
-    /**
-     * Format: int32
-     * @description The type of credit spend
-     * @enum {integer}
-     */
-    CreditSpendType: StoryGeneration | StorySegmentEdit | AudioGeneration | AudioRegeneration | ImageRegeneration | AmazonPublishing | AmazonPublishingPDFOnly | WatermarkedEBookPDF | OriginalEBookPDF | RegenerateSegmentWithAI | AddNewPage | VideoLandscape | VideoPortrait | VideoLandscapeSubtitle | ImageScribble | EnrollStoryInContest | WatermarkedStoryBookPDF | OriginalStoryBookPDF | OneStoryBookGeneration | OneVideoGeneration;
-    DiscountCode: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      code?: string | null;
-      /** Format: int32 */
-      discountPercentage?: number;
-      isActive?: boolean;
-      /** Format: date-time */
-      expirationDate?: string;
-      discountCodeType?: components["schemas"]["DiscountCodeType"];
-      bookOrders?: components["schemas"]["BookOrder"][] | null;
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    DiscountCodeType: None | BookOrder;
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    DisplayResolution: _1024x576 | _576x1024 | _1024x1024;
-    /** @description Represents the payment type for a story item. */
-    DownloadVideoDTO: {
-      creditSpendType?: components["schemas"]["CreditSpendType"];
-      storyItemSubType?: components["schemas"]["StoryItemSubType"];
-    };
-    /** @description DTO used to edit a complete story from given prompt. */
-    EditCompleteStoryDTO: {
-      /**
-       * Prompt
-       * @description The new prompt of the story.
-       */
-      prompt?: string | null;
-      /**
-       * LengthParam
-       * @description The length parameter of the story.
-       */
-      lengthParam?: string | null;
-      /**
-       * ReadabilityParam
-       * @description The readability parameter of the story.
-       */
-      readabilityParam?: string | null;
-      imageStyle?: components["schemas"]["ImageStyles"];
-    };
-    EditStoryCommentLog: {
-      /** Format: uuid */
-      id?: string;
-      oldCommentText?: string | null;
-      newCommentText?: string | null;
-      /** Format: date-time */
-      editTime?: string;
-      /** Format: uuid */
-      commentId?: string;
-      storyComment?: components["schemas"]["StoryComment"];
-    };
-    /** @description DTO used to edit a StorySegment in a WebStory. */
-    EditStorySegmentDTO: {
-      /**
-       * StorySegmentIndex
-       * Format: int32
-       * @description The index of the story segment to edit.
-       */
-      storySegmentIndex?: number;
-      /**
-       * StorySegmentContent
-       * @description The new content of the story segment.
-       */
-      storySegmentContent?: string;
-    };
-    /** @description DTO used to edit Summary in a WebStory. */
-    EditStorySummaryDTO: {
-      /**
-       * Summary
-       * @description The new summary of the story.
-       */
-      summary?: string;
-    };
-    /** @description DTO used to edit a StoryTitle in a WebStory. */
-    EditStoryTitleDTO: {
-      /**
-       * StoryTitle
-       * @description The new title of the story.
-       */
-      storyTitle?: string;
-    };
-    EmailContactUsVariables: {
-      name?: string | null;
-      email?: string | null;
-      message?: string | null;
-    };
-    EmailNotificationPreferences: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      amazonFailedEmail?: boolean;
-      amazonProcessingEmail?: boolean;
-      amazonPublishEmail?: boolean;
-      amazonRequestedEmail?: boolean;
-      bookOrderFailedEmail?: boolean;
-      bookOrderedEmail?: boolean;
-      bookOrderShippedEmail?: boolean;
-      lowTokensEmail?: boolean;
-      tokensPurchasedEmail?: boolean;
-      tokensSpentEmail?: boolean;
-      reportConfirmationEmail?: boolean;
-      publishedStoryDeletedEmail?: boolean;
-      storyPublishedEmail?: boolean;
-      newCommentOnStoryEmail?: boolean;
-      /** Format: date-time */
-      lastUpdated?: string | null;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-    };
-    /** @description DTO used to update a user's email notification preferences. */
-    EmailNotificationPreferencesDTO: {
-      /**
-       * AmazonFailedEmail
-       * @description Preference for Amazon Failed Email notifications.
-       */
-      amazonFailedEmail: boolean;
-      /**
-       * AmazonProcessingEmail
-       * @description Preference for Amazon Processing Email notifications.
-       */
-      amazonProcessingEmail: boolean;
-      /**
-       * AmazonPublishEmail
-       * @description Preference for Amazon Publish Email notifications.
-       */
-      amazonPublishEmail: boolean;
-      /**
-       * AmazonRequestedEmail
-       * @description Preference for Amazon Requested Email notifications.
-       */
-      amazonRequestedEmail: boolean;
-      /**
-       * BookOrderFailedEmail
-       * @description Preference for Book Order Failed Email notifications.
-       */
-      bookOrderFailedEmail: boolean;
-      /**
-       * BookOrderedEmail
-       * @description Preference for Book Ordered Email notifications.
-       */
-      bookOrderedEmail: boolean;
-      /**
-       * BookOrderShippedEmail
-       * @description Preference for Book Order Shipped Email notifications.
-       */
-      bookOrderShippedEmail: boolean;
-      /**
-       * LowTokensEmail
-       * @description Preference for Low Tokens Email notifications.
-       */
-      lowTokensEmail: boolean;
-      /**
-       * TokensPurchasedEmail
-       * @description Preference for Tokens Purchased Email notifications.
-       */
-      tokensPurchasedEmail: boolean;
-      /**
-       * TokensSpentEmail
-       * @description Preference for Tokens Spent Email notifications.
-       */
-      tokensSpentEmail: boolean;
-      /**
-       * ReportConfirmationEmail
-       * @description Preference for Report Confirmation Email notifications.
-       */
-      reportConfirmationEmail: boolean;
-      /**
-       * PublishedStoryDeletedEmail
-       * @description Preference for Published Story Deleted Email notifications.
-       */
-      publishedStoryDeletedEmail: boolean;
-      /**
-       * StoryPublishedEmail
-       * @description Preference for Story Published Email notifications.
-       */
-      storyPublishedEmail: boolean;
-      /**
-       * NewCommentOnStoryEmail
-       * @description Preference for New Comment On Story Email notifications.
-       */
-      newCommentOnStoryEmail: boolean;
-    };
-    /** @description DTO used to enroll WebStory into an active contest */
-    EnrollStoryInContestDTO: {
-      /** Format: uuid */
-      contestId?: string;
-    };
-    /** @description DTO used to read generate audio request for generic Male/Female Voice */
-    GenerateGenericAudioDTO: {
-      voiceType: components["schemas"]["GenericVoiceType"];
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    GenericVoiceType: Male | Female | Portuguese;
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    ImageResolution: _512x512 | _1024x1024 | _1024x576 | _576x1024 | _1152x1024 | _1024x1152;
-    /**
-     * Format: int32
-     * @description Represents the art style of the image.
-     * @enum {integer}
-     */
-    ImageStyles: None | Auto | Cartoon | Sketch | WaterColor | SciFi | Anime | Horror;
-    /** @description Represents the standard response format for API requests. */
-    Int32BooleanDictionaryApiResponse: {
-      data?: ({
-        [key: string]: boolean | null;
-      }) | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    InternalTransactionDTO: {
-      succeeded?: boolean;
-      errorMessage?: string | null;
-      /** Format: double */
-      principalCharge?: number;
-      /** Format: double */
-      secondaryCharge?: number;
-      clientSecret?: string | null;
-      paymentIntentId?: string | null;
-      subscriptionId?: string | null;
-      nextAction?: {
-        [key: string]: unknown;
-      } | null;
-      requiresAction?: boolean;
-    };
-    /** @description Represents the standard response format for API requests. */
-    InternalTransactionDTOApiResponse: {
-      data?: components["schemas"]["InternalTransactionDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /**
-     * Format: int32
-     * @description KYC Lifecycle.
-     * @enum {integer}
-     */
-    KYCLifeCycle: PendingVerification | Rejected | Completed;
-    /** @description DTO used to Like or Unlike a WebStory. */
-    LikeStoryDTO: {
-      /**
-       * Liked
-       * @description Whether the story should be liked or unliked.
-       */
-      liked: boolean;
-    };
-    LoginDTO: {
-      /**
-       * Email
-       * Format: email
-       * @description The user's email address.
-       */
-      email?: string;
-      /**
-       * Password
-       * Format: password
-       * @description The user's password.
-       */
-      password?: string;
-    };
-    ManualImageRegenerationDTO: {
-      /** Format: uuid */
-      webStoryId?: string;
-      /** Format: int32 */
-      imageIndex?: number;
-    };
-    /** @description Return model for the other user's account details. */
-    OtherUserInfoDTO: {
-      /**
-       * Name
-       * @description The user's name.
-       */
-      name?: string | null;
-      /**
-       * LastName
-       * @description The user's Last Name.
-       */
-      lastName?: string | null;
-      /**
-       * ProfileName
-       * @description The user's unique profile name.
-       */
-      profileName?: string | null;
-      /**
-       * ProfilePicture
-       * @description The user's profile picture.
-       */
-      profilePicture?: string | null;
-      /**
-       * Bio
-       * @description The user's bio.
-       */
-      bio?: string | null;
-    };
-    /** @description Represents the standard response format for API requests. */
-    OtherUserInfoDTOApiResponse: {
-      data?: components["schemas"]["OtherUserInfoDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents the payment type for a story item. */
-    PaymentTypeDTO: {
-      creditSpendType?: components["schemas"]["CreditSpendType"];
-    };
-    PayoutAccount: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      isBank?: boolean;
-      stripeId?: string | null;
-      bankName?: string | null;
-      cardBrand?: string | null;
-      last4?: string | null;
-      routingNumber?: string | null;
-      /** Format: int32 */
-      expiryMonth?: number;
-      /** Format: int32 */
-      expiryYear?: number;
-      canReceivePayouts?: boolean;
-      currency?: string | null;
-      isDefault?: boolean;
-      /** Format: date-time */
-      lastSynced?: string;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-    };
-    PromptResponse: {
-      prompt?: string | null;
-    };
-    /** @description Request body for purchasing account credits. */
-    PurchaseAccountCreditDTO: {
-      creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
-      creditSpendType?: components["schemas"]["CreditSpendType"];
-    };
-    /** @description DTO used to specify the image characteristics of images to be regenerated */
-    RegenerateImageDTO: {
-      imageStyle?: components["schemas"]["ImageStyles"];
-    };
-    /** @description DTO used to register a new user. */
-    RegisterUserDTO: {
-      /**
-       * AuthId
-       * @description The user's unique identifier from Social Sign-On.
-       */
-      authId: string;
-      /**
-       * Name
-       * @description The user's name.
-       */
-      name?: string | null;
-      /**
-       * LastName
-       * @description The user's Last Name.
-       */
-      lastName?: string | null;
-      /**
-       * Email
-       * Format: email
-       * @description The user's email address.
-       */
-      email: string;
-      /**
-       * VerificationRequired
-       * @description Whether this user's email requires verification.
-       */
-      verificationRequired: boolean;
-      /**
-       * ProfilePicture
-       * @description The user's profile picture from Social Sign-On.
-       */
-      profilePicture?: string | null;
-    };
-    /** @description DTO used to report a Comment on a WebStory. */
-    ReportCommentDTO: {
-      commentReportReason?: components["schemas"]["CommentReportReason"];
-      /**
-       * OtherReason
-       * @description An optional reason for reporting the story.
-       */
-      otherReason?: string | null;
-    };
-    /** @description DTO used to report a WebStory. */
-    ReportStoryDTO: {
-      storyReportReason?: components["schemas"]["StoryReportReason"];
-      /**
-       * OtherReason
-       * @description An optional reason for reporting the story.
-       */
-      otherReason?: string | null;
-    };
-    /** @description DTO used to request a book order. */
-    RequestBookOrderDTO: {
-      authorFirstName?: string | null;
-      authorLastName?: string | null;
-      name: string;
-      address1: string;
-      address2?: string | null;
-      city: string;
-      postal: string;
-      state: string;
-      shippingClassification: components["schemas"]["ShippingClassification"];
-      /** Format: int32 */
-      quantity: number;
-      discountCode?: string | null;
-    };
-    /** @description DTO used to request a book order without an account. */
-    RequestBookOrderNoAuthDTO: {
-      /** @description Name of the person ordering the book. */
-      name: string;
-      /** @description Address line 1 of the person ordering the book. */
-      address1: string;
-      /** @description Address line 2 of the person ordering the book. */
-      address2?: string | null;
-      /** @description City of the person ordering the book. */
-      city: string;
-      /** @description Postal code of the person ordering the book. */
-      postal: string;
-      /** @description State of the person ordering the book. */
-      state: string;
-      shippingClassification: components["schemas"]["ShippingClassification"];
-      /**
-       * Format: int32
-       * @description Quantity of books to order.
-       */
-      quantity: number;
-      /** @description Phone number of the person ordering the book. */
-      phoneNumber?: string | null;
-      /** @description Email address of the person ordering the book. */
-      email: string;
-      /** @description Discount code to apply to the book order. */
-      discountCode?: string | null;
-    };
-    /** @description DTO used to create a new WebStory. */
-    RequestStoryDTO: {
-      /**
-       * Prompt
-       * @description The text prompt for story generation.
-       */
-      prompt?: string;
-      imageStyle?: components["schemas"]["ImageStyles"];
-      language?: components["schemas"]["StoryLanguages"];
-      storyLength?: components["schemas"]["StoryLength"];
-    };
-    /** @description Admin panel AmazonBook publish request. */
-    ReturnAdminAmazonBookDTO: {
-      /**
-       * WebStoryId
-       * Format: uuid
-       * @description The unique identifier of the story that this AmazonBook is for.
-       */
-      webStoryId?: string;
-      /**
-       * CoverPDFUrl
-       * @description The URL of the cover PDF for the AmazonBook.
-       */
-      coverPDFUrl?: string | null;
-      /**
-       * GutsPDFUrl
-       * @description The URL of the guts PDF for the AmazonBook.
-       */
-      gutsPDFUrl?: string | null;
-      /**
-       * AuthorFirstName
-       * @description The first name of the author of the story.
-       */
-      authorFirstName?: string | null;
-      /**
-       * AuthorLastName
-       * @description The last name of the author of the story.
-       */
-      authorLastName?: string | null;
-      amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
-      /**
-       * PublicationDate
-       * Format: date-time
-       * @description The date the original WebStory was published on Storybird.
-       */
-      publicationDate?: string;
-      /**
-       * AmazonUrl
-       * @description The URL of the AmazonBook on Amazon.
-       */
-      amazonUrl?: string | null;
-      /**
-       * AmazonPublishDate
-       * Format: date-time
-       * @description The date the AmazonBook was published on Amazon.
-       */
-      amazonPublishDate?: string | null;
-      /**
-       * AmazonRejectReason
-       * @description The reason the AmazonBook was rejected by Amazon.
-       */
-      amazonRejectReason?: string | null;
-      /**
-       * StoryTitle
-       * @description The title of the story.
-       */
-      storyTitle?: string | null;
-      /**
-       * StorySummary
-       * @description The summary of the story.
-       */
-      storySummary?: string | null;
-      returnBookMetaDataDTO?: components["schemas"]["ReturnBookMetaDataDTO"];
-      /**
-       * Language
-       * @description The language of the AmazonBook.
-       */
-      language?: string | null;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date the AmazonBook publish request was created.
-       */
-      created?: string;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminAmazonBookDTOApiResponse: {
-      data?: components["schemas"]["ReturnAdminAmazonBookDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnAdminAmazonBookDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnAdminAmazonBookDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminAmazonBookDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnAdminAmazonBookDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Admin panel BookOrder object. */
-    ReturnAdminBookOrderDTO: {
-      /**
-       * CoverPDFUrl
-       * @description The URL of the cover PDF for the BookOrder.
-       */
-      coverPDFUrl?: string | null;
-      /**
-       * GutsPDFUrl
-       * @description The URL of the guts PDF for the BookOrder.
-       */
-      gutsPDFUrl?: string | null;
-      /**
-       * AuthorFirstName
-       * @description The first name of the author of the story.
-       */
-      authorFirstName?: string | null;
-      /**
-       * AuthorLastName
-       * @description The last name of the author of the story.
-       */
-      authorLastName?: string | null;
-      /**
-       * Quantity
-       * Format: int32
-       * @description The number of copies ordered for the BookOrder.
-       */
-      quantity?: number;
-      bookOrderLifecycle?: components["schemas"]["BookOrderLifecycle"];
-      /**
-       * OrderReference
-       * @description The reference number of the order.
-       */
-      orderReference?: string | null;
-      /**
-       * OrderPrice
-       * Format: double
-       * @description The price of the order without shipping.
-       */
-      orderPrice?: number;
-      /**
-       * ShippingPrice
-       * Format: double
-       * @description The price of shipping for the order.
-       */
-      shippingPrice?: number;
-      /**
-       * TotalPrice
-       * Format: double
-       * @description The total price of the order.
-       */
-      totalPrice?: number;
-      /**
-       * StoryTitle
-       * @description The title of the story.
-       */
-      storyTitle?: string | null;
-      /**
-       * CoverImage
-       * @description The URL of the cover image for the story.
-       */
-      coverImage?: string | null;
-      /**
-       * Name
-       * @description The name of the person who ordered the book.
-       */
-      name?: string | null;
-      /**
-       * Address1
-       * @description The first line of the address of the person who ordered the book.
-       */
-      address1?: string | null;
-      /**
-       * Address2
-       * @description The second line of the address of the person who ordered the book.
-       */
-      address2?: string | null;
-      /**
-       * City
-       * @description The city of the person who ordered the book.
-       */
-      city?: string | null;
-      /**
-       * Postal
-       * @description The postal code of the person who ordered the book.
-       */
-      postal?: string | null;
-      /**
-       * Country
-       * @description The country of the person who ordered the book.
-       */
-      country?: string | null;
-      /**
-       * Phone
-       * @description The phone number of the person who ordered the book.
-       */
-      phone?: string | null;
-      /**
-       * Email
-       * @description The email address of the person who ordered the book.
-       */
-      email?: string | null;
-      /**
-       * State
-       * @description The State of the person who ordered the book.
-       */
-      state?: string | null;
-      shippingClassification?: components["schemas"]["ShippingClassification"];
-      /**
-       * Id
-       * Format: uuid
-       * @description The ID of the BookOrder.
-       */
-      id?: string;
-      /**
-       * WebStoryId
-       * Format: uuid
-       * @description The ID of the WebStory that the BookOrder is for.
-       */
-      webStoryId?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date the BookOrder was created.
-       */
-      created?: string;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminBookOrderDTOApiResponse: {
-      data?: components["schemas"]["ReturnAdminBookOrderDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnAdminBookOrderDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnAdminBookOrderDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminBookOrderDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnAdminBookOrderDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Admin panel DiscountCode object. */
-    ReturnAdminDiscountCodeDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The ID of the DiscountCode.
-       */
-      id?: string;
-      /**
-       * Code
-       * @description The actual code of the DiscountCode that is given to users.
-       */
-      code?: string | null;
-      /**
-       * DiscountPercentage
-       * Format: int32
-       * @description The discount percentage of the DiscountCode as an integer.
-       */
-      discountPercentage?: number;
-      /**
-       * IsActive
-       * @description Whether or not the DiscountCode is active and can be used.
-       */
-      isActive?: boolean;
-      /**
-       * ExpirationDate
-       * Format: date-time
-       * @description The expiration date of the DiscountCode, after which the code will not work.
-       */
-      expirationDate?: string;
-      discountCodeType?: components["schemas"]["DiscountCodeType"];
-      /**
-       * Created
-       * Format: date-time
-       * @description The date the DiscountCode was created.
-       */
-      created?: string;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminDiscountCodeDTOApiResponse: {
-      data?: components["schemas"]["ReturnAdminDiscountCodeDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminDiscountCodeDTOListApiResponse: {
-      data?: components["schemas"]["ReturnAdminDiscountCodeDTO"][] | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Admin panel smaller WebStory object. */
-    ReturnAdminSmallWebStoryDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The ID of the story.
-       */
-      id?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date the story was created.
-       */
-      created?: string;
-      /**
-       * StoryDone
-       * @description Whether the story text generation is done or not.
-       */
-      storyDone?: boolean;
-      /**
-       * ImagesDone
-       * @description Whether the story image generation is done or not.
-       */
-      imagesDone?: boolean;
-      /**
-       * IsPublic
-       * @description Whether or not the WebStory is public.
-       */
-      isPublic?: boolean;
-      /**
-       * PluginGenerated
-       * @description Whether or not the WebStory is plugin generated.
-       */
-      pluginGenerated?: boolean;
-      /**
-       * Slug
-       * @description The slug of the WebStory.
-       */
-      slug?: string | null;
-      /**
-       * StoryTitle
-       * @description The title of the WebStory.
-       */
-      storyTitle?: string | null;
-      /**
-       * Summary
-       * @description The summary of the WebStory.
-       */
-      summary?: string | null;
-      /**
-       * StoryLikes
-       * Format: int32
-       * @description The number of likes the WebStory has.
-       */
-      storyLikes?: number;
-      /**
-       * CoverImage
-       * @description The URL of the cover image for the WebStory.
-       */
-      coverImage?: string | null;
-    };
-    /** @description Return model for Comments. */
-    ReturnAdminStoryCommentDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The id of the comment.
-       */
-      id?: string;
-      /**
-       * UserId
-       * Format: uuid
-       * @description The id of the user who created the comment.
-       */
-      userId?: string;
-      /**
-       * WebStoryId
-       * Format: uuid
-       * @description The id of the story the comment belongs to.
-       */
-      webStoryId?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the comment was created.
-       */
-      created?: string;
-      /**
-       * CommentText
-       * @description The text content of the comment.
-       */
-      commentText?: string | null;
-      /**
-       * ProfileName
-       * @description The unique profileName of the user who created the comment.
-       */
-      profileName?: string | null;
-    };
-    /** @description Admin panel StorySegment object. */
-    ReturnAdminStorySegmentDTO: {
-      /**
-       * TextContent
-       * @description The text content of the StorySegment.
-       */
-      textContent?: string | null;
-      /**
-       * ImageKey
-       * @description The image key of the StorySegment.
-       */
-      imageKey?: string | null;
-      /**
-       * VideoKey
-       * @description The video key of the StorySegment.
-       */
-      videoKey?: string | null;
-      /**
-       * Index
-       * Format: int32
-       * @description The index of the StorySegment.
-       */
-      index?: number;
-      /**
-       * ImageRegenerating
-       * @description Whether or not the image is regenerating.
-       */
-      imageRegenerating?: boolean;
-      /**
-       * ImagePrompt
-       * @description The prompt of the image.
-       */
-      imagePrompt?: string | null;
-    };
-    /** @description Admin panel User object. */
-    ReturnAdminUserDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The ID of the User.
-       */
-      id?: string;
-      /**
-       * Email
-       * @description The email address of the User.
-       */
-      email?: string | null;
-      /**
-       * FirstName
-       * @description The first name of the User.
-       */
-      name?: string | null;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date the user was created.
-       */
-      created?: string;
-    };
-    /** @description Admin panel UserInfo object. */
-    ReturnAdminUserInfoDTO: {
-      name?: string | null;
-      email?: string | null;
-      phoneNumber?: string | null;
-      webStories?: components["schemas"]["ReturnAdminSmallWebStoryDTO"][] | null;
-      pdfPurchases?: components["schemas"]["ReturnUserPdfPurchasesDTO"][] | null;
-      /** Format: double */
-      walletBalance?: number;
-      /** Format: date-time */
-      created?: string;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminUserInfoDTOApiResponse: {
-      data?: components["schemas"]["ReturnAdminUserInfoDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Admin panel WebStory object. */
-    ReturnAdminWebStoryDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The ID of the story.
-       */
-      id?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date the story was created.
-       */
-      created?: string;
-      /**
-       * StoryDone
-       * @description Whether the story text generation is done or not.
-       */
-      storyDone?: boolean;
-      /**
-       * ImagesDone
-       * @description Whether the story image generation is done or not.
-       */
-      imagesDone?: boolean;
-      resolution?: components["schemas"]["DisplayResolution"];
-      /**
-       * IsPublic
-       * @description Whether or not the WebStory is public.
-       */
-      isPublic?: boolean;
-      /**
-       * PluginGenerated
-       * @description Whether or not the WebStory is plugin generated.
-       */
-      pluginGenerated?: boolean;
-      /**
-       * Slug
-       * @description The slug of the WebStory.
-       */
-      slug?: string | null;
-      /**
-       * TopLevelCategory
-       * @description The top level category of the story
-       */
-      topLevelCategory?: string | null;
-      /**
-       * StoryTitle
-       * @description The title of the WebStory.
-       */
-      storyTitle?: string | null;
-      /**
-       * Summary
-       * @description The summary of the WebStory.
-       */
-      summary?: string | null;
-      /**
-       * StoryLikes
-       * Format: int32
-       * @description The number of likes the WebStory has.
-       */
-      storyLikes?: number;
-      /**
-       * CoverImage
-       * @description The URL of the cover image for the WebStory.
-       */
-      coverImage?: string | null;
-      user?: components["schemas"]["ReturnAdminUserDTO"];
-      /**
-       * StoryPrompt
-       * @description Story input prompt
-       */
-      storyPrompt?: string | null;
-      /**
-       * StorySegments
-       * @description The segments of the WebStory.
-       */
-      storySegments?: components["schemas"]["ReturnAdminStorySegmentDTO"][] | null;
-      /**
-       * StoryComments
-       * @description The comments of the WebStory.
-       */
-      storyComments?: components["schemas"]["ReturnAdminStoryCommentDTO"][] | null;
-      amazonBook?: components["schemas"]["ReturnAdminAmazonBookDTO"];
-      /**
-       * BookOrders
-       * @description The BookOrders of the WebStory.
-       */
-      bookOrders?: components["schemas"]["ReturnAdminBookOrderDTO"][] | null;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminWebStoryDTOApiResponse: {
-      data?: components["schemas"]["ReturnAdminWebStoryDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnAdminWebStoryDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnAdminWebStoryDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAdminWebStoryDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnAdminWebStoryDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return Amazon Publish status of a book. */
-    ReturnAmazonBookDTO: {
-      /**
-       * Format: uuid
-       * @description The ID of the web story.
-       */
-      webStoryId?: string;
-      amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
-      /** @description The amazon link of the story book (if published). */
-      amazonUrl?: string | null;
-      /**
-       * Format: date-time
-       * @description The date the book was requested to be processed on Amazon.
-       */
-      created?: string;
-    };
-    /** @description DTO returned with an anonymously created WebStory. */
-    ReturnAnonymousStoryDTO: {
-      /**
-       * Url
-       * @description The url category/slug of the story.
-       */
-      url?: string | null;
-      /**
-       * ClaimingToken
-       * Format: uuid
-       * @description The claim token of the story.
-       */
-      claimingToken?: string;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnAnonymousStoryDTOApiResponse: {
-      data?: components["schemas"]["ReturnAnonymousStoryDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return Amazon KDP Metadata. */
-    ReturnBookMetaDataDTO: {
-      /** @description The title of the book. */
-      title?: string | null;
-      /** @description The subtitle of the book. */
-      subtitle?: string | null;
-      /** @description The author of the book. */
-      author?: string | null;
-      /** @description GPT generated summary of the book. */
-      summary?: string | null;
-      /** @description Categories */
-      categories?: {
-          [key: string]: unknown;
-        }[] | null;
-      /** @description Comma separated 7 keywords */
-      seoKeywords?: string | null;
-      /** @description Age group minimum. */
-      ageGroupMin?: string | null;
-      /** @description Age group maximum. */
-      ageGroupMax?: string | null;
-      amazonMarketplace?: components["schemas"]["AmazonMarketplace"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnBookMetaDataDTOApiResponse: {
-      data?: components["schemas"]["ReturnBookMetaDataDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Admin panel return CommentReport object. */
-    ReturnCommentReportDTO: {
-      comment?: components["schemas"]["ReturnAdminStoryCommentDTO"];
-      commentReportReason?: components["schemas"]["CommentReportReason"];
-      /** @description The other reason for the report, if the reason is 'Other'. */
-      otherReason?: string | null;
-      user?: components["schemas"]["ReturnAdminUserDTO"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnCommentReportDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnCommentReportDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnCommentReportDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnCommentReportDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    ReturnDiscountCodeDTO: {
-      code?: string | null;
-      /** Format: int32 */
-      discountPercentage?: number;
-      isActive?: boolean;
-      /** Format: date-time */
-      expirationDate?: string;
-      discountCodeType?: components["schemas"]["DiscountCodeType"];
-    };
-    ReturnDiscountCodeDetailsDTO: {
-      isValid?: boolean;
-      code?: string | null;
-      /** Format: int32 */
-      discountPercentage?: number;
-      discountCodeType?: components["schemas"]["DiscountCodeType"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnDiscountCodeDetailsDTOApiResponse: {
-      data?: components["schemas"]["ReturnDiscountCodeDetailsDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO returned after a book order is made without auth. */
-    ReturnNoAuthBookResult: {
-      /**
-       * ClientSecret
-       * @description Stripe secret key for the transaction.
-       */
-      clientSecret?: string | null;
-      /**
-       * OrderRef
-       * @description The order reference number for the book order.
-       */
-      orderRef?: string | null;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnNoAuthBookResultApiResponse: {
-      data?: components["schemas"]["ReturnNoAuthBookResult"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return a WebStory that belongs to another user. */
-    ReturnOtherUserWebStoryDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The unique identifier of the story.
-       */
-      id?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the story was created.
-       */
-      created?: string;
-      /**
-       * StoryLikes
-       * Format: int32
-       * @description The number of likes the story has received.
-       */
-      storyLikes?: number;
-      /**
-       * StoryDone
-       * @description Whether the story text generation is done or not.
-       */
-      storyDone?: boolean;
-      /**
-       * ImagesDone
-       * @description Whether the story image generation is done or not.
-       */
-      imagesDone?: boolean;
-      resolution?: components["schemas"]["DisplayResolution"];
-      /**
-       * StoryTitle
-       * @description The title of the story.
-       */
-      storyTitle?: string | null;
-      /**
-       * Summary
-       * @description The summary of the story.
-       */
-      summary?: string | null;
-      /**
-       * Slug
-       * @description The url slug of the story.
-       */
-      slug?: string | null;
-      /**
-       * TopLevelCategory
-       * @description The top level category of the story
-       */
-      topLevelCategory?: string | null;
-      user?: components["schemas"]["ReturnTinyUserDTO"];
-      /**
-       * CoverImage
-       * @description The cover image of the story.
-       */
-      coverImage?: string | null;
-      storyType?: components["schemas"]["StoryType"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnOtherUserWebStoryDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnOtherUserWebStoryDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnOtherUserWebStoryDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnOtherUserWebStoryDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return a user's book order. */
-    ReturnOwnBookOrderDTO: {
-      coverPDFUrl?: string | null;
-      gutsPDFUrl?: string | null;
-      authorFirstName?: string | null;
-      authorLastName?: string | null;
-      /** Format: int32 */
-      quantity?: number;
-      bookOrderLifecycle?: components["schemas"]["BookOrderLifecycle"];
-      orderReference?: string | null;
-      /** Format: double */
-      orderPrice?: number;
-      /** Format: double */
-      shippingPrice?: number;
-      /** Format: double */
-      totalPrice?: number;
-      storyTitle?: string | null;
-      coverImage?: string | null;
-      discountCode?: components["schemas"]["ReturnDiscountCodeDTO"];
-      name?: string | null;
-      address1?: string | null;
-      address2?: string | null;
-      city?: string | null;
-      postal?: string | null;
-      country?: string | null;
-      phone?: string | null;
-      email?: string | null;
-      state?: string | null;
-      shippingClassification?: components["schemas"]["ShippingClassification"];
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      webStoryId?: string;
-      /** Format: date-time */
-      created?: string;
-    };
-    /** @description Represents a paged list of items. */
-    ReturnOwnBookOrderDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnOwnBookOrderDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnOwnBookOrderDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnOwnBookOrderDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return a WebStory that belongs to the user. */
-    ReturnOwnWebStoryDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The unique identifier of the story.
-       */
-      id?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the story was created.
-       */
-      created?: string;
-      /**
-       * StoryLikes
-       * Format: int32
-       * @description The number of likes the story has received.
-       */
-      storyLikes?: number;
-      /**
-       * StoryDone
-       * @description Whether the story text generation is done or not.
-       */
-      storyDone?: boolean;
-      /**
-       * ImagesDone
-       * @description Whether the story image generation is done or not.
-       */
-      imagesDone?: boolean;
-      resolution?: components["schemas"]["DisplayResolution"];
-      /**
-       * StoryTitle
-       * @description The title of the story.
-       */
-      storyTitle?: string | null;
-      /**
-       * Summary
-       * @description The summary of the story.
-       */
-      summary?: string | null;
-      /**
-       * Slug
-       * @description The url slug of the story.
-       */
-      slug?: string | null;
-      /**
-       * TopLevelCategory
-       * @description The top level category of the story
-       */
-      topLevelCategory?: string | null;
-      /**
-       * IsPublic
-       * @description Whether the story is public or not.
-       */
-      isPublic?: boolean;
-      /**
-       * Scenes
-       * @description The scenes of the story.
-       */
-      scenes?: components["schemas"]["Scene"][] | null;
-      /**
-       * StorySegments
-       * @description A list of generated story segments, each representing a page.
-       */
-      storySegments?: components["schemas"]["ReturnStorySegmentDTO"][] | null;
-      amazonBook?: components["schemas"]["ReturnAmazonBookDTO"];
-      user?: components["schemas"]["ReturnTinyUserDTO"];
-      /**
-       * CoverImage
-       * @description The cover image of the story.
-       */
-      coverImage?: string | null;
-      /**
-       * HasMaleVoice
-       * @description Whether the story has a male voice audio option generated/generating.
-       */
-      hasMaleVoice?: boolean;
-      /**
-       * HasFemaleVoice
-       * @description Whether the story has a female voice audio option generated/generating.
-       */
-      hasFemaleVoice?: boolean;
-      /**
-       * HasCustomVoice
-       * @description Whether the story has a custom voice audio option generated/generating.
-       */
-      hasCustomVoice?: boolean;
-      /**
-       * HasPortugueseVoice
-       * @description Whether the story has a portuguese voice audio option generated/generating.
-       */
-      hasPortugueseVoice?: boolean;
-      /**
-       * MaleVoiceDone
-       * @description Whether the male voice is done generating
-       */
-      maleVoiceDone?: boolean;
-      /**
-       * FemaleVoiceDone
-       * @description Whether the female voice is done generating
-       */
-      femaleVoiceDone?: boolean;
-      /**
-       * CustomVoiceDone
-       * @description Whether the custom voice is done generating
-       */
-      customVoiceDone?: boolean;
-      /**
-       * PortugueseVoiceDone
-       * @description Whether the portuguese voice is done generating.
-       */
-      portugueseVoiceDone?: boolean;
-    };
-    /** @description Represents a paged list of items. */
-    ReturnOwnWebStoryDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnOwnWebStoryDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnOwnWebStoryDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnOwnWebStoryDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return Scenes information of a WebStory */
-    ReturnSceneDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The unique identifier of the scene.
-       */
-      id?: string;
-      /**
-       * Index
-       * Format: int32
-       * @description The index of the scene.
-       */
-      index?: number;
-      /**
-       * SceneDescription
-       * @description The description of the scene.
-       */
-      sceneDescription?: string | null;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the scene was created.
-       */
-      created?: string;
-      /**
-       * StorySegments
-       * @description The story segments in this scene.
-       */
-      storySegments?: components["schemas"]["ReturnStorySegmentDTO"][] | null;
-      /**
-       * VideoSegments
-       * @description The video segments in this scene.
-       */
-      videoSegments?: components["schemas"]["ReturnVideoSegmentDTO"][] | null;
-    };
-    /** @description Return model for Comments. */
-    ReturnStoryCommentDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The id of the comment.
-       */
-      id?: string;
-      /**
-       * UserId
-       * Format: uuid
-       * @description The id of the user who created the comment.
-       */
-      userId?: string;
-      /**
-       * WebStoryId
-       * Format: uuid
-       * @description The id of the story the comment belongs to.
-       */
-      webStoryId?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the comment was created.
-       */
-      created?: string;
-      /**
-       * CommentText
-       * @description The text content of the comment.
-       */
-      commentText?: string | null;
-      /**
-       * ProfileName
-       * @description The unique profileName of the user who created the comment.
-       */
-      profileName?: string | null;
-      /**
-       * ProfilePicture
-       * @description The profile picture of the user who created the comment.
-       */
-      profilePicture?: string | null;
-    };
-    /** @description Represents a paged list of items. */
-    ReturnStoryCommentDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnStoryCommentDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnStoryCommentDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnStoryCommentDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return user interaction data with a given WebStory. */
-    ReturnStoryInteractionDTO: {
-      /**
-       * Liked
-       * @description Whether the user has liked the story or not.
-       */
-      liked?: boolean;
-      /**
-       * Reported
-       * @description Whether the user has reported the story or not.
-       */
-      reported?: boolean;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnStoryInteractionDTOApiResponse: {
-      data?: components["schemas"]["ReturnStoryInteractionDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return story items */
-    ReturnStoryItemDTO: {
-      /**
-       * Format: int32
-       * @description CreditSpendType of the story item
-       */
-      creditSpendType?: number;
-      /**
-       * Format: date-time
-       * @description Story item creation date and time
-       */
-      created?: string;
-      /** @description The Title of the story the item belongs to. */
-      storyTitle?: string | null;
-      /** @description The TopLevelCategory of the story the item belongs to. */
-      topLevelCategory?: string | null;
-      /** @description The Slug of the story the item belongs to. */
-      slug?: string | null;
-      /** @description The CoverImage of the story the item belongs to. */
-      coverImage?: string | null;
-      /**
-       * Format: uuid
-       * @description The WebStory ID of the story the item belongs to.
-       */
-      webStoryId?: string;
-      /** @description The Url of the story item if it's a PDF. */
-      pdfUrl?: string | null;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnStoryItemDTOApiResponse: {
-      data?: components["schemas"]["ReturnStoryItemDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnStoryItemDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnStoryItemDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnStoryItemDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnStoryItemDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Admin panel return StoryReport object. */
-    ReturnStoryReportDTO: {
-      storyReportReason?: components["schemas"]["StoryReportReason"];
-      /** @description The other reason for the report, if the reason is 'Other'. */
-      otherReason?: string | null;
-      user?: components["schemas"]["ReturnAdminUserDTO"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnStoryReportDTOApiResponse: {
-      data?: components["schemas"]["ReturnStoryReportDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnStoryReportDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnStoryReportDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnStoryReportDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnStoryReportDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Return model for StorySegments. */
-    ReturnStorySegmentDTO: {
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the segment was created.
-       */
-      created?: string;
-      /**
-       * ImageRegenerating
-       * @description Whether the image is currently being regenerated.
-       */
-      imageRegenerating?: boolean;
-      /**
-       * Index
-       * Format: int32
-       * @description The index of the segment in the story.
-       */
-      index?: number;
-      /**
-       * SceneId
-       * Format: uuid
-       * @description The Id of the associated Scene
-       */
-      sceneId?: string | null;
-      /**
-       * TextContent
-       * @description The text content of the segment.
-       */
-      textContent?: string | null;
-      /**
-       * ImageKey
-       * @description The key of the image in the image storage.
-       */
-      imageKey?: string | null;
-      /**
-       * VideoKey
-       * @description The key of the video in the video storage.
-       */
-      videoKey?: string | null;
-      /**
-       * FrameInterpolationKey
-       * @description The key of the frame interpolation in the video storage.
-       */
-      frameInterpolationKey?: string | null;
-      /**
-       * LastImageKey
-       * @description The key of the last image in the image storage.
-       */
-      lastImageKey?: string | null;
-      imageStyle?: components["schemas"]["ImageStyles"];
-      /**
-       * ImagePrompt
-       * @description The prompt of the image.
-       */
-      imagePrompt?: string | null;
-      /**
-       * ImageSeed
-       * Format: int64
-       * @description The seed of the image.
-       */
-      imageSeed?: number | null;
-      /**
-       * ImageCFGScale
-       * Format: double
-       * @description The scale of the image.
-       */
-      imageCFGScale?: number | null;
-      imageResolution?: components["schemas"]["ImageResolution"];
-      /**
-       * ImageSamplingSteps
-       * Format: int32
-       * @description The sampling steps of the image.
-       */
-      imageSamplingSteps?: number | null;
-      /**
-       * ImageAltText
-       * @description The alt text of the image.
-       */
-      imageAltText?: string | null;
-      /**
-       * MaleAudioKey
-       * @description The key of the audio for Male Voice.
-       */
-      maleAudioKey?: string | null;
-      /**
-       * MaleAudioGenerating
-       * @description Whether the story has a male voice clip that is generating.
-       */
-      maleAudioGenerating?: boolean;
-      /**
-       * FemaleAudioKey
-       * @description The key of the audio for Female Voice.
-       */
-      femaleAudioKey?: string | null;
-      /**
-       * FemaleAudioGenerating
-       * @description Whether the story has a female voice clip that is generating.
-       */
-      femaleAudioGenerating?: boolean;
-      /**
-       * CustomAudioKey
-       * @description The key of the audio for Custom Voice.
-       */
-      customAudioKey?: string | null;
-      /**
-       * CustomAudioGenerating
-       * @description Whether the story has a custom voice clip that is generating.
-       */
-      customAudioGenerating?: boolean;
-      /**
-       * PortugueseAudioKey
-       * @description The key of the audio for Portuguese Voice.
-       */
-      portugueseAudioKey?: string | null;
-      /**
-       * PortugueseAudioGenerating
-       * @description Whether the story has a portuguese voice clip that is generating.
-       */
-      portugueseAudioGenerating?: boolean;
-    };
-    /** @description Smaller return model for a user. */
-    ReturnTinyUserDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The unique identifier of the user.
-       */
-      id?: string;
-      /**
-       * Name
-       * @description The user's name.
-       */
-      name?: string | null;
-      /**
-       * LastName
-       * @description The user's Last Name.
-       */
-      lastName?: string | null;
-      /**
-       * ProfileName
-       * @description The user's unique profile name.
-       */
-      profileName?: string | null;
-      /**
-       * ProfilePicture
-       * @description The user's profile picture.
-       */
-      profilePicture?: string | null;
-      /**
-       * StoryCount
-       * Format: int32
-       * @description The number of stories the user has.
-       */
-      storyCount?: number;
-      /**
-       * VideoCount
-       * Format: int32
-       * @description The number of videos the user has.
-       */
-      videoCount?: number;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the user was created.
-       */
-      created?: string;
-    };
-    /** @description DTO used to return Amazon Publish Status data to user. */
-    ReturnUserAmazonBookDTO: {
-      /**
-       * Format: uuid
-       * @description The ID of the web story.
-       */
-      webStoryId?: string;
-      /** @description The top level category of the story. */
-      topLevelCategory?: string | null;
-      /** @description The slug of the web story. */
-      slug?: string | null;
-      /** @description The title of the book. */
-      title?: string | null;
-      /** @description The subtitle of the book. */
-      subtitle?: string | null;
-      /** @description The cover image of the book. */
-      coverImage?: string | null;
-      /**
-       * Format: date-time
-       * @description The date the book was created.
-       */
-      created?: string;
-      amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
-      /** @description The First name of the author of the book. */
-      authorFirstName?: string | null;
-      /** @description The Last name of the author of the book. */
-      authorLastName?: string | null;
-      /** @description The Amazon marketplace Enum. */
-      amazonMarketplace?: string | null;
-      /** @description The URL of the book on Amazon. */
-      amazonURL?: string | null;
-      /**
-       * Format: date-time
-       * @description The date the book was published on Amazon.
-       */
-      amazonPublishDate?: string | null;
-      /** @description The Amazon PDF for the cover of the book. */
-      coverPDFUrl?: string | null;
-      /** @description The Amazon PDF for the book. */
-      gutsPDFUrl?: string | null;
-      /** @description GPT generated summary of the book. */
-      summary?: string | null;
-      /** @description Categories */
-      categories?: {
-          [key: string]: unknown;
-        }[] | null;
-      /** @description Comma separated 7 keywords */
-      seoKeywords?: string | null;
-      /** @description Age group minimum. */
-      ageGroupMin?: string | null;
-      /** @description Age group maximum. */
-      ageGroupMax?: string | null;
-      /** Format: double */
-      lifetimeRoyalties?: number;
-      /** Format: double */
-      unclaimedRoyalties?: number;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnUserAmazonBookDTOApiResponse: {
-      data?: components["schemas"]["ReturnUserAmazonBookDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnUserAmazonBookDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnUserAmazonBookDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnUserAmazonBookDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnUserAmazonBookDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Admin panel UserPdfPurchases object. */
-    ReturnUserPdfPurchasesDTO: {
-      /**
-       * WebStoryId
-       * Format: uuid
-       * @description The WebStoryId of the story of PDF purchase.
-       */
-      webStoryId?: string;
-      /**
-       * StoryTitle
-       * @description The title of the story of PDF purchase.
-       */
-      storyTitle?: string | null;
-      /**
-       * Slug
-       * @description The Slug of the story of PDF purchase.
-       */
-      slug?: string | null;
-      /**
-       * TopLevelCategory
-       * @description The TopLevelCategory of the story of PDF purchase.
-       */
-      topLevelCategory?: string | null;
-      creditSpendType?: components["schemas"]["CreditSpendType"];
-    };
-    /** @description DTO used to return User's story items */
-    ReturnUserStoryItemsDTO: {
-      /**
-       * Format: int32
-       * @description CreditSpendType of the story item
-       */
-      creditSpendType?: number;
-      /**
-       * Format: date-time
-       * @description Story item creation date and time
-       */
-      created?: string;
-      /** @description The Title of the story the item belongs to. */
-      storyTitle?: string | null;
-      /** @description The TopLevelCategory of the story the item belongs to. */
-      topLevelCategory?: string | null;
-      /** @description The Slug of the story the item belongs to. */
-      slug?: string | null;
-      /** @description The CoverImage of the story the item belongs to. */
-      coverImage?: string | null;
-      /**
-       * Format: uuid
-       * @description The WebStory ID of the story the item belongs to.
-       */
-      webStoryId?: string;
-      /** @description The Url of the story item. */
-      itemUrl?: string | null;
-      storyItemSubType?: components["schemas"]["StoryItemSubType"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnUserStoryItemsDTOApiResponse: {
-      data?: components["schemas"]["ReturnUserStoryItemsDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnUserStoryItemsDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnUserStoryItemsDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnUserStoryItemsDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnUserStoryItemsDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return User's Token balance and earliest expiry tokens. */
-    ReturnUserTokenInfoDTO: {
-      /** Format: int32 */
-      totalTokens?: number;
-      earliestExpiryPurchase?: components["schemas"]["CreditPurchaseDTO"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnUserTokenInfoDTOApiResponse: {
-      data?: components["schemas"]["ReturnUserTokenInfoDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Return model for VideoSegments. */
-    ReturnVideoSegmentDTO: {
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the segment was created.
-       */
-      created?: string;
-      /**
-       * Index
-       * Format: int32
-       * @description The index of the segment in the story.
-       */
-      index?: number;
-      /**
-       * SceneId
-       * Format: uuid
-       * @description The id of the associated scene.
-       */
-      sceneId?: string | null;
-      /**
-       * TextContent
-       * @description The text content of the segment.
-       */
-      textContent?: string | null;
-      /**
-       * ImageKey
-       * @description The key of the image in the image storage.
-       */
-      imageKey?: string | null;
-      /**
-       * VideoKey
-       * @description The key of the video in the video storage.
-       */
-      videoKey?: string | null;
-      /**
-       * FrameInterpolationKey
-       * @description The key of the frame interpolation in the video storage.
-       */
-      frameInterpolationKey?: string | null;
-      imageStyle?: components["schemas"]["ImageStyles"];
-      /**
-       * ImageRegenerating
-       * @description The status of the image regeneration.
-       */
-      imageRegenerating?: boolean;
-      /**
-       * VideoRegenerating
-       * @description The status of the video regeneration.
-       */
-      videoRegenerating?: boolean;
-      /**
-       * ImagePrompt
-       * @description The prompt of the image.
-       */
-      imagePrompt?: string | null;
-      /**
-       * ImageSeed
-       * Format: int64
-       * @description The seed of the image.
-       */
-      imageSeed?: number | null;
-      /**
-       * ImageCFGScale
-       * Format: double
-       * @description The cfg scale of the image.
-       */
-      imageCFGScale?: number | null;
-      imageResolution?: components["schemas"]["ImageResolution"];
-      /**
-       * ImageSamplingSteps
-       * Format: int32
-       * @description The sampling steps of the image.
-       */
-      imageSamplingSteps?: number | null;
-      /**
-       * ImageAltText
-       * @description The alt text of the image.
-       */
-      imageAltText?: string | null;
-      /**
-       * VideoFPS
-       * Format: int32
-       * @description The fps of the video.
-       */
-      videoFPS?: number | null;
-      /**
-       * MaleAudioKey
-       * @description The key of the audio for Male Voice.
-       */
-      maleAudioKey?: string | null;
-      /**
-       * FemaleAudioKey
-       * @description The key of the audio for Female Voice.
-       */
-      femaleAudioKey?: string | null;
-      /**
-       * CustomAudioKey
-       * @description The key of the audio for Custom Voice.
-       */
-      customAudioKey?: string | null;
-      /**
-       * PortugueseAudioKey
-       * @description The key of the audio for Portuguese Voice.
-       */
-      portugueseAudioKey?: string | null;
-    };
-    /** @description DTO used to return a public Video. */
-    ReturnVideoStoryDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The unique identifier of the story.
-       */
-      id?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the story was created.
-       */
-      created?: string;
-      /**
-       * StoryLikes
-       * Format: int32
-       * @description The number of likes the story has received.
-       */
-      storyLikes?: number;
-      /**
-       * StoryTitle
-       * @description The title of the story.
-       */
-      storyTitle?: string | null;
-      /**
-       * Summary
-       * @description The summary of the story.
-       */
-      summary?: string | null;
-      /**
-       * Slug
-       * @description The url slug of the story.
-       */
-      slug?: string | null;
-      /**
-       * TopLevelCategory
-       * @description The top level category of the story
-       */
-      topLevelCategory?: string | null;
-      /**
-       * IsPublic
-       * @description Whether the story is public or not.
-       */
-      isPublic?: boolean;
-      user?: components["schemas"]["ReturnTinyUserDTO"];
-      /**
-       * CoverImage
-       * @description The cover image of the story.
-       */
-      coverImage?: string | null;
-      /**
-       * Scenes
-       * @description The scene informations in the story.
-       */
-      scenes?: components["schemas"]["ReturnSceneDTO"][] | null;
-      storyType?: components["schemas"]["StoryType"];
-      /**
-       * StoryDone
-       * @description Whether the story text generation is done or not.
-       */
-      storyDone?: boolean;
-      /**
-       * VideosDone
-       * @description Whether the story video generation is done or not.
-       */
-      videosDone?: boolean;
-      /**
-       * ImagesDone
-       * @description Whether the story image generation is done or not.
-       */
-      imagesDone?: boolean;
-      resolution?: components["schemas"]["DisplayResolution"];
-      /**
-       * OriginalMediaKey
-       * @description Path to the video/audio uploaded by the user as input.
-       */
-      originalMediaKey?: string | null;
-      /**
-       * RenderedVideoKey
-       * @description The final rendered video key.
-       */
-      renderedVideoKey?: string | null;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnVideoStoryDTOApiResponse: {
-      data?: components["schemas"]["ReturnVideoStoryDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnVideoStoryDTOListApiResponse: {
-      data?: components["schemas"]["ReturnVideoStoryDTO"][] | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnVideoStoryDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnVideoStoryDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnVideoStoryDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnVideoStoryDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to return a public WebStory. */
-    ReturnWebStoryDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The unique identifier of the story.
-       */
-      id?: string;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the story was created.
-       */
-      created?: string;
-      /**
-       * StoryLikes
-       * Format: int32
-       * @description The number of likes the story has received.
-       */
-      storyLikes?: number;
-      /**
-       * StoryTitle
-       * @description The title of the story.
-       */
-      storyTitle?: string | null;
-      /**
-       * Summary
-       * @description The summary of the story.
-       */
-      summary?: string | null;
-      /**
-       * Slug
-       * @description The url slug of the story.
-       */
-      slug?: string | null;
-      /**
-       * TopLevelCategory
-       * @description The top level category of the story
-       */
-      topLevelCategory?: string | null;
-      /**
-       * IsPublic
-       * @description Whether the story is public or not.
-       */
-      isPublic?: boolean;
-      user?: components["schemas"]["ReturnTinyUserDTO"];
-      /**
-       * Scenes
-       * @description The scenes of the story.
-       */
-      scenes?: components["schemas"]["ReturnSceneDTO"][] | null;
-      amazonBook?: components["schemas"]["ReturnAmazonBookDTO"];
-      /**
-       * CoverImage
-       * @description The cover image of the story.
-       */
-      coverImage?: string | null;
-      storyType?: components["schemas"]["StoryType"];
-      /**
-       * StoryDone
-       * @description Whether the story text generation is done or not.
-       */
-      storyDone?: boolean;
-      /**
-       * ImagesDone
-       * @description Whether the story image generation is done or not.
-       */
-      imagesDone?: boolean;
-      resolution?: components["schemas"]["DisplayResolution"];
-      /**
-       * AIContributionRate
-       * Format: float
-       * @description The similarity of the story to the original AI generated story.
-       */
-      aiContributionRate?: number;
-      /**
-       * HasMaleVoice
-       * @description Whether the story has a male voice audio option generated/generating.
-       */
-      hasMaleVoice?: boolean;
-      /**
-       * HasFemaleVoice
-       * @description Whether the story has a female voice audio option generated/generating.
-       */
-      hasFemaleVoice?: boolean;
-      /**
-       * HasCustomVoice
-       * @description Whether the story has a custom voice audio option generated/generating.
-       */
-      hasCustomVoice?: boolean;
-      /**
-       * HasPortugueseVoice
-       * @description Whether the story has a portuguese voice audio option generated/generating.
-       */
-      hasPortugueseVoice?: boolean;
-      /**
-       * MaleVoiceDone
-       * @description Whether the male voice is done generating
-       */
-      maleVoiceDone?: boolean;
-      /**
-       * FemaleVoiceDone
-       * @description Whether the female voice is done generating
-       */
-      femaleVoiceDone?: boolean;
-      /**
-       * CustomVoiceDone
-       * @description Whether the custom voice is done generating
-       */
-      customVoiceDone?: boolean;
-      /**
-       * PortugueseVoiceDone
-       * @description Whether the portuguese voice is done generating.
-       */
-      portugueseVoiceDone?: boolean;
-      /**
-       * StoryContests
-       * @description A list of contests the story is enrolled in.
-       */
-      storyContests?: components["schemas"]["StoryContestsDTO"][] | null;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnWebStoryDTOApiResponse: {
-      data?: components["schemas"]["ReturnWebStoryDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnWebStoryDTOListApiResponse: {
-      data?: components["schemas"]["ReturnWebStoryDTO"][] | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents a paged list of items. */
-    ReturnWebStoryDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["ReturnWebStoryDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    ReturnWebStoryDTOPagedListApiResponse: {
-      data?: components["schemas"]["ReturnWebStoryDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    Scene: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      /** Format: uuid */
-      webStoryId?: string;
-      /** Format: int32 */
-      index?: number;
-      sceneDescription?: string | null;
-      webStory?: components["schemas"]["WebStory"];
-      storySegments?: components["schemas"]["StorySegment"][] | null;
-      videoSegments?: components["schemas"]["VideoSegment"][] | null;
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    ShippingClassification: priority | express | standard | economy;
-    ShippingPrices: {
-      /** Format: double */
-      economyPrice?: number;
-      /** Format: double */
-      standardPrice?: number;
-      /** Format: double */
-      expressPrice?: number;
-      /** Format: double */
-      priorityPrice?: number;
-    };
-    /** @description Represents the standard response format for API requests. */
-    ShippingPricesApiResponse: {
-      data?: components["schemas"]["ShippingPrices"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /**
-     * Format: int32
-     * @description The type of sorting to use when retrieving stories.
-     * @enum {integer}
-     */
-    SortType: Latest | TotalLikes;
-    StoryComment: {
-      /** Format: uuid */
-      id?: string;
-      commentText?: string | null;
-      /** Format: date-time */
-      created?: string;
-      isDeleted?: boolean;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      editStoryCommentLogs?: components["schemas"]["EditStoryCommentLog"][] | null;
-      commentReports?: components["schemas"]["CommentReport"][] | null;
-    };
-    StoryContest: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      name?: string | null;
-      description?: string | null;
-      contestImage?: string | null;
-      isActive?: boolean;
-      /** Format: date-time */
-      startDate?: string;
-      /** Format: date-time */
-      endDate?: string;
-      entries?: components["schemas"]["StoryContestEntry"][] | null;
-    };
-    StoryContestEntry: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      /** Format: uuid */
-      storyContestId?: string;
-      storyContest?: components["schemas"]["StoryContest"];
-      /** Format: int32 */
-      finalVotes?: number | null;
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      isWinner?: boolean | null;
-    };
-    /** @description Represents one story contest. */
-    StoryContestsDTO: {
-      /**
-       * Format: uuid
-       * @description The ID of the contest.
-       */
-      id?: string;
-      /** @description The name of the contest. */
-      name?: string | null;
-      /** @description The description of the contest. */
-      description?: string | null;
-      /** @description The image of the contest. */
-      contestImage?: string | null;
-      /** @description The status of the contest. */
-      isActive?: boolean;
-      /**
-       * Format: date-time
-       * @description The start date of the contest.
-       */
-      startDate?: string;
-      /**
-       * Format: date-time
-       * @description The end date of the contest.
-       */
-      endDate?: string;
-      /**
-       * Format: int32
-       * @description The number of stories enrolled
-       */
-      numberOfStories?: number;
-      /**
-       * Format: int32
-       * @description The number of votes
-       */
-      numberOfVotes?: number;
-    };
-    /** @description Represents the standard response format for API requests. */
-    StoryContestsDTOListApiResponse: {
-      data?: components["schemas"]["StoryContestsDTO"][] | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    StoryItem: {
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      itemKey?: string | null;
-      storyItemType?: components["schemas"]["StoryItemType"];
-      /** Format: int32 */
-      downloadsCount?: number;
-      /** Format: date-time */
-      created?: string;
-      storyItemSubType?: components["schemas"]["StoryItemSubType"];
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    StoryItemSubType: Default | Male | Female | Portuguese | Custom | StoryBook | EBook;
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    StoryItemType: WatermarkedPDF | OriginalPDF | VideoLandscape | VideoPortrait | VideoLandscapeSubtitle;
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    StoryLanguages: English | Spanish | French | German | Italian | Portuguese | Russian | Japanese | Chinese | Korean | Arabic | Hindi | Urdu | Persian | Turkish | Dutch | Polish | Swedish | Danish | Greek | Malay | Thai | Bulgarian | Croatian | Serbian | Ukrainian | Hebrew | Yiddish;
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    StoryLength: Short | Medium | Long;
-    StoryLike: {
-      /** Format: uuid */
-      userId?: string;
-      /** Format: uuid */
-      storyId?: string;
-      userAuthId?: string | null;
-      user?: components["schemas"]["UserAccount"];
-      webStory?: components["schemas"]["WebStory"];
-      /** Format: date-time */
-      created?: string;
-      isEnabled?: boolean | null;
-    };
-    /** @description Story Privacy setting. */
-    StoryPrivacyUpdate: {
-      /** @description Story ID. */
-      storyId?: string | null;
-      /** @description Privacy Setting */
-      isPublic?: boolean;
-    };
-    StoryReport: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      storyReportReason?: components["schemas"]["StoryReportReason"];
-      otherReason?: string | null;
-      isResolved?: boolean;
-      /** Format: uuid */
-      webStoryId?: string | null;
-      webStory?: components["schemas"]["WebStory"];
-      /** Format: uuid */
-      userId?: string | null;
-      user?: components["schemas"]["UserAccount"];
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    StoryReportReason: InappropriateText | NotLoading | HateSpeech | Other | InappropriateImages;
-    StorySegment: {
-      textContent?: string | null;
-      characterContent?: string | null;
-      imageKey?: string | null;
-      videoKey?: string | null;
-      frameInterpolationKey?: string | null;
-      lastImageKey?: string | null;
-      /** Format: int32 */
-      ind?: number;
-      imageRegenerating?: boolean;
-      maleAudioKey?: string | null;
-      maleAudioGenerating?: boolean;
-      femaleAudioKey?: string | null;
-      femaleAudioGenerating?: boolean;
-      customAudioKey?: string | null;
-      customAudioGenerating?: boolean;
-      portugueseAudioKey?: string | null;
-      portugueseAudioGenerating?: boolean;
-      imageStyle?: components["schemas"]["ImageStyles"];
-      imagePrompt?: string | null;
-      /** Format: int64 */
-      imageSeed?: number | null;
-      /** Format: double */
-      imageCFGScale?: number | null;
-      imageResolution?: components["schemas"]["ImageResolution"];
-      /** Format: int32 */
-      imageSamplingSteps?: number | null;
-      imageAltText?: string | null;
-      /** Format: date-time */
-      created?: string;
-      /** Format: uuid */
-      webStoryId?: string;
-      webStory?: components["schemas"]["WebStory"];
-      /** Format: uuid */
-      sceneId?: string | null;
-      scene?: components["schemas"]["Scene"];
-    };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    StoryType: StoryBook | Video | SplitScreen;
-    /** @description Represents the standard response format for API requests. */
-    StringApiResponse: {
-      data?: string | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    StringICollectionApiResponse: {
-      data?: string[] | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    StringObjectDictionaryListApiResponse: {
-      data?: {
-          [key: string]: unknown;
-        }[] | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description Represents the standard response format for API requests. */
-    StringStringDictionaryApiResponse: {
-      data?: ({
-        [key: string]: string | null;
-      }) | null;
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /**
-     * Format: int32
-     * @description Stripe Connect Account Status
-     * @enum {integer}
-     */
-    StripeConnectAccountStatus: DoesNotExist | OnboardingIncomplete | Onboarded;
-    /** @description Represents the standard response format for API requests. */
-    StripeConnectAccountStatusApiResponse: {
-      data?: components["schemas"]["StripeConnectAccountStatus"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    StripePayment: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      stripePaymentIntentId?: string | null;
-      /** Format: double */
-      amountPaid?: number;
-      /** Format: double */
-      amountCredited?: number | null;
-      allowanceType?: components["schemas"]["AllowanceType"];
-      /** Format: int32 */
-      quantity?: number;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-    };
-    /**
-     * Format: int32
-     * @description The duration of the subscription.
-     * @enum {integer}
-     */
-    SubscriptionPeriod: Monthly | Annual;
-    /**
-     * Format: int32
-     * @description The type of Subscription Plan.
-     * @enum {integer}
-     */
-    SubscriptionPlan: Free | Starter | Creator | Professional;
-    /** @description DTO used to return User's Token Transaction list. */
-    TokenTransactionDTO: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      date?: string;
-      type?: string | null;
-      /** Format: int32 */
-      credits?: number;
-      /** Format: double */
-      amount?: number | null;
-      creditSpendType?: components["schemas"]["CreditSpendType"];
-      description?: string | null;
-    };
-    /** @description Represents a paged list of items. */
-    TokenTransactionDTOPagedList: {
-      /**
-       * Current Page
-       * Format: int32
-       * @description The current page number.
-       */
-      currentPage: number;
-      /**
-       * Page Size
-       * Format: int32
-       * @description The number of items per page.
-       */
-      pageSize: number;
-      /**
-       * Total Items
-       * Format: int32
-       * @description The total number of items in the list.
-       */
-      totalItems: number;
-      /**
-       * Total Pages
-       * Format: int32
-       * @description The total number of pages in the list.
-       */
-      totalPages: number;
-      /**
-       * Items
-       * @description The items in the current page.
-       */
-      items: components["schemas"]["TokenTransactionDTO"][];
-    };
-    /** @description Represents the standard response format for API requests. */
-    TokenTransactionDTOPagedListApiResponse: {
-      data?: components["schemas"]["TokenTransactionDTOPagedList"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    /** @description DTO used to update Amazon Book Royalty for one Amazon Book */
-    UpdateAmazonBookRoyaltyDTO: {
-      asin?: string | null;
-      /**
-       * UnclaimedRoyalties
-       * Format: double
-       * @description The unclaimed royalties of the AmazonBookRoyalty.
-       */
-      revenue: number;
-      /**
-       * Sales
-       * Format: int32
-       * @description Number of sales of the book.
-       */
-      sales: number;
-      /**
-       * Currency
-       * @description The currency of the AmazonBookRoyalty.
-       */
-      currency?: string | null;
-    };
-    UpdateAmazonStatusDTO: {
-      /**
-       * AmazonPublishLifecycle
-       * Format: int32
-       * @description The Amazon publish lifecycle status of the story.
-       */
-      amazonPublishLifecycle?: number;
-      amazonUrl?: string | null;
-      /** Format: date-time */
-      amazonPublishDate?: string | null;
-      amazonRejectReason?: string | null;
-    };
-    /** @description Admin panel update expiry date object. */
-    UpdateDiscountCodeExpiryDateDTO: {
-      /**
-       * ExpirationDate
-       * Format: date-time
-       * @description The new expiration date of the DiscountCode.
-       */
-      expirationDate: string;
-    };
-    /** @description Admin panel update IsActive object. */
-    UpdateDiscountCodeIsActiveDTO: {
-      /**
-       * IsActive
-       * @description Whether or not the DiscountCode is active and can be used.
-       */
-      isActive: boolean;
-    };
-    /** @description DTO used to update bulk Story Privacy settings. */
-    UpdateMultipleStoriesPrivacyDTO: {
-      /** @description List of Story Privacy settings to update. */
-      storiesToUpdate?: components["schemas"]["StoryPrivacyUpdate"][] | null;
-    };
-    /** @description DTO used to update a user's phone number. */
-    UpdatePhoneNumberDTO: {
-      /**
-       * PhoneNumber
-       * @description The user's phone number.
-       */
-      phoneNumber: string;
-    };
-    /** @description DTO used to return the pre-signed URL and object key for uploading to S3. */
-    UploadToS3DTO: {
-      /** @description The pre-signed URL for uploading to S3. */
-      preSignedUrl?: string | null;
-      /** @description The file location in S3. */
-      objectKey?: string | null;
-    };
-    /** @description Represents the standard response format for API requests. */
-    UploadToS3DTOApiResponse: {
-      data?: components["schemas"]["UploadToS3DTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    UserAccount: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      name?: string | null;
-      lastName?: string | null;
-      email?: string | null;
-      phoneNumber?: string | null;
-      /** Format: date-time */
-      dateOfBirth?: string | null;
-      profileName?: string | null;
-      bio?: string | null;
-      profilePicture?: string | null;
-      kycVerified?: components["schemas"]["KYCLifeCycle"];
-      address?: string | null;
-      country?: string | null;
-      photoID?: string | null;
-      photoIDType?: string | null;
-      photoIDNumber?: string | null;
-      emailVerified?: boolean;
-      verificationId?: string | null;
-      authId?: string | null;
-      stripeCustomerId?: string | null;
-      cardBrand?: string | null;
-      cardLast4?: string | null;
-      /** Format: int32 */
-      cardExpiryMonth?: number | null;
-      /** Format: int32 */
-      cardExpiryYear?: number | null;
-      stripeConnectAccountId?: string | null;
-      voiceRecordingPath?: string | null;
-      voiceRecordingName?: string | null;
-      defaultPublic?: boolean;
-      /** Format: int32 */
-      storyCount?: number;
-      /** Format: int32 */
-      videoCount?: number;
-      subscriptions?: components["schemas"]["UserSubscription"][] | null;
-      allowance?: components["schemas"]["UserAllowance"];
-      amazonBook?: components["schemas"]["AmazonBook"][] | null;
-      webStories?: components["schemas"]["WebStory"][] | null;
-      likes?: components["schemas"]["StoryLike"][] | null;
-      bookOrders?: components["schemas"]["BookOrder"][] | null;
-      storyReports?: components["schemas"]["StoryReport"][] | null;
-      creditPurchases?: components["schemas"]["CreditPurchase"][] | null;
-      creditSpends?: components["schemas"]["CreditSpend"][] | null;
-      emailNotificationPreferences?: components["schemas"]["EmailNotificationPreferences"];
-      storyComments?: components["schemas"]["StoryComment"][] | null;
-      commentReports?: components["schemas"]["CommentReport"][] | null;
-      amazonBookRoyalties?: components["schemas"]["AmazonBookRoyalty"][] | null;
-      amazonRoyaltyTransactions?: components["schemas"]["AmazonRoyaltyTransaction"][] | null;
-      payoutAccounts?: components["schemas"]["PayoutAccount"][] | null;
-      stripePayments?: components["schemas"]["StripePayment"][] | null;
-    };
-    UserAllowance: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      /** Format: int32 */
-      storyBooks?: number;
-      /** Format: int32 */
-      videos?: number;
-      /** Format: int32 */
-      credits?: number;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-    };
-    /** @description Return model for the user's account details. */
-    UserInfoDTO: {
-      /**
-       * Id
-       * Format: uuid
-       * @description The unique identifier of the user.
-       */
-      id?: string;
-      /**
-       * Name
-       * @description The user's name.
-       */
-      name?: string | null;
-      /**
-       * LastName
-       * @description The user's Last Name.
-       */
-      lastName?: string | null;
-      /**
-       * Email
-       * @description The user's email address.
-       */
-      email?: string | null;
-      /**
-       * ProfilePicture
-       * @description The user's profile picture.
-       */
-      profilePicture?: string | null;
-      /**
-       * PhoneNumber
-       * @description The user's phone number.
-       */
-      phoneNumber?: string | null;
-      /**
-       * DateOfBirth
-       * Format: date-time
-       * @description The user's date of birth.
-       */
-      dateOfBirth?: string | null;
-      /**
-       * ProfileName
-       * @description The user's unique profile name.
-       */
-      profileName?: string | null;
-      /**
-       * Bio
-       * @description The user's bio.
-       */
-      bio?: string | null;
-      /**
-       * StoryCount
-       * Format: int32
-       * @description The number of stories the user has.
-       */
-      storyCount?: number;
-      /**
-       * VideoCount
-       * Format: int32
-       * @description The number of videos the user has.
-       */
-      videoCount?: number;
-      /**
-       * CardBrand
-       * @description The brand of the user's card.
-       */
-      cardBrand?: string | null;
-      /**
-       * CardLast4
-       * @description The last 4 digits of the user's card.
-       */
-      cardLast4?: string | null;
-      /**
-       * CardExpiryMonth
-       * Format: int32
-       * @description The expiry month of the user's card.
-       */
-      cardExpiryMonth?: number | null;
-      /**
-       * CardExpiryYear
-       * Format: int32
-       * @description The expiry year of the user's card.
-       */
-      cardExpiryYear?: number | null;
-      subscription?: components["schemas"]["UserSubscriptionDTO"];
-      emailNotificationPreferences?: components["schemas"]["EmailNotificationPreferencesDTO"];
-      /**
-       * EmailVerified
-       * @description Whether the user's email address has been verified.
-       */
-      emailVerified?: boolean;
-      /**
-       * BookOrdersCount
-       * Format: int32
-       * @description The number of book orders the user has.
-       */
-      bookOrdersCount?: number;
-      /**
-       * AmazonPublishingCount
-       * Format: int32
-       * @description The number of Amazon publishing requests the user has.
-       */
-      amazonPublishingCount?: number;
-      /**
-       * MyItemsCount
-       * Format: int32
-       * @description The number of items the user has created.
-       */
-      myItemsCount?: number;
-      /**
-       * TotalUnclaimedRoyalties
-       * Format: double
-       * @description The total unclaimed royalties the user has.
-       */
-      totalUnclaimedRoyalties?: number;
-      /**
-       * TotalProcessingRoyalties
-       * Format: double
-       * @description The total royalties currently being processed the user has.
-       */
-      totalProcessingRoyalties?: number;
-      /** @description Name of the voice recording */
-      voiceRecordingName?: string | null;
-      /** @description S3 path of the voice recording */
-      voiceRecordingPath?: string | null;
-      /** @description Whether the user has used their free audio generation */
-      usedFreeAudioGeneration?: boolean;
-      /** @description Whether stories should be public by default or not */
-      defaultPublic?: boolean;
-      kycVerified?: components["schemas"]["KYCLifeCycle"];
-      address?: string | null;
-      country?: string | null;
-      photoIDType?: string | null;
-      photoIDNumber?: string | null;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the user was created.
-       */
-      created?: string;
-    };
-    /** @description Represents the standard response format for API requests. */
-    UserInfoDTOApiResponse: {
-      data?: components["schemas"]["UserInfoDTO"];
-      succeeded?: boolean;
-      message?: string | null;
-      status?: components["schemas"]["ApiResponseStatus"];
-    };
-    UserSubscription: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      stripeSubscriptionId?: string | null;
-      plan?: components["schemas"]["SubscriptionPlan"];
-      period?: components["schemas"]["SubscriptionPeriod"];
-      isActive?: boolean;
-      /** Format: date-time */
-      startDate?: string | null;
-      /** Format: date-time */
-      endDate?: string | null;
-      /** Format: date-time */
-      nextRefreshDate?: string | null;
-      /** Format: date-time */
-      canceledDate?: string | null;
-      /** Format: uuid */
-      userId?: string;
-      user?: components["schemas"]["UserAccount"];
-    };
-    /** @description DTO used to receive User's Subscription details. */
-    UserSubscriptionDTO: {
-      subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
-      subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
-      /**
-       * Format: int32
-       * @description The number of story generations the user has.
-       */
-      storyGenerations?: number;
-      /**
-       * Format: int32
-       * @description The number of video generations the user has.
-       */
-      videoGenerations?: number;
-      /**
-       * Format: int32
-       * @description The number of credits the user has for misc. features.
-       */
-      credits?: number;
-      /**
-       * Format: date-time
-       * @description The date and time the user's subscription was created.
-       */
-      startDate?: string | null;
-      /**
-       * Format: date-time
-       * @description The date and time the user's subscription will expire.
-       */
-      endDate?: string | null;
-      /**
-       * Format: date-time
-       * @description The date and time the user's subscription will refresh.
-       */
-      nextRefreshDate?: string | null;
-    };
-    /** @description DTO used to verify a user's email address. */
-    VerifyEmailDTO: {
-      /**
-       * VerificationId
-       * @description The verification id sent to the user's email address.
-       */
-      verificationId: string;
-    };
-    VideoSegment: {
-      /** Format: uuid */
-      webStoryId?: string;
-      /** Format: int32 */
-      ind?: number;
-      textContent?: string | null;
-      characterContent?: string | null;
-      imageKey?: string | null;
-      videoKey?: string | null;
-      frameInterpolationKey?: string | null;
-      lastImageKey?: string | null;
-      imageRegenerating?: boolean;
-      videoRegenerating?: boolean;
-      maleAudioKey?: string | null;
-      maleAudioGenerating?: boolean;
-      femaleAudioKey?: string | null;
-      femaleAudioGenerating?: boolean;
-      customAudioKey?: string | null;
-      customAudioGenerating?: boolean;
-      portugueseAudioKey?: string | null;
-      portugueseAudioGenerating?: boolean;
-      imageStyle?: components["schemas"]["ImageStyles"];
-      imagePrompt?: string | null;
-      /** Format: int64 */
-      imageSeed?: number | null;
-      /** Format: double */
-      imageCFGScale?: number | null;
-      imageResolution?: components["schemas"]["ImageResolution"];
-      /** Format: int32 */
-      imageSamplingSteps?: number | null;
-      imageAltText?: string | null;
-      /** Format: int64 */
-      videoSeed?: number | null;
-      /** Format: double */
-      videoCFGScale?: number | null;
-      /** Format: int32 */
-      videoMotionBucketId?: number | null;
-      /** Format: int32 */
-      videoSamplingSteps?: number | null;
-      /** Format: int32 */
-      videoFPS?: number | null;
-      /** Format: date-time */
-      created?: string;
-      webStory?: components["schemas"]["WebStory"];
-      /** Format: uuid */
-      sceneId?: string | null;
-      scene?: components["schemas"]["Scene"];
-    };
-    WebStory: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: date-time */
-      created?: string;
-      storyDone?: boolean;
-      videosDone?: boolean;
-      imagesDone?: boolean;
-      isRendering?: boolean | null;
-      isPublic?: boolean;
-      pluginGenerated?: boolean | null;
-      deleted?: boolean;
-      /** Format: uuid */
-      claimingToken?: string;
-      invalidateRender?: boolean | null;
-      hasMaleVoice?: boolean;
-      hasFemaleVoice?: boolean;
-      hasCustomVoice?: boolean;
-      hasPortugueseVoice?: boolean;
-      maleVoiceDone?: boolean;
-      femaleVoiceDone?: boolean;
-      customVoiceDone?: boolean;
-      portugueseVoiceDone?: boolean;
-      storyPrompt?: string | null;
-      language?: string | null;
-      topLevelCategory?: string | null;
-      slug?: string | null;
-      storyTitle?: string | null;
-      summary?: string | null;
-      /** Format: int32 */
-      storyLikes?: number;
-      coverImage?: string | null;
-      coverImageContent?: string | null;
-      /** Format: float */
-      aiContributionRate?: number;
-      renderedVideoKey?: string | null;
-      originalMediaKey?: string | null;
-      storyType?: components["schemas"]["StoryType"];
-      resolution?: components["schemas"]["DisplayResolution"];
-      imageStyle?: components["schemas"]["ImageStyles"];
-      /** Format: uuid */
-      userId?: string | null;
-      user?: components["schemas"]["UserAccount"];
-      storySegments?: components["schemas"]["StorySegment"][] | null;
-      videoSegments?: components["schemas"]["VideoSegment"][] | null;
-      characters?: components["schemas"]["Characters"][] | null;
-      scenes?: components["schemas"]["Scene"][] | null;
-      likes?: components["schemas"]["StoryLike"][] | null;
-      amazonKdpMetaData?: components["schemas"]["AmazonKdpMetaData"];
-      amazonBook?: components["schemas"]["AmazonBook"];
-      bookOrders?: components["schemas"]["BookOrder"][] | null;
-      storyReports?: components["schemas"]["StoryReport"][] | null;
-      creditSpends?: components["schemas"]["CreditSpend"][] | null;
-      storyComments?: components["schemas"]["StoryComment"][] | null;
-      commentReports?: components["schemas"]["CommentReport"][] | null;
-      storyItems?: components["schemas"]["StoryItem"][] | null;
-      amazonBookRoyalties?: components["schemas"]["AmazonBookRoyalty"];
-      amazonRoyaltyTransactions?: components["schemas"]["AmazonRoyaltyTransaction"][] | null;
-      storyContestEntries?: components["schemas"]["StoryContestEntry"][] | null;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+	schemas: {
+		/** @description DTO used to add credits to a user account from admin panel */
+		AddCreditsDTO: {
+			/**
+			 * Email
+			 * @description The email address of the user.
+			 */
+			email: string;
+			/**
+			 * Amount
+			 * Format: double
+			 * @description The amount of credits to add.
+			 */
+			amount: number;
+		};
+		/** @description DTO used to add a paragraph to a WebStory. */
+		AddParagraphDTO: {
+			/**
+			 * ParagraphContent
+			 * @description The content of the paragraph to add.
+			 */
+			textContent?: string | null;
+			/**
+			 * Index
+			 * Format: int32
+			 * @description The index of the paragraph to add.
+			 */
+			index?: number;
+			/**
+			 * GenerateParagraph
+			 * @description Whether to automatically generate a new paragraph or not.
+			 */
+			generateParagraph?: boolean;
+			imageStyle?: components["schemas"]["ImageStyles"];
+		};
+		/** @description Request body for buying additional credits. */
+		AdditionalCreditsDTO: {
+			allowanceType?: components["schemas"]["AllowanceType"];
+			/**
+			 * Format: int32
+			 * @description The amount of credits to buy.
+			 */
+			quantity?: number;
+		};
+		/**
+		 * Format: int32
+		 * @description The type of allowance.
+		 * @enum {integer}
+		 */
+		AllowanceType: StoryBooks | Videos | Credits;
+		AmazonBook: {
+			coverPDFUrl?: string | null;
+			gutsPDFUrl?: string | null;
+			authorFirstName?: string | null;
+			authorLastName?: string | null;
+			amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
+			amazonUrl?: string | null;
+			/** Format: date-time */
+			amazonPublishDate?: string | null;
+			amazonRejectReason?: string | null;
+			asin?: string | null;
+			/** Format: date-time */
+			created?: string;
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+		};
+		/** @description DTO used to save metadata to DB. */
+		AmazonBookMetaDataDTO: {
+			/** @description The title of the book. */
+			title?: string | null;
+			/** @description The subtitle of the book. */
+			subtitle?: string | null;
+			/** @description The Prefix of the author of the book. */
+			prefix?: string | null;
+			/** @description The First name of the author of the book. */
+			firstName?: string | null;
+			/** @description The Middle name of the author of the book. */
+			middleName?: string | null;
+			/** @description The Last name of the author of the book. */
+			lastName?: string | null;
+			/** @description The Suffix of the author of the book. */
+			suffix?: string | null;
+			/** @description GPT generated summary of the book. */
+			summary?: string | null;
+			/** @description Categories */
+			categories?:
+				| {
+						[key: string]: unknown;
+				  }[]
+				| null;
+			/** @description Comma separated 7 keywords */
+			seoKeywords?: string | null;
+			/** @description Age group minimum. */
+			ageGroupMin?: string | null;
+			/** @description Age group maximum. */
+			ageGroupMax?: string | null;
+			amazonMarketplace?: components["schemas"]["AmazonMarketplace"];
+			amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
+		};
+		AmazonBookRoyalty: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			asin?: string | null;
+			/** Format: int32 */
+			totalSales?: number;
+			/** Format: double */
+			lifetimeRoyalties?: number;
+			/** Format: double */
+			unclaimedRoyalties?: number;
+			/** Format: double */
+			processingRoyalties?: number;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			amazonRoyaltyTransactions?:
+				| components["schemas"]["AmazonRoyaltyTransaction"][]
+				| null;
+		};
+		/** @description Represents the latest snapshot of one amazon book's royalty. */
+		AmazonBooksRevenueDTO: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: uuid */
+			webStoryId?: string;
+			storyTitle?: string | null;
+			topLevelCategory?: string | null;
+			slug?: string | null;
+			/** Format: int32 */
+			totalSales?: number;
+			/** Format: double */
+			lifetimeRoyalty?: number;
+			/** Format: double */
+			unclaimedRoyalty?: number;
+			amazonUrl?: string | null;
+		};
+		/** @description Represents a paged list of items. */
+		AmazonBooksRevenueDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["AmazonBooksRevenueDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		AmazonBooksRevenueDTOPagedListApiResponse: {
+			data?: components["schemas"]["AmazonBooksRevenueDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		AmazonKdpMetaData: {
+			/** Format: uuid */
+			id?: string;
+			title?: string | null;
+			subtitle?: string | null;
+			prefix?: string | null;
+			firstName?: string | null;
+			middleName?: string | null;
+			lastName?: string | null;
+			suffix?: string | null;
+			summary?: string | null;
+			categories?: string | null;
+			seoKeywords?: string | null;
+			ageGroupMin?: string | null;
+			ageGroupMax?: string | null;
+			amazonMarketplace?: string | null;
+			/** Format: date-time */
+			created?: string;
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		AmazonMarketplace:
+			| US
+			| CA
+			| MX
+			| BR
+			| DE
+			| FR
+			| IT
+			| ES
+			| AU
+			| IN
+			| JP
+			| NL
+			| UK;
+		/** @description Represents the standard response format for API requests. */
+		AmazonMarketplaceStringDictionaryApiResponse: {
+			data?: {
+				[key: string]: string | null;
+			} | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/**
+		 * Format: int32
+		 * @description Represents the lifecycle state of an Amazon published book.
+		 * @enum {integer}
+		 */
+		AmazonPublishLifecycle:
+			| Requested
+			| Processing
+			| Published
+			| Rejected
+			| PDFOnly;
+		/** @description Represents the amazon request payment type of a storybook. */
+		AmazonRequestPaymentTypeDTO: {
+			creditSpendType?: components["schemas"]["CreditSpendType"];
+		};
+		AmazonRoyaltyTransaction: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			asin?: string | null;
+			/** Format: double */
+			royaltyAdded?: number;
+			/** Format: double */
+			royaltyWithdrawn?: number;
+			/** Format: uuid */
+			transferId?: string | null;
+			stripePayoutId?: string | null;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			/** Format: uuid */
+			amazonBookRoyaltyId?: string;
+			amazonBookRoyalty?: components["schemas"]["AmazonBookRoyalty"];
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		ApiResponseStatus:
+			| Success
+			| Unauthorized
+			| NotFound
+			| BadRequest
+			| ServerError
+			| Forbidden
+			| PaymentRequired
+			| OkNoContent;
+		BookOrder: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			coverPDFUrl?: string | null;
+			gutsPDFUrl?: string | null;
+			authorFirstName?: string | null;
+			authorLastName?: string | null;
+			/** Format: int32 */
+			quantity?: number;
+			bookOrderLifecycle?: components["schemas"]["BookOrderLifecycle"];
+			orderReference?: string | null;
+			/** Format: double */
+			orderPrice?: number;
+			/** Format: double */
+			shippingPrice?: number;
+			/** Format: double */
+			totalPrice?: number;
+			paymentIntentId?: string | null;
+			noAuth?: boolean;
+			paid?: boolean;
+			name?: string | null;
+			address1?: string | null;
+			address2?: string | null;
+			city?: string | null;
+			postal?: string | null;
+			country?: string | null;
+			phone?: string | null;
+			email?: string | null;
+			state?: string | null;
+			shippingClassification?: components["schemas"]["ShippingClassification"];
+			shippingMethodName?: string | null;
+			trackingNumber?: string | null;
+			dispatchDateUTC?: string | null;
+			estimatedDeliveryUTC?: string | null;
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+			/** Format: uuid */
+			discountCodeId?: string | null;
+			discountCode?: components["schemas"]["DiscountCode"];
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		BookOrderLifecycle:
+			| Requested
+			| Generating
+			| ReadyToSubmit
+			| RPIReceived
+			| RPIPrinting
+			| RPIShipped
+			| Delivered
+			| Failed;
+		/** @description Represents the standard response format for API requests. */
+		BooleanApiResponse: {
+			data?: boolean;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		Characters: {
+			/** Format: uuid */
+			webStoryId?: string;
+			/** Format: int32 */
+			characterId?: number;
+			characterName?: string | null;
+			characterDescription?: string | null;
+			characterImage?: string | null;
+			/** Format: date-time */
+			created?: string;
+			webStory?: components["schemas"]["WebStory"];
+		};
+		CheckPaymentStatusDTO: {
+			/** @description The type of payment */
+			creditSpendType?: components["schemas"]["CreditSpendType"][] | null;
+		};
+		CommentReport: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			commentReportReason?: components["schemas"]["CommentReportReason"];
+			otherReason?: string | null;
+			isResolved?: boolean;
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+			/** Format: uuid */
+			commentId?: string;
+			storyComment?: components["schemas"]["StoryComment"];
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		CommentReportReason: InappropriateText | HateSpeech | Irrelevant | Other;
+		/** @description DTO used to add a new Comment to a WebStory. */
+		CommentTextDTO: {
+			/**
+			 * CommentText
+			 * @description The text content of the comment.
+			 */
+			commentText?: string;
+		};
+		ConfirmPaymentDTO: {
+			paymentIntentId?: string | null;
+			/** Format: float */
+			amount?: number;
+			allowanceType?: components["schemas"]["AllowanceType"];
+			/** Format: int32 */
+			quantity?: number;
+		};
+		/** @description Request body for confirming a subscription. */
+		ConfirmSubscriptionDTO: {
+			/** @description The payment intent id. */
+			paymentIntentId?: string | null;
+			/** @description The Subscription id. */
+			subscriptionId?: string | null;
+			subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
+			subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
+		};
+		/** @description Admin panel DiscountCode object. */
+		CreateDiscountCodeDTO: {
+			/**
+			 * Code
+			 * @description The actual code of the DiscountCode that is given to users.
+			 */
+			code: string;
+			/**
+			 * DiscountPercentage
+			 * Format: int32
+			 * @description The discount percentage of the DiscountCode as an integer.
+			 */
+			discountPercentage: number;
+			/**
+			 * IsActive
+			 * @description Whether or not the DiscountCode is active and can be used.
+			 */
+			isActive: boolean;
+			/**
+			 * ExpirationDate
+			 * Format: date-time
+			 * @description The expiration date of the DiscountCode, after which the code will not work.
+			 */
+			expirationDate: string;
+			discountCodeType: components["schemas"]["DiscountCodeType"];
+		};
+		/** @description Request body for payout account. */
+		CreatePayoutAccountDTO: {
+			individualBusinessType?: boolean;
+			firstName?: string | null;
+			lastName?: string | null;
+			companyName?: string | null;
+			phoneNumber?: string | null;
+			country?: string | null;
+		};
+		/** @description Request body for creating a subscription. */
+		CreateSubscriptionDTO: {
+			subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
+			subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
+		};
+		CreditPurchase: {
+			/** Format: uuid */
+			id?: string;
+			creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
+			/** Format: double */
+			amount?: number;
+			/** Format: int32 */
+			creditsIssued?: number;
+			/** Format: int32 */
+			creditsRemaining?: number;
+			/** Format: date-time */
+			dateIssued?: string;
+			/** Format: date-time */
+			expiryDate?: string;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+		};
+		/** @description DTO used to return User's Token balance and earliest expiry tokens. */
+		CreditPurchaseDTO: {
+			/** Format: uuid */
+			id?: string;
+			creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
+			/** Format: double */
+			amount?: number;
+			/** Format: int32 */
+			creditsIssued?: number;
+			/** Format: int32 */
+			creditsRemaining?: number;
+			/** Format: date-time */
+			dateIssued?: string;
+			/** Format: date-time */
+			expiryDate?: string;
+			/** Format: uuid */
+			userId?: string;
+		};
+		/**
+		 * Format: int32
+		 * @description The type of credit purchase. (Note: Gift Purchase will be rejected on PurchaseCredits API)
+		 * @enum {integer}
+		 */
+		CreditPurchaseType:
+			| Gift
+			| Teaser
+			| Leaflet
+			| Anthology
+			| Library
+			| Supplement;
+		CreditSpend: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			creditSpendType?: components["schemas"]["CreditSpendType"];
+			/** Format: int32 */
+			creditsSpent?: number;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+		};
+		/**
+		 * Format: int32
+		 * @description The type of credit spend
+		 * @enum {integer}
+		 */
+		CreditSpendType:
+			| StoryGeneration
+			| StorySegmentEdit
+			| AudioGeneration
+			| AudioRegeneration
+			| ImageRegeneration
+			| AmazonPublishing
+			| AmazonPublishingPDFOnly
+			| WatermarkedEBookPDF
+			| OriginalEBookPDF
+			| RegenerateSegmentWithAI
+			| AddNewPage
+			| VideoLandscape
+			| VideoPortrait
+			| VideoLandscapeSubtitle
+			| ImageScribble
+			| EnrollStoryInContest
+			| WatermarkedStoryBookPDF
+			| OriginalStoryBookPDF
+			| OneStoryBookGeneration
+			| OneVideoGeneration;
+		DiscountCode: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			code?: string | null;
+			/** Format: int32 */
+			discountPercentage?: number;
+			isActive?: boolean;
+			/** Format: date-time */
+			expirationDate?: string;
+			discountCodeType?: components["schemas"]["DiscountCodeType"];
+			bookOrders?: components["schemas"]["BookOrder"][] | null;
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		DiscountCodeType: None | BookOrder;
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		DisplayResolution: _1024x576 | _576x1024 | _1024x1024;
+		/** @description Represents the payment type for a story item. */
+		DownloadVideoDTO: {
+			creditSpendType?: components["schemas"]["CreditSpendType"];
+			storyItemSubType?: components["schemas"]["StoryItemSubType"];
+		};
+		/** @description DTO used to edit a complete story from given prompt. */
+		EditCompleteStoryDTO: {
+			/**
+			 * Prompt
+			 * @description The new prompt of the story.
+			 */
+			prompt?: string | null;
+			/**
+			 * LengthParam
+			 * @description The length parameter of the story.
+			 */
+			lengthParam?: string | null;
+			/**
+			 * ReadabilityParam
+			 * @description The readability parameter of the story.
+			 */
+			readabilityParam?: string | null;
+			imageStyle?: components["schemas"]["ImageStyles"];
+		};
+		EditStoryCommentLog: {
+			/** Format: uuid */
+			id?: string;
+			oldCommentText?: string | null;
+			newCommentText?: string | null;
+			/** Format: date-time */
+			editTime?: string;
+			/** Format: uuid */
+			commentId?: string;
+			storyComment?: components["schemas"]["StoryComment"];
+		};
+		/** @description DTO used to edit a StorySegment in a WebStory. */
+		EditStorySegmentDTO: {
+			/**
+			 * StorySegmentIndex
+			 * Format: int32
+			 * @description The index of the story segment to edit.
+			 */
+			storySegmentIndex?: number;
+			/**
+			 * StorySegmentContent
+			 * @description The new content of the story segment.
+			 */
+			storySegmentContent?: string;
+		};
+		/** @description DTO used to edit Summary in a WebStory. */
+		EditStorySummaryDTO: {
+			/**
+			 * Summary
+			 * @description The new summary of the story.
+			 */
+			summary?: string;
+		};
+		/** @description DTO used to edit a StoryTitle in a WebStory. */
+		EditStoryTitleDTO: {
+			/**
+			 * StoryTitle
+			 * @description The new title of the story.
+			 */
+			storyTitle?: string;
+		};
+		EmailContactUsVariables: {
+			name?: string | null;
+			email?: string | null;
+			message?: string | null;
+		};
+		EmailNotificationPreferences: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			amazonFailedEmail?: boolean;
+			amazonProcessingEmail?: boolean;
+			amazonPublishEmail?: boolean;
+			amazonRequestedEmail?: boolean;
+			bookOrderFailedEmail?: boolean;
+			bookOrderedEmail?: boolean;
+			bookOrderShippedEmail?: boolean;
+			lowTokensEmail?: boolean;
+			tokensPurchasedEmail?: boolean;
+			tokensSpentEmail?: boolean;
+			reportConfirmationEmail?: boolean;
+			publishedStoryDeletedEmail?: boolean;
+			storyPublishedEmail?: boolean;
+			newCommentOnStoryEmail?: boolean;
+			/** Format: date-time */
+			lastUpdated?: string | null;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+		};
+		/** @description DTO used to update a user's email notification preferences. */
+		EmailNotificationPreferencesDTO: {
+			/**
+			 * AmazonFailedEmail
+			 * @description Preference for Amazon Failed Email notifications.
+			 */
+			amazonFailedEmail: boolean;
+			/**
+			 * AmazonProcessingEmail
+			 * @description Preference for Amazon Processing Email notifications.
+			 */
+			amazonProcessingEmail: boolean;
+			/**
+			 * AmazonPublishEmail
+			 * @description Preference for Amazon Publish Email notifications.
+			 */
+			amazonPublishEmail: boolean;
+			/**
+			 * AmazonRequestedEmail
+			 * @description Preference for Amazon Requested Email notifications.
+			 */
+			amazonRequestedEmail: boolean;
+			/**
+			 * BookOrderFailedEmail
+			 * @description Preference for Book Order Failed Email notifications.
+			 */
+			bookOrderFailedEmail: boolean;
+			/**
+			 * BookOrderedEmail
+			 * @description Preference for Book Ordered Email notifications.
+			 */
+			bookOrderedEmail: boolean;
+			/**
+			 * BookOrderShippedEmail
+			 * @description Preference for Book Order Shipped Email notifications.
+			 */
+			bookOrderShippedEmail: boolean;
+			/**
+			 * LowTokensEmail
+			 * @description Preference for Low Tokens Email notifications.
+			 */
+			lowTokensEmail: boolean;
+			/**
+			 * TokensPurchasedEmail
+			 * @description Preference for Tokens Purchased Email notifications.
+			 */
+			tokensPurchasedEmail: boolean;
+			/**
+			 * TokensSpentEmail
+			 * @description Preference for Tokens Spent Email notifications.
+			 */
+			tokensSpentEmail: boolean;
+			/**
+			 * ReportConfirmationEmail
+			 * @description Preference for Report Confirmation Email notifications.
+			 */
+			reportConfirmationEmail: boolean;
+			/**
+			 * PublishedStoryDeletedEmail
+			 * @description Preference for Published Story Deleted Email notifications.
+			 */
+			publishedStoryDeletedEmail: boolean;
+			/**
+			 * StoryPublishedEmail
+			 * @description Preference for Story Published Email notifications.
+			 */
+			storyPublishedEmail: boolean;
+			/**
+			 * NewCommentOnStoryEmail
+			 * @description Preference for New Comment On Story Email notifications.
+			 */
+			newCommentOnStoryEmail: boolean;
+		};
+		/** @description DTO used to enroll WebStory into an active contest */
+		EnrollStoryInContestDTO: {
+			/** Format: uuid */
+			contestId?: string;
+		};
+		/** @description DTO used to read generate audio request for generic Male/Female Voice */
+		GenerateGenericAudioDTO: {
+			voiceType: components["schemas"]["GenericVoiceType"];
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		GenericVoiceType: Male | Female | Portuguese;
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		ImageResolution:
+			| _512x512
+			| _1024x1024
+			| _1024x576
+			| _576x1024
+			| _1152x1024
+			| _1024x1152;
+		/**
+		 * Format: int32
+		 * @description Represents the art style of the image.
+		 * @enum {integer}
+		 */
+		ImageStyles:
+			| None
+			| Auto
+			| Cartoon
+			| Sketch
+			| WaterColor
+			| SciFi
+			| Anime
+			| Horror;
+		/** @description Represents the standard response format for API requests. */
+		Int32BooleanDictionaryApiResponse: {
+			data?: {
+				[key: string]: boolean | null;
+			} | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		InternalTransactionDTO: {
+			succeeded?: boolean;
+			errorMessage?: string | null;
+			/** Format: double */
+			principalCharge?: number;
+			/** Format: double */
+			secondaryCharge?: number;
+			clientSecret?: string | null;
+			paymentIntentId?: string | null;
+			subscriptionId?: string | null;
+			nextAction?: {
+				[key: string]: unknown;
+			} | null;
+			requiresAction?: boolean;
+		};
+		/** @description Represents the standard response format for API requests. */
+		InternalTransactionDTOApiResponse: {
+			data?: components["schemas"]["InternalTransactionDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/**
+		 * Format: int32
+		 * @description KYC Lifecycle.
+		 * @enum {integer}
+		 */
+		KYCLifeCycle: PendingVerification | Rejected | Completed;
+		/** @description DTO used to Like or Unlike a WebStory. */
+		LikeStoryDTO: {
+			/**
+			 * Liked
+			 * @description Whether the story should be liked or unliked.
+			 */
+			liked: boolean;
+		};
+		LoginDTO: {
+			/**
+			 * Email
+			 * Format: email
+			 * @description The user's email address.
+			 */
+			email?: string;
+			/**
+			 * Password
+			 * Format: password
+			 * @description The user's password.
+			 */
+			password?: string;
+		};
+		ManualImageRegenerationDTO: {
+			/** Format: uuid */
+			webStoryId?: string;
+			/** Format: int32 */
+			imageIndex?: number;
+		};
+		/** @description Return model for the other user's account details. */
+		OtherUserInfoDTO: {
+			/**
+			 * Name
+			 * @description The user's name.
+			 */
+			name?: string | null;
+			/**
+			 * LastName
+			 * @description The user's Last Name.
+			 */
+			lastName?: string | null;
+			/**
+			 * ProfileName
+			 * @description The user's unique profile name.
+			 */
+			profileName?: string | null;
+			/**
+			 * ProfilePicture
+			 * @description The user's profile picture.
+			 */
+			profilePicture?: string | null;
+			/**
+			 * Bio
+			 * @description The user's bio.
+			 */
+			bio?: string | null;
+		};
+		/** @description Represents the standard response format for API requests. */
+		OtherUserInfoDTOApiResponse: {
+			data?: components["schemas"]["OtherUserInfoDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents the payment type for a story item. */
+		PaymentTypeDTO: {
+			creditSpendType?: components["schemas"]["CreditSpendType"];
+		};
+		PayoutAccount: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			isBank?: boolean;
+			stripeId?: string | null;
+			bankName?: string | null;
+			cardBrand?: string | null;
+			last4?: string | null;
+			routingNumber?: string | null;
+			/** Format: int32 */
+			expiryMonth?: number;
+			/** Format: int32 */
+			expiryYear?: number;
+			canReceivePayouts?: boolean;
+			currency?: string | null;
+			isDefault?: boolean;
+			/** Format: date-time */
+			lastSynced?: string;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+		};
+		PromptResponse: {
+			prompt?: string | null;
+		};
+		/** @description Request body for purchasing account credits. */
+		PurchaseAccountCreditDTO: {
+			creditPurchaseType?: components["schemas"]["CreditPurchaseType"];
+			creditSpendType?: components["schemas"]["CreditSpendType"];
+		};
+		/** @description DTO used to specify the image characteristics of images to be regenerated */
+		RegenerateImageDTO: {
+			imageStyle?: components["schemas"]["ImageStyles"];
+		};
+		/** @description DTO used to register a new user. */
+		RegisterUserDTO: {
+			/**
+			 * AuthId
+			 * @description The user's unique identifier from Social Sign-On.
+			 */
+			authId: string;
+			/**
+			 * Name
+			 * @description The user's name.
+			 */
+			name?: string | null;
+			/**
+			 * LastName
+			 * @description The user's Last Name.
+			 */
+			lastName?: string | null;
+			/**
+			 * Email
+			 * Format: email
+			 * @description The user's email address.
+			 */
+			email: string;
+			/**
+			 * VerificationRequired
+			 * @description Whether this user's email requires verification.
+			 */
+			verificationRequired: boolean;
+			/**
+			 * ProfilePicture
+			 * @description The user's profile picture from Social Sign-On.
+			 */
+			profilePicture?: string | null;
+		};
+		/** @description DTO used to report a Comment on a WebStory. */
+		ReportCommentDTO: {
+			commentReportReason?: components["schemas"]["CommentReportReason"];
+			/**
+			 * OtherReason
+			 * @description An optional reason for reporting the story.
+			 */
+			otherReason?: string | null;
+		};
+		/** @description DTO used to report a WebStory. */
+		ReportStoryDTO: {
+			storyReportReason?: components["schemas"]["StoryReportReason"];
+			/**
+			 * OtherReason
+			 * @description An optional reason for reporting the story.
+			 */
+			otherReason?: string | null;
+		};
+		/** @description DTO used to request a book order. */
+		RequestBookOrderDTO: {
+			authorFirstName?: string | null;
+			authorLastName?: string | null;
+			name: string;
+			address1: string;
+			address2?: string | null;
+			city: string;
+			postal: string;
+			state: string;
+			shippingClassification: components["schemas"]["ShippingClassification"];
+			/** Format: int32 */
+			quantity: number;
+			discountCode?: string | null;
+		};
+		/** @description DTO used to request a book order without an account. */
+		RequestBookOrderNoAuthDTO: {
+			/** @description Name of the person ordering the book. */
+			name: string;
+			/** @description Address line 1 of the person ordering the book. */
+			address1: string;
+			/** @description Address line 2 of the person ordering the book. */
+			address2?: string | null;
+			/** @description City of the person ordering the book. */
+			city: string;
+			/** @description Postal code of the person ordering the book. */
+			postal: string;
+			/** @description State of the person ordering the book. */
+			state: string;
+			shippingClassification: components["schemas"]["ShippingClassification"];
+			/**
+			 * Format: int32
+			 * @description Quantity of books to order.
+			 */
+			quantity: number;
+			/** @description Phone number of the person ordering the book. */
+			phoneNumber?: string | null;
+			/** @description Email address of the person ordering the book. */
+			email: string;
+			/** @description Discount code to apply to the book order. */
+			discountCode?: string | null;
+		};
+		/** @description DTO used to create a new WebStory. */
+		RequestStoryDTO: {
+			/**
+			 * Prompt
+			 * @description The text prompt for story generation.
+			 */
+			prompt?: string;
+			imageStyle?: components["schemas"]["ImageStyles"];
+			language?: components["schemas"]["StoryLanguages"];
+			storyLength?: components["schemas"]["StoryLength"];
+		};
+		/** @description Admin panel AmazonBook publish request. */
+		ReturnAdminAmazonBookDTO: {
+			/**
+			 * WebStoryId
+			 * Format: uuid
+			 * @description The unique identifier of the story that this AmazonBook is for.
+			 */
+			webStoryId?: string;
+			/**
+			 * CoverPDFUrl
+			 * @description The URL of the cover PDF for the AmazonBook.
+			 */
+			coverPDFUrl?: string | null;
+			/**
+			 * GutsPDFUrl
+			 * @description The URL of the guts PDF for the AmazonBook.
+			 */
+			gutsPDFUrl?: string | null;
+			/**
+			 * AuthorFirstName
+			 * @description The first name of the author of the story.
+			 */
+			authorFirstName?: string | null;
+			/**
+			 * AuthorLastName
+			 * @description The last name of the author of the story.
+			 */
+			authorLastName?: string | null;
+			amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
+			/**
+			 * PublicationDate
+			 * Format: date-time
+			 * @description The date the original WebStory was published on Storybird.
+			 */
+			publicationDate?: string;
+			/**
+			 * AmazonUrl
+			 * @description The URL of the AmazonBook on Amazon.
+			 */
+			amazonUrl?: string | null;
+			/**
+			 * AmazonPublishDate
+			 * Format: date-time
+			 * @description The date the AmazonBook was published on Amazon.
+			 */
+			amazonPublishDate?: string | null;
+			/**
+			 * AmazonRejectReason
+			 * @description The reason the AmazonBook was rejected by Amazon.
+			 */
+			amazonRejectReason?: string | null;
+			/**
+			 * StoryTitle
+			 * @description The title of the story.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * StorySummary
+			 * @description The summary of the story.
+			 */
+			storySummary?: string | null;
+			returnBookMetaDataDTO?: components["schemas"]["ReturnBookMetaDataDTO"];
+			/**
+			 * Language
+			 * @description The language of the AmazonBook.
+			 */
+			language?: string | null;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date the AmazonBook publish request was created.
+			 */
+			created?: string;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminAmazonBookDTOApiResponse: {
+			data?: components["schemas"]["ReturnAdminAmazonBookDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnAdminAmazonBookDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnAdminAmazonBookDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminAmazonBookDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnAdminAmazonBookDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Admin panel BookOrder object. */
+		ReturnAdminBookOrderDTO: {
+			/**
+			 * CoverPDFUrl
+			 * @description The URL of the cover PDF for the BookOrder.
+			 */
+			coverPDFUrl?: string | null;
+			/**
+			 * GutsPDFUrl
+			 * @description The URL of the guts PDF for the BookOrder.
+			 */
+			gutsPDFUrl?: string | null;
+			/**
+			 * AuthorFirstName
+			 * @description The first name of the author of the story.
+			 */
+			authorFirstName?: string | null;
+			/**
+			 * AuthorLastName
+			 * @description The last name of the author of the story.
+			 */
+			authorLastName?: string | null;
+			/**
+			 * Quantity
+			 * Format: int32
+			 * @description The number of copies ordered for the BookOrder.
+			 */
+			quantity?: number;
+			bookOrderLifecycle?: components["schemas"]["BookOrderLifecycle"];
+			/**
+			 * OrderReference
+			 * @description The reference number of the order.
+			 */
+			orderReference?: string | null;
+			/**
+			 * OrderPrice
+			 * Format: double
+			 * @description The price of the order without shipping.
+			 */
+			orderPrice?: number;
+			/**
+			 * ShippingPrice
+			 * Format: double
+			 * @description The price of shipping for the order.
+			 */
+			shippingPrice?: number;
+			/**
+			 * TotalPrice
+			 * Format: double
+			 * @description The total price of the order.
+			 */
+			totalPrice?: number;
+			/**
+			 * StoryTitle
+			 * @description The title of the story.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * CoverImage
+			 * @description The URL of the cover image for the story.
+			 */
+			coverImage?: string | null;
+			/**
+			 * Name
+			 * @description The name of the person who ordered the book.
+			 */
+			name?: string | null;
+			/**
+			 * Address1
+			 * @description The first line of the address of the person who ordered the book.
+			 */
+			address1?: string | null;
+			/**
+			 * Address2
+			 * @description The second line of the address of the person who ordered the book.
+			 */
+			address2?: string | null;
+			/**
+			 * City
+			 * @description The city of the person who ordered the book.
+			 */
+			city?: string | null;
+			/**
+			 * Postal
+			 * @description The postal code of the person who ordered the book.
+			 */
+			postal?: string | null;
+			/**
+			 * Country
+			 * @description The country of the person who ordered the book.
+			 */
+			country?: string | null;
+			/**
+			 * Phone
+			 * @description The phone number of the person who ordered the book.
+			 */
+			phone?: string | null;
+			/**
+			 * Email
+			 * @description The email address of the person who ordered the book.
+			 */
+			email?: string | null;
+			/**
+			 * State
+			 * @description The State of the person who ordered the book.
+			 */
+			state?: string | null;
+			shippingClassification?: components["schemas"]["ShippingClassification"];
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The ID of the BookOrder.
+			 */
+			id?: string;
+			/**
+			 * WebStoryId
+			 * Format: uuid
+			 * @description The ID of the WebStory that the BookOrder is for.
+			 */
+			webStoryId?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date the BookOrder was created.
+			 */
+			created?: string;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminBookOrderDTOApiResponse: {
+			data?: components["schemas"]["ReturnAdminBookOrderDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnAdminBookOrderDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnAdminBookOrderDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminBookOrderDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnAdminBookOrderDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Admin panel DiscountCode object. */
+		ReturnAdminDiscountCodeDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The ID of the DiscountCode.
+			 */
+			id?: string;
+			/**
+			 * Code
+			 * @description The actual code of the DiscountCode that is given to users.
+			 */
+			code?: string | null;
+			/**
+			 * DiscountPercentage
+			 * Format: int32
+			 * @description The discount percentage of the DiscountCode as an integer.
+			 */
+			discountPercentage?: number;
+			/**
+			 * IsActive
+			 * @description Whether or not the DiscountCode is active and can be used.
+			 */
+			isActive?: boolean;
+			/**
+			 * ExpirationDate
+			 * Format: date-time
+			 * @description The expiration date of the DiscountCode, after which the code will not work.
+			 */
+			expirationDate?: string;
+			discountCodeType?: components["schemas"]["DiscountCodeType"];
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date the DiscountCode was created.
+			 */
+			created?: string;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminDiscountCodeDTOApiResponse: {
+			data?: components["schemas"]["ReturnAdminDiscountCodeDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminDiscountCodeDTOListApiResponse: {
+			data?: components["schemas"]["ReturnAdminDiscountCodeDTO"][] | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Admin panel smaller WebStory object. */
+		ReturnAdminSmallWebStoryDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The ID of the story.
+			 */
+			id?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date the story was created.
+			 */
+			created?: string;
+			/**
+			 * StoryDone
+			 * @description Whether the story text generation is done or not.
+			 */
+			storyDone?: boolean;
+			/**
+			 * ImagesDone
+			 * @description Whether the story image generation is done or not.
+			 */
+			imagesDone?: boolean;
+			/**
+			 * IsPublic
+			 * @description Whether or not the WebStory is public.
+			 */
+			isPublic?: boolean;
+			/**
+			 * PluginGenerated
+			 * @description Whether or not the WebStory is plugin generated.
+			 */
+			pluginGenerated?: boolean;
+			/**
+			 * Slug
+			 * @description The slug of the WebStory.
+			 */
+			slug?: string | null;
+			/**
+			 * StoryTitle
+			 * @description The title of the WebStory.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * Summary
+			 * @description The summary of the WebStory.
+			 */
+			summary?: string | null;
+			/**
+			 * StoryLikes
+			 * Format: int32
+			 * @description The number of likes the WebStory has.
+			 */
+			storyLikes?: number;
+			/**
+			 * CoverImage
+			 * @description The URL of the cover image for the WebStory.
+			 */
+			coverImage?: string | null;
+		};
+		/** @description Return model for Comments. */
+		ReturnAdminStoryCommentDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The id of the comment.
+			 */
+			id?: string;
+			/**
+			 * UserId
+			 * Format: uuid
+			 * @description The id of the user who created the comment.
+			 */
+			userId?: string;
+			/**
+			 * WebStoryId
+			 * Format: uuid
+			 * @description The id of the story the comment belongs to.
+			 */
+			webStoryId?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the comment was created.
+			 */
+			created?: string;
+			/**
+			 * CommentText
+			 * @description The text content of the comment.
+			 */
+			commentText?: string | null;
+			/**
+			 * ProfileName
+			 * @description The unique profileName of the user who created the comment.
+			 */
+			profileName?: string | null;
+		};
+		/** @description Admin panel StorySegment object. */
+		ReturnAdminStorySegmentDTO: {
+			/**
+			 * TextContent
+			 * @description The text content of the StorySegment.
+			 */
+			textContent?: string | null;
+			/**
+			 * ImageKey
+			 * @description The image key of the StorySegment.
+			 */
+			imageKey?: string | null;
+			/**
+			 * VideoKey
+			 * @description The video key of the StorySegment.
+			 */
+			videoKey?: string | null;
+			/**
+			 * Index
+			 * Format: int32
+			 * @description The index of the StorySegment.
+			 */
+			index?: number;
+			/**
+			 * ImageRegenerating
+			 * @description Whether or not the image is regenerating.
+			 */
+			imageRegenerating?: boolean;
+			/**
+			 * ImagePrompt
+			 * @description The prompt of the image.
+			 */
+			imagePrompt?: string | null;
+		};
+		/** @description Admin panel User object. */
+		ReturnAdminUserDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The ID of the User.
+			 */
+			id?: string;
+			/**
+			 * Email
+			 * @description The email address of the User.
+			 */
+			email?: string | null;
+			/**
+			 * FirstName
+			 * @description The first name of the User.
+			 */
+			name?: string | null;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date the user was created.
+			 */
+			created?: string;
+		};
+		/** @description Admin panel UserInfo object. */
+		ReturnAdminUserInfoDTO: {
+			name?: string | null;
+			email?: string | null;
+			phoneNumber?: string | null;
+			webStories?:
+				| components["schemas"]["ReturnAdminSmallWebStoryDTO"][]
+				| null;
+			pdfPurchases?:
+				| components["schemas"]["ReturnUserPdfPurchasesDTO"][]
+				| null;
+			/** Format: double */
+			walletBalance?: number;
+			/** Format: date-time */
+			created?: string;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminUserInfoDTOApiResponse: {
+			data?: components["schemas"]["ReturnAdminUserInfoDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Admin panel WebStory object. */
+		ReturnAdminWebStoryDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The ID of the story.
+			 */
+			id?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date the story was created.
+			 */
+			created?: string;
+			/**
+			 * StoryDone
+			 * @description Whether the story text generation is done or not.
+			 */
+			storyDone?: boolean;
+			/**
+			 * ImagesDone
+			 * @description Whether the story image generation is done or not.
+			 */
+			imagesDone?: boolean;
+			resolution?: components["schemas"]["DisplayResolution"];
+			/**
+			 * IsPublic
+			 * @description Whether or not the WebStory is public.
+			 */
+			isPublic?: boolean;
+			/**
+			 * PluginGenerated
+			 * @description Whether or not the WebStory is plugin generated.
+			 */
+			pluginGenerated?: boolean;
+			/**
+			 * Slug
+			 * @description The slug of the WebStory.
+			 */
+			slug?: string | null;
+			/**
+			 * TopLevelCategory
+			 * @description The top level category of the story
+			 */
+			topLevelCategory?: string | null;
+			/**
+			 * StoryTitle
+			 * @description The title of the WebStory.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * Summary
+			 * @description The summary of the WebStory.
+			 */
+			summary?: string | null;
+			/**
+			 * StoryLikes
+			 * Format: int32
+			 * @description The number of likes the WebStory has.
+			 */
+			storyLikes?: number;
+			/**
+			 * CoverImage
+			 * @description The URL of the cover image for the WebStory.
+			 */
+			coverImage?: string | null;
+			user?: components["schemas"]["ReturnAdminUserDTO"];
+			/**
+			 * StoryPrompt
+			 * @description Story input prompt
+			 */
+			storyPrompt?: string | null;
+			/**
+			 * StorySegments
+			 * @description The segments of the WebStory.
+			 */
+			storySegments?:
+				| components["schemas"]["ReturnAdminStorySegmentDTO"][]
+				| null;
+			/**
+			 * StoryComments
+			 * @description The comments of the WebStory.
+			 */
+			storyComments?:
+				| components["schemas"]["ReturnAdminStoryCommentDTO"][]
+				| null;
+			amazonBook?: components["schemas"]["ReturnAdminAmazonBookDTO"];
+			/**
+			 * BookOrders
+			 * @description The BookOrders of the WebStory.
+			 */
+			bookOrders?: components["schemas"]["ReturnAdminBookOrderDTO"][] | null;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminWebStoryDTOApiResponse: {
+			data?: components["schemas"]["ReturnAdminWebStoryDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnAdminWebStoryDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnAdminWebStoryDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAdminWebStoryDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnAdminWebStoryDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return Amazon Publish status of a book. */
+		ReturnAmazonBookDTO: {
+			/**
+			 * Format: uuid
+			 * @description The ID of the web story.
+			 */
+			webStoryId?: string;
+			amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
+			/** @description The amazon link of the story book (if published). */
+			amazonUrl?: string | null;
+			/**
+			 * Format: date-time
+			 * @description The date the book was requested to be processed on Amazon.
+			 */
+			created?: string;
+		};
+		/** @description DTO returned with an anonymously created WebStory. */
+		ReturnAnonymousStoryDTO: {
+			/**
+			 * Url
+			 * @description The url category/slug of the story.
+			 */
+			url?: string | null;
+			/**
+			 * ClaimingToken
+			 * Format: uuid
+			 * @description The claim token of the story.
+			 */
+			claimingToken?: string;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnAnonymousStoryDTOApiResponse: {
+			data?: components["schemas"]["ReturnAnonymousStoryDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return Amazon KDP Metadata. */
+		ReturnBookMetaDataDTO: {
+			/** @description The title of the book. */
+			title?: string | null;
+			/** @description The subtitle of the book. */
+			subtitle?: string | null;
+			/** @description The author of the book. */
+			author?: string | null;
+			/** @description GPT generated summary of the book. */
+			summary?: string | null;
+			/** @description Categories */
+			categories?:
+				| {
+						[key: string]: unknown;
+				  }[]
+				| null;
+			/** @description Comma separated 7 keywords */
+			seoKeywords?: string | null;
+			/** @description Age group minimum. */
+			ageGroupMin?: string | null;
+			/** @description Age group maximum. */
+			ageGroupMax?: string | null;
+			amazonMarketplace?: components["schemas"]["AmazonMarketplace"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnBookMetaDataDTOApiResponse: {
+			data?: components["schemas"]["ReturnBookMetaDataDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Admin panel return CommentReport object. */
+		ReturnCommentReportDTO: {
+			comment?: components["schemas"]["ReturnAdminStoryCommentDTO"];
+			commentReportReason?: components["schemas"]["CommentReportReason"];
+			/** @description The other reason for the report, if the reason is 'Other'. */
+			otherReason?: string | null;
+			user?: components["schemas"]["ReturnAdminUserDTO"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnCommentReportDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnCommentReportDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnCommentReportDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnCommentReportDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		ReturnDiscountCodeDTO: {
+			code?: string | null;
+			/** Format: int32 */
+			discountPercentage?: number;
+			isActive?: boolean;
+			/** Format: date-time */
+			expirationDate?: string;
+			discountCodeType?: components["schemas"]["DiscountCodeType"];
+		};
+		ReturnDiscountCodeDetailsDTO: {
+			isValid?: boolean;
+			code?: string | null;
+			/** Format: int32 */
+			discountPercentage?: number;
+			discountCodeType?: components["schemas"]["DiscountCodeType"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnDiscountCodeDetailsDTOApiResponse: {
+			data?: components["schemas"]["ReturnDiscountCodeDetailsDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO returned after a book order is made without auth. */
+		ReturnNoAuthBookResult: {
+			/**
+			 * ClientSecret
+			 * @description Stripe secret key for the transaction.
+			 */
+			clientSecret?: string | null;
+			/**
+			 * OrderRef
+			 * @description The order reference number for the book order.
+			 */
+			orderRef?: string | null;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnNoAuthBookResultApiResponse: {
+			data?: components["schemas"]["ReturnNoAuthBookResult"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return a WebStory that belongs to another user. */
+		ReturnOtherUserWebStoryDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The unique identifier of the story.
+			 */
+			id?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the story was created.
+			 */
+			created?: string;
+			/**
+			 * StoryLikes
+			 * Format: int32
+			 * @description The number of likes the story has received.
+			 */
+			storyLikes?: number;
+			/**
+			 * StoryDone
+			 * @description Whether the story text generation is done or not.
+			 */
+			storyDone?: boolean;
+			/**
+			 * ImagesDone
+			 * @description Whether the story image generation is done or not.
+			 */
+			imagesDone?: boolean;
+			resolution?: components["schemas"]["DisplayResolution"];
+			/**
+			 * StoryTitle
+			 * @description The title of the story.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * Summary
+			 * @description The summary of the story.
+			 */
+			summary?: string | null;
+			/**
+			 * Slug
+			 * @description The url slug of the story.
+			 */
+			slug?: string | null;
+			/**
+			 * TopLevelCategory
+			 * @description The top level category of the story
+			 */
+			topLevelCategory?: string | null;
+			user?: components["schemas"]["ReturnTinyUserDTO"];
+			/**
+			 * CoverImage
+			 * @description The cover image of the story.
+			 */
+			coverImage?: string | null;
+			storyType?: components["schemas"]["StoryType"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnOtherUserWebStoryDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnOtherUserWebStoryDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnOtherUserWebStoryDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnOtherUserWebStoryDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return a user's book order. */
+		ReturnOwnBookOrderDTO: {
+			coverPDFUrl?: string | null;
+			gutsPDFUrl?: string | null;
+			authorFirstName?: string | null;
+			authorLastName?: string | null;
+			/** Format: int32 */
+			quantity?: number;
+			bookOrderLifecycle?: components["schemas"]["BookOrderLifecycle"];
+			orderReference?: string | null;
+			/** Format: double */
+			orderPrice?: number;
+			/** Format: double */
+			shippingPrice?: number;
+			/** Format: double */
+			totalPrice?: number;
+			storyTitle?: string | null;
+			coverImage?: string | null;
+			discountCode?: components["schemas"]["ReturnDiscountCodeDTO"];
+			name?: string | null;
+			address1?: string | null;
+			address2?: string | null;
+			city?: string | null;
+			postal?: string | null;
+			country?: string | null;
+			phone?: string | null;
+			email?: string | null;
+			state?: string | null;
+			shippingClassification?: components["schemas"]["ShippingClassification"];
+			/** Format: uuid */
+			id?: string;
+			/** Format: uuid */
+			webStoryId?: string;
+			/** Format: date-time */
+			created?: string;
+		};
+		/** @description Represents a paged list of items. */
+		ReturnOwnBookOrderDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnOwnBookOrderDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnOwnBookOrderDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnOwnBookOrderDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return a WebStory that belongs to the user. */
+		ReturnOwnWebStoryDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The unique identifier of the story.
+			 */
+			id?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the story was created.
+			 */
+			created?: string;
+			/**
+			 * StoryLikes
+			 * Format: int32
+			 * @description The number of likes the story has received.
+			 */
+			storyLikes?: number;
+			/**
+			 * StoryDone
+			 * @description Whether the story text generation is done or not.
+			 */
+			storyDone?: boolean;
+			/**
+			 * ImagesDone
+			 * @description Whether the story image generation is done or not.
+			 */
+			imagesDone?: boolean;
+			resolution?: components["schemas"]["DisplayResolution"];
+			/**
+			 * StoryTitle
+			 * @description The title of the story.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * Summary
+			 * @description The summary of the story.
+			 */
+			summary?: string | null;
+			/**
+			 * Slug
+			 * @description The url slug of the story.
+			 */
+			slug?: string | null;
+			/**
+			 * TopLevelCategory
+			 * @description The top level category of the story
+			 */
+			topLevelCategory?: string | null;
+			/**
+			 * IsPublic
+			 * @description Whether the story is public or not.
+			 */
+			isPublic?: boolean;
+			/**
+			 * Scenes
+			 * @description The scenes of the story.
+			 */
+			scenes?: components["schemas"]["Scene"][] | null;
+			/**
+			 * StorySegments
+			 * @description A list of generated story segments, each representing a page.
+			 */
+			storySegments?: components["schemas"]["ReturnStorySegmentDTO"][] | null;
+			amazonBook?: components["schemas"]["ReturnAmazonBookDTO"];
+			user?: components["schemas"]["ReturnTinyUserDTO"];
+			/**
+			 * CoverImage
+			 * @description The cover image of the story.
+			 */
+			coverImage?: string | null;
+			/**
+			 * HasMaleVoice
+			 * @description Whether the story has a male voice audio option generated/generating.
+			 */
+			hasMaleVoice?: boolean;
+			/**
+			 * HasFemaleVoice
+			 * @description Whether the story has a female voice audio option generated/generating.
+			 */
+			hasFemaleVoice?: boolean;
+			/**
+			 * HasCustomVoice
+			 * @description Whether the story has a custom voice audio option generated/generating.
+			 */
+			hasCustomVoice?: boolean;
+			/**
+			 * HasPortugueseVoice
+			 * @description Whether the story has a portuguese voice audio option generated/generating.
+			 */
+			hasPortugueseVoice?: boolean;
+			/**
+			 * MaleVoiceDone
+			 * @description Whether the male voice is done generating
+			 */
+			maleVoiceDone?: boolean;
+			/**
+			 * FemaleVoiceDone
+			 * @description Whether the female voice is done generating
+			 */
+			femaleVoiceDone?: boolean;
+			/**
+			 * CustomVoiceDone
+			 * @description Whether the custom voice is done generating
+			 */
+			customVoiceDone?: boolean;
+			/**
+			 * PortugueseVoiceDone
+			 * @description Whether the portuguese voice is done generating.
+			 */
+			portugueseVoiceDone?: boolean;
+		};
+		/** @description Represents a paged list of items. */
+		ReturnOwnWebStoryDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnOwnWebStoryDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnOwnWebStoryDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnOwnWebStoryDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return Scenes information of a WebStory */
+		ReturnSceneDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The unique identifier of the scene.
+			 */
+			id?: string;
+			/**
+			 * Index
+			 * Format: int32
+			 * @description The index of the scene.
+			 */
+			index?: number;
+			/**
+			 * SceneDescription
+			 * @description The description of the scene.
+			 */
+			sceneDescription?: string | null;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the scene was created.
+			 */
+			created?: string;
+			/**
+			 * StorySegments
+			 * @description The story segments in this scene.
+			 */
+			storySegments?: components["schemas"]["ReturnStorySegmentDTO"][] | null;
+			/**
+			 * VideoSegments
+			 * @description The video segments in this scene.
+			 */
+			videoSegments?: components["schemas"]["ReturnVideoSegmentDTO"][] | null;
+		};
+		/** @description Return model for Comments. */
+		ReturnStoryCommentDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The id of the comment.
+			 */
+			id?: string;
+			/**
+			 * UserId
+			 * Format: uuid
+			 * @description The id of the user who created the comment.
+			 */
+			userId?: string;
+			/**
+			 * WebStoryId
+			 * Format: uuid
+			 * @description The id of the story the comment belongs to.
+			 */
+			webStoryId?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the comment was created.
+			 */
+			created?: string;
+			/**
+			 * CommentText
+			 * @description The text content of the comment.
+			 */
+			commentText?: string | null;
+			/**
+			 * ProfileName
+			 * @description The unique profileName of the user who created the comment.
+			 */
+			profileName?: string | null;
+			/**
+			 * ProfilePicture
+			 * @description The profile picture of the user who created the comment.
+			 */
+			profilePicture?: string | null;
+		};
+		/** @description Represents a paged list of items. */
+		ReturnStoryCommentDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnStoryCommentDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnStoryCommentDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnStoryCommentDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return user interaction data with a given WebStory. */
+		ReturnStoryInteractionDTO: {
+			/**
+			 * Liked
+			 * @description Whether the user has liked the story or not.
+			 */
+			liked?: boolean;
+			/**
+			 * Reported
+			 * @description Whether the user has reported the story or not.
+			 */
+			reported?: boolean;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnStoryInteractionDTOApiResponse: {
+			data?: components["schemas"]["ReturnStoryInteractionDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return story items */
+		ReturnStoryItemDTO: {
+			/**
+			 * Format: int32
+			 * @description CreditSpendType of the story item
+			 */
+			creditSpendType?: number;
+			/**
+			 * Format: date-time
+			 * @description Story item creation date and time
+			 */
+			created?: string;
+			/** @description The Title of the story the item belongs to. */
+			storyTitle?: string | null;
+			/** @description The TopLevelCategory of the story the item belongs to. */
+			topLevelCategory?: string | null;
+			/** @description The Slug of the story the item belongs to. */
+			slug?: string | null;
+			/** @description The CoverImage of the story the item belongs to. */
+			coverImage?: string | null;
+			/**
+			 * Format: uuid
+			 * @description The WebStory ID of the story the item belongs to.
+			 */
+			webStoryId?: string;
+			/** @description The Url of the story item if it's a PDF. */
+			pdfUrl?: string | null;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnStoryItemDTOApiResponse: {
+			data?: components["schemas"]["ReturnStoryItemDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnStoryItemDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnStoryItemDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnStoryItemDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnStoryItemDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Admin panel return StoryReport object. */
+		ReturnStoryReportDTO: {
+			storyReportReason?: components["schemas"]["StoryReportReason"];
+			/** @description The other reason for the report, if the reason is 'Other'. */
+			otherReason?: string | null;
+			user?: components["schemas"]["ReturnAdminUserDTO"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnStoryReportDTOApiResponse: {
+			data?: components["schemas"]["ReturnStoryReportDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnStoryReportDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnStoryReportDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnStoryReportDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnStoryReportDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Return model for StorySegments. */
+		ReturnStorySegmentDTO: {
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the segment was created.
+			 */
+			created?: string;
+			/**
+			 * ImageRegenerating
+			 * @description Whether the image is currently being regenerated.
+			 */
+			imageRegenerating?: boolean;
+			/**
+			 * Index
+			 * Format: int32
+			 * @description The index of the segment in the story.
+			 */
+			index?: number;
+			/**
+			 * SceneId
+			 * Format: uuid
+			 * @description The Id of the associated Scene
+			 */
+			sceneId?: string | null;
+			/**
+			 * TextContent
+			 * @description The text content of the segment.
+			 */
+			textContent?: string | null;
+			/**
+			 * ImageKey
+			 * @description The key of the image in the image storage.
+			 */
+			imageKey?: string | null;
+			/**
+			 * VideoKey
+			 * @description The key of the video in the video storage.
+			 */
+			videoKey?: string | null;
+			/**
+			 * FrameInterpolationKey
+			 * @description The key of the frame interpolation in the video storage.
+			 */
+			frameInterpolationKey?: string | null;
+			/**
+			 * LastImageKey
+			 * @description The key of the last image in the image storage.
+			 */
+			lastImageKey?: string | null;
+			imageStyle?: components["schemas"]["ImageStyles"];
+			/**
+			 * ImagePrompt
+			 * @description The prompt of the image.
+			 */
+			imagePrompt?: string | null;
+			/**
+			 * ImageSeed
+			 * Format: int64
+			 * @description The seed of the image.
+			 */
+			imageSeed?: number | null;
+			/**
+			 * ImageCFGScale
+			 * Format: double
+			 * @description The scale of the image.
+			 */
+			imageCFGScale?: number | null;
+			imageResolution?: components["schemas"]["ImageResolution"];
+			/**
+			 * ImageSamplingSteps
+			 * Format: int32
+			 * @description The sampling steps of the image.
+			 */
+			imageSamplingSteps?: number | null;
+			/**
+			 * ImageAltText
+			 * @description The alt text of the image.
+			 */
+			imageAltText?: string | null;
+			/**
+			 * MaleAudioKey
+			 * @description The key of the audio for Male Voice.
+			 */
+			maleAudioKey?: string | null;
+			/**
+			 * MaleAudioGenerating
+			 * @description Whether the story has a male voice clip that is generating.
+			 */
+			maleAudioGenerating?: boolean;
+			/**
+			 * FemaleAudioKey
+			 * @description The key of the audio for Female Voice.
+			 */
+			femaleAudioKey?: string | null;
+			/**
+			 * FemaleAudioGenerating
+			 * @description Whether the story has a female voice clip that is generating.
+			 */
+			femaleAudioGenerating?: boolean;
+			/**
+			 * CustomAudioKey
+			 * @description The key of the audio for Custom Voice.
+			 */
+			customAudioKey?: string | null;
+			/**
+			 * CustomAudioGenerating
+			 * @description Whether the story has a custom voice clip that is generating.
+			 */
+			customAudioGenerating?: boolean;
+			/**
+			 * PortugueseAudioKey
+			 * @description The key of the audio for Portuguese Voice.
+			 */
+			portugueseAudioKey?: string | null;
+			/**
+			 * PortugueseAudioGenerating
+			 * @description Whether the story has a portuguese voice clip that is generating.
+			 */
+			portugueseAudioGenerating?: boolean;
+		};
+		/** @description Smaller return model for a user. */
+		ReturnTinyUserDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The unique identifier of the user.
+			 */
+			id?: string;
+			/**
+			 * Name
+			 * @description The user's name.
+			 */
+			name?: string | null;
+			/**
+			 * LastName
+			 * @description The user's Last Name.
+			 */
+			lastName?: string | null;
+			/**
+			 * ProfileName
+			 * @description The user's unique profile name.
+			 */
+			profileName?: string | null;
+			/**
+			 * ProfilePicture
+			 * @description The user's profile picture.
+			 */
+			profilePicture?: string | null;
+			/**
+			 * StoryCount
+			 * Format: int32
+			 * @description The number of stories the user has.
+			 */
+			storyCount?: number;
+			/**
+			 * VideoCount
+			 * Format: int32
+			 * @description The number of videos the user has.
+			 */
+			videoCount?: number;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the user was created.
+			 */
+			created?: string;
+		};
+		/** @description DTO used to return Amazon Publish Status data to user. */
+		ReturnUserAmazonBookDTO: {
+			/**
+			 * Format: uuid
+			 * @description The ID of the web story.
+			 */
+			webStoryId?: string;
+			/** @description The top level category of the story. */
+			topLevelCategory?: string | null;
+			/** @description The slug of the web story. */
+			slug?: string | null;
+			/** @description The title of the book. */
+			title?: string | null;
+			/** @description The subtitle of the book. */
+			subtitle?: string | null;
+			/** @description The cover image of the book. */
+			coverImage?: string | null;
+			/**
+			 * Format: date-time
+			 * @description The date the book was created.
+			 */
+			created?: string;
+			amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
+			/** @description The First name of the author of the book. */
+			authorFirstName?: string | null;
+			/** @description The Last name of the author of the book. */
+			authorLastName?: string | null;
+			/** @description The Amazon marketplace Enum. */
+			amazonMarketplace?: string | null;
+			/** @description The URL of the book on Amazon. */
+			amazonURL?: string | null;
+			/**
+			 * Format: date-time
+			 * @description The date the book was published on Amazon.
+			 */
+			amazonPublishDate?: string | null;
+			/** @description The Amazon PDF for the cover of the book. */
+			coverPDFUrl?: string | null;
+			/** @description The Amazon PDF for the book. */
+			gutsPDFUrl?: string | null;
+			/** @description GPT generated summary of the book. */
+			summary?: string | null;
+			/** @description Categories */
+			categories?:
+				| {
+						[key: string]: unknown;
+				  }[]
+				| null;
+			/** @description Comma separated 7 keywords */
+			seoKeywords?: string | null;
+			/** @description Age group minimum. */
+			ageGroupMin?: string | null;
+			/** @description Age group maximum. */
+			ageGroupMax?: string | null;
+			/** Format: double */
+			lifetimeRoyalties?: number;
+			/** Format: double */
+			unclaimedRoyalties?: number;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnUserAmazonBookDTOApiResponse: {
+			data?: components["schemas"]["ReturnUserAmazonBookDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnUserAmazonBookDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnUserAmazonBookDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnUserAmazonBookDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnUserAmazonBookDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Admin panel UserPdfPurchases object. */
+		ReturnUserPdfPurchasesDTO: {
+			/**
+			 * WebStoryId
+			 * Format: uuid
+			 * @description The WebStoryId of the story of PDF purchase.
+			 */
+			webStoryId?: string;
+			/**
+			 * StoryTitle
+			 * @description The title of the story of PDF purchase.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * Slug
+			 * @description The Slug of the story of PDF purchase.
+			 */
+			slug?: string | null;
+			/**
+			 * TopLevelCategory
+			 * @description The TopLevelCategory of the story of PDF purchase.
+			 */
+			topLevelCategory?: string | null;
+			creditSpendType?: components["schemas"]["CreditSpendType"];
+		};
+		/** @description DTO used to return User's story items */
+		ReturnUserStoryItemsDTO: {
+			/**
+			 * Format: int32
+			 * @description CreditSpendType of the story item
+			 */
+			creditSpendType?: number;
+			/**
+			 * Format: date-time
+			 * @description Story item creation date and time
+			 */
+			created?: string;
+			/** @description The Title of the story the item belongs to. */
+			storyTitle?: string | null;
+			/** @description The TopLevelCategory of the story the item belongs to. */
+			topLevelCategory?: string | null;
+			/** @description The Slug of the story the item belongs to. */
+			slug?: string | null;
+			/** @description The CoverImage of the story the item belongs to. */
+			coverImage?: string | null;
+			/**
+			 * Format: uuid
+			 * @description The WebStory ID of the story the item belongs to.
+			 */
+			webStoryId?: string;
+			/** @description The Url of the story item. */
+			itemUrl?: string | null;
+			storyItemSubType?: components["schemas"]["StoryItemSubType"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnUserStoryItemsDTOApiResponse: {
+			data?: components["schemas"]["ReturnUserStoryItemsDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnUserStoryItemsDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnUserStoryItemsDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnUserStoryItemsDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnUserStoryItemsDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return User's Token balance and earliest expiry tokens. */
+		ReturnUserTokenInfoDTO: {
+			/** Format: int32 */
+			totalTokens?: number;
+			earliestExpiryPurchase?: components["schemas"]["CreditPurchaseDTO"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnUserTokenInfoDTOApiResponse: {
+			data?: components["schemas"]["ReturnUserTokenInfoDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Return model for VideoSegments. */
+		ReturnVideoSegmentDTO: {
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the segment was created.
+			 */
+			created?: string;
+			/**
+			 * Index
+			 * Format: int32
+			 * @description The index of the segment in the story.
+			 */
+			index?: number;
+			/**
+			 * SceneId
+			 * Format: uuid
+			 * @description The id of the associated scene.
+			 */
+			sceneId?: string | null;
+			/**
+			 * TextContent
+			 * @description The text content of the segment.
+			 */
+			textContent?: string | null;
+			/**
+			 * ImageKey
+			 * @description The key of the image in the image storage.
+			 */
+			imageKey?: string | null;
+			/**
+			 * VideoKey
+			 * @description The key of the video in the video storage.
+			 */
+			videoKey?: string | null;
+			/**
+			 * FrameInterpolationKey
+			 * @description The key of the frame interpolation in the video storage.
+			 */
+			frameInterpolationKey?: string | null;
+			imageStyle?: components["schemas"]["ImageStyles"];
+			/**
+			 * ImageRegenerating
+			 * @description The status of the image regeneration.
+			 */
+			imageRegenerating?: boolean;
+			/**
+			 * VideoRegenerating
+			 * @description The status of the video regeneration.
+			 */
+			videoRegenerating?: boolean;
+			/**
+			 * ImagePrompt
+			 * @description The prompt of the image.
+			 */
+			imagePrompt?: string | null;
+			/**
+			 * ImageSeed
+			 * Format: int64
+			 * @description The seed of the image.
+			 */
+			imageSeed?: number | null;
+			/**
+			 * ImageCFGScale
+			 * Format: double
+			 * @description The cfg scale of the image.
+			 */
+			imageCFGScale?: number | null;
+			imageResolution?: components["schemas"]["ImageResolution"];
+			/**
+			 * ImageSamplingSteps
+			 * Format: int32
+			 * @description The sampling steps of the image.
+			 */
+			imageSamplingSteps?: number | null;
+			/**
+			 * ImageAltText
+			 * @description The alt text of the image.
+			 */
+			imageAltText?: string | null;
+			/**
+			 * VideoFPS
+			 * Format: int32
+			 * @description The fps of the video.
+			 */
+			videoFPS?: number | null;
+			/**
+			 * MaleAudioKey
+			 * @description The key of the audio for Male Voice.
+			 */
+			maleAudioKey?: string | null;
+			/**
+			 * FemaleAudioKey
+			 * @description The key of the audio for Female Voice.
+			 */
+			femaleAudioKey?: string | null;
+			/**
+			 * CustomAudioKey
+			 * @description The key of the audio for Custom Voice.
+			 */
+			customAudioKey?: string | null;
+			/**
+			 * PortugueseAudioKey
+			 * @description The key of the audio for Portuguese Voice.
+			 */
+			portugueseAudioKey?: string | null;
+		};
+		/** @description DTO used to return a public Video. */
+		ReturnVideoStoryDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The unique identifier of the story.
+			 */
+			id?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the story was created.
+			 */
+			created?: string;
+			/**
+			 * StoryLikes
+			 * Format: int32
+			 * @description The number of likes the story has received.
+			 */
+			storyLikes?: number;
+			/**
+			 * StoryTitle
+			 * @description The title of the story.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * Summary
+			 * @description The summary of the story.
+			 */
+			summary?: string | null;
+			/**
+			 * Slug
+			 * @description The url slug of the story.
+			 */
+			slug?: string | null;
+			/**
+			 * TopLevelCategory
+			 * @description The top level category of the story
+			 */
+			topLevelCategory?: string | null;
+			/**
+			 * IsPublic
+			 * @description Whether the story is public or not.
+			 */
+			isPublic?: boolean;
+			user?: components["schemas"]["ReturnTinyUserDTO"];
+			/**
+			 * CoverImage
+			 * @description The cover image of the story.
+			 */
+			coverImage?: string | null;
+			/**
+			 * Scenes
+			 * @description The scene informations in the story.
+			 */
+			scenes?: components["schemas"]["ReturnSceneDTO"][] | null;
+			storyType?: components["schemas"]["StoryType"];
+			/**
+			 * StoryDone
+			 * @description Whether the story text generation is done or not.
+			 */
+			storyDone?: boolean;
+			/**
+			 * VideosDone
+			 * @description Whether the story video generation is done or not.
+			 */
+			videosDone?: boolean;
+			/**
+			 * ImagesDone
+			 * @description Whether the story image generation is done or not.
+			 */
+			imagesDone?: boolean;
+			resolution?: components["schemas"]["DisplayResolution"];
+			/**
+			 * OriginalMediaKey
+			 * @description Path to the video/audio uploaded by the user as input.
+			 */
+			originalMediaKey?: string | null;
+			/**
+			 * RenderedVideoKey
+			 * @description The final rendered video key.
+			 */
+			renderedVideoKey?: string | null;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnVideoStoryDTOApiResponse: {
+			data?: components["schemas"]["ReturnVideoStoryDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnVideoStoryDTOListApiResponse: {
+			data?: components["schemas"]["ReturnVideoStoryDTO"][] | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnVideoStoryDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnVideoStoryDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnVideoStoryDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnVideoStoryDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to return a public WebStory. */
+		ReturnWebStoryDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The unique identifier of the story.
+			 */
+			id?: string;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the story was created.
+			 */
+			created?: string;
+			/**
+			 * StoryLikes
+			 * Format: int32
+			 * @description The number of likes the story has received.
+			 */
+			storyLikes?: number;
+			/**
+			 * StoryTitle
+			 * @description The title of the story.
+			 */
+			storyTitle?: string | null;
+			/**
+			 * Summary
+			 * @description The summary of the story.
+			 */
+			summary?: string | null;
+			/**
+			 * Slug
+			 * @description The url slug of the story.
+			 */
+			slug?: string | null;
+			/**
+			 * TopLevelCategory
+			 * @description The top level category of the story
+			 */
+			topLevelCategory?: string | null;
+			/**
+			 * IsPublic
+			 * @description Whether the story is public or not.
+			 */
+			isPublic?: boolean;
+			user?: components["schemas"]["ReturnTinyUserDTO"];
+			/**
+			 * Scenes
+			 * @description The scenes of the story.
+			 */
+			scenes?: components["schemas"]["ReturnSceneDTO"][] | null;
+			amazonBook?: components["schemas"]["ReturnAmazonBookDTO"];
+			/**
+			 * CoverImage
+			 * @description The cover image of the story.
+			 */
+			coverImage?: string | null;
+			storyType?: components["schemas"]["StoryType"];
+			/**
+			 * StoryDone
+			 * @description Whether the story text generation is done or not.
+			 */
+			storyDone?: boolean;
+			/**
+			 * ImagesDone
+			 * @description Whether the story image generation is done or not.
+			 */
+			imagesDone?: boolean;
+			resolution?: components["schemas"]["DisplayResolution"];
+			/**
+			 * AIContributionRate
+			 * Format: float
+			 * @description The similarity of the story to the original AI generated story.
+			 */
+			aiContributionRate?: number;
+			/**
+			 * HasMaleVoice
+			 * @description Whether the story has a male voice audio option generated/generating.
+			 */
+			hasMaleVoice?: boolean;
+			/**
+			 * HasFemaleVoice
+			 * @description Whether the story has a female voice audio option generated/generating.
+			 */
+			hasFemaleVoice?: boolean;
+			/**
+			 * HasCustomVoice
+			 * @description Whether the story has a custom voice audio option generated/generating.
+			 */
+			hasCustomVoice?: boolean;
+			/**
+			 * HasPortugueseVoice
+			 * @description Whether the story has a portuguese voice audio option generated/generating.
+			 */
+			hasPortugueseVoice?: boolean;
+			/**
+			 * MaleVoiceDone
+			 * @description Whether the male voice is done generating
+			 */
+			maleVoiceDone?: boolean;
+			/**
+			 * FemaleVoiceDone
+			 * @description Whether the female voice is done generating
+			 */
+			femaleVoiceDone?: boolean;
+			/**
+			 * CustomVoiceDone
+			 * @description Whether the custom voice is done generating
+			 */
+			customVoiceDone?: boolean;
+			/**
+			 * PortugueseVoiceDone
+			 * @description Whether the portuguese voice is done generating.
+			 */
+			portugueseVoiceDone?: boolean;
+			/**
+			 * StoryContests
+			 * @description A list of contests the story is enrolled in.
+			 */
+			storyContests?: components["schemas"]["StoryContestsDTO"][] | null;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnWebStoryDTOApiResponse: {
+			data?: components["schemas"]["ReturnWebStoryDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnWebStoryDTOListApiResponse: {
+			data?: components["schemas"]["ReturnWebStoryDTO"][] | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents a paged list of items. */
+		ReturnWebStoryDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["ReturnWebStoryDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		ReturnWebStoryDTOPagedListApiResponse: {
+			data?: components["schemas"]["ReturnWebStoryDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		Scene: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			/** Format: uuid */
+			webStoryId?: string;
+			/** Format: int32 */
+			index?: number;
+			sceneDescription?: string | null;
+			webStory?: components["schemas"]["WebStory"];
+			storySegments?: components["schemas"]["StorySegment"][] | null;
+			videoSegments?: components["schemas"]["VideoSegment"][] | null;
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		ShippingClassification: priority | express | standard | economy;
+		ShippingPrices: {
+			/** Format: double */
+			economyPrice?: number;
+			/** Format: double */
+			standardPrice?: number;
+			/** Format: double */
+			expressPrice?: number;
+			/** Format: double */
+			priorityPrice?: number;
+		};
+		/** @description Represents the standard response format for API requests. */
+		ShippingPricesApiResponse: {
+			data?: components["schemas"]["ShippingPrices"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/**
+		 * Format: int32
+		 * @description The type of sorting to use when retrieving stories.
+		 * @enum {integer}
+		 */
+		SortType: Latest | TotalLikes;
+		StoryComment: {
+			/** Format: uuid */
+			id?: string;
+			commentText?: string | null;
+			/** Format: date-time */
+			created?: string;
+			isDeleted?: boolean;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			editStoryCommentLogs?:
+				| components["schemas"]["EditStoryCommentLog"][]
+				| null;
+			commentReports?: components["schemas"]["CommentReport"][] | null;
+		};
+		StoryContest: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			name?: string | null;
+			description?: string | null;
+			contestImage?: string | null;
+			isActive?: boolean;
+			/** Format: date-time */
+			startDate?: string;
+			/** Format: date-time */
+			endDate?: string;
+			entries?: components["schemas"]["StoryContestEntry"][] | null;
+		};
+		StoryContestEntry: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			/** Format: uuid */
+			storyContestId?: string;
+			storyContest?: components["schemas"]["StoryContest"];
+			/** Format: int32 */
+			finalVotes?: number | null;
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			isWinner?: boolean | null;
+		};
+		/** @description Represents one story contest. */
+		StoryContestsDTO: {
+			/**
+			 * Format: uuid
+			 * @description The ID of the contest.
+			 */
+			id?: string;
+			/** @description The name of the contest. */
+			name?: string | null;
+			/** @description The description of the contest. */
+			description?: string | null;
+			/** @description The image of the contest. */
+			contestImage?: string | null;
+			/** @description The status of the contest. */
+			isActive?: boolean;
+			/**
+			 * Format: date-time
+			 * @description The start date of the contest.
+			 */
+			startDate?: string;
+			/**
+			 * Format: date-time
+			 * @description The end date of the contest.
+			 */
+			endDate?: string;
+			/**
+			 * Format: int32
+			 * @description The number of stories enrolled
+			 */
+			numberOfStories?: number;
+			/**
+			 * Format: int32
+			 * @description The number of votes
+			 */
+			numberOfVotes?: number;
+		};
+		/** @description Represents the standard response format for API requests. */
+		StoryContestsDTOListApiResponse: {
+			data?: components["schemas"]["StoryContestsDTO"][] | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		StoryItem: {
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			itemKey?: string | null;
+			storyItemType?: components["schemas"]["StoryItemType"];
+			/** Format: int32 */
+			downloadsCount?: number;
+			/** Format: date-time */
+			created?: string;
+			storyItemSubType?: components["schemas"]["StoryItemSubType"];
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		StoryItemSubType:
+			| Default
+			| Male
+			| Female
+			| Portuguese
+			| Custom
+			| StoryBook
+			| EBook;
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		StoryItemType:
+			| WatermarkedPDF
+			| OriginalPDF
+			| VideoLandscape
+			| VideoPortrait
+			| VideoLandscapeSubtitle;
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		StoryLanguages:
+			| English
+			| Spanish
+			| French
+			| German
+			| Italian
+			| Portuguese
+			| Russian
+			| Japanese
+			| Chinese
+			| Korean
+			| Arabic
+			| Hindi
+			| Urdu
+			| Persian
+			| Turkish
+			| Dutch
+			| Polish
+			| Swedish
+			| Danish
+			| Greek
+			| Malay
+			| Thai
+			| Bulgarian
+			| Croatian
+			| Serbian
+			| Ukrainian
+			| Hebrew
+			| Yiddish;
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		StoryLength: Short | Medium | Long;
+		StoryLike: {
+			/** Format: uuid */
+			userId?: string;
+			/** Format: uuid */
+			storyId?: string;
+			userAuthId?: string | null;
+			user?: components["schemas"]["UserAccount"];
+			webStory?: components["schemas"]["WebStory"];
+			/** Format: date-time */
+			created?: string;
+			isEnabled?: boolean | null;
+		};
+		/** @description Story Privacy setting. */
+		StoryPrivacyUpdate: {
+			/** @description Story ID. */
+			storyId?: string | null;
+			/** @description Privacy Setting */
+			isPublic?: boolean;
+		};
+		StoryReport: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			storyReportReason?: components["schemas"]["StoryReportReason"];
+			otherReason?: string | null;
+			isResolved?: boolean;
+			/** Format: uuid */
+			webStoryId?: string | null;
+			webStory?: components["schemas"]["WebStory"];
+			/** Format: uuid */
+			userId?: string | null;
+			user?: components["schemas"]["UserAccount"];
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		StoryReportReason:
+			| InappropriateText
+			| NotLoading
+			| HateSpeech
+			| Other
+			| InappropriateImages;
+		StorySegment: {
+			textContent?: string | null;
+			characterContent?: string | null;
+			imageKey?: string | null;
+			videoKey?: string | null;
+			frameInterpolationKey?: string | null;
+			lastImageKey?: string | null;
+			/** Format: int32 */
+			ind?: number;
+			imageRegenerating?: boolean;
+			maleAudioKey?: string | null;
+			maleAudioGenerating?: boolean;
+			femaleAudioKey?: string | null;
+			femaleAudioGenerating?: boolean;
+			customAudioKey?: string | null;
+			customAudioGenerating?: boolean;
+			portugueseAudioKey?: string | null;
+			portugueseAudioGenerating?: boolean;
+			imageStyle?: components["schemas"]["ImageStyles"];
+			imagePrompt?: string | null;
+			/** Format: int64 */
+			imageSeed?: number | null;
+			/** Format: double */
+			imageCFGScale?: number | null;
+			imageResolution?: components["schemas"]["ImageResolution"];
+			/** Format: int32 */
+			imageSamplingSteps?: number | null;
+			imageAltText?: string | null;
+			/** Format: date-time */
+			created?: string;
+			/** Format: uuid */
+			webStoryId?: string;
+			webStory?: components["schemas"]["WebStory"];
+			/** Format: uuid */
+			sceneId?: string | null;
+			scene?: components["schemas"]["Scene"];
+		};
+		/**
+		 * Format: int32
+		 * @enum {integer}
+		 */
+		StoryType: StoryBook | Video | SplitScreen;
+		/** @description Represents the standard response format for API requests. */
+		StringApiResponse: {
+			data?: string | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		StringICollectionApiResponse: {
+			data?: string[] | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		StringObjectDictionaryListApiResponse: {
+			data?:
+				| {
+						[key: string]: unknown;
+				  }[]
+				| null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description Represents the standard response format for API requests. */
+		StringStringDictionaryApiResponse: {
+			data?: {
+				[key: string]: string | null;
+			} | null;
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/**
+		 * Format: int32
+		 * @description Stripe Connect Account Status
+		 * @enum {integer}
+		 */
+		StripeConnectAccountStatus: DoesNotExist | OnboardingIncomplete | Onboarded;
+		/** @description Represents the standard response format for API requests. */
+		StripeConnectAccountStatusApiResponse: {
+			data?: components["schemas"]["StripeConnectAccountStatus"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		StripePayment: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			stripePaymentIntentId?: string | null;
+			/** Format: double */
+			amountPaid?: number;
+			/** Format: double */
+			amountCredited?: number | null;
+			allowanceType?: components["schemas"]["AllowanceType"];
+			/** Format: int32 */
+			quantity?: number;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+		};
+		/**
+		 * Format: int32
+		 * @description The duration of the subscription.
+		 * @enum {integer}
+		 */
+		SubscriptionPeriod: Monthly | Annual;
+		/**
+		 * Format: int32
+		 * @description The type of Subscription Plan.
+		 * @enum {integer}
+		 */
+		SubscriptionPlan: Free | Starter | Creator | Professional;
+		/** @description DTO used to return User's Token Transaction list. */
+		TokenTransactionDTO: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			date?: string;
+			type?: string | null;
+			/** Format: int32 */
+			credits?: number;
+			/** Format: double */
+			amount?: number | null;
+			creditSpendType?: components["schemas"]["CreditSpendType"];
+			description?: string | null;
+		};
+		/** @description Represents a paged list of items. */
+		TokenTransactionDTOPagedList: {
+			/**
+			 * Current Page
+			 * Format: int32
+			 * @description The current page number.
+			 */
+			currentPage: number;
+			/**
+			 * Page Size
+			 * Format: int32
+			 * @description The number of items per page.
+			 */
+			pageSize: number;
+			/**
+			 * Total Items
+			 * Format: int32
+			 * @description The total number of items in the list.
+			 */
+			totalItems: number;
+			/**
+			 * Total Pages
+			 * Format: int32
+			 * @description The total number of pages in the list.
+			 */
+			totalPages: number;
+			/**
+			 * Items
+			 * @description The items in the current page.
+			 */
+			items: components["schemas"]["TokenTransactionDTO"][];
+		};
+		/** @description Represents the standard response format for API requests. */
+		TokenTransactionDTOPagedListApiResponse: {
+			data?: components["schemas"]["TokenTransactionDTOPagedList"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		/** @description DTO used to update Amazon Book Royalty for one Amazon Book */
+		UpdateAmazonBookRoyaltyDTO: {
+			asin?: string | null;
+			/**
+			 * UnclaimedRoyalties
+			 * Format: double
+			 * @description The unclaimed royalties of the AmazonBookRoyalty.
+			 */
+			revenue: number;
+			/**
+			 * Sales
+			 * Format: int32
+			 * @description Number of sales of the book.
+			 */
+			sales: number;
+			/**
+			 * Currency
+			 * @description The currency of the AmazonBookRoyalty.
+			 */
+			currency?: string | null;
+		};
+		UpdateAmazonStatusDTO: {
+			/**
+			 * AmazonPublishLifecycle
+			 * Format: int32
+			 * @description The Amazon publish lifecycle status of the story.
+			 */
+			amazonPublishLifecycle?: number;
+			amazonUrl?: string | null;
+			/** Format: date-time */
+			amazonPublishDate?: string | null;
+			amazonRejectReason?: string | null;
+		};
+		/** @description Admin panel update expiry date object. */
+		UpdateDiscountCodeExpiryDateDTO: {
+			/**
+			 * ExpirationDate
+			 * Format: date-time
+			 * @description The new expiration date of the DiscountCode.
+			 */
+			expirationDate: string;
+		};
+		/** @description Admin panel update IsActive object. */
+		UpdateDiscountCodeIsActiveDTO: {
+			/**
+			 * IsActive
+			 * @description Whether or not the DiscountCode is active and can be used.
+			 */
+			isActive: boolean;
+		};
+		/** @description DTO used to update bulk Story Privacy settings. */
+		UpdateMultipleStoriesPrivacyDTO: {
+			/** @description List of Story Privacy settings to update. */
+			storiesToUpdate?: components["schemas"]["StoryPrivacyUpdate"][] | null;
+		};
+		/** @description DTO used to update a user's phone number. */
+		UpdatePhoneNumberDTO: {
+			/**
+			 * PhoneNumber
+			 * @description The user's phone number.
+			 */
+			phoneNumber: string;
+		};
+		/** @description DTO used to return the pre-signed URL and object key for uploading to S3. */
+		UploadToS3DTO: {
+			/** @description The pre-signed URL for uploading to S3. */
+			preSignedUrl?: string | null;
+			/** @description The file location in S3. */
+			objectKey?: string | null;
+		};
+		/** @description Represents the standard response format for API requests. */
+		UploadToS3DTOApiResponse: {
+			data?: components["schemas"]["UploadToS3DTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		UserAccount: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			name?: string | null;
+			lastName?: string | null;
+			email?: string | null;
+			phoneNumber?: string | null;
+			/** Format: date-time */
+			dateOfBirth?: string | null;
+			profileName?: string | null;
+			bio?: string | null;
+			profilePicture?: string | null;
+			kycVerified?: components["schemas"]["KYCLifeCycle"];
+			address?: string | null;
+			country?: string | null;
+			photoID?: string | null;
+			photoIDType?: string | null;
+			photoIDNumber?: string | null;
+			emailVerified?: boolean;
+			verificationId?: string | null;
+			authId?: string | null;
+			stripeCustomerId?: string | null;
+			cardBrand?: string | null;
+			cardLast4?: string | null;
+			/** Format: int32 */
+			cardExpiryMonth?: number | null;
+			/** Format: int32 */
+			cardExpiryYear?: number | null;
+			stripeConnectAccountId?: string | null;
+			voiceRecordingPath?: string | null;
+			voiceRecordingName?: string | null;
+			defaultPublic?: boolean;
+			/** Format: int32 */
+			storyCount?: number;
+			/** Format: int32 */
+			videoCount?: number;
+			subscriptions?: components["schemas"]["UserSubscription"][] | null;
+			allowance?: components["schemas"]["UserAllowance"];
+			amazonBook?: components["schemas"]["AmazonBook"][] | null;
+			webStories?: components["schemas"]["WebStory"][] | null;
+			likes?: components["schemas"]["StoryLike"][] | null;
+			bookOrders?: components["schemas"]["BookOrder"][] | null;
+			storyReports?: components["schemas"]["StoryReport"][] | null;
+			creditPurchases?: components["schemas"]["CreditPurchase"][] | null;
+			creditSpends?: components["schemas"]["CreditSpend"][] | null;
+			emailNotificationPreferences?: components["schemas"]["EmailNotificationPreferences"];
+			storyComments?: components["schemas"]["StoryComment"][] | null;
+			commentReports?: components["schemas"]["CommentReport"][] | null;
+			amazonBookRoyalties?: components["schemas"]["AmazonBookRoyalty"][] | null;
+			amazonRoyaltyTransactions?:
+				| components["schemas"]["AmazonRoyaltyTransaction"][]
+				| null;
+			payoutAccounts?: components["schemas"]["PayoutAccount"][] | null;
+			stripePayments?: components["schemas"]["StripePayment"][] | null;
+		};
+		UserAllowance: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			/** Format: int32 */
+			storyBooks?: number;
+			/** Format: int32 */
+			videos?: number;
+			/** Format: int32 */
+			credits?: number;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+		};
+		/** @description Return model for the user's account details. */
+		UserInfoDTO: {
+			/**
+			 * Id
+			 * Format: uuid
+			 * @description The unique identifier of the user.
+			 */
+			id?: string;
+			/**
+			 * Name
+			 * @description The user's name.
+			 */
+			name?: string | null;
+			/**
+			 * LastName
+			 * @description The user's Last Name.
+			 */
+			lastName?: string | null;
+			/**
+			 * Email
+			 * @description The user's email address.
+			 */
+			email?: string | null;
+			/**
+			 * ProfilePicture
+			 * @description The user's profile picture.
+			 */
+			profilePicture?: string | null;
+			/**
+			 * PhoneNumber
+			 * @description The user's phone number.
+			 */
+			phoneNumber?: string | null;
+			/**
+			 * DateOfBirth
+			 * Format: date-time
+			 * @description The user's date of birth.
+			 */
+			dateOfBirth?: string | null;
+			/**
+			 * ProfileName
+			 * @description The user's unique profile name.
+			 */
+			profileName?: string | null;
+			/**
+			 * Bio
+			 * @description The user's bio.
+			 */
+			bio?: string | null;
+			/**
+			 * StoryCount
+			 * Format: int32
+			 * @description The number of stories the user has.
+			 */
+			storyCount?: number;
+			/**
+			 * VideoCount
+			 * Format: int32
+			 * @description The number of videos the user has.
+			 */
+			videoCount?: number;
+			/**
+			 * CardBrand
+			 * @description The brand of the user's card.
+			 */
+			cardBrand?: string | null;
+			/**
+			 * CardLast4
+			 * @description The last 4 digits of the user's card.
+			 */
+			cardLast4?: string | null;
+			/**
+			 * CardExpiryMonth
+			 * Format: int32
+			 * @description The expiry month of the user's card.
+			 */
+			cardExpiryMonth?: number | null;
+			/**
+			 * CardExpiryYear
+			 * Format: int32
+			 * @description The expiry year of the user's card.
+			 */
+			cardExpiryYear?: number | null;
+			subscription?: components["schemas"]["UserSubscriptionDTO"];
+			emailNotificationPreferences?: components["schemas"]["EmailNotificationPreferencesDTO"];
+			/**
+			 * EmailVerified
+			 * @description Whether the user's email address has been verified.
+			 */
+			emailVerified?: boolean;
+			/**
+			 * BookOrdersCount
+			 * Format: int32
+			 * @description The number of book orders the user has.
+			 */
+			bookOrdersCount?: number;
+			/**
+			 * AmazonPublishingCount
+			 * Format: int32
+			 * @description The number of Amazon publishing requests the user has.
+			 */
+			amazonPublishingCount?: number;
+			/**
+			 * MyItemsCount
+			 * Format: int32
+			 * @description The number of items the user has created.
+			 */
+			myItemsCount?: number;
+			/**
+			 * TotalUnclaimedRoyalties
+			 * Format: double
+			 * @description The total unclaimed royalties the user has.
+			 */
+			totalUnclaimedRoyalties?: number;
+			/**
+			 * TotalProcessingRoyalties
+			 * Format: double
+			 * @description The total royalties currently being processed the user has.
+			 */
+			totalProcessingRoyalties?: number;
+			/** @description Name of the voice recording */
+			voiceRecordingName?: string | null;
+			/** @description S3 path of the voice recording */
+			voiceRecordingPath?: string | null;
+			/** @description Whether the user has used their free audio generation */
+			usedFreeAudioGeneration?: boolean;
+			/** @description Whether stories should be public by default or not */
+			defaultPublic?: boolean;
+			kycVerified?: components["schemas"]["KYCLifeCycle"];
+			address?: string | null;
+			country?: string | null;
+			photoIDType?: string | null;
+			photoIDNumber?: string | null;
+			/**
+			 * Created
+			 * Format: date-time
+			 * @description The date and time the user was created.
+			 */
+			created?: string;
+		};
+		/** @description Represents the standard response format for API requests. */
+		UserInfoDTOApiResponse: {
+			data?: components["schemas"]["UserInfoDTO"];
+			succeeded?: boolean;
+			message?: string | null;
+			status?: components["schemas"]["ApiResponseStatus"];
+		};
+		UserSubscription: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			stripeSubscriptionId?: string | null;
+			plan?: components["schemas"]["SubscriptionPlan"];
+			period?: components["schemas"]["SubscriptionPeriod"];
+			isActive?: boolean;
+			/** Format: date-time */
+			startDate?: string | null;
+			/** Format: date-time */
+			endDate?: string | null;
+			/** Format: date-time */
+			nextRefreshDate?: string | null;
+			/** Format: date-time */
+			canceledDate?: string | null;
+			/** Format: uuid */
+			userId?: string;
+			user?: components["schemas"]["UserAccount"];
+		};
+		/** @description DTO used to receive User's Subscription details. */
+		UserSubscriptionDTO: {
+			subscriptionPlan?: components["schemas"]["SubscriptionPlan"];
+			subscriptionPeriod?: components["schemas"]["SubscriptionPeriod"];
+			/**
+			 * Format: int32
+			 * @description The number of story generations the user has.
+			 */
+			storyGenerations?: number;
+			/**
+			 * Format: int32
+			 * @description The number of video generations the user has.
+			 */
+			videoGenerations?: number;
+			/**
+			 * Format: int32
+			 * @description The number of credits the user has for misc. features.
+			 */
+			credits?: number;
+			/**
+			 * Format: date-time
+			 * @description The date and time the user's subscription was created.
+			 */
+			startDate?: string | null;
+			/**
+			 * Format: date-time
+			 * @description The date and time the user's subscription will expire.
+			 */
+			endDate?: string | null;
+			/**
+			 * Format: date-time
+			 * @description The date and time the user's subscription will refresh.
+			 */
+			nextRefreshDate?: string | null;
+		};
+		/** @description DTO used to verify a user's email address. */
+		VerifyEmailDTO: {
+			/**
+			 * VerificationId
+			 * @description The verification id sent to the user's email address.
+			 */
+			verificationId: string;
+		};
+		VideoSegment: {
+			/** Format: uuid */
+			webStoryId?: string;
+			/** Format: int32 */
+			ind?: number;
+			textContent?: string | null;
+			characterContent?: string | null;
+			imageKey?: string | null;
+			videoKey?: string | null;
+			frameInterpolationKey?: string | null;
+			lastImageKey?: string | null;
+			imageRegenerating?: boolean;
+			videoRegenerating?: boolean;
+			maleAudioKey?: string | null;
+			maleAudioGenerating?: boolean;
+			femaleAudioKey?: string | null;
+			femaleAudioGenerating?: boolean;
+			customAudioKey?: string | null;
+			customAudioGenerating?: boolean;
+			portugueseAudioKey?: string | null;
+			portugueseAudioGenerating?: boolean;
+			imageStyle?: components["schemas"]["ImageStyles"];
+			imagePrompt?: string | null;
+			/** Format: int64 */
+			imageSeed?: number | null;
+			/** Format: double */
+			imageCFGScale?: number | null;
+			imageResolution?: components["schemas"]["ImageResolution"];
+			/** Format: int32 */
+			imageSamplingSteps?: number | null;
+			imageAltText?: string | null;
+			/** Format: int64 */
+			videoSeed?: number | null;
+			/** Format: double */
+			videoCFGScale?: number | null;
+			/** Format: int32 */
+			videoMotionBucketId?: number | null;
+			/** Format: int32 */
+			videoSamplingSteps?: number | null;
+			/** Format: int32 */
+			videoFPS?: number | null;
+			/** Format: date-time */
+			created?: string;
+			webStory?: components["schemas"]["WebStory"];
+			/** Format: uuid */
+			sceneId?: string | null;
+			scene?: components["schemas"]["Scene"];
+		};
+		WebStory: {
+			/** Format: uuid */
+			id?: string;
+			/** Format: date-time */
+			created?: string;
+			storyDone?: boolean;
+			videosDone?: boolean;
+			imagesDone?: boolean;
+			isRendering?: boolean | null;
+			isPublic?: boolean;
+			pluginGenerated?: boolean | null;
+			deleted?: boolean;
+			/** Format: uuid */
+			claimingToken?: string;
+			invalidateRender?: boolean | null;
+			hasMaleVoice?: boolean;
+			hasFemaleVoice?: boolean;
+			hasCustomVoice?: boolean;
+			hasPortugueseVoice?: boolean;
+			maleVoiceDone?: boolean;
+			femaleVoiceDone?: boolean;
+			customVoiceDone?: boolean;
+			portugueseVoiceDone?: boolean;
+			storyPrompt?: string | null;
+			language?: string | null;
+			topLevelCategory?: string | null;
+			slug?: string | null;
+			storyTitle?: string | null;
+			summary?: string | null;
+			/** Format: int32 */
+			storyLikes?: number;
+			coverImage?: string | null;
+			coverImageContent?: string | null;
+			/** Format: float */
+			aiContributionRate?: number;
+			renderedVideoKey?: string | null;
+			originalMediaKey?: string | null;
+			storyType?: components["schemas"]["StoryType"];
+			resolution?: components["schemas"]["DisplayResolution"];
+			imageStyle?: components["schemas"]["ImageStyles"];
+			/** Format: uuid */
+			userId?: string | null;
+			user?: components["schemas"]["UserAccount"];
+			storySegments?: components["schemas"]["StorySegment"][] | null;
+			videoSegments?: components["schemas"]["VideoSegment"][] | null;
+			characters?: components["schemas"]["Characters"][] | null;
+			scenes?: components["schemas"]["Scene"][] | null;
+			likes?: components["schemas"]["StoryLike"][] | null;
+			amazonKdpMetaData?: components["schemas"]["AmazonKdpMetaData"];
+			amazonBook?: components["schemas"]["AmazonBook"];
+			bookOrders?: components["schemas"]["BookOrder"][] | null;
+			storyReports?: components["schemas"]["StoryReport"][] | null;
+			creditSpends?: components["schemas"]["CreditSpend"][] | null;
+			storyComments?: components["schemas"]["StoryComment"][] | null;
+			commentReports?: components["schemas"]["CommentReport"][] | null;
+			storyItems?: components["schemas"]["StoryItem"][] | null;
+			amazonBookRoyalties?: components["schemas"]["AmazonBookRoyalty"];
+			amazonRoyaltyTransactions?:
+				| components["schemas"]["AmazonRoyaltyTransaction"][]
+				| null;
+			storyContestEntries?: components["schemas"]["StoryContestEntry"][] | null;
+		};
+	};
+	responses: never;
+	parameters: never;
+	requestBodies: never;
+	headers: never;
+	pathItems: never;
 }
 
 export type $defs = Record<string, never>;
@@ -7288,515 +7430,514 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
-
-  /**
-   * Get public stories
-   * @description Get a list of public stories based on pagination parameters
-   */
-  GetPublicStories: {
-    parameters: {
-      query?: {
-        CurrentPage?: number;
-        PageSize?: number;
-        liked?: boolean;
-        sortType?: components["schemas"]["SortType"];
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-          "application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-          "text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get all categories
-   * @description Get a list of all categories in order of decreasing story count
-   */
-  GetAllCategories: {
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get stories under the specified category
-   * @description Get stories under the specified category based on pagination parameters
-   */
-  GetStoriesByTopLevelCategory: {
-    parameters: {
-      query?: {
-        CurrentPage?: number;
-        PageSize?: number;
-        storyType?: components["schemas"]["StoryType"];
-        searchTerm?: string;
-        resolution?: components["schemas"]["DisplayResolution"];
-        isDescending?: boolean;
-      };
-      path: {
-        topLevelCategory: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
-          "application/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
-          "text/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get one public story by id. Depricated API, returns category/slug url.
-   * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
-   */
-  GetOnePublicStoryById: {
-    parameters: {
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get one public story by slug
-   * @description Get a single public story by its slug
-   */
-  GetOnePublicStoryBySlug: {
-    parameters: {
-      path: {
-        topLevelCategory: string;
-        slug: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get one public story by category and slug
-   * @description Get a single public story by its category and slug
-   */
-  GetOnePublicStoryByCategoryAndSlug: {
-    parameters: {
-      path: {
-        topLevelCategory: string;
-        slug: string;
-        storyType: components["schemas"]["StoryType"];
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
-          "application/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
-          "text/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get suggested stories
-   * @description Get a list of suggested stories based on the provided story id
-   */
-  GetSuggestedStories: {
-    parameters: {
-      query?: {
-        CurrentPage?: number;
-        PageSize?: number;
-        storyType?: components["schemas"]["StoryType"];
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
-          "application/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
-          "text/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get active contests
-   * @description Get a list of active contests
-   */
-  GetActiveContests: {
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["StoryContestsDTOListApiResponse"];
-          "application/json": components["schemas"]["StoryContestsDTOListApiResponse"];
-          "text/json": components["schemas"]["StoryContestsDTOListApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get contest by id
-   * @description Get a contest by its id
-   */
-  GetContestById: {
-    parameters: {
-      query?: {
-        CurrentPage?: number;
-        PageSize?: number;
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-          "application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-          "text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Like a Web Story
-   * @description Like the given Web Story by its id.
-   */
-  LikeStory: {
-    parameters: {
-      path: {
-        id: string;
-      };
-    };
-    requestBody?: {
-      content: {
-        "application/json-patch+json": components["schemas"]["LikeStoryDTO"];
-        "application/json": components["schemas"]["LikeStoryDTO"];
-        "text/json": components["schemas"]["LikeStoryDTO"];
-        "application/*+json": components["schemas"]["LikeStoryDTO"];
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["BooleanApiResponse"];
-          "application/json": components["schemas"]["BooleanApiResponse"];
-          "text/json": components["schemas"]["BooleanApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get all slugs
-   * @description Get a list of all slugs
-   */
-  GetAllSlugs: {
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["StringICollectionApiResponse"];
-          "application/json": components["schemas"]["StringICollectionApiResponse"];
-          "text/json": components["schemas"]["StringICollectionApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Generate a story from plugin
-   * @description Generate a new story based on the provided prompt
-   */
-  PluginGenerateStory: {
-    requestBody?: {
-      content: {
-        "application/json-patch+json": components["schemas"]["PromptResponse"];
-        "application/json": components["schemas"]["PromptResponse"];
-        "text/json": components["schemas"]["PromptResponse"];
-        "application/*+json": components["schemas"]["PromptResponse"];
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * ChatGPT Plugin manifest
-   * @description  Get ai-plugin.json for ChatGPT
-   */
-  GetAIPluginJson: {
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get OpenAPI YAML
-   * @description Get the openapi.yaml file
-   */
-  GetOpenApiYaml: {
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get logo
-   * @description Get the logo.png file
-   */
-  GetLogo: {
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Generate audio
-   * @description Generate a new audio using generic voice IDs
-   */
-  GenerateGenericAudio: {
-    parameters: {
-      path: {
-        id: string;
-      };
-    };
-    requestBody?: {
-      content: {
-        "application/json-patch+json": components["schemas"]["GenerateGenericAudioDTO"];
-        "application/json": components["schemas"]["GenerateGenericAudioDTO"];
-        "text/json": components["schemas"]["GenerateGenericAudioDTO"];
-        "application/*+json": components["schemas"]["GenerateGenericAudioDTO"];
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Generate audio sample
-   * @description Generate audio sample for first two segments for Video preview
-   */
-  GenerateGenericAudioSample: {
-    parameters: {
-      path: {
-        id: string;
-      };
-    };
-    requestBody?: {
-      content: {
-        "application/json-patch+json": components["schemas"]["GenerateGenericAudioDTO"];
-        "application/json": components["schemas"]["GenerateGenericAudioDTO"];
-        "text/json": components["schemas"]["GenerateGenericAudioDTO"];
-        "application/*+json": components["schemas"]["GenerateGenericAudioDTO"];
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get user stories under the specified category
-   * @description Get user's stories under the specified category based on pagination parameters
-   */
-  GetUserStoriesByTopLevelCategory: {
-    parameters: {
-      query?: {
-        CurrentPage?: number;
-        PageSize?: number;
-        searchTerm?: string;
-        isDescending?: boolean;
-      };
-      path: {
-        topLevelCategory: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-          "application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-          "text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Get user videos under the specified category
-   * @description Get user's videos under the specified category based on pagination parameters
-   */
-  GetUserVideosByTopLevelCategory: {
-    parameters: {
-      query?: {
-        CurrentPage?: number;
-        PageSize?: number;
-        storyType?: components["schemas"]["StoryType"];
-        searchTerm?: string;
-        resolution?: components["schemas"]["DisplayResolution"];
-        isDescending?: boolean;
-      };
-      path: {
-        topLevelCategory: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
-          "application/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
-          "text/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Render a video
-   * @description Render a video based on the provided story id
-   */
-  RenderVideo: {
-    parameters: {
-      query?: {
-        storyItemSubType?: components["schemas"]["StoryItemSubType"];
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["StringApiResponse"];
-          "application/json": components["schemas"]["StringApiResponse"];
-          "text/json": components["schemas"]["StringApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Copy a video
-   * @description Copy a video based on the provided story id
-   */
-  CopyVideo: {
-    parameters: {
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
-          "application/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
-          "text/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
+	/**
+	 * Get public stories
+	 * @description Get a list of public stories based on pagination parameters
+	 */
+	GetPublicStories: {
+		parameters: {
+			query?: {
+				CurrentPage?: number;
+				PageSize?: number;
+				liked?: boolean;
+				sortType?: components["schemas"]["SortType"];
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+					"application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+					"text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get all categories
+	 * @description Get a list of all categories in order of decreasing story count
+	 */
+	GetAllCategories: {
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get stories under the specified category
+	 * @description Get stories under the specified category based on pagination parameters
+	 */
+	GetStoriesByTopLevelCategory: {
+		parameters: {
+			query?: {
+				CurrentPage?: number;
+				PageSize?: number;
+				storyType?: components["schemas"]["StoryType"];
+				searchTerm?: string;
+				resolution?: components["schemas"]["DisplayResolution"];
+				isDescending?: boolean;
+			};
+			path: {
+				topLevelCategory: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+					"application/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+					"text/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get one public story by id. Depricated API, returns category/slug url.
+	 * @description Depricated API, returns category/slug url which should be used to redirect the user to the story.
+	 */
+	GetOnePublicStoryById: {
+		parameters: {
+			path: {
+				id: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get one public story by slug
+	 * @description Get a single public story by its slug
+	 */
+	GetOnePublicStoryBySlug: {
+		parameters: {
+			path: {
+				topLevelCategory: string;
+				slug: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get one public story by category and slug
+	 * @description Get a single public story by its category and slug
+	 */
+	GetOnePublicStoryByCategoryAndSlug: {
+		parameters: {
+			path: {
+				topLevelCategory: string;
+				slug: string;
+				storyType: components["schemas"]["StoryType"];
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+					"application/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+					"text/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get suggested stories
+	 * @description Get a list of suggested stories based on the provided story id
+	 */
+	GetSuggestedStories: {
+		parameters: {
+			query?: {
+				CurrentPage?: number;
+				PageSize?: number;
+				storyType?: components["schemas"]["StoryType"];
+			};
+			path: {
+				id: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
+					"application/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
+					"text/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get active contests
+	 * @description Get a list of active contests
+	 */
+	GetActiveContests: {
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["StoryContestsDTOListApiResponse"];
+					"application/json": components["schemas"]["StoryContestsDTOListApiResponse"];
+					"text/json": components["schemas"]["StoryContestsDTOListApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get contest by id
+	 * @description Get a contest by its id
+	 */
+	GetContestById: {
+		parameters: {
+			query?: {
+				CurrentPage?: number;
+				PageSize?: number;
+			};
+			path: {
+				id: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+					"application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+					"text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Like a Web Story
+	 * @description Like the given Web Story by its id.
+	 */
+	LikeStory: {
+		parameters: {
+			path: {
+				id: string;
+			};
+		};
+		requestBody?: {
+			content: {
+				"application/json-patch+json": components["schemas"]["LikeStoryDTO"];
+				"application/json": components["schemas"]["LikeStoryDTO"];
+				"text/json": components["schemas"]["LikeStoryDTO"];
+				"application/*+json": components["schemas"]["LikeStoryDTO"];
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["BooleanApiResponse"];
+					"application/json": components["schemas"]["BooleanApiResponse"];
+					"text/json": components["schemas"]["BooleanApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get all slugs
+	 * @description Get a list of all slugs
+	 */
+	GetAllSlugs: {
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["StringICollectionApiResponse"];
+					"application/json": components["schemas"]["StringICollectionApiResponse"];
+					"text/json": components["schemas"]["StringICollectionApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Generate a story from plugin
+	 * @description Generate a new story based on the provided prompt
+	 */
+	PluginGenerateStory: {
+		requestBody?: {
+			content: {
+				"application/json-patch+json": components["schemas"]["PromptResponse"];
+				"application/json": components["schemas"]["PromptResponse"];
+				"text/json": components["schemas"]["PromptResponse"];
+				"application/*+json": components["schemas"]["PromptResponse"];
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * ChatGPT Plugin manifest
+	 * @description  Get ai-plugin.json for ChatGPT
+	 */
+	GetAIPluginJson: {
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get OpenAPI YAML
+	 * @description Get the openapi.yaml file
+	 */
+	GetOpenApiYaml: {
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get logo
+	 * @description Get the logo.png file
+	 */
+	GetLogo: {
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Generate audio
+	 * @description Generate a new audio using generic voice IDs
+	 */
+	GenerateGenericAudio: {
+		parameters: {
+			path: {
+				id: string;
+			};
+		};
+		requestBody?: {
+			content: {
+				"application/json-patch+json": components["schemas"]["GenerateGenericAudioDTO"];
+				"application/json": components["schemas"]["GenerateGenericAudioDTO"];
+				"text/json": components["schemas"]["GenerateGenericAudioDTO"];
+				"application/*+json": components["schemas"]["GenerateGenericAudioDTO"];
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Generate audio sample
+	 * @description Generate audio sample for first two segments for Video preview
+	 */
+	GenerateGenericAudioSample: {
+		parameters: {
+			path: {
+				id: string;
+			};
+		};
+		requestBody?: {
+			content: {
+				"application/json-patch+json": components["schemas"]["GenerateGenericAudioDTO"];
+				"application/json": components["schemas"]["GenerateGenericAudioDTO"];
+				"text/json": components["schemas"]["GenerateGenericAudioDTO"];
+				"application/*+json": components["schemas"]["GenerateGenericAudioDTO"];
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: never;
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get user stories under the specified category
+	 * @description Get user's stories under the specified category based on pagination parameters
+	 */
+	GetUserStoriesByTopLevelCategory: {
+		parameters: {
+			query?: {
+				CurrentPage?: number;
+				PageSize?: number;
+				searchTerm?: string;
+				isDescending?: boolean;
+			};
+			path: {
+				topLevelCategory: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+					"application/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+					"text/json": components["schemas"]["ReturnWebStoryDTOPagedListApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Get user videos under the specified category
+	 * @description Get user's videos under the specified category based on pagination parameters
+	 */
+	GetUserVideosByTopLevelCategory: {
+		parameters: {
+			query?: {
+				CurrentPage?: number;
+				PageSize?: number;
+				storyType?: components["schemas"]["StoryType"];
+				searchTerm?: string;
+				resolution?: components["schemas"]["DisplayResolution"];
+				isDescending?: boolean;
+			};
+			path: {
+				topLevelCategory: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+					"application/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+					"text/json": components["schemas"]["ReturnVideoStoryDTOPagedListApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Render a video
+	 * @description Render a video based on the provided story id
+	 */
+	RenderVideo: {
+		parameters: {
+			query?: {
+				storyItemSubType?: components["schemas"]["StoryItemSubType"];
+			};
+			path: {
+				id: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["StringApiResponse"];
+					"application/json": components["schemas"]["StringApiResponse"];
+					"text/json": components["schemas"]["StringApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
+	/**
+	 * Copy a video
+	 * @description Copy a video based on the provided story id
+	 */
+	CopyVideo: {
+		parameters: {
+			path: {
+				id: string;
+			};
+		};
+		responses: {
+			/** @description Success */
+			200: {
+				content: {
+					"text/plain": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+					"application/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+					"text/json": components["schemas"]["ReturnVideoStoryDTOApiResponse"];
+				};
+			};
+			/** @description Unauthorized */
+			401: {
+				content: never;
+			};
+		};
+	};
 }

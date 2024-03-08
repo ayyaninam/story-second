@@ -32,8 +32,8 @@ export default function FileUpload({
 				console.log(uploadData.data.objectKey);
 				setVideoFileId(uploadData.data.objectKey ?? "");
 			} else {
-        toast.error("Please upload a valid video file");
-      }
+				toast.error("Please upload a valid video file");
+			}
 		}
 		setIsVideoUploading(false);
 	};

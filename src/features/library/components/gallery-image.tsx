@@ -9,7 +9,6 @@ import ShareIcon from "./svgs/share-icon";
 import PlayIcon from "./svgs/play-icon";
 import useEventLogger from "@/utils/analytics";
 
-
 function GalleryImage({
 	story,
 	galleryDetails,
@@ -29,13 +28,10 @@ function GalleryImage({
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 			onClick={() => {
-				const categoryId = story.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all";
+				const categoryId =
+					story.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all";
 				router.push(
-					Routes.ViewStory(
-						story.storyType,
-						categoryId,
-						story.slug as string
-					)
+					Routes.ViewStory(story.storyType, categoryId, story.slug as string)
 				);
 			}}
 		>
@@ -90,15 +86,19 @@ function GalleryImage({
 					}}
 				>
 					<div className="flex flex-col gap-[-4px]">
-						<span className={cn(
-							"line-clamp-1 text-white overflow-hidden text-ellipsis font-semibold leading-6 ",
-							story.expand? "text-lg" : "text-sm")}
+						<span
+							className={cn(
+								"line-clamp-1 text-white overflow-hidden text-ellipsis font-semibold leading-6 ",
+								story.expand ? "text-lg" : "text-sm"
+							)}
 						>
 							{story.title}
 						</span>
-						<p className={cn(
-							"overflow-hidden text-ellipsis font-normal text-[#ffffffab]",
-							story.expand? "text-md line-clamp-2" : "text-xs line-clamp-1")}
+						<p
+							className={cn(
+								"overflow-hidden text-ellipsis font-normal text-[#ffffffab]",
+								story.expand ? "text-md line-clamp-2" : "text-xs line-clamp-1"
+							)}
 						>
 							{story.description}
 						</p>
@@ -112,8 +112,12 @@ function GalleryImage({
 							className="flex grow gap-1 bg-indigo-600 hover:bg-indigo-800 text-white text-sm font-normal py-1.5 px-2 h-fit"
 							onClick={(e) => {
 								e.stopPropagation();
-								const categoryId = story.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all";
-								router.push(`${Routes.ViewStory(story.storyType, categoryId, story.slug as string)}`);
+								const categoryId =
+									story.topLevelCategory?.replace(/ /g, "-").toLowerCase() ||
+									"all";
+								router.push(
+									`${Routes.ViewStory(story.storyType, categoryId, story.slug as string)}`
+								);
 							}}
 						>
 							<ShareIcon />

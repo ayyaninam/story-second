@@ -38,7 +38,7 @@ const SceneEditSegmentModal = ({
 	const [regeratingImages, setRegeneratingImages] = useState(
 		Array(scene?.segments?.length).fill(false)
 	);
-  const { invalidateUser } = useUpdateUser();
+	const { invalidateUser } = useUpdateUser();
 	const handleRegenerateVideo = async (segmentIndex: number) => {
 		const segment = story.scenes[sceneId ?? 0]?.segments[segmentIndex]!;
 		dispatch({
@@ -55,7 +55,7 @@ const SceneEditSegmentModal = ({
 			story_id: story.id,
 			story_type: webstory.storyType,
 		});
-    invalidateUser();
+		invalidateUser();
 	};
 	if (scene && sceneId !== undefined) {
 		return (

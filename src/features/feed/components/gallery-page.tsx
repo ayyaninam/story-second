@@ -29,10 +29,10 @@ function FeedGalleryPage({
 	const filterOptions = useDebounce(
 		useMemo<FeedPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
-			const sort = router.query.sort as string || "desc"
+			const sort = (router.query.sort as string) || "desc";
 			return {
 				CurrentPage: parseInt(page),
-				topLevelCategory: router.query.genre as string || "all",
+				topLevelCategory: (router.query.genre as string) || "all",
 				isDescending: sort === "desc",
 			};
 		}, [router.query.page, router.query.genre, router.query.sort]),
@@ -108,7 +108,10 @@ function FeedGalleryPage({
 				thumbnails={galleryThumbnails}
 				areThumbnailsLoading={storiesList.isPending || storiesList.isFetching}
 			/>
-			<GenericPagination currentPage={currentPage} totalPages={storiesList.data?.totalPages || 0} />
+			<GenericPagination
+				currentPage={currentPage}
+				totalPages={storiesList.data?.totalPages || 0}
+			/>
 		</div>
 	);
 }

@@ -3,12 +3,12 @@ import React, { CSSProperties } from "react";
 import AiStar from "@/features/library/components/svgs/ai-star";
 import RightArrow from "@/features/library/components/svgs/right-arrow";
 import BookScroll from "@/features/library/components/svgs/book-scroll";
-import {cn} from "@/utils";
+import { cn } from "@/utils";
 import toast from "react-hot-toast";
 import Router from "next/router";
 import Routes from "@/routes";
 import Link from "next/link";
-import {VideoThumbnail} from "@/types";
+import { VideoThumbnail } from "@/types";
 
 const heroSectionContainer: CSSProperties = {
 	borderRadius: "var(--radius-3xl, 24px)",
@@ -17,7 +17,11 @@ const heroSectionContainer: CSSProperties = {
 	boxShadow: "0px 1px 2px 0px rgba(20, 21, 26, 0.05)",
 };
 
-function LibraryHeroSection( { randomStory } : { randomStory?: VideoThumbnail | null } ) {
+function LibraryHeroSection({
+	randomStory,
+}: {
+	randomStory?: VideoThumbnail | null;
+}) {
 	return (
 		<div className="w-full flex items-center justify-center gap-2 pb-6">
 			<div
@@ -70,10 +74,12 @@ function LibraryHeroSection( { randomStory } : { randomStory?: VideoThumbnail | 
 				<Link
 					href={`${Routes.ViewStory(
 						randomStory?.storyType || 0,
-						randomStory?.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all",
+						randomStory?.topLevelCategory?.replace(/ /g, "-").toLowerCase() ||
+							"all",
 						randomStory?.slug || ""
 					)}`}
-					className="hidden lg:block w-full min-h-full bg-accent-700 self-stretch">
+					className="hidden lg:block w-full min-h-full bg-accent-700 self-stretch"
+				>
 					{/* # TODO: make this responsive*/}
 					{randomStory && (
 						<div
@@ -86,10 +92,7 @@ function LibraryHeroSection( { randomStory } : { randomStory?: VideoThumbnail | 
 								backgroundPosition: "center",
 								borderRadius: "8px",
 							}}
-						>
-
-						</div>
-
+						></div>
 					)}
 				</Link>
 			</div>

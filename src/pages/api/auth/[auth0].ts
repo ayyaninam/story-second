@@ -1,7 +1,6 @@
 import { env } from "@/env.mjs";
-import {handleAuth, handleLogin, handleLogout} from "@auth0/nextjs-auth0";
+import { handleAuth, handleLogin, handleLogout } from "@auth0/nextjs-auth0";
 import Routes from "@/routes";
-
 
 // handleCallback
 export default handleAuth({
