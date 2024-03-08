@@ -107,7 +107,10 @@ const GenerateModalContent: FC = () => {
 			if (error) {
 				if (error === "not enough credits") {
 					setOpenStoryBooksDialog(true);
-				} else if (error === "not paid subscription") {
+				} else if (
+					error === "not paid subscription" ||
+					error === "using custom plan"
+				) {
 					setOpenSubscriptionDialog(true);
 				}
 
@@ -123,7 +126,10 @@ const GenerateModalContent: FC = () => {
 			if (error) {
 				if (error === "not enough credits") {
 					setOpenCreditsDialog(true);
-				} else if (error === "not paid subscription") {
+				} else if (
+					error === "not paid subscription" ||
+					error === "using custom plan"
+				) {
 					setOpenSubscriptionDialog(true);
 				}
 
