@@ -49,7 +49,7 @@ const UpgradeSubscriptionDialog = ({
 				<DialogHeader>
 					<DialogTitle>Upgrade Subscription</DialogTitle>
 					<DialogDescription>
-						<PricingCards onClickFreePlan={() => setOpen(false)} />
+						<PricingCards onCloseDialog={() => setOpen(false)} />
 					</DialogDescription>
 				</DialogHeader>
 			</DialogContent>
