@@ -38,36 +38,38 @@ const MobileBook = ({ story }: BookProps) => {
 		setPageArray(pArray);
 	}, [story.scenes]);
 
-	console.log(pageArray);
-	console.log(pageArray.length === 0);
-
-	if (pageArray.length === 0) {
-		return <Skeleton className="h-[350px] w-[250px] m-1" />;
-	}
-
 	return (
-		<div className="w-screen gap-4 flex flex-col overflow-y-scroll h-screen mt-16">
+		<div className="w-screen gap-4 flex flex-col overflow-y-scroll h-[calc(100vh-250px)]">
 			{pageArray.map((item) => (
 				<div
 					key={item.pageNumber}
 					className="flex flex-col items-center text-center border-4 border-accent-500 rounded-2xl px-4 py-8 gap-8"
 				>
-					<div>{item.textContent}</div>
+					{item.textContent ? <div>{item.textContent}</div> : "Loading text..."}
 
 					<div className="flex flex-col flex-1 w-full gap-2 min-w-[250px] max-w-[512px]">
 						<div className="aspect-square w-full my-auto">
-							<Image
-								alt="Placeholder image"
-								className="aspect-square rounded-lg"
-								src={Format.GetImageUrl(item.imageKey)}
-								sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-								width={512}
-								height={512}
-							/>
+							{item.imageKey ? (
+								<Image
+									alt="Placeholder image"
+									className="aspect-square rounded-lg"
+									src={Format.GetImageUrl(item.imageKey)}
+									sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+									width={512}
+									height={512}
+								/>
+							) : (
+								<Skeleton className="w-full aspect-square rounded-xl" />
+							)}
 						</div>
 					</div>
 				</div>
 			))}
+			{!story.storyDone && (
+				<div className="flex flex-row justify-center border-4 border-accent-500 rounded-2xl py-8">
+					Loading...
+				</div>
+			)}
 		</div>
 	);
 };

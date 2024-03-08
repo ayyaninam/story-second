@@ -35,7 +35,7 @@ export const AnimatedPage = ({
 		)}
 	>
 		<div className={cn("absolute inset-0 flex")}>
-			<PageView story={story} page={pages[0]} />
+			<PageView story={story} canChangePage={false} page={pages[0]} />
 		</div>
 		<div
 			className={cn(
@@ -44,7 +44,7 @@ export const AnimatedPage = ({
 				styles.flipVertically
 			)}
 		>
-			<PageView story={story} page={pages[1]} />
+			<PageView story={story} canChangePage={false} page={pages[1]} />
 		</div>
 	</div>
 );
