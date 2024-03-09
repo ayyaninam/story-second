@@ -57,10 +57,14 @@ const CheckIcon = ({ className }: { className?: string }) => (
 );
 
 interface PricingCardsProps {
-	onClickFreePlan: () => void;
+	onCloseDialog: () => void;
 }
 
-const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
+const secondaryButtonStyles = "w-full transition-none group-hover:border-2";
+const primaryButtonStyles =
+	"w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground";
+
+const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 	const [frequency, setFrequency] = useState<PricingTierFrequency>(
 		frequencies[1]
 	);
@@ -69,15 +73,6 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 	const eventLogger = useEventLogger();
 	const { user, isLoading } = useUser();
 
-	const openLoginWhenNotLoggedIn = (e: React.MouseEvent<HTMLButtonElement>) => {
-		if (!user) {
-			// prevents to show the checkout dialog
-			e.preventDefault();
-
-			router.push(Routes.ToAuthPage("/account?step=payment")).then();
-		}
-	};
-
 	const period =
 		frequency.label === "Monthly"
 			? SubscriptionPeriod.Monthly
@@ -85,43 +80,89 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 	const userSubscriptionPlan = user?.subscription?.subscriptionPlan;
 	const userSubscriptionPeriod = user?.subscription?.subscriptionPeriod;
 
-	const getIsCurrentPlan = (plan: SubscriptionPlan) =>
+	const _isCurrentPlan = (plan: SubscriptionPlan) =>
 		userSubscriptionPlan === plan && userSubscriptionPeriod === period;
 
-	const isUpgradePlan = (plan: SubscriptionPlan) =>
-		(Object.values(SubscriptionPlan).indexOf(plan) >
-			Object.values(SubscriptionPlan).indexOf(userSubscriptionPlan) ||
-			period > userSubscriptionPeriod) &&
-		period >= userSubscriptionPeriod;
+	const _isUpgradePlan = (plan: SubscriptionPlan) => {
+		if (userSubscriptionPlan === SubscriptionPlan.Free) {
+			return false;
+		}
+
+		if (period === userSubscriptionPeriod) {
+			return (
+				Object.values(SubscriptionPlan).indexOf(plan) >
+				Object.values(SubscriptionPlan).indexOf(userSubscriptionPlan)
+			);
+		}
+		return (
+			period === SubscriptionPeriod.Annual &&
+			userSubscriptionPeriod === SubscriptionPeriod.Monthly
+		);
+	};
 
 	const getButtonText = (plan: SubscriptionPlan) => {
 		if (userSubscriptionPlan) {
-			if (getIsCurrentPlan(plan)) {
+			if (_isCurrentPlan(plan)) {
 				return "Current Plan";
-			} else if (isUpgradePlan(plan)) {
+			} else if (_isUpgradePlan(plan)) {
 				return "Upgrade Plan";
-			} else {
-				return "Downgrade Plan";
 			}
-		} else {
-			switch (plan) {
-				case SubscriptionPlan.Basic:
-					return "Sign Up For Starter";
-				case SubscriptionPlan.Pro:
-					return "Sign Up For Creator";
-				case SubscriptionPlan.Premium:
-					return "Sign Up for Professional";
-				default:
-					return "Get Started For Free";
-			}
+			return "Downgrade Plan";
+		}
+
+		switch (plan) {
+			case SubscriptionPlan.Basic:
+				return "Sign Up For Starter";
+			case SubscriptionPlan.Pro:
+				return "Sign Up For Creator";
+			case SubscriptionPlan.Premium:
+				return "Sign Up for Professional";
+			default:
+				return "Get Started For Free";
 		}
 	};
 
-	const getDisabledButton = (plan: SubscriptionPlan) => {
-		if (userSubscriptionPlan) {
-			return getIsCurrentPlan(plan) || !isUpgradePlan(plan);
+	const isCurrentPlan = (plan: SubscriptionPlan) =>
+		getButtonText(plan) === "Current Plan";
+	const isUpgradePlan = (plan: SubscriptionPlan) =>
+		getButtonText(plan) === "Upgrade Plan";
+	const isDowngradePlan = (plan: SubscriptionPlan) =>
+		getButtonText(plan) === "Downgrade Plan";
+
+	const getButtonStyles = (plan: SubscriptionPlan) => {
+		if (
+			plan === SubscriptionPlan.Free ||
+			isDowngradePlan(plan) ||
+			isCurrentPlan(plan)
+		) {
+			return secondaryButtonStyles;
+		}
+		return primaryButtonStyles;
+	};
+
+	const handleClickSubscriptionButton = (
+		e: React.MouseEvent<HTMLButtonElement>,
+		plan: SubscriptionPlan
+	) => {
+		const preventsToShowCheckoutDialog = () => {
+			e.preventDefault();
+		};
+
+		if (!user) {
+			preventsToShowCheckoutDialog();
+			router.push(Routes.ToAuthPage("/account?step=payment")).then();
+		} else if (isDowngradePlan(plan)) {
+			preventsToShowCheckoutDialog();
+			Router.push(Routes.ToSubscriptionPage()).then();
+			onCloseDialog();
+		} else if (plan === SubscriptionPlan.Free) {
+			eventLogger("pricing_free_plan_clicked");
+			Router.push(Routes.Generate()).then();
+			onCloseDialog();
 		}
 	};
+
+	const getDisabledButton = (plan: SubscriptionPlan) => isCurrentPlan(plan);
 
 	const professionalProps: PricingCardProps = {
 		variant: "Paid",
@@ -140,15 +181,15 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 				variant="subscription"
 				plan={SubscriptionPlan.Premium}
 				period={period}
-				isUpgradePlan={
-					getButtonText(SubscriptionPlan.Premium) === "Upgrade Plan"
-				}
+				isUpgradePlan={isUpgradePlan(SubscriptionPlan.Premium)}
 			>
 				<Button
 					variant="outline"
-					className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
+					className={getButtonStyles(SubscriptionPlan.Premium)}
 					size="sm"
-					onClick={openLoginWhenNotLoggedIn}
+					onClick={(e) =>
+						handleClickSubscriptionButton(e, SubscriptionPlan.Premium)
+					}
 					disabled={getDisabledButton(SubscriptionPlan.Premium)}
 				>
 					{getButtonText(SubscriptionPlan.Premium)}
@@ -240,14 +281,11 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 						button={
 							<Button
 								variant="outline"
-								className="w-full transition-none group-hover:border-2"
+								className={getButtonStyles(SubscriptionPlan.Free)}
 								size="sm"
-								onClick={(e) => {
-									eventLogger("pricing_free_plan_clicked");
-									Router.push(Routes.Generate()).then();
-									onClickFreePlan();
-								}}
-								disabled={getDisabledButton(SubscriptionPlan.Free)}
+								onClick={(e) =>
+									handleClickSubscriptionButton(e, SubscriptionPlan.Free)
+								}
 							>
 								{getButtonText(SubscriptionPlan.Free)}
 							</Button>
@@ -285,15 +323,15 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								variant="subscription"
 								plan={SubscriptionPlan.Basic}
 								period={period}
-								isUpgradePlan={
-									getButtonText(SubscriptionPlan.Basic) === "Upgrade Plan"
-								}
+								isUpgradePlan={isUpgradePlan(SubscriptionPlan.Basic)}
 							>
 								<Button
 									variant="outline"
-									className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
+									className={getButtonStyles(SubscriptionPlan.Basic)}
 									size="sm"
-									onClick={openLoginWhenNotLoggedIn}
+									onClick={(e) =>
+										handleClickSubscriptionButton(e, SubscriptionPlan.Basic)
+									}
 									disabled={getDisabledButton(SubscriptionPlan.Basic)}
 								>
 									{getButtonText(SubscriptionPlan.Basic)}
@@ -329,15 +367,15 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								variant="subscription"
 								plan={SubscriptionPlan.Pro}
 								period={period}
-								isUpgradePlan={
-									getButtonText(SubscriptionPlan.Pro) === "Upgrade Plan"
-								}
+								isUpgradePlan={isUpgradePlan(SubscriptionPlan.Pro)}
 							>
 								<Button
 									variant="outline"
-									className="w-full transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
+									className={getButtonStyles(SubscriptionPlan.Pro)}
 									size="sm"
-									onClick={openLoginWhenNotLoggedIn}
+									onClick={(e) =>
+										handleClickSubscriptionButton(e, SubscriptionPlan.Pro)
+									}
 									disabled={getDisabledButton(SubscriptionPlan.Pro)}
 								>
 									{getButtonText(SubscriptionPlan.Pro)}
@@ -370,15 +408,15 @@ const PricingCards = ({ onClickFreePlan }: PricingCardsProps) => {
 								variant="subscription"
 								plan={SubscriptionPlan.Premium}
 								period={period}
-								isUpgradePlan={
-									getButtonText(SubscriptionPlan.Premium) === "Upgrade Plan"
-								}
+								isUpgradePlan={isUpgradePlan(SubscriptionPlan.Premium)}
 							>
 								<Button
 									variant="outline"
 									className="px-4 transition-none group-hover:bg-accent-button group-hover:text-primary-foreground"
 									size="sm"
-									onClick={openLoginWhenNotLoggedIn}
+									onClick={(e) =>
+										handleClickSubscriptionButton(e, SubscriptionPlan.Premium)
+									}
 									disabled={getDisabledButton(SubscriptionPlan.Premium)}
 								>
 									{getButtonText(SubscriptionPlan.Premium)}
