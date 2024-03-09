@@ -256,8 +256,8 @@ export default function GenerateIcon() {
 					y2="40"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="white" stop-opacity="0.12" />
-					<stop offset="1" stop-color="white" stop-opacity="0" />
+					<stop stopColor="white" stopOpacity="0.12" />
+					<stop offset="1" stopColor="white" stopOpacity="0" />
 				</linearGradient>
 				<linearGradient
 					id="paint1_linear_1887_8441"
@@ -267,8 +267,8 @@ export default function GenerateIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#6060A6" />
-					<stop offset="1" stop-color="#F0D2FC" />
+					<stop stopColor="#6060A6" />
+					<stop offset="1" stopColor="#F0D2FC" />
 				</linearGradient>
 				<linearGradient
 					id="paint2_linear_1887_8441"
@@ -278,8 +278,8 @@ export default function GenerateIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#7521A6" />
-					<stop offset="1" stop-color="#E3B4FE" />
+					<stop stopColor="#7521A6" />
+					<stop offset="1" stopColor="#E3B4FE" />
 				</linearGradient>
 			</defs>
 		</svg>

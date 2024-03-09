@@ -1,4 +1,7 @@
-import React, { FC, useState } from "react";
+import React, { useState } from "react";
+import clsx from "clsx";
+import toast from "react-hot-toast";
+import { HTTPError } from "ky";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -33,12 +36,24 @@ import {
 	VideoRatioSelect,
 } from "@/features/generate/components/selection-constants";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { publicProxyApiFetcher } from "@/lib/fetcher";
 import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import useEventLogger from "@/utils/analytics";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
+import StoryLogo from "../../public/auth-prompt/story-logo";
 
-const GenerateModalContent: FC = () => {
+/**
+ * Story generation form.
+ * @todo Migrate to individual states React Hook Form to take advantage of validation and form states.
+ */
+const GenerateModalContent: React.FC<{
+	className?: string;
+	/**
+	 * if true, escape iframe
+	 */
+	fromLanding?: boolean;
+}> = ({ className = "", fromLanding = false }) => {
 	const eventLogger = useEventLogger();
 
 	const { userCanUseCredits } = useUserCanUseCredits();
@@ -96,73 +111,21 @@ const GenerateModalContent: FC = () => {
 			params["image_resolution"] = ImageRatios["9x8"].enumValue;
 		}
 
-		const isStoryBook = outputType === StoryOutputTypes.Story;
-
-		if (isStoryBook) {
-			const { error } = await userCanUseCredits({
-				variant: "story book",
-				storybookCredits: 1,
-			});
-
-			if (error) {
-				if (error === "not enough credits") {
-					setOpenStoryBooksDialog(true);
-				} else if (
-					error === "not paid subscription" ||
-					error === "using custom plan"
-				) {
-					setOpenSubscriptionDialog(true);
-				}
-
-				setIsLoading(false);
-				return;
-			}
-		} else {
-			const { error } = await userCanUseCredits({
-				variant: "video credits",
-				videoCredits: 1,
-			});
-
-			if (error) {
-				if (error === "not enough credits") {
-					setOpenCreditsDialog(true);
-				} else if (
-					error === "not paid subscription" ||
-					error === "using custom plan"
-				) {
-					setOpenSubscriptionDialog(true);
-				}
-
-				setIsLoading(false);
-				return;
-			}
-		}
-
-		const response = Routes.CreateStoryFromRoute(params);
-		Router.push(response)
-			.then(() => {
-				invalidateUser();
-				setIsLoading(false);
-			})
-			.catch((error) => {
-				console.error("Navigation error:", error);
-				setIsLoading(false); // Ensure loading state is reset even if navigation fails
-			});
+		await submitToBackend(params, invalidateUser, fromLanding, setIsLoading);
 	};
 
 	return (
-		<div className="mt-24 w-full flex flex-col items-center">
+		<div className={clsx("relative flex flex-col items-center", className)}>
 			<div
-				className={`flex flex-col w-4/5 gap-4 p-1`}
+				className={`flex flex-col gap-4 p-1 w-full`}
 				style={{
 					borderRadius: "12px",
-					border: "0.622px solid rgba(255, 255, 255, 0.64)",
 					background:
 						"radial-gradient(160.1% 83.28% at 24.99% 40.87%, rgba(206, 123, 255, 0.40) 0%, rgba(102, 129, 255, 0.40) 38.5%, rgba(134, 248, 255, 0.40) 100%)",
 					backdropFilter: "blur(3.7341220378875732px)",
 				}}
 			>
-				<div className="flex flex-col bg-white items-center p-2 gap-2 rounded-lg h-[calc(100vh-152px)] lg:h-fit overflow-auto">
+				<div className="flex flex-col bg-white items-center p-2 gap-2 rounded-lg lg:h-fit overflow-auto">
 					<ToggleGroup
 						type="single"
 						className="grid grid-cols-3 bg-slate-100 p-0.5 rounded-md w-full lg:w-fit"
@@ -261,9 +224,9 @@ const GenerateModalContent: FC = () => {
 									disabled={isSubmitDisabled}
 									className="flex gap-2 items-center w-full"
 									variant="default"
-									onClick={() => onSubmit()}
+									onClick={onSubmit}
 								>
-									<Sparkles className="h-4 w-4" />
+									<StoryLogo />
 									{isLoading ? "Generating" : "Generate"}
 								</Button>
 							</div>
@@ -295,3 +258,70 @@ const GenerateModalContent: FC = () => {
 };
 
 export default GenerateModalContent;
+
+/**
+ * Submit form data to the backend
+ * @param params form data
+ * @param invalidateUser
+ * @param fromLanding true if the user is coming from the landing page
+ * @param setIsLoading form submitting state
+ */
+export const submitToBackend = async (
+	params: CreateInitialStoryQueryParams,
+	invalidateUser: () => Promise<void>,
+	fromLanding: boolean,
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+	const data = JSON.stringify(params);
+
+	try {
+		const json: { storyPath: string } = await publicProxyApiFetcher
+			.post("api/story/create", { body: data })
+			.json();
+
+		console.log(data);
+		console.log(json);
+
+		invalidateUser();
+
+		if (json.storyPath == null) {
+			toast.error("An unexpected error has occurred. Please try again.");
+		} else {
+			// Ok! Send the user to the story page
+			redirect(json.storyPath, fromLanding);
+		}
+	} catch (error) {
+		if (error instanceof HTTPError) {
+			switch (error.response.status) {
+				case 401: {
+					redirect("/auth/login?returnTo=/generate", fromLanding);
+					break;
+				}
+				case 402: {
+					toast.error("Not enough balance to create story.");
+					break;
+				}
+				default: {
+					toast.error("Unable to generate your story. Please try again.");
+					console.error(error.message, error.response.status);
+				}
+			}
+		}
+	} finally {
+		setIsLoading(false);
+	}
+};
+
+/**
+ * Redirect user to `/generate` page.  Why not `useRouter.push()`?
+ * This prompt component is used in both Next.js's legacy pages and the newer app dir in which
+ * the router API has changed.  So we can't import both versions.
+ *
+ */
+const redirect = (dest: string, escapeIFrame: boolean) => {
+	if (escapeIFrame) {
+		window.parent.location.href = dest;
+	} else {
+		window.location.href = dest;
+	}
+};

@@ -214,8 +214,8 @@ export default function LibraryIcon() {
 						y2="33"
 						gradientUnits="userSpaceOnUse"
 					>
-						<stop stop-color="white" stop-opacity="0.12" />
-						<stop offset="1" stop-color="white" stop-opacity="0" />
+						<stop stopColor="white" stopOpacity="0.12" />
+						<stop offset="1" stopColor="white" stopOpacity="0" />
 					</linearGradient>
 					<linearGradient
 						id="paint1_linear_1887_8473"
@@ -225,8 +225,8 @@ export default function LibraryIcon() {
 						y2="31"
 						gradientUnits="userSpaceOnUse"
 					>
-						<stop stop-color="#6060A6" />
-						<stop offset="1" stop-color="#F0D2FC" />
+						<stop stopColor="#6060A6" />
+						<stop offset="1" stopColor="#F0D2FC" />
 					</linearGradient>
 					<linearGradient
 						id="paint2_linear_1887_8473"
@@ -236,8 +236,8 @@ export default function LibraryIcon() {
 						y2="31"
 						gradientUnits="userSpaceOnUse"
 					>
-						<stop stop-color="#042F2E" />
-						<stop offset="1" stop-color="#9FEAE1" />
+						<stop stopColor="#042F2E" />
+						<stop offset="1" stopColor="#9FEAE1" />
 					</linearGradient>
 				</defs>
 			</svg>
