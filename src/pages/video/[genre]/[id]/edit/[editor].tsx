@@ -166,3 +166,5 @@ export const getServerSideProps = withPageAuthRequired({
 		};
 	},
 });
+
+export default EditorPage;

@@ -27,6 +27,11 @@ export const VIDEO_ORIENTATIONS = {
 		id: "wide",
 		icon: <WideOrientationIcon />,
 	},
+	TIK_TOK: {
+		value: "Trends",
+		id: "tik-tok",
+		icon: <TrendsOrientation />,
+	},
 	VERTICAL: {
 		value: "Vertical",
 		id: "vertical",
@@ -36,11 +41,6 @@ export const VIDEO_ORIENTATIONS = {
 		value: "Book",
 		id: "book",
 		icon: <BookOrientationIcon />,
-	},
-	TIK_TOK: {
-		value: "Trends",
-		id: "tik-tok",
-		icon: <TrendsOrientation />,
 	},
 };
 
