@@ -1,8 +1,13 @@
-import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
+import {
+	authFetcher,
+	mlFetcher,
+	publicFetcher,
+	publicProxyApiFetcher,
+} from "@/lib/fetcher";
 import { mainSchema, mlSchema } from "../schema";
 import { getJwt } from "@/utils/jwt";
 import { StoryOutputTypes } from "@/utils/enums";
-import { RegenerateVideoSegments } from "@/types";
+import { FeedPageVideoQueryOptions, RegenerateVideoSegments } from "@/types";
 
 const video = {
 	getUploadUrl: async (
@@ -17,14 +22,25 @@ const video = {
 		topLevelCategory: string,
 		slug: string,
 		storyType: StoryOutputTypes,
-		accessToken?: string
+		requireAuth?: boolean
 	): Promise<mainSchema["ReturnVideoStoryDTO"]> => {
-		const data: mainSchema["ReturnVideoStoryDTOApiResponse"] =
-			await publicFetcher
-				.get(`api/Video/${topLevelCategory}/${slug}`, {
-					searchParams: { storyType },
-				})
-				.json();
+		let fetcher = publicFetcher;
+		let endpoint =
+			storyType === StoryOutputTypes.Story
+				? `api/StoryBook/${topLevelCategory}/${slug}`
+				: `api/Video/${topLevelCategory}/${slug}`;
+		if (requireAuth) {
+			fetcher = publicProxyApiFetcher;
+			endpoint = endpoint.replace("api/", "proxyApi/");
+		}
+		console.log(endpoint);
+		const data:
+			| mainSchema["ReturnVideoStoryDTOApiResponse"]
+			| mainSchema["ReturnWebStoryDTOApiResponse"] = await fetcher
+			.get(endpoint, {
+				searchParams: { storyType },
+			})
+			.json();
 
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
@@ -36,7 +52,36 @@ const video = {
 
 		return data.data;
 	},
+	getStoryServer: async (
+		topLevelCategory: string,
+		slug: string,
+		storyType: StoryOutputTypes,
+		accessToken?: string
+	): Promise<mainSchema["ReturnVideoStoryDTO"]> => {
+		let fetcher = publicFetcher;
+		if (accessToken) fetcher = authFetcher(accessToken);
+		const endpoint =
+			storyType === StoryOutputTypes.Story
+				? `api/StoryBook/${topLevelCategory}/${slug}`
+				: `api/Video/${topLevelCategory}/${slug}`;
 
+		const data:
+			| mainSchema["ReturnWebStoryDTOApiResponse"]
+			| mainSchema["ReturnVideoStoryDTOApiResponse"] = await fetcher
+			.get(endpoint, {
+				searchParams: { storyType },
+			})
+			.json();
+
+		if (!data.succeeded) {
+			throw new Error("Story not found");
+		}
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
 	editSegment: async (
 		params: mlSchema["EditSegmentRequest"],
 		accessToken?: string

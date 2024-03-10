@@ -92,7 +92,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	const queryClient = new QueryClient();
 	const storyData = await queryClient.fetchQuery({
 		queryFn: async () =>
-			await api.video.get(genre, id, StoryOutputTypes.SplitScreen),
+			await api.video.getStoryServer(
+				genre,
+				id,
+				StoryOutputTypes.SplitScreen,
+				session?.accessToken
+			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 	});

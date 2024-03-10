@@ -41,7 +41,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			Routes.EditStory(StoryOutputTypes.Video, genre, id)
 		);
 
-		const storyData = await api.video.get(genre, id, StoryOutputTypes.Video);
+		const storyData = await api.video.getStoryServer(
+			genre,
+			id,
+			StoryOutputTypes.Video,
+			session?.accessToken
+		);
 
 		return { props: { session: { ...session }, storyData } };
 	} catch (e) {

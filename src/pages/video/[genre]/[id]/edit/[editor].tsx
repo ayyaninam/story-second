@@ -34,20 +34,19 @@ import EditAccentStyle from "@/features/scenes/edit-accent-style";
 import Script from "next/script";
 
 const EditorPage = ({
-	dehydratedState,
 	session,
 	storyData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 	useSaveSessionToken(session.accessToken);
 	const router = useRouter();
-	const queryClient = useQueryClient();
 
 	const Webstory = useQuery<mainSchema["ReturnVideoStoryDTO"]>({
 		queryFn: () =>
 			api.video.get(
 				router.query.genre!.toString(),
 				router.query.id!.toString(),
-				storyData.storyType
+				storyData.storyType,
+				true
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],
@@ -130,7 +129,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	const queryClient = new QueryClient();
 	const storyData = await queryClient.fetchQuery({
 		queryFn: async () =>
-			await api.video.get(genre, id, StoryOutputTypes.SplitScreen),
+			await api.video.getStoryServer(
+				genre,
+				id,
+				StoryOutputTypes.Video,
+				session?.accessToken
+			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 	});
@@ -150,7 +154,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		props: {
 			session: { ...session },
 			storyData,
-			dehydratedState: dehydrate(queryClient),
 		},
 	};
 };

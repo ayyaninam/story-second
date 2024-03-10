@@ -29,7 +29,7 @@ export default function CheckedCheckBox() {
 					filterUnits="userSpaceOnUse"
 					color-interpolation-filters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"

@@ -34,10 +34,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			Routes.EditStory(StoryOutputTypes.SplitScreen, genre, id)
 		);
 
-		const storyData = await api.video.get(
+		const storyData = await api.video.getStoryServer(
 			genre,
 			id,
-			StoryOutputTypes.SplitScreen
+			StoryOutputTypes.SplitScreen,
+			session?.accessToken
 		);
 
 		return { props: { session: { ...session }, storyData } };

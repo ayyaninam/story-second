@@ -43,8 +43,8 @@ export default function ChallengesIcon() {
 					</g>
 					<g filter="url(#filter3_d_1887_8528)">
 						<path
-							fill-rule="evenodd"
-							clip-rule="evenodd"
+							fillRule="evenodd"
+							clipRule="evenodd"
 							d="M32.8438 19.2513H34.625C34.9399 19.2513 35.242 19.3764 35.4647 19.5991C35.6874 19.8218 35.8125 20.1238 35.8125 20.4388V21.6263C35.8125 22.4136 35.4997 23.1687 34.943 23.7255C34.3862 24.2822 33.6311 24.595 32.8438 24.595H32.5528C31.8373 26.8171 29.8705 28.4804 27.5 28.7201V30.5325H29.2812C29.4387 30.5325 29.5897 30.5951 29.7011 30.7064C29.8124 30.8178 29.875 30.9688 29.875 31.1263C29.875 31.2837 29.8124 31.4347 29.7011 31.5461C29.5897 31.6574 29.4387 31.72 29.2812 31.72H24.5312C24.3738 31.72 24.2228 31.6574 24.1114 31.5461C24.0001 31.4347 23.9375 31.2837 23.9375 31.1263C23.9375 30.9688 24.0001 30.8178 24.1114 30.7064C24.2228 30.5951 24.3738 30.5325 24.5312 30.5325H26.3125V28.7223C25.1561 28.6053 24.0594 28.152 23.1578 27.4185C22.2563 26.685 21.5894 25.7034 21.2396 24.595H20.9688C20.5789 24.595 20.1928 24.5182 19.8327 24.369C19.4725 24.2198 19.1452 24.0011 18.8695 23.7255C18.3128 23.1687 18 22.4136 18 21.6263V20.4388C18 20.1238 18.1251 19.8218 18.3478 19.5991C18.5705 19.3764 18.8726 19.2513 19.1875 19.2513H20.9688V17.6575C20.9688 17.3426 21.0939 17.0405 21.3166 16.8178C21.5393 16.5951 21.8413 16.47 22.1562 16.47H26.9062H31.6562C31.9712 16.47 32.2732 16.5951 32.4959 16.8178C32.7186 17.0405 32.8438 17.3426 32.8438 17.6575V19.2513ZM19.7092 22.8858C20.0433 23.2198 20.4963 23.4075 20.9688 23.4075H20.9977C20.9784 23.2096 20.9688 23.0117 20.9688 22.8138V20.4388H19.1875V21.6263C19.1875 22.0987 19.3752 22.5517 19.7092 22.8858ZM34.1033 22.8858C34.4373 22.5517 34.625 22.0987 34.625 21.6263V20.4388H32.8438V22.747C32.8434 22.9676 32.831 23.1882 32.8066 23.4075H32.8438C33.3162 23.4075 33.7692 23.2198 34.1033 22.8858ZM29.3431 22.4063L25.7257 24.5086C25.653 24.5529 25.5698 24.5767 25.4847 24.5777C25.3996 24.5786 25.3158 24.5566 25.2421 24.514C25.1685 24.4714 25.1077 24.4097 25.0661 24.3354C25.0246 24.2611 25.0038 24.177 25.006 24.0919V19.8874C25.0038 19.8023 25.0246 19.7182 25.0661 19.6439C25.1077 19.5696 25.1685 19.5079 25.2421 19.4653C25.3158 19.4226 25.3996 19.4006 25.4847 19.4016C25.5698 19.4025 25.653 19.4264 25.7257 19.4707L29.3431 21.5919C29.4138 21.6338 29.4723 21.6934 29.513 21.7648C29.5536 21.8362 29.575 21.9169 29.575 21.9991C29.575 22.0813 29.5536 22.162 29.513 22.2334C29.4723 22.3048 29.4138 22.3644 29.3431 22.4063Z"
 							fill="white"
 						/>
@@ -61,7 +61,7 @@ export default function ChallengesIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -114,7 +114,7 @@ export default function ChallengesIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -172,7 +172,7 @@ export default function ChallengesIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -223,7 +223,7 @@ export default function ChallengesIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -256,8 +256,8 @@ export default function ChallengesIcon() {
 					y2="40"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="white" stop-opacity="0.12" />
-					<stop offset="1" stop-color="white" stop-opacity="0" />
+					<stop stopColor="white" stop-opacity="0.12" />
+					<stop offset="1" stopColor="white" stop-opacity="0" />
 				</linearGradient>
 				<linearGradient
 					id="paint1_linear_1887_8528"
@@ -267,8 +267,8 @@ export default function ChallengesIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#6060A6" />
-					<stop offset="1" stop-color="#F0D2FC" />
+					<stop stopColor="#6060A6" />
+					<stop offset="1" stopColor="#F0D2FC" />
 				</linearGradient>
 				<linearGradient
 					id="paint2_linear_1887_8528"
@@ -278,8 +278,8 @@ export default function ChallengesIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#1A2E05" />
-					<stop offset="1" stop-color="#B2F263" />
+					<stop stopColor="#1A2E05" />
+					<stop offset="1" stopColor="#B2F263" />
 				</linearGradient>
 			</defs>
 		</svg>

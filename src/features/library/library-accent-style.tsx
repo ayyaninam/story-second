@@ -1,6 +1,6 @@
 import React from "react";
 
-const FeedAccentStyle = () => {
+const LibraryAccentStyle = () => {
 	return (
 		<style jsx global>{`
 			:root {
@@ -29,4 +29,4 @@ const FeedAccentStyle = () => {
 	);
 };
 
-export default FeedAccentStyle;
+export default LibraryAccentStyle;

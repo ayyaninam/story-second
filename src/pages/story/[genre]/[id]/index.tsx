@@ -13,6 +13,7 @@ import Format from "@/utils/format";
 import { NextSeo } from "next-seo";
 import PageLayout from "@/components/layouts/PageLayout";
 import StoryBookPage from "@/features/story/story-page";
+import { StoryOutputTypes } from "@/utils/enums";
 
 export default function PublishPage({
 	storyData,
@@ -88,10 +89,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	const queryClient = new QueryClient();
 	const storyData = await queryClient.fetchQuery({
 		queryFn: async () =>
-			await api.storybook.getStory({
-				topLevelCategory: genre as string,
-				slug: id as string,
-			}),
+			await api.video.getStoryServer(
+				genre,
+				id,
+				StoryOutputTypes.Story,
+				session?.accessToken
+			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 	});
