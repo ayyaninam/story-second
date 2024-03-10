@@ -3,15 +3,14 @@ import { GalleryData, VideoOrientation, VideoThumbnail } from "@/types";
 import { Button } from "@/components/ui/button";
 import GalleryImage from "./gallery-image";
 import GalleryComponentLoader from "./gallery-component-loader";
-import RightArrow from "@/features/feed/components/svgs/right-arrow";
+import RightArrow from "./svgs/right-arrow";
 
 const navigationButtonStyles = {
 	border: "0.5px solid var(--border)",
-	background: "linear-gradient(180deg, #FFF 0%, #F8FAFC 100%)",
 	boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1px #A1A1AA",
 };
 
-function LibraryGalleryComponent({
+function GalleryComponent({
 	galleryDetails,
 	isIndependentGalleryPage = false,
 	setSelectedOrientationTab,
@@ -61,13 +60,13 @@ function LibraryGalleryComponent({
 						}}
 					>
 						{galleryDetails.header.buttonText}
-						<RightArrow fill="#0D9488" />
+						<RightArrow fill="#4F46E5" />
 					</Button>
 				)}
 			</div>
 			<div
 				className={
-					"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:grid-cols-5 gap-4 grid-flow-row"
+					"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 grid-flow-row"
 				}
 			>
 				{areThumbnailsLoading ? (
@@ -95,4 +94,4 @@ function LibraryGalleryComponent({
 	);
 }
 
-export default LibraryGalleryComponent;
+export default GalleryComponent;

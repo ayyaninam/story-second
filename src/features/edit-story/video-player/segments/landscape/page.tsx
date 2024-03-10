@@ -55,7 +55,7 @@ const SegmentPage = ({
 			letterSpacing: -1,
 			lineHeight: 1.2,
 			color: "#fff",
-			"-webkit-text-stroke": "2px #000",
+			WebkitTextStroke: "2px #000",
 			textShadow: "0.04em 0.04em 0.04em black",
 			fontWeight: 900,
 		}),

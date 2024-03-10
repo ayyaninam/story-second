@@ -1,6 +1,6 @@
 import { cn } from "@/utils";
 import React from "react";
-import { VIDEO_ORIENTATIONS } from "../constants";
+import { VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GalleryData, VideoOrientation } from "@/types";
 
@@ -18,7 +18,7 @@ function GalleryComponentLoader({
 		>
 			<div
 				className={cn(
-					"w-full min-h-[100%] relative bg-gray-100 relative overflow-hidden",
+					"w-full min-h-[100%] relative bg-gray-100 overflow-hidden",
 					galleryDetails.orientation === VIDEO_ORIENTATIONS.WIDE.id
 						? "aspect-[16/9]"
 						: galleryDetails.orientation === VIDEO_ORIENTATIONS.BOOK.id

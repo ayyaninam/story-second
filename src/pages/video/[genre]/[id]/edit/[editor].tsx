@@ -30,7 +30,7 @@ import { notFound } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect } from "react";
 import { useImmerReducer } from "use-immer";
-import EditAccentStyles from "@/features/scenes/edit-accent-style";
+import EditAccentStyle from "@/features/scenes/edit-accent-style";
 import Script from "next/script";
 
 const EditorPage = ({
@@ -90,21 +90,21 @@ const EditorPage = ({
             };
           `}
 				</Script>
-				<EditAccentStyles />
+				<EditAccentStyle />
 				<ScriptLayout {...{ story, dispatch }} />
 			</WebStoryProvider>
 		);
 	} else if (router.query.editor === "storyboard") {
 		return (
 			<WebStoryProvider initialValue={storyData}>
-				<EditAccentStyles />
+				<EditAccentStyle />
 				<StoryboardLayout {...{ story, dispatch }} />
 			</WebStoryProvider>
 		);
 	} else if (router.query.editor === "scenes") {
 		return (
 			<WebStoryProvider initialValue={storyData}>
-				<EditAccentStyles />
+				<EditAccentStyle />
 				<ScenesLayout {...{ story, dispatch }} />
 			</WebStoryProvider>
 		);

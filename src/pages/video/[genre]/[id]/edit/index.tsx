@@ -8,7 +8,7 @@ import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
 import { StoryOutputTypes } from "@/utils/enums";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { ReactElement } from "react";
-import EditAccentStyles from "@/features/scenes/edit-accent-style";
+import EditAccentStyle from "@/features/scenes/edit-accent-style";
 
 function StoryPage({
 	session,
@@ -18,7 +18,7 @@ function StoryPage({
 
 	return (
 		<WebStoryProvider initialValue={storyData}>
-			<EditAccentStyles />
+			<EditAccentStyle />
 			<EditStory />
 		</WebStoryProvider>
 	);
