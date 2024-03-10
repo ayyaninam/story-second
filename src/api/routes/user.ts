@@ -14,7 +14,7 @@ const user = {
 		return await publicProxyApiFetcher.get(`proxyApi/User`).json();
 	},
 	getServer: async (
-		accessToken?: string
+		accessToken?: string | null
 	): Promise<mainSchema["UserInfoDTOApiResponse"] | null> => {
 		if (!accessToken) return null;
 		return await authFetcher(accessToken as string)

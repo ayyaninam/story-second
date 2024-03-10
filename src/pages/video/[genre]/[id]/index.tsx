@@ -3,7 +3,7 @@ import api from "@/api";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { StoryOutputTypes } from "@/utils/enums";
 import { WebStoryProvider } from "@/features/edit-story/providers/WebstoryContext";
-import { getSession } from "@auth0/nextjs-auth0";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
 import React, { ReactElement } from "react";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import {
@@ -26,40 +26,48 @@ export default function PublishPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	useSaveSessionToken(session.accessToken);
 	return (
-		<HydrationBoundary state={dehydratedState}>
-			<NextSeo
-				title={storyData?.storyTitle || undefined}
-				description={
-					storyData?.summary ||
-					"Find your videos, trends, storybooks, all in one place"
-				}
-				openGraph={{
-					images: [
-						{
-							url: storyData?.coverImage
-								? Format.GetImageUrl(storyData.coverImage)
-								: "/og-assets/og-story.png",
-							width: 1200,
-							height: 630,
-							alt: storyData?.storyTitle || "Story.com",
-						},
-					],
-				}}
-			/>
-			{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
-			<WebStoryProvider initialValue={storyData}>
-				<PublishedStory storyData={storyData} session={session} />
-			</WebStoryProvider>
-		</HydrationBoundary>
+		<PageLayout pageIndex={isOwner ? 2 : 0}>
+			<HydrationBoundary state={dehydratedState}>
+				<NextSeo
+					title={storyData?.storyTitle || undefined}
+					description={
+						storyData?.summary ||
+						"Find your videos, trends, storybooks, all in one place"
+					}
+					openGraph={{
+						images: [
+							{
+								url: storyData?.coverImage
+									? Format.GetImageUrl(storyData.coverImage)
+									: "/og-assets/og-story.png",
+								width: 1200,
+								height: 630,
+								alt: storyData?.storyTitle || "Story.com",
+							},
+						],
+					}}
+				/>
+				{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
+				<WebStoryProvider initialValue={storyData}>
+					<PublishedStory storyData={storyData} session={session} />
+				</WebStoryProvider>
+			</HydrationBoundary>
+		</PageLayout>
 	);
 }
 
-PublishPage.getLayout = function getLayout(page: ReactElement) {
-	return <PageLayout pageIndex={1}>{page}</PageLayout>;
-};
+// PublishPage.getLayout = function getLayout(page: ReactElement) {
+// 	return <PageLayout pageIndex={1}>{page}</PageLayout>;
+// };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-	const session = await getSession(ctx.req, ctx.res);
+	let accessToken: string | undefined = undefined;
+	try {
+		const tokenResult = await getAccessToken(ctx.req, ctx.res);
+		accessToken = tokenResult.accessToken;
+	} catch (e) {
+		accessToken = undefined;
+	}
 
 	// @ts-expect-error Not typing correctly
 	const { genre, id } = ctx.params;
@@ -72,17 +80,18 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	const queryClient = new QueryClient();
 	try {
 		const user = await queryClient.fetchQuery({
-			queryFn: async () => await api.user.getServer(session?.accessToken),
+			queryFn: async () => await api.user.getServer(accessToken),
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 			queryKey: [QueryKeys.USER],
 		});
+		console.log(user);
 		const storyData = await queryClient.fetchQuery({
 			queryFn: async () =>
 				await api.video.getStoryServer(
 					genre,
 					id,
 					StoryOutputTypes.Video,
-					session?.accessToken
+					accessToken
 				),
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 			queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
@@ -99,9 +108,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		// 	});
 		// }
 		const isOwner = user?.data?.id === storyData?.user?.id;
+		// const isOwner = false;
 		return {
 			props: {
-				session: { ...session },
+				session: { accessToken: accessToken || "" },
 				storyData: storyData,
 				isOwner: isOwner,
 				dehydratedState: dehydrate(queryClient),

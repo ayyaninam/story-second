@@ -60,7 +60,7 @@ function GalleryComponent({
 						}}
 					>
 						{galleryDetails.header.buttonText}
-						<RightArrow fill="#4F46E5" />
+						<RightArrow fill="var(--accent-color-600)" />
 					</Button>
 				)}
 			</div>
