@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo } from "react";
-import LibraryGalleryComponent from "./gallery-component";
+import LibraryGalleryComponent from "@/components/gallery-components/gallery-component";
 import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
-import { LIBRARY_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
+import {
+	LIBRARY_HOME_GALLERY_DATA,
+	VIDEO_ORIENTATIONS,
+} from "@/constants/feed-constants";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import {
 	keepPreviousData,
@@ -12,69 +15,46 @@ import { mainSchema } from "@/api/schema";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
-import { useDebounce } from "usehooks-ts";
-import { getGalleryThumbnails } from "../utils";
+import { getGalleryThumbnails } from "@/utils/feed-utils";
 import GenericPagination from "@/components/ui/generic-pagination";
 
-const LibraryGalleryPage: React.FC<{ orientation: VideoOrientation }> = ({
+function LibraryGalleryPage({
 	orientation = "wide",
-}) => {
+	filterOptions,
+}: {
+	orientation: VideoOrientation;
+	filterOptions: LibraryPageVideoQueryOptions;
+}) {
 	const router = useRouter();
-	const galleryDetails = LIBRARY_HOME_GALLERY_DATA[orientation];
 	const queryClient = useQueryClient();
 	const currentPage = parseInt((router.query.page as string) || "1");
 
-	const filterOptions = useDebounce(
-		useMemo<LibraryPageVideoQueryOptions>(() => {
-			const page = (router.query.page as string) || "1";
-			const sort = (router.query.sort as string) || "desc";
-			return {
-				CurrentPage: parseInt(page),
-				topLevelCategory: (router.query.genre as string) || "all",
-				isDescending: sort === "desc",
-			};
-		}, [router.query.page, router.query.genre, router.query.sort]),
-		500
-	);
 	const storiesList = useQuery<
 		| mainSchema["ReturnWebStoryDTOPagedList"]
 		| mainSchema["ReturnVideoStoryDTOPagedList"]
 	>({
 		queryFn: () => {
-			if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
-				return api.library.getStoryBooks({
-					params: {
-						PageSize: 20,
-						...filterOptions,
-					},
-				});
-			}
-			if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
-				return api.library.getVideos({
-					params: {
-						PageSize: 20,
-						storyType: StoryOutputTypes.SplitScreen,
-						resolution: DisplayAspectRatios["576x1024"],
-						...filterOptions,
-					},
-				});
-			}
-			return api.library.getVideos({
-				params: {
-					PageSize: 20,
-					storyType: StoryOutputTypes.Video,
-					resolution:
-						orientation === VIDEO_ORIENTATIONS.WIDE.id
-							? DisplayAspectRatios["1024x576"]
-							: DisplayAspectRatios["576x1024"],
-					...filterOptions,
-				},
-			});
+			const params = {
+				PageSize: 20,
+				storyType:
+					orientation === VIDEO_ORIENTATIONS.BOOK.id
+						? StoryOutputTypes.Story
+						: orientation === VIDEO_ORIENTATIONS.TIK_TOK.id
+							? StoryOutputTypes.SplitScreen
+							: StoryOutputTypes.Video,
+				resolution:
+					orientation === VIDEO_ORIENTATIONS.WIDE.id
+						? DisplayAspectRatios["1024x576"]
+						: DisplayAspectRatios["576x1024"],
+				...filterOptions,
+			};
+
+			return api.library.getStories({ params });
 		},
 		staleTime: 3000,
-		queryKey: [QueryKeys.LIBRARY_GALLERY, filterOptions, orientation],
+		queryKey: [QueryKeys.GALLERY, filterOptions, orientation],
 		initialData: queryClient.getQueryData([
-			QueryKeys.LIBRARY_GALLERY,
+			QueryKeys.GALLERY,
 			filterOptions,
 			orientation,
 		]),
@@ -94,6 +74,7 @@ const LibraryGalleryPage: React.FC<{ orientation: VideoOrientation }> = ({
 		window.scrollTo(0, 0);
 	}, [currentPage]);
 
+	const galleryDetails = LIBRARY_HOME_GALLERY_DATA[orientation];
 	if (!galleryDetails) {
 		return null;
 	}
@@ -112,6 +93,6 @@ const LibraryGalleryPage: React.FC<{ orientation: VideoOrientation }> = ({
 			/>
 		</div>
 	);
-};
+}
 
 export default LibraryGalleryPage;

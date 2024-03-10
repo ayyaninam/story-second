@@ -43,8 +43,8 @@ export default function GenerateIcon() {
 					</g>
 					<g filter="url(#filter3_d_1887_8441)">
 						<path
-							fill-rule="evenodd"
-							clip-rule="evenodd"
+							fillRule="evenodd"
+							clipRule="evenodd"
 							d="M33.73 21.05L35.74 21.63H35.73C35.89 21.68 36 21.82 36 21.99C36 22.16 35.89 22.31 35.73 22.35L33.72 22.93C31.87 23.46 30.45 24.88 29.92 26.73L29.35 28.74C29.31 28.9 29.16 29.01 29 29.01C28.84 29.01 28.7 28.9 28.65 28.74L28.08 26.73C27.55 24.88 26.13 23.46 24.28 22.93L22.27 22.35C22.11 22.3 22 22.16 22 21.99C22 21.82 22.11 21.67 22.27 21.63L24.28 21.05C26.13 20.52 27.55 19.1 28.08 17.25L28.65 15.24C28.74 14.92 29.27 14.92 29.36 15.24L29.93 17.25C30.46 19.1 31.88 20.52 33.73 21.05ZM24.25 28.77L25.32 29.08C25.4 29.11 25.46 29.18 25.46 29.27C25.46 29.36 25.4 29.44 25.32 29.46L24.25 29.77C23.27 30.05 22.51 30.8 22.23 31.79L21.92 32.86C21.89 32.94 21.82 33 21.73 33C21.64 33 21.56 32.94 21.54 32.86L21.23 31.79C20.95 30.81 20.19 30.05 19.21 29.77L18.14 29.46C18.06 29.43 18 29.36 18 29.27C18 29.18 18.06 29.1 18.14 29.08L19.21 28.77C20.19 28.49 20.95 27.74 21.23 26.75L21.54 25.68C21.59 25.51 21.87 25.51 21.92 25.68L22.23 26.75C22.51 27.73 23.27 28.49 24.25 28.77Z"
 							fill="white"
 						/>
@@ -61,7 +61,7 @@ export default function GenerateIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -114,7 +114,7 @@ export default function GenerateIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -172,7 +172,7 @@ export default function GenerateIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -223,7 +223,7 @@ export default function GenerateIcon() {
 					filterUnits="userSpaceOnUse"
 					colorInterpolationFilters="sRGB"
 				>
-					<feFlood flood-opacity="0" result="BackgroundImageFix" />
+					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
 						type="matrix"
@@ -256,8 +256,8 @@ export default function GenerateIcon() {
 					y2="40"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="white" stop-opacity="0.12" />
-					<stop offset="1" stop-color="white" stop-opacity="0" />
+					<stop stopColor="white" stop-opacity="0.12" />
+					<stop offset="1" stopColor="white" stop-opacity="0" />
 				</linearGradient>
 				<linearGradient
 					id="paint1_linear_1887_8441"
@@ -267,8 +267,8 @@ export default function GenerateIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#6060A6" />
-					<stop offset="1" stop-color="#F0D2FC" />
+					<stop stopColor="#6060A6" />
+					<stop offset="1" stopColor="#F0D2FC" />
 				</linearGradient>
 				<linearGradient
 					id="paint2_linear_1887_8441"
@@ -278,8 +278,8 @@ export default function GenerateIcon() {
 					y2="38"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stop-color="#7521A6" />
-					<stop offset="1" stop-color="#E3B4FE" />
+					<stop stopColor="#7521A6" />
+					<stop offset="1" stopColor="#E3B4FE" />
 				</linearGradient>
 			</defs>
 		</svg>

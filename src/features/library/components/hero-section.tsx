@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
 import React, { CSSProperties } from "react";
-import AiStar from "@/features/library/components/svgs/ai-star";
-import RightArrow from "@/features/library/components/svgs/right-arrow";
-import BookScroll from "@/features/library/components/svgs/book-scroll";
+import AiStar from "@/components/gallery-components/svgs/ai-star";
+import RightArrow from "@/components/gallery-components/svgs/right-arrow";
 import { cn } from "@/utils";
-import toast from "react-hot-toast";
 import Router from "next/router";
 import Routes from "@/routes";
 import Link from "next/link";

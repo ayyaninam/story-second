@@ -16,12 +16,9 @@ import { QueryKeys } from "@/lib/queryKeys";
 import api from "@/api";
 import { useEffect, useState } from "react";
 import { SubscriptionConstants } from "@/constants/subscription-constants";
-import { userInfo } from "os";
 import { mainSchema } from "@/api/schema";
 import { calculateDaysBetweenDates } from "@/utils/daytime";
-import { boolean } from "zod";
 import useEventLogger from "@/utils/analytics";
-import { router } from "next/client";
 import { useRouter } from "next/router";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
@@ -130,7 +127,13 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 					{!isPending && data?.data ? (
 						<>
 							<Avatar className="h-8 w-8 border-[1px] border-gray-200">
-								<AvatarImage src={data?.data?.profilePicture || ""} />
+								<AvatarImage
+									src={
+										data?.data?.profilePicture
+											? Format.GetImageUrl(data?.data?.profilePicture)
+											: ""
+									}
+								/>
 								<AvatarFallback>
 									{Format.AvatarName(
 										data?.data?.name?.split(" ")[0] || "S",

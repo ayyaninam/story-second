@@ -6,7 +6,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 } from "@/components/ui/select";
-import { getGenreNameFromSlug } from "../utils";
+import { getGenreNameFromSlug } from "@/utils/feed-utils";
 
 export const GenreTabSwitcher = ({
 	selectedGenre,

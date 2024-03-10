@@ -1,5 +1,5 @@
-import { CSSProperties, Dispatch, SetStateAction, useState } from "react";
-import { VIDEO_ORIENTATIONS } from "../constants";
+import { CSSProperties } from "react";
+import { VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
 import { cn } from "@/utils";
 
 const tabsContainerStyles: CSSProperties = {
@@ -24,7 +24,7 @@ export const HeaderTabSwitcher = ({
 					className={`w-[120px] h-[28px] justify-center rounded-[10000px] text-sm font-normal ease-linear duration-300 transition-all flex gap-2 items-center ${
 						selectedTab === orientation.id
 							? "bg-white text-slate-950"
-							: "text-[#5E6678] bg-transparent"
+							: "text-accent-500 bg-transparent"
 					}`}
 					style={{
 						boxShadow:
@@ -37,9 +37,7 @@ export const HeaderTabSwitcher = ({
 					<div
 						className={cn(
 							"ease-linear duration-300 transition-all",
-							orientation.id === selectedTab
-								? "text-accent-600"
-								: "text-accent-600"
+							orientation.id === selectedTab ? "text-accent-600" : ""
 						)}
 					>
 						{orientation.icon}

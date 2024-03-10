@@ -53,7 +53,7 @@ export const SegmentPortraitPage = ({
 			fontSize: 40,
 			width: 500,
 			color: "#fff",
-			"-webkit-text-stroke": "2px #000",
+			WebkitTextStroke: "2px #000",
 			textShadow: "0.04em 0.04em 0.04em black",
 			fontWeight: 900,
 		}),

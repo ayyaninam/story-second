@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo } from "react";
-import FeedGalleryComponent from "./gallery-component";
+import GalleryComponent from "@/components/gallery-components/gallery-component";
 import { FeedPageVideoQueryOptions, VideoOrientation } from "@/types";
-import { EXPLORE_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
+import {
+	EXPLORE_HOME_GALLERY_DATA,
+	VIDEO_ORIENTATIONS,
+} from "@/constants/feed-constants";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import {
 	keepPreviousData,
@@ -12,66 +15,41 @@ import { mainSchema } from "@/api/schema";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useRouter } from "next/router";
-import { useDebounce } from "usehooks-ts";
-import { getGalleryThumbnails } from "../utils";
+import { getGalleryThumbnails } from "@/utils/feed-utils";
 import GenericPagination from "@/components/ui/generic-pagination";
 
 function FeedGalleryPage({
 	orientation = "wide",
+	filterOptions,
 }: {
 	orientation: VideoOrientation;
+	filterOptions: FeedPageVideoQueryOptions;
 }) {
 	const router = useRouter();
-	const galleryDetails = EXPLORE_HOME_GALLERY_DATA[orientation];
 	const queryClient = useQueryClient();
 	const currentPage = parseInt((router.query.page as string) || "1");
 
-	const filterOptions = useDebounce(
-		useMemo<FeedPageVideoQueryOptions>(() => {
-			const page = (router.query.page as string) || "1";
-			const sort = (router.query.sort as string) || "desc";
-			return {
-				CurrentPage: parseInt(page),
-				topLevelCategory: (router.query.genre as string) || "all",
-				isDescending: sort === "desc",
-			};
-		}, [router.query.page, router.query.genre, router.query.sort]),
-		500
-	);
 	const storiesList = useQuery<
 		| mainSchema["ReturnWebStoryDTOPagedList"]
 		| mainSchema["ReturnVideoStoryDTOPagedList"]
 	>({
 		queryFn: () => {
-			if (orientation === VIDEO_ORIENTATIONS.BOOK.id) {
-				return api.feed.getStoryBooks({
-					params: {
-						PageSize: 20,
-						...filterOptions,
-					},
-				});
-			}
-			if (orientation === VIDEO_ORIENTATIONS.TIK_TOK.id) {
-				return api.feed.getVideos({
-					params: {
-						PageSize: 20,
-						storyType: StoryOutputTypes.SplitScreen,
-						resolution: DisplayAspectRatios["576x1024"],
-						...filterOptions,
-					},
-				});
-			}
-			return api.feed.getVideos({
-				params: {
-					PageSize: 20,
-					storyType: StoryOutputTypes.Video,
-					resolution:
-						orientation === VIDEO_ORIENTATIONS.WIDE.id
-							? DisplayAspectRatios["1024x576"]
-							: DisplayAspectRatios["576x1024"],
-					...filterOptions,
-				},
-			});
+			const params = {
+				PageSize: 20,
+				storyType:
+					orientation === VIDEO_ORIENTATIONS.BOOK.id
+						? StoryOutputTypes.Story
+						: orientation === VIDEO_ORIENTATIONS.TIK_TOK.id
+							? StoryOutputTypes.SplitScreen
+							: StoryOutputTypes.Video,
+				resolution:
+					orientation === VIDEO_ORIENTATIONS.WIDE.id
+						? DisplayAspectRatios["1024x576"]
+						: DisplayAspectRatios["576x1024"],
+				...filterOptions,
+			};
+
+			return api.feed.getStories({ params });
 		},
 		staleTime: 3000,
 		queryKey: [QueryKeys.GALLERY, filterOptions, orientation],
@@ -96,17 +74,18 @@ function FeedGalleryPage({
 		window.scrollTo(0, 0);
 	}, [currentPage]);
 
+	const galleryDetails = EXPLORE_HOME_GALLERY_DATA[orientation];
 	if (!galleryDetails) {
 		return null;
 	}
 
 	return (
 		<div className="flex flex-col gap-4 max-w-[1440px] mx-auto px-3 lg:px-6 p-10">
-			<FeedGalleryComponent
+			<GalleryComponent
 				galleryDetails={galleryDetails}
 				isIndependentGalleryPage
 				thumbnails={galleryThumbnails}
-				areThumbnailsLoading={storiesList.isPending || storiesList.isFetching}
+				areThumbnailsLoading={storiesList.isFetching}
 			/>
 			<GenericPagination
 				currentPage={currentPage}

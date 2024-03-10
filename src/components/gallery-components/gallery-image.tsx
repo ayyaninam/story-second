@@ -1,5 +1,5 @@
 import React from "react";
-import { VIDEO_ORIENTATIONS } from "../constants";
+import { VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
 import { cn } from "@/utils";
 import { GalleryData, VideoOrientation, VideoThumbnail } from "@/types";
 import { Button } from "@/components/ui/button";

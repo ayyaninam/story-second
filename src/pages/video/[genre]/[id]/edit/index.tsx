@@ -8,7 +8,7 @@ import { AuthError, getServerSideSessionWithRedirect } from "@/utils/auth";
 import { StoryOutputTypes } from "@/utils/enums";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { ReactElement } from "react";
-import EditAccentStyles from "@/features/scenes/edit-accent-style";
+import EditAccentStyle from "@/features/scenes/edit-accent-style";
 
 function StoryPage({
 	session,
@@ -18,7 +18,7 @@ function StoryPage({
 
 	return (
 		<WebStoryProvider initialValue={storyData}>
-			<EditAccentStyles />
+			<EditAccentStyle />
 			<EditStory />
 		</WebStoryProvider>
 	);
@@ -41,7 +41,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			Routes.EditStory(StoryOutputTypes.Video, genre, id)
 		);
 
-		const storyData = await api.video.get(genre, id, StoryOutputTypes.Video);
+		const storyData = await api.video.getStoryServer(
+			genre,
+			id,
+			StoryOutputTypes.Video,
+			session?.accessToken
+		);
 
 		return { props: { session: { ...session }, storyData } };
 	} catch (e) {

@@ -1,6 +1,6 @@
 import React from "react";
 
-const EditAccentStyles = () => {
+const EditAccentStyle = () => {
 	return (
 		<style jsx global>{`
 			:root {
@@ -34,4 +34,4 @@ const EditAccentStyles = () => {
 	);
 };
 
-export default EditAccentStyles;
+export default EditAccentStyle;

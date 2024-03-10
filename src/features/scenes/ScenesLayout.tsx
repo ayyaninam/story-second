@@ -39,7 +39,8 @@ export default function StoryScenes({
 			api.video.get(
 				router.query.genre!.toString(),
 				router.query.id!.toString(),
-				WebstoryData.storyType
+				WebstoryData.storyType,
+				true
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],

@@ -27,6 +27,11 @@ export const VIDEO_ORIENTATIONS = {
 		id: "wide",
 		icon: <WideOrientationIcon />,
 	},
+	TIK_TOK: {
+		value: "Trends",
+		id: "tik-tok",
+		icon: <TrendsOrientation />,
+	},
 	VERTICAL: {
 		value: "Vertical",
 		id: "vertical",
@@ -36,11 +41,6 @@ export const VIDEO_ORIENTATIONS = {
 		value: "Book",
 		id: "book",
 		icon: <BookOrientationIcon />,
-	},
-	TIK_TOK: {
-		value: "Trends",
-		id: "tik-tok",
-		icon: <TrendsOrientation />,
 	},
 };
 
@@ -87,6 +87,53 @@ export const EXPLORE_HOME_GALLERY_DATA: GalleryData = {
 			title: "Trending Story Books",
 			subtitle: "Checkout our library",
 			buttonText: "See all Story Books",
+		},
+	},
+};
+
+export const LIBRARY_HOME_GALLERY_DATA: GalleryData = {
+	[VIDEO_ORIENTATIONS.WIDE.id]: {
+		title: "Wide",
+		orientation: "wide",
+		header: {
+			title: "Your Widescreen Videos",
+			subtitle: "16:9 Aspect Ratio",
+			buttonText: "See all your wide videos",
+		},
+		icon: <WideOrientationIcon />,
+		aspectRatio: "16:9",
+	},
+	[VIDEO_ORIENTATIONS.VERTICAL.id]: {
+		title: "Vertical",
+		orientation: "vertical",
+		icon: <VerticalOrientationIcon />,
+		aspectRatio: "9:16",
+		header: {
+			title: "Your Portrait-Mode Videos",
+			subtitle: "9:16 Aspect Ratio",
+			buttonText: "See all your portrait videos",
+		},
+	},
+	[VIDEO_ORIENTATIONS.BOOK.id]: {
+		title: "Book",
+		orientation: "book",
+		icon: <BookOrientationIcon />,
+		aspectRatio: "1:1",
+		header: {
+			title: "Your Story Books",
+			subtitle: "Checkout our library",
+			buttonText: "See all your Story Books",
+		},
+	},
+	[VIDEO_ORIENTATIONS.TIK_TOK.id]: {
+		title: "Trends",
+		orientation: "tik-tok",
+		icon: <TrendsOrientation />,
+		aspectRatio: "9:16",
+		header: {
+			title: "Your Trends",
+			subtitle: "Upload yourself & generate",
+			buttonText: "See all your Trends",
 		},
 	},
 };
