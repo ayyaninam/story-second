@@ -266,15 +266,17 @@ export default function PublishedStory({
 					>
 						<Share2 className="mr-2 h-4 w-4" /> Share this video
 					</Button>
-					<Button
-						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
-						variant="outline"
-						onClick={() => {
-							router.push(Routes.Logout("/feed"));
-						}}
-					>
-						<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
-					</Button>
+					{session?.accessToken && (
+						<Button
+							className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+							variant="outline"
+							onClick={() => {
+								router.push(Routes.Logout("/feed"));
+							}}
+						>
+							<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
+						</Button>
+					)}
 				</div>
 			</div>
 
@@ -533,7 +535,7 @@ export default function PublishedStory({
 					</div>
 					<div className="absolute bottom-10 left-4 items-center flex flex-row gap-x-1">
 						<span
-							className="rounded-full text-xs text-purple-100 bg-purple-500 p-1.5 hover:cursor-pointer hover:bg-purple-400 transition-colors duration-200  ease-in-out"
+							className="rounded-full text-xs text-accent-100 bg-accent-600 p-1.5 hover:cursor-pointer hover:bg-accent-400 transition-colors duration-200  ease-in-out"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
 							onClick={() => router.push(Routes.Generate())}
 						>

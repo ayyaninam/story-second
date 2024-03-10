@@ -50,7 +50,8 @@ export const useSubmitEditScenesAndSegments = (
 			const newVideo = await api.video.get(
 				updatedStory.topLevelCategory,
 				updatedStory.slug,
-				updatedStory.type
+				updatedStory.type,
+				true
 			);
 
 			const reindexSceneSegments = (scene: Scene, sceneIndex: number) => {
@@ -100,7 +101,8 @@ export const useSubmitEditScenesAndSegments = (
 			const response = await api.video.get(
 				prevStory?.topLevelCategory!,
 				prevStory?.slug!,
-				prevStory?.storyType!
+				prevStory?.storyType!,
+				true
 			);
 
 			dispatch({ type: "reset", draft: WebstoryToStoryDraft(response) });

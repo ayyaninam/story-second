@@ -26,7 +26,7 @@ function SpinnerArc({ width = 43, height = 43 }) {
 					gradientTransform="translate(21.8359 21.25) rotate(-63.4349) scale(22.3607)"
 				>
 					<stop stopColor="#A734EA" />
-					<stop offset="1" stopColor="#A734EA" stopOpacity="0" />
+					<stop offset="1" stopColor="#A734EA" stop-opacity="0" />
 				</radialGradient>
 			</defs>
 		</svg>

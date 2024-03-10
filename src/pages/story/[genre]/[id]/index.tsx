@@ -1,6 +1,6 @@
 import api from "@/api";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getSession } from "@auth0/nextjs-auth0";
+import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
 import React, { ReactElement } from "react";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import {
@@ -13,69 +13,58 @@ import Format from "@/utils/format";
 import { NextSeo } from "next-seo";
 import PageLayout from "@/components/layouts/PageLayout";
 import StoryBookPage from "@/features/story/story-page";
+import { StoryOutputTypes } from "@/utils/enums";
+import LibraryAccentStyle from "@/features/library/library-accent-style";
+import FeedAccentStyle from "@/features/feed/feed-accent-style";
 
 export default function PublishPage({
 	storyData,
 	session,
+	isOwner,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	useSaveSessionToken(session.accessToken);
 	return (
-		<HydrationBoundary state={dehydratedState}>
-			<NextSeo
-				title={storyData?.storyTitle || undefined}
-				description={
-					storyData?.summary ||
-					"Find your videos, trends, storybooks, all in one place"
-				}
-				openGraph={{
-					images: [
-						{
-							url: storyData?.coverImage
-								? Format.GetImageUrl(storyData.coverImage)
-								: "/og-assets/og-story.png",
-							width: 1200,
-							height: 630,
-							alt: storyData?.storyTitle || "Story.com",
-						},
-					],
-				}}
-			/>
-			{/* declare css variables */}
-			<style jsx global>{`
-				:root {
-					--menu-item-border-color: rgba(206, 122, 255, 0.3);
-					--menu-item-selected-background-color: radial-gradient(
-						88.31% 100% at 0% 50%,
-						rgba(187, 85, 247, 0.5) 25.5%,
-						rgba(102, 129, 255, 0) 100%
-					);
-					--menu-item-selected-border-color: rgba(206, 122, 255, 0.2);
-					--stepper-box-shadow: 0px 4px 4px 0px rgba(187, 85, 247, 0.4);
-					--accent-color-50: #faf5ff;
-					--accent-color-100: #f3e8ff;
-					--accent-color-200: #e9d5ff;
-					--accent-color-300: #d8b4fe;
-					--accent-color-400: #c084fc;
-					--accent-color-500: #a855f7;
-					--accent-color-600: #9333ea;
-					--accent-color-700: #7e22ce;
-					--accent-color-800: #6b21a8;
-					--accent-color-900: #581c87;
-					--accent-color-950: #3b0764;
-				}
-			`}</style>
-			<StoryBookPage storyData={storyData} />
-		</HydrationBoundary>
+		<PageLayout pageIndex={isOwner ? 2 : 0}>
+			<HydrationBoundary state={dehydratedState}>
+				<NextSeo
+					title={storyData?.storyTitle || undefined}
+					description={
+						storyData?.summary ||
+						"Find your videos, trends, storybooks, all in one place"
+					}
+					openGraph={{
+						images: [
+							{
+								url: storyData?.coverImage
+									? Format.GetImageUrl(storyData.coverImage)
+									: "/og-assets/og-story.png",
+								width: 1200,
+								height: 630,
+								alt: storyData?.storyTitle || "Story.com",
+							},
+						],
+					}}
+				/>
+				{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
+				<StoryBookPage storyData={storyData} />
+			</HydrationBoundary>
+		</PageLayout>
 	);
 }
 
-PublishPage.getLayout = function getLayout(page: ReactElement) {
-	return <PageLayout pageIndex={1}>{page}</PageLayout>;
-};
+// PublishPage.getLayout = function getLayout(page: ReactElement) {
+// 	return <PageLayout pageIndex={1}>{page}</PageLayout>;
+// };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-	const session = await getSession(ctx.req, ctx.res);
+	let accessToken: string | undefined = undefined;
+	try {
+		const tokenResult = await getAccessToken(ctx.req, ctx.res);
+		accessToken = tokenResult.accessToken;
+	} catch (e) {
+		accessToken = undefined;
+	}
 
 	// @ts-expect-error Not typing correctly
 	const { genre, id } = ctx.params;
@@ -86,22 +75,26 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	}
 
 	const queryClient = new QueryClient();
+	const user = await queryClient.fetchQuery({
+		queryFn: async () => await api.user.getServer(accessToken),
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.USER],
+	});
 	const storyData = await queryClient.fetchQuery({
 		queryFn: async () =>
-			await api.storybook.getStory({
-				topLevelCategory: genre as string,
-				slug: id as string,
-			}),
+			await api.video.getStoryServer(
+				genre,
+				id,
+				StoryOutputTypes.Story,
+				accessToken
+			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 	});
-	if (session?.accessToken) {
+	if (accessToken) {
 		await queryClient.prefetchQuery({
 			queryFn: async () =>
-				await api.webstory.interactions(
-					storyData?.id as string,
-					session?.accessToken
-				),
+				await api.webstory.interactions(storyData?.id as string, accessToken),
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 			queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
 		});
@@ -114,8 +107,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 	return {
 		props: {
-			session: { ...session },
+			session: { accessToken: accessToken || "" },
 			storyData: storyData || null,
+			isOwner: user?.data?.id === storyData?.user?.id,
 			dehydratedState: dehydrate(queryClient),
 		},
 	};

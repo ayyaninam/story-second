@@ -188,7 +188,8 @@ const Footer = ({
 			const newStory = await api.video.get(
 				story.topLevelCategory,
 				story.slug,
-				story.type
+				story.type,
+				true
 			);
 			const ungeneratedImages = newStory.scenes?.flatMap((scene) =>
 				scene.videoSegments
@@ -288,7 +289,8 @@ const Footer = ({
 			const newStory = await api.video.get(
 				story.topLevelCategory,
 				story.slug,
-				story.type
+				story.type,
+				true
 			);
 			const ungeneratedVideos = newStory.scenes?.flatMap((scene) =>
 				scene.videoSegments
@@ -322,7 +324,8 @@ const Footer = ({
 			const newStory = await api.video.get(
 				story.topLevelCategory,
 				story.slug,
-				story.type
+				story.type,
+				true
 			);
 			const ungeneratedVideos = newStory.scenes?.flatMap((scene) =>
 				scene.videoSegments

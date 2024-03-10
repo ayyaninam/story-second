@@ -6,7 +6,7 @@ import {
 	SceneModifications,
 } from "./utils/enums";
 import { CallbackListener } from "@remotion/player";
-import { VIDEO_ORIENTATIONS } from "./features/library/constants";
+import { VIDEO_ORIENTATIONS } from "./constants/feed-constants";
 
 export type CreateInitialStoryQueryParams = mlSchema["CreateStoryRequest"];
 
@@ -106,6 +106,7 @@ export type LibraryPageVideoQueryOptions = {
 	isDescending?: boolean;
 	topLevelCategory: string;
 };
+
 export type RegenerateVideoSegments = {
 	image_key: string;
 	image_prompt: string;
@@ -123,6 +124,7 @@ export type FeedPageVideoQueryOptions = {
 	storyType?: StoryOutputTypes;
 	searchTerm?: string;
 	resolution?: DisplayAspectRatios;
+	orientation?: VideoOrientation;
 	isDescending?: boolean;
 	topLevelCategory: string;
 };

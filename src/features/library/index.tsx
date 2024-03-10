@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import { LibraryHeader } from "./components/header";
-import { VIDEO_ORIENTATIONS } from "./constants";
+import { VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
 import LibraryHomePage from "./components/home-page";
 import LibraryGalleryPage from "./components/gallery-page";
-import { VideoOrientation } from "@/types";
+import { FeedPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { useRouter } from "next/router";
+import { useDebounce } from "usehooks-ts";
 
 function LibraryPage() {
 	const router = useRouter();
@@ -31,6 +32,30 @@ function LibraryPage() {
 		);
 	};
 
+	const selectedSort = (router.query.sort as string) || "desc";
+	const setSelectedSort = (sort: string) => {
+		router.push(
+			{
+				query: { ...router.query, sort, page: 1 },
+			},
+			undefined,
+			{ shallow: true }
+		);
+	};
+
+	const filterOptions = useDebounce(
+		useMemo<FeedPageVideoQueryOptions>(() => {
+			const page = (router.query.page as string) || "1";
+			const sort = (router.query.sort as string) || "desc";
+			return {
+				CurrentPage: parseInt(page, 10),
+				topLevelCategory: (router.query.genre as string) || "all",
+				isDescending: sort === "desc",
+			};
+		}, [router.query]),
+		500
+	);
+
 	return (
 		<div className="h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
 			<LibraryHeader
@@ -38,15 +63,19 @@ function LibraryPage() {
 				setSelectedOrientationTab={setSelectedOrientationTab}
 				selectedGenre={selectedGenre}
 				setSelectedGenre={setSelectedGenre}
+				selectedSort={selectedSort}
+				setSelectedSort={setSelectedSort}
 			/>
 			{selectedOrientationTab === VIDEO_ORIENTATIONS.ALL.id ? (
 				<LibraryHomePage
 					setSelectedOrientationTab={setSelectedOrientationTab}
+					filterOptions={filterOptions}
 				/>
 			) : (
 				<LibraryGalleryPage
 					key={selectedOrientationTab}
 					orientation={selectedOrientationTab as VideoOrientation}
+					filterOptions={filterOptions}
 				/>
 			)}
 		</div>

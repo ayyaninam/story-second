@@ -71,7 +71,7 @@ export default function LibraryIcon() {
 						filterUnits="userSpaceOnUse"
 						colorInterpolationFilters="sRGB"
 					>
-						<feFlood flood-opacity="0" result="BackgroundImageFix" />
+						<feFlood floodOpacity="0" result="BackgroundImageFix" />
 						<feColorMatrix
 							in="SourceAlpha"
 							type="matrix"
@@ -106,7 +106,7 @@ export default function LibraryIcon() {
 						filterUnits="userSpaceOnUse"
 						colorInterpolationFilters="sRGB"
 					>
-						<feFlood flood-opacity="0" result="BackgroundImageFix" />
+						<feFlood floodOpacity="0" result="BackgroundImageFix" />
 						<feColorMatrix
 							in="SourceAlpha"
 							type="matrix"
@@ -164,7 +164,7 @@ export default function LibraryIcon() {
 						filterUnits="userSpaceOnUse"
 						colorInterpolationFilters="sRGB"
 					>
-						<feFlood flood-opacity="0" result="BackgroundImageFix" />
+						<feFlood floodOpacity="0" result="BackgroundImageFix" />
 						<feColorMatrix
 							in="SourceAlpha"
 							type="matrix"
@@ -214,8 +214,8 @@ export default function LibraryIcon() {
 						y2="33"
 						gradientUnits="userSpaceOnUse"
 					>
-						<stop stopColor="white" stopOpacity="0.12" />
-						<stop offset="1" stopColor="white" stopOpacity="0" />
+						<stop stopColor="white" stop-opacity="0.12" />
+						<stop offset="1" stopColor="white" stop-opacity="0" />
 					</linearGradient>
 					<linearGradient
 						id="paint1_linear_1887_8473"

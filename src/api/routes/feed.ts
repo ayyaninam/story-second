@@ -1,134 +1,88 @@
-import { authFetcher, publicFetcher } from "@/lib/fetcher";
-import { getJwt } from "@/utils/jwt";
+import {
+	authFetcher,
+	publicFetcher,
+	publicProxyApiFetcher,
+} from "@/lib/fetcher";
 import { mainSchema } from "../schema";
-import { LibraryPageVideoQueryOptions } from "@/types";
+import { FeedPageVideoQueryOptions } from "@/types";
+import { StoryOutputTypes } from "@/utils/enums";
 
 const feed = {
-	get: async (
-		topLevelCategory: string,
-		slug: string,
-		accessToken?: string
-	): Promise<mainSchema["ReturnVideoStoryDTO"]> => {
-		const data: mainSchema["ReturnVideoStoryDTOApiResponse"] =
-			await publicFetcher.get(`api/library/${topLevelCategory}/${slug}`).json();
-
-		if (!data.succeeded) {
-			// TODO:figure out error boundaries
-		}
-
-		if (!data.data) {
-			throw new Error("No data returned");
-		}
-
-		return data.data;
-	},
-	getVideos: async ({
+	getStories: async ({
 		params,
+		requireAuth = false,
 	}: {
-		params: LibraryPageVideoQueryOptions;
-	}): Promise<mainSchema["ReturnVideoStoryDTOPagedList"]> => {
-		const { topLevelCategory } = params;
+		params: FeedPageVideoQueryOptions;
+		requireAuth?: boolean;
+	}): Promise<
+		| mainSchema["ReturnWebStoryDTOPagedList"]
+		| mainSchema["ReturnVideoStoryDTOPagedList"]
+	> => {
+		const { topLevelCategory, storyType } = params;
+		let endpoint =
+			storyType === StoryOutputTypes.Story
+				? `api/StoryBook/${topLevelCategory}`
+				: `api/Video/${topLevelCategory}`;
+
+		let fetcher = publicFetcher;
+		if (requireAuth) {
+			fetcher = publicProxyApiFetcher;
+			endpoint = endpoint.replace("api", "proxyApi");
+		}
+
 		const searchParams = {
 			...params,
 			topLevelCategory: "",
 		};
-		const data: mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] =
-			await publicFetcher
-				.get(`api/Video/${topLevelCategory}`, {
-					searchParams,
-				})
-				.json();
-		if (!data.succeeded) {
-			// TODO:figure out error boundaries
-		}
 
-		if (!data.data) {
-			throw new Error("No data returned");
-		}
-
-		return data.data;
-	},
-	getCategories: async (): Promise<string[]> => {
-		const data: mainSchema["StringICollectionApiResponse"] = await publicFetcher
-			.get("api/StoryBook/Categories")
-			.json();
-
-		if (!data.succeeded) {
-			// TODO:figure out error boundaries
-		}
-
-		if (!data.data) {
-			throw new Error("No data returned");
-		}
-
-		return data.data;
-	},
-	getStoryBooks: async ({
-		params,
-	}: {
-		params: LibraryPageVideoQueryOptions;
-	}): Promise<mainSchema["ReturnWebStoryDTOPagedList"]> => {
-		const { topLevelCategory } = params;
-		const searchParams = {
-			...params,
-			topLevelCategory: "",
-		};
-		const data: mainSchema["ReturnWebStoryDTOPagedListApiResponse"] =
-			await publicFetcher
-				.get(`api/StoryBook/${topLevelCategory}`, {
-					searchParams: params,
-				})
-				.json();
-		if (!data.succeeded) {
-			// TODO:figure out error boundaries
-		}
-
-		if (!data.data) {
-			throw new Error("No data returned");
-		}
-
-		return data.data;
-	},
-	getMultiple: async (
-		params: {},
-		accessToken?: string
-	): Promise<mainSchema["ReturnWebStoryDTOPagedList"]> => {
-		const data: mainSchema["ReturnWebStoryDTOPagedListApiResponse"] =
-			await publicFetcher
-				.get(`api/library`, { searchParams: { ...params } })
-				.json();
-
-		if (!data.succeeded) {
-			// TODO:figure out error boundaries
-		}
-
-		if (!data.data) {
-			throw new Error("No data returned");
-		}
-
-		return data.data;
-	},
-	likeVideo: async ({
-		id,
-		params,
-		token,
-	}: {
-		id: string;
-		params: mainSchema["LikeStoryDTO"];
-		token?: string;
-	}): Promise<boolean> => {
-		const data: mainSchema["BooleanApiResponse"] = await authFetcher(
-			token || getJwt()
-		)
-			.patch(`api/Library/${id}/Like`, {
-				body: JSON.stringify(params),
+		const data:
+			| mainSchema["ReturnWebStoryDTOPagedListApiResponse"]
+			| mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] = await fetcher
+			.get(endpoint, {
+				searchParams,
 			})
 			.json();
 
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
 
+		return data.data;
+	},
+	getStoriesServer: async ({
+		params,
+		accessToken,
+	}: {
+		params: FeedPageVideoQueryOptions;
+		accessToken?: string | null;
+	}) => {
+		let fetcher = publicFetcher;
+		if (accessToken) fetcher = authFetcher(accessToken);
+		const { topLevelCategory, storyType } = params;
+		// Determine the API endpoint based on the type of story
+		const endpoint =
+			storyType === StoryOutputTypes.Story
+				? `api/StoryBook/${topLevelCategory}`
+				: `api/Video/${topLevelCategory}`;
+		const searchParams = {
+			...params,
+			topLevelCategory: "",
+		};
+
+		const data:
+			| mainSchema["ReturnWebStoryDTOPagedListApiResponse"]
+			| mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] = await fetcher
+			.get(endpoint, {
+				searchParams,
+			})
+			.json();
+
+		if (!data.succeeded) {
+			// TODO:figure out error boundaries
+		}
 		if (!data.data) {
 			throw new Error("No data returned");
 		}

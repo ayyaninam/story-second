@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import FeedIcon from "@/components/icons/side-nav/FeedIcon";
-import AiStar from "@/features/library/components/svgs/ai-star";
+import AiStar from "@/components/gallery-components/svgs/ai-star";
 import LibraryIcon from "@/components/icons/side-nav/LibraryIcon";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
