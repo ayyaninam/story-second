@@ -3,22 +3,6 @@ import { mainSchema } from "../schema";
 import { authFetcher } from "@/lib/fetcher";
 
 const payment = {
-	getShippingPricing: async ({
-		quantity,
-	}: {
-		quantity: number;
-	}): Promise<mainSchema["ShippingPricesApiResponse"]> =>
-		await authFetcher(getJwt())
-			.get(`api/Payment/GetShippingPricing/${quantity}`)
-			.json(),
-	getDiscountCodeDetails: async ({
-		code,
-	}: {
-		code: string;
-	}): Promise<mainSchema["ReturnDiscountCodeDetailsDTOApiResponse"]> =>
-		await authFetcher(getJwt())
-			.get(`api/Payment/DiscountCodeDetails`, { searchParams: { code } })
-			.json(),
 	addCard: async (): Promise<mainSchema["StringApiResponse"]> =>
 		await authFetcher(getJwt()).post(`api/Payment/AddCard`).json(),
 	removeCard: async (): Promise<mainSchema["StringApiResponse"]> =>

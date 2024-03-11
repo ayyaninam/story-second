@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import toast from "react-hot-toast";
 import { HTTPError } from "ky";
@@ -114,6 +114,13 @@ const GenerateModalContent: React.FC<{
 		await submitToBackend(params, invalidateUser, fromLanding, setIsLoading);
 	};
 
+	useEffect(() => {
+		const prompt = localStorage.getItem("prompt") || "";
+		if (prompt) {
+			setInput(prompt);
+		}
+	}, []);
+
 	return (
 		<div className={clsx("relative flex flex-col items-center", className)}>
 			<div
@@ -175,6 +182,7 @@ const GenerateModalContent: React.FC<{
 							className="max-h-fit border-border focus-visible:ring-[1px] text-md"
 							onChange={(e) => setInput(e.target.value)}
 							placeholder={`What's your story?`}
+							value={input}
 						/>
 					)}
 
@@ -275,6 +283,7 @@ export const submitToBackend = async (
 	const data = JSON.stringify(params);
 
 	try {
+		localStorage.setItem("prompt", params.prompt || "");
 		const json: { storyPath: string } = await publicProxyApiFetcher
 			.post("api/story/create", { body: data })
 			.json();

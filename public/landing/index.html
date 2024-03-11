@@ -211,6 +211,7 @@
                         onload="iframeLoaded()"></iframe>
               </div>
 
+
 <!--              <div class="cta-wrapper" id="prompt-form">-->
 <!--                <div class="hero-cta-input-holder">-->
 <!--                  <div class="ai-form w-form" >-->
@@ -702,14 +703,13 @@
     <h1 class="hero-text white-footer-text">Does Your story need more than 4 seconds to tell?</h1>
     <div class="hero-section-button-holder">
       <div class="cta-wrapper">
-        <div class="hero-cta-input-holder">
+        <div  style="width: 100%; max-width: 780px; background-color: transparent; box-shadow: none;">
           <div class="ai-form w-form" id="prompt-form-2">
-            <form id="email-form" name="email-form" data-name="Email Form" method="get" class="ai-form-content" data-wf-page-id="65b6aa6f8f16376d852276a8" data-wf-element-id="a83f8eb5-402b-8faf-60bc-403a2ff8e3b0"><input class="build-form-input w-input" maxlength="256" name="Prompt-2" data-name="Prompt 2" placeholder="What is your story about?" type="text" id="Prompt-2" required=""><input type="submit" data-wait="Please wait..." class="button hero-submit-button w-button" value="Produce It"></form>
-            <div class="success-message-2 w-form-done">
-              <div>Thank you! Your submission has been received!</div>
-            </div>
-            <div class="error-message-hero w-form-fail">
-              <div>👋 This is the form submission in Webflow!</div>
+            <div style="height: 270px; position: relative;">
+              <iframe src="/prompt"
+                      style="width: 100%; height: 100%; background-color: transparent; border: none; position: absolute; left: 0;"
+                      sandbox="allow-top-navigation allow-forms allow-modals allow-pointer-lock allow-popups allow-scripts allow-same-origin"
+                      onload="iframeLoaded()"></iframe>
             </div>
           </div>
         </div>
