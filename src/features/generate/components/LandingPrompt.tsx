@@ -5,11 +5,13 @@ import GenerateModalContent from "@/components/create-modal";
 import { ArrowRight } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
 import StoryLogo from "../../../../public/auth-prompt/story-logo";
+import { useSearchParams } from "next/navigation";
 
 /**
  * Prompt component for the landing page
  */
 export const LandingPrompt: React.FC = () => {
+	const searchParams = useSearchParams();
 	const isMobile = useMediaQuery("(max-width: 768px)");
 	const [activated, setActivated] = useState(false);
 	const [queryClient] = useState(
@@ -22,10 +24,13 @@ export const LandingPrompt: React.FC = () => {
 				},
 			})
 	);
-
 	return activated ? (
 		<QueryClientProvider client={queryClient}>
-			<GenerateModalContent className="relative h-full" fromLanding />
+			<GenerateModalContent
+				className="relative h-full"
+				fromLanding
+				tiktok={searchParams?.get("tiktok") === "true"}
+			/>
 		</QueryClientProvider>
 	) : (
 		<div className="px-4 lg:px-0">

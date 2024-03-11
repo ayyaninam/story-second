@@ -1,9 +1,9 @@
 import video from "@/api/routes/video";
-import TailwindSpinner from "@/features/tiktok/components/tw-spinner";
+import TailwindSpinner from "@/components/file-upload/tw-spinner";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 
-export default function FileUpload({
+export default function Index({
 	setVideoFileId,
 	videoFileId,
 }: {
@@ -46,9 +46,9 @@ export default function FileUpload({
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="#64748B"
-					stroke-width="1"
-					stroke-linecap="round"
-					stroke-linejoin="round"
+					strokeWidth="1"
+					strokeLinecap="round"
+					strokeLinejoin="round"
 					className="lucide lucide-file-check iconButton"
 				>
 					<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
@@ -65,9 +65,9 @@ export default function FileUpload({
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke={isVideoUploading ? "#7f8894" : "#64748B"}
-					stroke-width="1"
-					stroke-linecap="round"
-					stroke-linejoin="round"
+					strokeWidth="1"
+					strokeLinecap="round"
+					strokeLinejoin="round"
 					className="lucide lucide-file-video-2 iconButton"
 				>
 					<path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4" />
@@ -81,12 +81,9 @@ export default function FileUpload({
 
 	return (
 		<div
+			className="flex w-full justify-center items-center rounded-md border border-gray-300 bg-gray-100 cursor-pointer"
 			style={{
-				display: "flex",
 				backgroundColor: "#F1F5F9",
-				// backgroundColor: "#F1F5F9",
-				borderRadius: "8px",
-				padding: "2px",
 			}}
 		>
 			<input
@@ -116,7 +113,7 @@ export default function FileUpload({
 						? "Loading"
 						: UploadFile.data?.data
 							? "Uploaded"
-							: ""}
+							: "Upload a tiktok"}
 				</p>
 			</label>
 		</div>
