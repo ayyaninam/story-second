@@ -5,8 +5,8 @@ import { CreateInitialStoryQueryParams } from "@/types";
 
 const webstory = {
 	create: async (
-		params: CreateInitialStoryQueryParams,
-		token?: string
+		params: any,
+		token: string
 	): Promise<{
 		title: string;
 		englishTitle: string;
@@ -15,8 +15,11 @@ const webstory = {
 		cover_image: string;
 		image_style: number;
 		url: string;
+		story_type: number;
 	}> => {
-		return await mlFetcher(token || getJwt())
+		console.log("formData: ", params);
+		console.log("token: ", token);
+		return await mlFetcher(token)
 			.post(`create`, {
 				body: JSON.stringify(params),
 			})

@@ -151,10 +151,6 @@ const Footer = ({
 			?.map((el, index) => ({ ...el, sceneId: scene.id }))
 			?.filter((segment) => !segment.audioKey)
 	);
-	console.log(
-		story.scenes.flatMap((el) => el.segments.map((el) => el.audioKey))
-	);
-	console.log("ungeneratedAudio", ungeneratedAudios);
 	const regenUngeneratedImagesCost = getImageCost(ungeneratedImages.length);
 
 	const numImages = story.scenes.flatMap((el) => el.segments);
@@ -679,22 +675,23 @@ const Footer = ({
 						</SelectContent>
 					</Select>
 				</div>
-				{/*<div className="flex">*/}
-				{/*	<Button*/}
-				{/*		disabled={!WebstoryData.storyDone || !ungeneratedAudios.length || regenerateAudioLoading}*/}
-				{/*		onClick={() => {*/}
-				{/*			setRegenerateAudioLoading(true);*/}
-				{/*			RegenerateAllAudio.mutateAsync().then(*/}
-				{/*					() => {*/}
-				{/*						setRegenerateAudioLoading(false);*/}
-				{/*					}*/}
-				{/*				);*/}
-				{/*			}*/}
-				{/*		}*/}
-				{/*	>*/}
-				{/*		{regenerateAudioLoading ? "Regenerating" : "Regenerate Audio"}*/}
-				{/*	</Button>*/}
-				{/*</div>*/}
+				<div className="flex">
+					<Button
+						disabled={
+							!WebstoryData.storyDone ||
+							!ungeneratedAudios.length ||
+							regenerateAudioLoading
+						}
+						onClick={() => {
+							setRegenerateAudioLoading(true);
+							RegenerateAllAudio.mutateAsync().then(() => {
+								setRegenerateAudioLoading(false);
+							});
+						}}
+					>
+						{regenerateAudioLoading ? "Regenerating" : "Regenerate Audio"}
+					</Button>
+				</div>
 			</div>
 
 			<div className="text-center w-100 flex flex-col items-center justify-center">

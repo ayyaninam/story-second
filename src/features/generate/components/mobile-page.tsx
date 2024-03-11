@@ -37,9 +37,14 @@ import {
 import FileUpload from "@/features/tiktok/components/file-upload";
 import Router, { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import { submitToBackend } from "@/components/create-modal";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
-export default function MobileGeneratePage() {
-	const [value, setValue] = useState<TabType>(TabType.Video);
+export default function MobileGeneratePage( {
+	fromLanding = false,
+}: {
+	fromLanding?: boolean;
+}) {const [value, setValue] = useState<TabType>(TabType.Video);
 	const [input, setInput] = useState("");
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
 
@@ -56,6 +61,7 @@ export default function MobileGeneratePage() {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
+	const { invalidateUser } = useUpdateUser();
 
 	const router = useRouter();
 	const { message } = router.query ?? {};
@@ -95,15 +101,7 @@ export default function MobileGeneratePage() {
 			params["image_resolution"] = ImageRatios["9x8"].enumValue;
 		}
 
-		const response = Routes.CreateStoryFromRoute(params);
-		Router.push(response)
-			.then(() => {
-				setIsLoading(false);
-			})
-			.catch((error) => {
-				console.error("Navigation error:", error);
-				setIsLoading(false); // Ensure loading state is reset even if navigation fails
-			});
+		await submitToBackend(params, invalidateUser, fromLanding, setIsLoading);
 	};
 
 	return (

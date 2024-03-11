@@ -101,7 +101,6 @@ export default function PublishedStory({
 	const isLoading = Webstory.isLoading || !Webstory.data;
 
 	useEffect(() => {
-		console.log("Webstory.data", Webstory.data);
 		if (Webstory.data) {
 			if (
 				Webstory.data?.scenes
