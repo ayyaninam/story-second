@@ -6,6 +6,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useEventLogger from "@/utils/analytics";
+import { NextSeo } from "next-seo";
 
 export default function LoginPage() {
 	const isMobile = useMediaQuery("(max-width: 768px)");
@@ -29,6 +30,14 @@ export default function LoginPage() {
 
 	return (
 		<>
+			<NextSeo
+				title="Get Started"
+				description="Login to your account"
+				openGraph={{
+					title: "Get Started",
+					description: "Login to your account",
+				}}
+			/>
 			<style jsx global>
 				{`
 					:root {
