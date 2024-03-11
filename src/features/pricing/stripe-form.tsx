@@ -5,10 +5,12 @@ import {
 	useStripe,
 } from "@stripe/react-stripe-js";
 import { Appearance, loadStripe } from "@stripe/stripe-js";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { env } from "@/env.mjs";
 import api from "@/api";
 import { useStripeSetup } from "@/features/pricing/hooks";
+import { QueryKeys } from "@/lib/queryKeys";
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -38,9 +40,11 @@ export type SetupStripe = ReturnType<typeof useStripeSetup>["setupStripe"];
 const StripeElement = ({
 	setupStripe,
 	onFormReady,
+	onLoadError,
 }: {
 	setupStripe: SetupStripe;
 	onFormReady: () => void;
+	onLoadError: () => void;
 }) => {
 	const stripe = useStripe();
 	const elements = useElements();
@@ -53,7 +57,11 @@ const StripeElement = ({
 	}, [stripe, elements]);
 
 	return (
-		<PaymentElement className="w-full" onLoaderStart={() => onFormReady()} />
+		<PaymentElement
+			className="w-full"
+			onLoaderStart={() => onFormReady()}
+			onLoadError={() => onLoadError()}
+		/>
 	);
 };
 
@@ -66,22 +74,23 @@ export default function StripeForm({
 	setupStripe: SetupStripe;
 	onLoadStripe?: () => void;
 }) {
-	const [clientSecret, setClientSecret] = useState("");
+	const {
+		data,
+		isPending,
+		error: errorAddCard,
+	} = useQuery({
+		queryKey: [QueryKeys.USER_SECRET_KEY],
+		queryFn: () => api.payment.addCard(),
+	});
+
+	const clientSecret = data?.data;
+
 	const [ready, setReady] = useState(false);
 	const [error, setError] = useState(false);
 
-	useEffect(() => {
-		if (clientSecret) return;
-
-		(async () => {
-			try {
-				setClientSecret((await api.payment.addCard()).data!);
-			} catch (e: any) {
-				console.error(e);
-				setError(true);
-			}
-		})();
-	}, [clientSecret]);
+	const onLoadError = () => {
+		setError(true);
+	};
 
 	useEffect(() => {
 		if (ready) {
@@ -90,13 +99,21 @@ export default function StripeForm({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ready]);
 
+	useEffect(() => {
+		if (errorAddCard) {
+			setError(true);
+		}
+	}, [errorAddCard]);
+
 	return (
 		<div className="flex w-full flex-col relative min-h-[280px]">
 			{clientSecret ? (
+				// @ts-ignore
 				<Elements stripe={stripePromise} options={{ appearance, clientSecret }}>
 					<StripeElement
 						setupStripe={setupStripe}
 						onFormReady={() => setReady(true)}
+						onLoadError={onLoadError}
 					/>
 				</Elements>
 			) : null}

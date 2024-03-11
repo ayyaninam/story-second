@@ -1,4 +1,4 @@
-import { publicProxyApiFetcher } from "@/lib/fetcher";
+import { authFetcher, publicProxyApiFetcher } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
 import { toFromData } from "@/utils/request";
 
@@ -12,6 +12,14 @@ const user = {
 	},
 	get: async (): Promise<mainSchema["UserInfoDTOApiResponse"]> => {
 		return await publicProxyApiFetcher.get(`proxyApi/User`).json();
+	},
+	getServer: async (
+		accessToken?: string | null
+	): Promise<mainSchema["UserInfoDTOApiResponse"] | null> => {
+		if (!accessToken) return null;
+		return await authFetcher(accessToken as string)
+			.get(`api/User`)
+			.json();
 	},
 	updateDetails: async <T>(data: T & Record<string, any>) => {
 		return await publicProxyApiFetcher

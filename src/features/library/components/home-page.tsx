@@ -1,139 +1,77 @@
 import React, { useMemo } from "react";
 import LibraryHeroSection from "./hero-section";
-import LibraryGalleryComponent from "./gallery-component";
-import { LibraryPageVideoQueryOptions, VideoOrientation } from "@/types";
-import { LIBRARY_HOME_GALLERY_DATA, VIDEO_ORIENTATIONS } from "../constants";
+import LibraryGalleryComponent from "@/components/gallery-components/gallery-component";
+import { LibraryPageVideoQueryOptions } from "@/types";
+import {
+	LIBRARY_HOME_GALLERY_DATA,
+	VIDEO_ORIENTATIONS,
+} from "@/constants/feed-constants";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { mainSchema } from "@/api/schema";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
-import { useRouter } from "next/router";
 import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
-import { useDebounce } from "usehooks-ts";
-import { getGalleryThumbnails } from "../utils";
+import { getGalleryThumbnails } from "@/utils/feed-utils";
 
-const LibraryHomePage: React.FC<{
+function LibraryHomePage({
+	setSelectedOrientationTab,
+	filterOptions,
+}: {
 	setSelectedOrientationTab: (orientation: string) => void;
-}> = ({ setSelectedOrientationTab }) => {
-	const router = useRouter();
+	filterOptions: LibraryPageVideoQueryOptions;
+}) {
 	const queryClient = useQueryClient();
-	const filterOptions = useDebounce(
-		useMemo<LibraryPageVideoQueryOptions>(() => {
-			const page = (router.query.page as string) || "1";
-			const sort = (router.query.sort as string) || "desc";
-			return {
-				CurrentPage: parseInt(page),
-				topLevelCategory: (router.query.genre as string) || "all",
-				isDescending: sort === "desc",
-			};
-		}, [router.query.page, router.query.genre, router.query.sort]),
-		500
-	);
 
-	const wideVideoList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>({
-		queryFn: () =>
-			api.library.getVideos({
-				params: {
-					PageSize: 7,
-					storyType: StoryOutputTypes.Video,
-					resolution: DisplayAspectRatios["1024x576"],
-					CurrentPage: 1,
-					topLevelCategory: filterOptions.topLevelCategory,
-					isDescending: filterOptions.isDescending,
-				},
-			}),
-		staleTime: 3000,
-		queryKey: [
-			QueryKeys.LIBRARY_WIDE_VIDEOS,
-			filterOptions.topLevelCategory,
-			filterOptions.isDescending,
-		],
-		initialData: queryClient.getQueryData([
-			QueryKeys.LIBRARY_WIDE_VIDEOS,
-			filterOptions.topLevelCategory,
-			filterOptions.isDescending,
-		]),
-	});
-
-	const verticalVideoList = useQuery<
-		mainSchema["ReturnVideoStoryDTOPagedList"]
-	>({
-		queryFn: () =>
-			api.library.getVideos({
-				params: {
-					PageSize: 5,
-					storyType: StoryOutputTypes.Video,
-					resolution: DisplayAspectRatios["576x1024"],
-					CurrentPage: 1,
-					topLevelCategory: filterOptions.topLevelCategory,
-					isDescending: filterOptions.isDescending,
-				},
-			}),
-		staleTime: 3000,
-		queryKey: [
-			QueryKeys.LIBRARY_VERTICAL_VIDEOS,
-			filterOptions.topLevelCategory,
-			filterOptions.isDescending,
-		],
-		initialData: queryClient.getQueryData([
-			QueryKeys.LIBRARY_VERTICAL_VIDEOS,
-			filterOptions.topLevelCategory,
-			filterOptions.isDescending,
-		]),
-	});
-
-	const storyBooksList = useQuery<mainSchema["ReturnWebStoryDTOPagedList"]>({
-		queryFn: () =>
-			api.library.getStoryBooks({
-				params: {
-					PageSize: 5,
-					CurrentPage: 1,
-					topLevelCategory: filterOptions.topLevelCategory,
-					isDescending: filterOptions.isDescending,
-				},
-			}),
-		staleTime: 3000,
-		queryKey: [
-			QueryKeys.LIBRARY_STORY_BOOKS,
-			filterOptions.topLevelCategory,
-			filterOptions.isDescending,
-		],
-		initialData: queryClient.getQueryData([
-			QueryKeys.LIBRARY_STORY_BOOKS,
-			filterOptions.topLevelCategory,
-			filterOptions.isDescending,
-		]),
-	});
-
-	const trendsVideosList = useQuery<mainSchema["ReturnVideoStoryDTOPagedList"]>(
-		{
+	const useFetchStories = (
+		storyType: StoryOutputTypes,
+		resolution?: DisplayAspectRatios
+	) =>
+		useQuery<
+			| mainSchema["ReturnVideoStoryDTOPagedList"]
+			| mainSchema["ReturnWebStoryDTOPagedList"]
+		>({
 			queryFn: () =>
-				api.library.getVideos({
+				api.library.getStories({
 					params: {
 						PageSize: 5,
-						storyType: StoryOutputTypes.SplitScreen,
-						resolution: DisplayAspectRatios["576x1024"],
 						CurrentPage: 1,
 						topLevelCategory: filterOptions.topLevelCategory,
 						isDescending: filterOptions.isDescending,
+						storyType: storyType,
+						resolution: resolution,
 					},
 				}),
 			staleTime: 3000,
 			queryKey: [
-				QueryKeys.LIBRARY_TIK_TOK,
-				filterOptions.topLevelCategory,
-				filterOptions.isDescending,
+				QueryKeys.LIBRARY_GALLERY,
+				filterOptions,
+				storyType,
+				resolution,
 			],
 			initialData: queryClient.getQueryData([
-				QueryKeys.LIBRARY_TIK_TOK,
-				filterOptions.topLevelCategory,
-				filterOptions.isDescending,
+				QueryKeys.LIBRARY_GALLERY,
+				filterOptions,
+				storyType,
+				resolution,
 			]),
-		}
+		});
+
+	const wideVideoList = useFetchStories(
+		StoryOutputTypes.Video,
+		DisplayAspectRatios["1024x576"]
+	);
+	const verticalVideoList = useFetchStories(
+		StoryOutputTypes.Video,
+		DisplayAspectRatios["576x1024"]
+	);
+	const storyBooksList = useFetchStories(StoryOutputTypes.Story); // Assuming no resolution needed for story books
+	const trendsVideosList = useFetchStories(
+		StoryOutputTypes.SplitScreen,
+		DisplayAspectRatios["576x1024"]
 	);
 
-	const segregatedStories = useMemo(() => {
-		const segregatedStories = {
+	const segregatedStories = useMemo(
+		() => ({
 			[VIDEO_ORIENTATIONS.WIDE.id]: getGalleryThumbnails(
 				wideVideoList.data?.items || [],
 				true
@@ -147,9 +85,14 @@ const LibraryHomePage: React.FC<{
 			[VIDEO_ORIENTATIONS.TIK_TOK.id]: getGalleryThumbnails(
 				trendsVideosList.data?.items || []
 			),
-		};
-		return segregatedStories;
-	}, [wideVideoList.data, verticalVideoList.data, storyBooksList.data]);
+		}),
+		[
+			wideVideoList.data,
+			verticalVideoList.data,
+			storyBooksList.data,
+			trendsVideosList.data,
+		]
+	);
 
 	const allStories = useMemo(() => {
 		return Object.values(segregatedStories).flat().filter(Boolean);
@@ -188,6 +131,6 @@ const LibraryHomePage: React.FC<{
 			</div>
 		</div>
 	);
-};
+}
 
 export default LibraryHomePage;

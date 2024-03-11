@@ -69,8 +69,7 @@ const CreditsCheckoutDialog = ({
 	onClose,
 }: CreditsCheckoutDialogProps) => {
 	const { user, updateUserDataAfter1Second } = useUser();
-	const { setupStripe, clearStripe, onAddCard, confirmPayment } =
-		useStripeSetup();
+	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
 
 	const [quantity, setQuantity] = useState(
 		allowanceType === AllowanceType.StoryBooks
@@ -104,12 +103,6 @@ const CreditsCheckoutDialog = ({
 	}
 
 	const showPaymentCard = userHasCard && !userWantsToChangePayment;
-
-	useEffect(() => {
-		return () => {
-			clearStripe();
-		};
-	}, []);
 
 	const onRefillAllowance = async () => {
 		if (submitting) return;

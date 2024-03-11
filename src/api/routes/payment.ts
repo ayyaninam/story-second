@@ -59,6 +59,21 @@ const payment = {
 				},
 			})
 			.json(),
+	upgradeSubscription: async ({
+		subscriptionPlan,
+		subscriptionPeriod,
+	}: {
+		subscriptionPlan: number;
+		subscriptionPeriod: number;
+	}): Promise<mainSchema["InternalTransactionDTOApiResponse"]> =>
+		await authFetcher(getJwt())
+			.post(`api/Payment/UpgradeSubscription`, {
+				json: {
+					subscriptionPlan,
+					subscriptionPeriod,
+				},
+			})
+			.json(),
 	refillAllowance: async ({
 		allowanceType,
 		quantity,

@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import React, { CSSProperties } from "react";
-import { HeaderTabSwitcher } from "./orientation-tab-switcher";
-import { GenreTabSwitcher } from "./genre-tab-switcher";
+import { HeaderTabSwitcher } from "@/components/gallery-components/orientation-tab-switcher";
+import { GenreTabSwitcher } from "@/components/gallery-components/genre-tab-switcher";
 import {
 	Select,
 	SelectContent,
@@ -50,26 +49,20 @@ export const FeedHeader = ({
 	setSelectedOrientationTab,
 	selectedGenre,
 	setSelectedGenre,
+	selectedSort,
+	setSelectedSort,
 }: {
 	selectedOrientationTab: string;
 	setSelectedOrientationTab: (orientation: string) => void;
 	selectedGenre: string;
 	setSelectedGenre: (genre: string) => void;
+	selectedSort: string;
+	setSelectedSort: (sort: string) => void;
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
 	const eventLogger = useEventLogger();
 
-	const sort = (router.query.sort as string) || "desc";
-	const setSort = (sort: string) => {
-		router.push(
-			{
-				query: { ...router.query, sort: sort, page: 1 },
-			},
-			undefined,
-			{ shallow: true }
-		);
-	};
 	const sortOptions = Object.values(SORTING_OPTIONS);
 	const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -253,8 +246,8 @@ export const FeedHeader = ({
 							tabs={genreOptions}
 						/>
 						<MobileSelector
-							selectedTab={sort}
-							setSelectedTab={setSort}
+							selectedTab={selectedSort}
+							setSelectedTab={setSelectedSort}
 							tabs={sortOptions}
 						/>
 					</div>
@@ -266,7 +259,10 @@ export const FeedHeader = ({
 							genreOptions={genreOptions}
 						/>
 						<div className="flex h-[40px] w-[180px] gap-2 items-center">
-							<Select onValueChange={setSort} defaultValue={sort}>
+							<Select
+								onValueChange={setSelectedSort}
+								defaultValue={selectedSort}
+							>
 								<SelectTrigger className="max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
 									<div className="text-accent-600">
 										<SelectValue placeholder="Sort by" />

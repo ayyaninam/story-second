@@ -36,11 +36,14 @@ export type AnalyticsEvent =
 	| "upgrade_subscription_dialog_opened"
 	| "upgrade_subscription_dialog_closed"
 	| "create_subscription_initiated"
+	| "upgrade_subscription_initiated"
 	| "add_card_initiated"
 	| "add_card_successful"
 	| "add_card_failed"
 	| "create_subscription_successful"
-	| "create_subscription_failed";
+	| "upgrade_subscription_successful"
+	| "create_subscription_failed"
+	| "upgrade_subscription_failed";
 const useEventLogger = () => {
 	const { user } = useUser();
 

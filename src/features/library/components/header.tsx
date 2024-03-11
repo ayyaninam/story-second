@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { CSSProperties, useEffect, useState } from "react";
-import { HeaderTabSwitcher } from "./orientation-tab-switcher";
-import { GenreTabSwitcher } from "./genre-tab-switcher";
+import { HeaderTabSwitcher } from "@/components/gallery-components/orientation-tab-switcher";
+import { GenreTabSwitcher } from "@/components/gallery-components/genre-tab-switcher";
 import {
 	Select,
 	SelectContent,
@@ -63,11 +63,15 @@ export const LibraryHeader = ({
 	setSelectedOrientationTab,
 	selectedGenre,
 	setSelectedGenre,
+	selectedSort,
+	setSelectedSort,
 }: {
 	selectedOrientationTab: string;
 	setSelectedOrientationTab: (orientation: string) => void;
 	selectedGenre: string;
 	setSelectedGenre: (genre: string) => void;
+	selectedSort: string;
+	setSelectedSort: (sort: string) => void;
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
@@ -247,7 +251,10 @@ export const LibraryHeader = ({
 							genreOptions={genreOptions}
 						/>
 						<div className="flex h-[40px] w-[180px] gap-2 items-center">
-							<Select onValueChange={setSort} defaultValue={sort}>
+							<Select
+								onValueChange={setSelectedSort}
+								defaultValue={selectedSort}
+							>
 								<SelectTrigger className="max-w-48 border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
 									<div className="text-accent-600">
 										<SelectValue placeholder="Sort by" />
