@@ -37,7 +37,7 @@ export const LandingPrompt: React.FC = () => {
 				}}
 			>
 				<input
-					className="cursor-pointer w-full outline-none ring-0 border-none"
+					className="hidden md:block cursor-pointer w-full outline-none ring-0 border-none"
 					placeholder="Tell your story..."
 				/>
 				<LandingSubmitButton />

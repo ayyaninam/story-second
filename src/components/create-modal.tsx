@@ -178,10 +178,10 @@ const GenerateModalContent: React.FC<{
 						/>
 					)}
 
-					<div className="flex flex-col lg:flex-row items-start lg:items-center lg:px-2 gap-1 w-full">
+					<div className="flex flex-row items-start md:items-center md:px-2 gap-1 w-full">
 						<div className="flex flex-grow gap-4 w-4/5">
 							{/* Centered content with controlled width */}
-							<div className="flex flex-col lg:flex-row gap-4 w-3/5">
+							<div className="flex flex-col md:flex-row gap-4 w-3/5">
 								{/* Always display LanguageSelect */}
 
 								{tabIndex !== 1 && (
@@ -218,7 +218,7 @@ const GenerateModalContent: React.FC<{
 							</div>
 						</div>
 
-						<div className="flex flex-col lg:flex-row w-1/5">
+						<div className="flex flex-col md:flex-row w-2/5 md:w-1/5">
 							<div className="flex justify-end w-full">
 								<Button
 									disabled={isSubmitDisabled}
