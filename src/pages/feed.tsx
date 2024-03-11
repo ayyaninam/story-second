@@ -13,10 +13,15 @@ import FeedPage from "@/features/feed";
 import PageLayout from "@/components/layouts/PageLayout";
 import FeedAccentStyle from "@/features/feed/feed-accent-style";
 import { fetchFeedStories } from "@/utils/fetch-feed-stories";
+import { getSession } from "@auth0/nextjs-auth0";
+import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
 function Feed({
+	session,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+	useSaveSessionToken(session.accessToken);
+
 	return (
 		<HydrationBoundary state={dehydratedState}>
 			<NextSeo
@@ -44,8 +49,10 @@ Feed.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default Feed;
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 	const queryClient = new QueryClient();
+	const session = await getSession(context.req, context.res);
 
 	const { genre, orientation, page, sort } = context.query as {
 		genre: string;
@@ -68,6 +75,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 	return {
 		props: {
 			dehydratedState: dehydrate(queryClient),
+			session: { ...session },
 		},
 	};
 }
