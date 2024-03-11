@@ -84,6 +84,10 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 		userSubscriptionPlan === plan && userSubscriptionPeriod === period;
 
 	const _isUpgradePlan = (plan: SubscriptionPlan) => {
+		if (userSubscriptionPlan === SubscriptionPlan.Custom) {
+			return true;
+		}
+
 		if (userSubscriptionPlan === SubscriptionPlan.Free) {
 			return false;
 		}
