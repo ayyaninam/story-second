@@ -12384,6 +12384,12 @@ blockquote {
   }
 }
 
+@media screen and (max-width: 848px) {
+  #loading-placeholder > div {
+    background-color: #9333EA !important;
+    height: 48px !important;
+  }
+}
 
 @font-face {
   font-family: 'Rand';
