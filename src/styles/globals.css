@@ -195,7 +195,6 @@
 	display: flex;
 	gap: 4px;
 	align-items: center;
-	width: max-content;
 	border: none;
 	border-radius: 8px;
 	padding: 8px 12px;
@@ -203,10 +202,5 @@
 	font-weight: 700;
 	line-height: 24px;
 	color: white;
-	background-color: #1f323d;
 }
 
-.prompt-default-button[type="submit"]:hover {
-	color: white;
-	background-color: #8f22ce;
-}
