@@ -23,7 +23,7 @@ const nextConfig = {
 			// },
 			{
 				// matching all API routes
-				source: "/(.*)",
+				source: "/:path*",
 				headers: [
 					{ key: "Access-Control-Allow-Credentials", value: "true" },
 					{ key: "Access-Control-Allow-Origin", value: "*" },
@@ -53,7 +53,7 @@ const nextConfig = {
 				},
 				{
 					source: "/tiktok",
-					destination: "/tiktok/index.html",
+					destination: "/landing/tiktok.html",
 				},
 				{
 					source: "/sitemap.xml",

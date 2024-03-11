@@ -3,8 +3,6 @@ import AuthPromptMobile from "@/features/auth-prompt/mobile";
 import Routes from "@/routes";
 import { useRouter } from "next/router";
 import { useMediaQuery } from "usehooks-ts";
-import { useEffect } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import useEventLogger from "@/utils/analytics";
 import { NextSeo } from "next-seo";
 

@@ -11,26 +11,23 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
 import {
 	languages,
-	TabType,
 	tabs,
+	TabType,
 	videoRatios,
 } from "@/features/generate/constants";
-import Router from "next/router";
-import FileUpload from "@/features/tiktok/components/file-upload";
+import FileUpload from "@/components/file-upload";
 import { CreateInitialStoryQueryParams } from "@/types";
 import { ImageRatios } from "@/utils/image-ratio";
 import {
+	AllowanceType,
 	DisplayAspectRatios,
 	StoryInputTypes,
 	StoryLanguages,
 	StoryLengths,
 	StoryOutputTypes,
-	AllowanceType,
 } from "@/utils/enums";
-import Routes from "@/routes";
 import {
 	LanguageSelect,
 	VideoRatioSelect,
@@ -53,11 +50,13 @@ const GenerateModalContent: React.FC<{
 	 * if true, escape iframe
 	 */
 	fromLanding?: boolean;
-}> = ({ className = "", fromLanding = false }) => {
+	tiktok?: boolean;
+}> = ({ className = "", fromLanding = false, tiktok = false }) => {
 	const eventLogger = useEventLogger();
 
-	const { userCanUseCredits } = useUserCanUseCredits();
-	const [value, setValue] = useState<TabType>(TabType.Video);
+	const [value, setValue] = useState<TabType>(
+		tiktok ? TabType.Trends : TabType.Video
+	);
 	const [input, setInput] = useState("");
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
