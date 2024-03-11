@@ -16,16 +16,6 @@ export default function LoginPage() {
 			? Routes.defaultRedirect
 			: (router.query.returnTo as string) || Routes.defaultRedirect;
 
-	// Disabled: This is causing a fake login redirect
-	// useEffect(() => {
-	// 	if (isLoading) return;
-	// 	console.log("user", user, "error", error, "isLoading", isLoading)
-	// 	console.log("returnTo", returnTo)
-	// 	if (user) {
-	// 		router.push(returnTo);
-	// 	}
-	// }, [isLoading]);
-
 	const onLogIn = () => {
 		eventLogger("login_page_login_clicked");
 		router.push(Routes.Login(returnTo));

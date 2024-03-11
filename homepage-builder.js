@@ -11,6 +11,7 @@ esbuild
 		treeShaking: true,
 		format: "esm",
 		tsconfig: "./tsconfig.json",
+		platform: "browser",
 		define: {
 			"process.env.NEXT_PUBLIC_BASE_URL": `"${process.env.NEXT_PUBLIC_BASE_URL}"`,
 			"process.env.NEXT_PUBLIC_API_URL": `"${process.env.NEXT_PUBLIC_API_URL}"`,
