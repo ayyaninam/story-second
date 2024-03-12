@@ -33,7 +33,7 @@ function LibraryHomePage({
 			queryFn: () =>
 				api.library.getStories({
 					params: {
-						PageSize: 5,
+						PageSize: resolution === DisplayAspectRatios["1024x576"] ? 7 : 5,
 						CurrentPage: 1,
 						topLevelCategory: filterOptions.topLevelCategory,
 						isDescending: filterOptions.isDescending,
