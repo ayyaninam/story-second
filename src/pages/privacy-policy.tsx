@@ -2,7 +2,7 @@ export default function PrivacyPolicy() {
 	return (
 		<div className="flex flex-col w-full m-4">
 			<h1 className="font-aleo text-3xl sm:text-4xl font-semibold pb-3 border-b-[5px] border-brand-fill">
-				Privacy Policy
+				Story.com: Privacy Policy
 			</h1>
 			<p className="mt-8">
 				This Privacy Policy describes how Authorly (together with its affiliates
