@@ -166,7 +166,10 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 					) : (
 						<>
 							<Skeleton className="h-8 w-8 rounded-full" />
-							<Link href={"/auth/login"} className={"flex flex-col gap-y-1"}>
+							<Link
+								href={"/auth/login?returnTo=" + router.asPath}
+								className={"flex flex-col gap-y-1"}
+							>
 								<Button
 									variant="outline"
 									className="text-white font-normal hover:text-accent-300"
@@ -337,7 +340,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						</Button>
 					</Link>
 				) : (
-					<Link href={"/auth/login"}>
+					<Link href={"/auth/login?returnTo=" + router.asPath}>
 						<Button
 							variant="outline"
 							className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-accent-300"
