@@ -33,6 +33,7 @@ import Link from "next/link";
 import GenericModal from "@/components/ui/generic-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import useEventLogger from "@/utils/analytics";
+import { HTTPError } from "ky";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -175,22 +176,57 @@ export default function PublishedStory({
 	};
 
 	const handleCopyVideo = async () => {
-		eventLogger("copy_video_clicked");
-		const newStory = await CopyVideo.mutateAsync({
-			id: storyData.id!,
-			accessToken: session.accessToken,
-		});
+		try {
+			const newStory = await CopyVideo.mutateAsync({
+				id: storyData.id as string,
+				accessToken: session.accessToken,
+			});
 
-		if (newStory) {
-			invalidateUser();
-			router.push(
-				Routes.ViewStory(
-					newStory.storyType,
-					newStory.topLevelCategory!,
-					newStory.slug!
-				)
-			);
-			toast.success("Video added to your library");
+			if (newStory) {
+				invalidateUser();
+				router.push(
+					Routes.ViewStory(
+						newStory.storyType,
+						newStory.topLevelCategory!,
+						newStory.slug!
+					)
+				);
+				toast.success("Video added to your library");
+			} else {
+				// Handle null newStory case if needed
+				toast.error("Failed to add video to your library. Please try again.");
+			}
+		} catch (error) {
+			if (error instanceof HTTPError) {
+				switch (error.response.status) {
+					case 401: {
+						// Handle unauthorized error
+						toast.error("You need to log in to perform this action.");
+						router.push(
+							Routes.ToAuthPage(
+								Routes.ViewStory(
+									storyData.storyType,
+									router.query.genre!.toString(),
+									router.query.id!.toString()
+								)
+							)
+						);
+						break;
+					}
+					case 402: {
+						toast.error("Not enough balance to copy video.");
+						break;
+					}
+					default: {
+						toast.error("Unable to copy video. Please try again.");
+						console.error(error.message, error.response.status);
+					}
+				}
+			} else {
+				// Handle non-HTTPError errors
+				toast.error("An unexpected error occurred. Please try again.");
+				console.error(error);
+			}
 		}
 	};
 
