@@ -3,18 +3,9 @@ import {
 	languages,
 	tabs,
 	TabType,
-	videoLengths,
 	videoRatios,
 } from "@/features/generate/constants";
 import { cn } from "@/utils";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Sparkles } from "lucide-react";
@@ -28,23 +19,22 @@ import {
 	StoryOutputTypes,
 } from "@/utils/enums";
 import { ImageRatios } from "@/utils/image-ratio";
-import Routes from "@/routes";
 import {
 	LanguageSelect,
-	VideoLengthSelect,
 	VideoRatioSelect,
 } from "@/features/generate/components/selection-constants";
-import FileUpload from "@/features/tiktok/components/file-upload";
+import FileUpload from "@/components/file-upload";
 import Router, { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { submitToBackend } from "@/components/create-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
 
-export default function MobileGeneratePage( {
+export default function MobileGeneratePage({
 	fromLanding = false,
 }: {
 	fromLanding?: boolean;
-}) {const [value, setValue] = useState<TabType>(TabType.Video);
+}) {
+	const [value, setValue] = useState<TabType>(TabType.Video);
 	const [input, setInput] = useState("");
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
 

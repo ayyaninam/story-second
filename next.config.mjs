@@ -53,7 +53,7 @@ const nextConfig = {
 				},
 				{
 					source: "/tiktok",
-					destination: "/tiktok/index.html",
+					destination: "/landing/tiktok.html",
 				},
 				{
 					source: "/sitemap.xml",
