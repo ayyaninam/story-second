@@ -2,23 +2,24 @@ export default function PrivacyPolicy() {
 	return (
 		<div className="flex flex-col w-full m-4">
 			<h1 className="font-aleo text-3xl sm:text-4xl font-semibold pb-3 border-b-[5px] border-brand-fill">
-				Privacy Policy
+				Story.com: Privacy Policy
 			</h1>
 			<p className="mt-8">
-				This Privacy Policy describes how Authorly (together with its affiliates
-				companies - “Authorly,” “we,” “our,” or “us”) collect(s), store(s),
-				use(s) and disclose(s) personal data regarding individuals (“you”) who:
+				This Privacy Policy describes how Story.com (together with its
+				affiliates companies - “Story.com,” “we,” “our,” or “us”) collect(s),
+				store(s), use(s) and disclose(s) personal data regarding individuals
+				(“you”) who:
 			</p>
 			<ol className="mt-4 px-6" style={{ listStyleType: "lower-roman" }}>
 				<li>
 					visit(s) or otherwise interact(s) with our website(s) (“Visitors”),
-					available at www.Authorly.ai or any other website, webpage, e-mail,
+					available at www.Story.com.ai or any other website, webpage, e-mail,
 					text message or online ad under our control (collectively -
 					“Website(s))”);
 				</li>
 				<li>
 					Users accessing and using Services, including, but not limited to,
-					Authorly and Authorly Dashboard, via the Website, or the Authorly
+					Story.com and Story.com Dashboard, via the Website, or the Story.com
 					desktop or App, addons or extensions upon authorization from Customer.
 				</li>
 			</ol>
@@ -108,7 +109,7 @@ const privacyData = {
 				},
 				{
 					title: "Customer Data Containing Personal Data",
-					text: "Users may choose to upload or submit to our Service certain content, materials and data on behalf of their Account or the Account owner (our Customer), which includes Personal Data  (collectively “Customer Data”). For the purpose of this Privacy Policy, User Terms of Service, and other related agreements, Account owner is the Customer who has entered into a commercial agreement with Authorly. Personal Data which is included in Customer Data will only be processed by Authorly on behalf of our Customer (who owns the Customer’s Account), in accordance with our Data Processing Addendum (to the extent applicable), other agreements with such Customer, and this Privacy Policy.",
+					text: "Users may choose to upload or submit to our Service certain content, materials and data on behalf of their Account or the Account owner (our Customer), which includes Personal Data  (collectively “Customer Data”). For the purpose of this Privacy Policy, User Terms of Service, and other related agreements, Account owner is the Customer who has entered into a commercial agreement with Story.com. Personal Data which is included in Customer Data will only be processed by Story.com on behalf of our Customer (who owns the Customer’s Account), in accordance with our Data Processing Addendum (to the extent applicable), other agreements with such Customer, and this Privacy Policy.",
 				},
 				{
 					title: "Data Concerning Service Integrations",
@@ -133,7 +134,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: 'If you reside or are using the Service (i) in a territory governed by privacy laws which determine that "consent" is the only or most appropriate legal basis for processing Personal Data (in general, or specifically with respect to the types of Personal Data you choose to share via the Service), your acceptance of our Terms and of this Privacy Policy will be deemed as your consent to the processing of your Personal Data for all purposes detailed in this Privacy Policy. If you wish to revoke such consent, please contact us by email at support@authorly.ai.',
+					text: 'If you reside or are using the Service (i) in a territory governed by privacy laws which determine that "consent" is the only or most appropriate legal basis for processing Personal Data (in general, or specifically with respect to the types of Personal Data you choose to share via the Service), your acceptance of our Terms and of this Privacy Policy will be deemed as your consent to the processing of your Personal Data for all purposes detailed in this Privacy Policy. If you wish to revoke such consent, please contact us by email at support@story.com.ai.',
 				},
 				{
 					title: "",
@@ -176,7 +177,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "Authorly is headquartered in Seattle, Washington, in the United States of America, and we do not presently have any customers in the European Union that we are aware of. While privacy laws may vary between jurisdictions, Authorly, its affiliates and Service Providers are each committed to protect Personal Data in accordance with this Privacy Policy, customary industry standards, and such appropriate lawful mechanisms and contractual terms requiring adequate data protection, regardless of any lesser legal requirements that may apply in the jurisdiction from which such data originated.  Notwithstanding the foregoing, Customer Data may only be processed in such locations as permitted in our Data Processing Addendum and other commercial agreements with such Customer.",
+					text: "Story.com is headquartered in Seattle, Washington, in the United States of America, and we do not presently have any customers in the European Union that we are aware of. While privacy laws may vary between jurisdictions, Story.com, its affiliates and Service Providers are each committed to protect Personal Data in accordance with this Privacy Policy, customary industry standards, and such appropriate lawful mechanisms and contractual terms requiring adequate data protection, regardless of any lesser legal requirements that may apply in the jurisdiction from which such data originated.  Notwithstanding the foregoing, Customer Data may only be processed in such locations as permitted in our Data Processing Addendum and other commercial agreements with such Customer.",
 				},
 				{
 					title: "Data Retention",
@@ -184,7 +185,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "Please note that except as required by applicable law or our specific agreements with you, we will not be obligated to retain your Personal Data for any particular period, and we are free to securely delete it or restrict access to it for any reason and at any time, with or without notice to you. If you have any  questions   about  our   data   retention   policy,   please   contact   us   by   email at support@authorly.ai.",
+					text: "Please note that except as required by applicable law or our specific agreements with you, we will not be obligated to retain your Personal Data for any particular period, and we are free to securely delete it or restrict access to it for any reason and at any time, with or without notice to you. If you have any  questions   about  our   data   retention   policy,   please   contact   us   by   email at support@story.com.ai.",
 				},
 			],
 		},
@@ -209,7 +210,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "Our Service Providers shall be deemed as ‘Data Processors’ in circumstances where Authorly assumes the role of ‘Data Controller’; and where Authorly acts as the Data Processor for our Customer, the Service Provider shall be deemed our ‘Sub-Processor’ (as further described in Section 9 below).",
+					text: "Our Service Providers shall be deemed as ‘Data Processors’ in circumstances where Story.com assumes the role of ‘Data Controller’; and where Story.com acts as the Data Processor for our Customer, the Service Provider shall be deemed our ‘Sub-Processor’ (as further described in Section 9 below).",
 				},
 				{
 					title: "Third Party Website(s) and Services",
@@ -225,15 +226,15 @@ const privacyData = {
 				},
 				{
 					title: "Sharing Your Feedback or Recommendations",
-					text: "If you submit a public review or feedback, note that we may (at our discretion) store and present your review to other users of our Website(s) and Service (including other Customers). If you wish to remove your public review, please contact us at support@authorly.ai. If you choose to send others an e-mail or message inviting them to use the Service, we will use the contact information you provide us to automatically send such an invitation email or message on your behalf. Your name and e-mail address may be included in the invitation email or message.  The Company reserves the right, in our sole discretion, to select (or not select) which public reviews, and/or feedback to use, publish, or to refrain from the same.  Your submission of reviews, and/or feedback constitutes consent to use the same without further permission, nor compensation of any kind or nature, and use the same in any manner consistent with our business interests.  Reviews and/or feedback that may be interpreted as foul, profane, slanderous, defamatory, bullying, bigoted, or otherwise inappropriate in our sole opinion, may not be used.",
+					text: "If you submit a public review or feedback, note that we may (at our discretion) store and present your review to other users of our Website(s) and Service (including other Customers). If you wish to remove your public review, please contact us at support@story.com.ai. If you choose to send others an e-mail or message inviting them to use the Service, we will use the contact information you provide us to automatically send such an invitation email or message on your behalf. Your name and e-mail address may be included in the invitation email or message.  The Company reserves the right, in our sole discretion, to select (or not select) which public reviews, and/or feedback to use, publish, or to refrain from the same.  Your submission of reviews, and/or feedback constitutes consent to use the same without further permission, nor compensation of any kind or nature, and use the same in any manner consistent with our business interests.  Reviews and/or feedback that may be interpreted as foul, profane, slanderous, defamatory, bullying, bigoted, or otherwise inappropriate in our sole opinion, may not be used.",
 				},
 				{
 					title: "Protecting Rights and Safety",
-					text: "We may share your Personal Data with others if we believe in good faith that this will help protect the rights, property or personal safety of Authorly, any of our Users or Customers, or any members of the general public.",
+					text: "We may share your Personal Data with others if we believe in good faith that this will help protect the rights, property or personal safety of Story.com, any of our Users or Customers, or any members of the general public.",
 				},
 				{
-					title: "Authorly Subsidiaries and Affiliated Companies",
-					text: "We may share Personal Data internally within our group, for the purposes described in this Privacy Policy. In addition,  should Authorly or any of its subsidiaries, affiliates, parent, sister, daughter, or related entities undergo any change in control, including by means of merger, acquisition or purchase of substantially all of its assets, your Personal Data may be shared with the parties involved in such an event. For the avoidance of doubt, Authorly may share your Personal Data in additional manners, pursuant to your explicit approval, or if we are legally obligated to do so, or if we have successfully rendered such data non-personal and anonymous. We may transfer, share or otherwise use non-personal data at our sole discretion and without the need for further approval.",
+					title: "Story.com Subsidiaries and Affiliated Companies",
+					text: "We may share Personal Data internally within our group, for the purposes described in this Privacy Policy. In addition,  should Story.com or any of its subsidiaries, affiliates, parent, sister, daughter, or related entities undergo any change in control, including by means of merger, acquisition or purchase of substantially all of its assets, your Personal Data may be shared with the parties involved in such an event. For the avoidance of doubt, Story.com may share your Personal Data in additional manners, pursuant to your explicit approval, or if we are legally obligated to do so, or if we have successfully rendered such data non-personal and anonymous. We may transfer, share or otherwise use non-personal data at our sole discretion and without the need for further approval.",
 				},
 			],
 		},
@@ -267,7 +268,7 @@ const privacyData = {
 				},
 				{
 					title: "Promotional Communications",
-					text: "We may also notify you about new features, additional offerings, events and special opportunities or any other information we think our Users will find valuable. We may provide such notices through any of the contact means available to us (e.g. phone, mobile or email), through the Service, or through our marketing campaigns on any other Website(s) or platforms. If you do not wish to receive such promotional communications, you may notify Authorly at any time by sending an e-mail to support@authorly.ai, changing your communications preferences in your User Profile settings, or by following the “unsubscribe”, “stop”, “opt-out” or “change email preferences” instructions contained in the promotional communications you receive.",
+					text: "We may also notify you about new features, additional offerings, events and special opportunities or any other information we think our Users will find valuable. We may provide such notices through any of the contact means available to us (e.g. phone, mobile or email), through the Service, or through our marketing campaigns on any other Website(s) or platforms. If you do not wish to receive such promotional communications, you may notify Story.com at any time by sending an e-mail to support@story.com.ai, changing your communications preferences in your User Profile settings, or by following the “unsubscribe”, “stop”, “opt-out” or “change email preferences” instructions contained in the promotional communications you receive.",
 				},
 			],
 		},
@@ -293,7 +294,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "If EU General Data Protection Regulation (GDPR) or the California Consumer Privacy Act (CCPA) applies to you and you wish to exercise those rights under the applicable law, such as the right to request access to, and rectification or erasure of your Personal Data held with Authorly, or to restrict or object to such Personal Data’s processing, or to port such Personal Data, or the right to equal services and prices (each to the extent available to you under the laws which apply to you) – please contact us by email at support@authorly.ai.",
+					text: "If EU General Data Protection Regulation (GDPR) or the California Consumer Privacy Act (CCPA) applies to you and you wish to exercise those rights under the applicable law, such as the right to request access to, and rectification or erasure of your Personal Data held with Story.com, or to restrict or object to such Personal Data’s processing, or to port such Personal Data, or the right to equal services and prices (each to the extent available to you under the laws which apply to you) – please contact us by email at support@story.com.ai.",
 				},
 				{
 					title: "",
@@ -301,7 +302,7 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "If you would like to make any requests or queries regarding Personal Data we process on your Account owner’s (our Customer’s) behalf, please contact the Account’s Admin directly. For example, if you are an User who wishes to access, correct, or delete data processed by Authorly on behalf of a Customer, please direct your request to the relevant Customer.",
+					text: "If you would like to make any requests or queries regarding Personal Data we process on your Account owner’s (our Customer’s) behalf, please contact the Account’s Admin directly. For example, if you are an User who wishes to access, correct, or delete data processed by Story.com on behalf of a Customer, please direct your request to the relevant Customer.",
 				},
 			],
 		},
@@ -314,19 +315,19 @@ const privacyData = {
 				},
 				{
 					title: "",
-					text: "Certain data protection laws and regulations, such as the GDPR or the CCPA, typically distinguish between two main roles for parties processing Personal Data: the “Data Controller” (or under the CCPA, “business”), who determines the purposes and means of processing; and the “Data Processor” (or under the CCPA, “service provider”), who processes the data on behalf of the Data Controller (or business). Below we explain how these roles apply to our Service, to the extent that such laws and regulations apply. Notwithstanding the foregoing, currently, Authorly, does not fall under the ambit of the CCPA as a “business.”",
+					text: "Certain data protection laws and regulations, such as the GDPR or the CCPA, typically distinguish between two main roles for parties processing Personal Data: the “Data Controller” (or under the CCPA, “business”), who determines the purposes and means of processing; and the “Data Processor” (or under the CCPA, “service provider”), who processes the data on behalf of the Data Controller (or business). Below we explain how these roles apply to our Service, to the extent that such laws and regulations apply. Notwithstanding the foregoing, currently, Story.com, does not fall under the ambit of the CCPA as a “business.”",
 				},
 				{
 					title: "",
-					text: "Authorly is the “Data Controller” of  its Visitors’ and Customers’ Personal Data,  as well as User Data consisting of profile and contact details, as well as  usage, preferences, engagement and analytics data. With respect to such data, we assume the responsibilities of Data Controller (solely to the extent applicable under law), as set forth in this Privacy Policy. In such instances, our Service Providers processing such data will assume the role of “Data Processor.”",
+					text: "Story.com is the “Data Controller” of  its Visitors’ and Customers’ Personal Data,  as well as User Data consisting of profile and contact details, as well as  usage, preferences, engagement and analytics data. With respect to such data, we assume the responsibilities of Data Controller (solely to the extent applicable under law), as set forth in this Privacy Policy. In such instances, our Service Providers processing such data will assume the role of “Data Processor.”",
 				},
 				{
 					title: "",
-					text: "If any of our Users upload or submit Customer Data or other content to our Service which includes Personal Data (e.g., by submitting their own clients’ contact details to one of their Boards), such data will only be processed by Authorly on behalf of our Customer, which is the owner of the respective Account, along with all other User Data processed on such Customer’s behalf.",
+					text: "If any of our Users upload or submit Customer Data or other content to our Service which includes Personal Data (e.g., by submitting their own clients’ contact details to one of their Boards), such data will only be processed by Story.com on behalf of our Customer, which is the owner of the respective Account, along with all other User Data processed on such Customer’s behalf.",
 				},
 				{
 					title: "",
-					text: "In such instances, our Customer shall be deemed the “Data Controller” of such data, and Authorly will process such data on the Customer’s behalf, as its “Data Processor”, in accordance with its reasonable instructions, subject to our Terms, our Data Processing Addendum with such Customer (to the extent applicable) and other commercial agreements. Authorly’s Service Providers shall act as designated Sub-Processors in these instances. The Customer will be responsible for meeting any legal requirements applicable to Data Controllers (such as establishing a legal basis for processing and responding to Data Subject Rights requests concerning the data they control).",
+					text: "In such instances, our Customer shall be deemed the “Data Controller” of such data, and Story.com will process such data on the Customer’s behalf, as its “Data Processor”, in accordance with its reasonable instructions, subject to our Terms, our Data Processing Addendum with such Customer (to the extent applicable) and other commercial agreements. Story.com’s Service Providers shall act as designated Sub-Processors in these instances. The Customer will be responsible for meeting any legal requirements applicable to Data Controllers (such as establishing a legal basis for processing and responding to Data Subject Rights requests concerning the data they control).",
 				},
 			],
 		},
@@ -348,11 +349,11 @@ const privacyData = {
 				{
 					title:
 						"Our Service is Not Designed to Attract Children Under the Age of 13",
-					text: "We do not knowingly collect Personal Data directly from children and do not wish to do so. If we learn that a person under the age of 13 is using the Service, we will attempt to prohibit and block such use and will make our best efforts to promptly delete any Personal Data stored with us with regard to such child. If you believe that we might have any such data, please contact us by email at support@authorly.ai.",
+					text: "We do not knowingly collect Personal Data directly from children and do not wish to do so. If we learn that a person under the age of 13 is using the Service, we will attempt to prohibit and block such use and will make our best efforts to promptly delete any Personal Data stored with us with regard to such child. If you believe that we might have any such data, please contact us by email at support@story.com.ai.",
 				},
 				{
 					title: "Questions, Concerns or Complaints",
-					text: "If you have any comments or questions regarding our Privacy Policy, or if you have any concerns regarding your Personal Data held with us, please contact Authorly’s support at support@authorly.ai.",
+					text: "If you have any comments or questions regarding our Privacy Policy, or if you have any concerns regarding your Personal Data held with us, please contact Story.com’s support at support@story.com.ai.",
 				},
 				{
 					title: "",
