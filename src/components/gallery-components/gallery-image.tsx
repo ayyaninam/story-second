@@ -7,6 +7,7 @@ import Routes from "@/routes";
 import { useRouter } from "next/router";
 import ShareIcon from "./svgs/share-icon";
 import PlayIcon from "./svgs/play-icon";
+import toast from "react-hot-toast";
 
 function GalleryImage({
 	story,
@@ -111,12 +112,8 @@ function GalleryImage({
 							className="flex grow gap-1 bg-accent-600 hover:bg-accent-800 text-white text-sm font-normal py-1.5 px-2 h-fit"
 							onClick={(e) => {
 								e.stopPropagation();
-								const categoryId =
-									story.topLevelCategory?.replace(/ /g, "-").toLowerCase() ||
-									"all";
-								router.push(
-									`${Routes.ViewStory(story.storyType, categoryId, story.slug as string)}`
-								);
+								navigator.clipboard.writeText(window.location.href);
+								toast.success("Link copied to clipboard");
 							}}
 						>
 							<ShareIcon />
