@@ -287,15 +287,13 @@ export const submitToBackend = async (
 			.post("api/story/create", { body: data })
 			.json();
 
-		console.log(data);
-		console.log(json);
-
 		invalidateUser();
 
 		if (json.storyPath == null) {
 			toast.error("An unexpected error has occurred. Please try again.");
 		} else {
 			// Ok! Send the user to the story page
+			localStorage.removeItem("prompt");
 			redirect(json.storyPath, fromLanding);
 		}
 	} catch (error) {

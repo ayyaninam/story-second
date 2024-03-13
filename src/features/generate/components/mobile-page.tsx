@@ -94,6 +94,13 @@ export default function MobileGeneratePage({
 		await submitToBackend(params, invalidateUser, fromLanding, setIsLoading);
 	};
 
+	useEffect(() => {
+		const prompt = localStorage.getItem("prompt") || "";
+		if (prompt) {
+			setInput(prompt);
+		}
+	}, []);
+
 	return (
 		<div
 			className="lg:hidden h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow"
@@ -230,6 +237,8 @@ export default function MobileGeneratePage({
 								maxLength={1000}
 								className="h-full border-border focus:border-0"
 								onChange={(e) => setInput(e.target.value)}
+								value={input}
+								placeholder={"Write a prompt for your story"}
 							/>
 							<div className="flex justify-between text-xs text-slate-600">
 								<span>{input.length}/1000 characters</span>
