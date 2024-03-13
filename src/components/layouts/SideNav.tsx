@@ -313,16 +313,16 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						{/*<p className="text-xs">Generate In Turbo Mode</p>*/}
 					</div>
 				</div>
-				<div className="flex flex-col items-center justify-center text-white text-center items-center pb-8">
+				<div className="flex flex-col items-center justify-center text-white text-center pb-8">
 					<Link
 						href="https://www.producthunt.com/posts/story-com?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-story&#0045;com"
 						target="_blank"
-						className="w-full"
+						className="w-full items-center"
 					>
 						<img
 							src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=444214&theme=neutral"
 							alt="Story&#0046;com - Storytelling&#0032;meets&#0032;AI | Product Hunt"
-							className="w-full"
+							className="w-full items-center"
 						/>
 					</Link>
 				</div>
