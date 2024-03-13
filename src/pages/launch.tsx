@@ -63,14 +63,28 @@ export default function LaunchPage() {
 									Plan. Dive into AI-generated movies and books tailored just
 									for you.
 								</p>
-								<p className="text-base mt-2">
-									Begin your storytelling adventure today.
-								</p>
 								<Link href={Routes.Login(Routes.defaultRedirect)}>
 									<Button className="mt-4 hover:bg-purple-700/80">
 										Claim Your Access
 									</Button>
 								</Link>
+							</div>
+							<div className="h-[1px] w-full bg-white mt-6" />
+							<div className="mt-6 flex flex-col items-center">
+								<p className="text-2xl font-bold">Support us on Product Hunt</p>
+								<a
+									href="https://www.producthunt.com/posts/ion-design?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-ion&#0045;design"
+									target="_blank"
+									className="mt-2"
+								>
+									<img
+										src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=443868&theme=light"
+										alt="ion&#0032;design - Instantly&#0032;turn&#0032;Figma&#0032;into&#0032;React&#0032;code | Product Hunt"
+										style={{ width: "250px", height: "54px" }}
+										width="250"
+										height="54"
+									/>
+								</a>
 							</div>
 						</div>
 					</div>
