@@ -72,6 +72,7 @@ const nextConfig = {
 		];
 	},
 	images: {
+    unoptimized: true,
 		remotePatterns: [
 			{
 				hostname: "ik.imagekit.io",
