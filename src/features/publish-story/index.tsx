@@ -445,7 +445,19 @@ export default function PublishedStory({
 													Video
 												</Button>
 											)}
-
+										<Button
+											className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+											variant="outline"
+											onClick={() => {
+												navigator.clipboard.writeText(window.location.href);
+												toast.success("Link copied to clipboard");
+											}}
+										>
+											<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Share
+											{User?.data?.data?.id === Webstory.data?.user?.id &&
+												Webstory.data?.storyType !== 2 &&
+												" Video"}
+										</Button>
 										{(numVideoSegmentsReady ?? 0) <
 											(numTotalVideoSegments ?? 0) ||
 										!Webstory.data?.storyDone ? null : Webstory.data
@@ -569,7 +581,7 @@ export default function PublishedStory({
 												</a> */}
 						</div>
 					</div>
-					<div className="absolute bottom-10 left-4 items-center flex flex-row gap-x-1">
+					<div className="absolute bottom-10 left-4 items-center hidden md:flex flex-row gap-x-1">
 						<span
 							className="rounded-full text-xs text-accent-100 bg-accent-600 p-1.5 hover:cursor-pointer hover:bg-accent-400 transition-colors duration-200  ease-in-out"
 							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
@@ -585,7 +597,7 @@ export default function PublishedStory({
 					</div>
 					<Link
 						href="/feed"
-						className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-row gap-x-3 text-sm text-muted-foreground"
+						className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden md:flex flex-row gap-x-3 text-sm text-muted-foreground"
 					>
 						© 2024 Story.com - All rights reserved
 					</Link>
