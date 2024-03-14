@@ -1,25 +1,25 @@
-import React from "react";
+import React, { ComponentProps } from "react";
 import { getRemotionEnvironment, Sequence, Audio } from "remotion";
+
 import { Premount } from "./premount";
 
-interface AudioWithPremountProps {
+interface AudioWithPremountProps extends ComponentProps<typeof Audio> {
 	startAudioFrom: number;
-	audioURL: string;
 }
 
 export const AudioWithPremount = ({
 	startAudioFrom,
-	audioURL,
+	...props
 }: AudioWithPremountProps) => {
 	const { isRendering } = getRemotionEnvironment();
 
 	return isRendering ? (
 		<Sequence from={startAudioFrom}>
-			<Audio src={audioURL} />
+			<Audio {...props} />
 		</Sequence>
 	) : (
 		<Premount for={startAudioFrom}>
-			<Audio src={audioURL} />
+			<Audio {...props} />
 		</Premount>
 	);
 };

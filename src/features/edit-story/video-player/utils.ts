@@ -97,5 +97,6 @@ export const webStoryToRemotionInputProps = async (
 		bottomVideoURL: story.originalMediaKey
 			? Format.GetVideoUrl(story.originalMediaKey)
 			: undefined,
+		enableBackgroundAudioFadeOutEffect: false,
 	});
 };
