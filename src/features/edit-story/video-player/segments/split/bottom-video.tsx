@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { AbsoluteFill, OffthreadVideo, staticFile } from "remotion";
+import { AbsoluteFill, OffthreadVideo } from "remotion";
 import { RemotionPlayerSplitInputProps, bigZIndexTrick } from "../../constants";
 import LogoWatermark from "./components/LogoWatermark";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Series } from "remotion";
+import { Series, OffthreadVideo } from "remotion";
 import { TransitionSeries } from "@remotion/transitions";
 import { SegmentSplitPage } from "./page";
 import {
@@ -10,12 +10,15 @@ import {
 import { Premount } from "../../../components/premount";
 import { SegmentSplitIntermediate } from "./intermediate";
 import { SegmentSplitSplitBottomVideo } from "./bottom-video";
-import { SegmentSplitTopTheEnd } from "./top-the-end";
 import TheEndSegment from "./the-end";
 
 const Main: React.FC<RemotionPlayerSplitInputProps> = (inputProps) => {
-	const { segments, topEndDurationInFrames, pagesDurationInFrames } =
-		inputProps;
+	const { segments, pagesDurationInFrames, renderedVideoURL } = inputProps;
+
+	if (renderedVideoURL) {
+		return <OffthreadVideo src={renderedVideoURL} />;
+	}
+
 	return (
 		<>
 			<TransitionSeries>
@@ -66,11 +69,6 @@ const Main: React.FC<RemotionPlayerSplitInputProps> = (inputProps) => {
 					}
 				})}
 
-				{!!topEndDurationInFrames && (
-					<TransitionSeries.Sequence durationInFrames={topEndDurationInFrames}>
-						<SegmentSplitTopTheEnd />
-					</TransitionSeries.Sequence>
-				)}
 				<TransitionSeries.Sequence
 					durationInFrames={TO_THE_END_OF_VIDEO}
 					offset={-PREMOUNT_FRAMES}
