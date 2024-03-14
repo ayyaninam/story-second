@@ -113,7 +113,9 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	>(null);
 	useEffect(() => {
 		setUserName(
-			data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName ||
+			data?.data?.name?.split(" ")[0] +
+				" " +
+				(data?.data?.lastName ? data?.data?.lastName : "") ||
 				"" ||
 				"Story.com"
 		);
