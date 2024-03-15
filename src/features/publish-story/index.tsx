@@ -476,15 +476,24 @@ export default function PublishedStory({
 												onClick={async (e) => {
 													eventLogger("download_video_clicked");
 													setIsVideoDownloading(true);
-													const presignedUrl = await RenderVideo.mutateAsync({
-														id: storyData.id!,
-														accessToken: session.accessToken,
-													});
-													if (!presignedUrl) {
-														setIsVideoDownloading(false);
-														return;
+
+													let videoUrl;
+													if (
+														storyData.renderedVideoKey &&
+														!storyData.invalidateRender
+													) {
+														videoUrl = Format.GetPublicBucketObjectUrl(
+															storyData.renderedVideoKey
+														);
+													} else {
+														videoUrl = await RenderVideo.mutateAsync({
+															id: storyData.id!,
+															accessToken: session.accessToken,
+														});
 													}
-													window.location.href = presignedUrl;
+													if (videoUrl) {
+														window.location.href = videoUrl;
+													}
 													setIsVideoDownloading(false);
 												}}
 												className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
