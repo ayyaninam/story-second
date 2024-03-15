@@ -309,7 +309,7 @@ export default function PublishedStory({
 							className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
 							variant="outline"
 							onClick={() => {
-								router.push(Routes.Logout("/feed"));
+								router.push(Routes.Logout("/feed/all"));
 							}}
 						>
 							<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
@@ -615,7 +615,7 @@ export default function PublishedStory({
 						</span>
 					</div>
 					<Link
-						href="/feed"
+						href="/feed/[genre]"
 						className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden md:flex flex-row gap-x-3 text-sm text-muted-foreground"
 					>
 						© 2024 Story.com - All rights reserved

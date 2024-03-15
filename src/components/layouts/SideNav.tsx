@@ -27,7 +27,7 @@ export const menuItems = [
 		icon: <FeedIcon size={24} />,
 		text: "Feed",
 		shortcut: "E",
-		redirectUrl: "/feed",
+		redirectUrl: "/feed/all",
 		cssVars: {
 			"--hover-border-color": "rgba(122,255,180,0.1)",
 			"--hover-background":
@@ -49,7 +49,7 @@ export const menuItems = [
 		icon: <LibraryIcon size={24} />,
 		text: "Library",
 		shortcut: "L",
-		redirectUrl: "/library",
+		redirectUrl: "/library/all",
 		cssVars: {
 			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
 			"--hover-background":
@@ -223,7 +223,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 			</div>
 			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-100">
 				<div className="mb-4 mx-3">
-					<Link href={"/feed"}>
+					<Link href={"/feed/all"}>
 						<StoryLogoFullWhite />
 					</Link>
 				</div>
