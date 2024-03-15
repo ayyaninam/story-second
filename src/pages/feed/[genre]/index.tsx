@@ -54,8 +54,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 	const queryClient = new QueryClient();
 	const session = await getSession(context.req, context.res);
 
-	const { genre, orientation, page, sort } = context.query as {
+	const { genre } = context.params as {
 		genre: string;
+	};
+	const { orientation, page, sort } = context.query as {
 		orientation: string;
 		page: string;
 		sort: string;
