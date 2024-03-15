@@ -22,7 +22,7 @@ async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const users = await fetchFromApi("api/User/GetAllUsers");
 
 	// Define your static routes
-	const staticRoutes = ["", "library", "about", "faqs", "blogs"];
+	const staticRoutes = [""];
 
 	const staticSitemap = staticRoutes.map((url: string) => {
 		return {
@@ -34,21 +34,22 @@ async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	const categorySitemap = await categories.map((category: string) => {
 		return {
-			url: `${env.NEXT_PUBLIC_BASE_URL}feed?genre=${category}`,
+			url: `${env.NEXT_PUBLIC_BASE_URL}feed/${category}`,
 			changeFrequency: "always",
 			priority: 1,
 		};
 	});
 
-	const userSitemap = await users.map((user: string) => {
-		return {
-			url: `${env.NEXT_PUBLIC_BASE_URL}u/${user}`,
-			changeFrequency: "weekly",
-			priority: 0.5,
-		};
-	});
+	// NOTE: When enabled, check for the api response size
+	// const userSitemap = await users.map((user: string) => {
+	// 	return {
+	// 		url: `${env.NEXT_PUBLIC_BASE_URL}${user}`,
+	// 		changeFrequency: "weekly",
+	// 		priority: 0.5,
+	// 	};
+	// });
 
-	return [...staticSitemap, ...categorySitemap, ...userSitemap];
+	return [...staticSitemap, ...categorySitemap];
 }
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse) {
