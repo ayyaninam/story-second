@@ -22,10 +22,12 @@ const calculateSegmentDuration = async ({
 	variant,
 	audioURL,
 	isLastSegment,
+	storyText,
 }: {
 	variant: RemotionVariant;
 	audioURL: string | null;
 	isLastSegment: boolean;
+	storyText: string;
 }) => {
 	const minContentDuration = 0 * VIDEO_FPS;
 
@@ -48,10 +50,15 @@ const calculateSegmentDuration = async ({
 				: 0)
 	);
 
+	const dotExtraDuration = storyText.endsWith(".") ? 8 : 0;
+
 	return {
 		contentDuration,
 		durationInFrames:
-			contentDuration + silentTime + (isLastSegment ? PREMOUNT_FRAMES : 0),
+			contentDuration +
+			silentTime +
+			(isLastSegment ? PREMOUNT_FRAMES : 0) +
+			dotExtraDuration,
 	};
 };
 
@@ -84,6 +91,7 @@ export const toRemotionSegment = async ({
 		variant,
 		audioURL,
 		isLastSegment,
+		storyText,
 	});
 
 	let pageSegment: Omit<RemotionPageSegment, "index"> | null = {

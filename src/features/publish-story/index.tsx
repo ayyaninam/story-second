@@ -1,3 +1,4 @@
+import { useMediaQuery } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import {
@@ -46,6 +47,7 @@ export default function PublishedStory({
 }) {
 	const router = useRouter();
 	const eventLogger = useEventLogger();
+	const isMobile = useMediaQuery("(max-width: 1024px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
 	const [storySegments, setStorySegments] = useState<
@@ -331,13 +333,15 @@ export default function PublishedStory({
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								<StoryScreenBgBlur
-									blur="3xl"
-									Webstory={Webstory.data}
-									isError={Webstory.isError}
-									isPlaying={isPlaying}
-									seekedFrame={seekedFrame}
-								/>
+								{!isMobile && (
+									<StoryScreenBgBlur
+										blur="3xl"
+										Webstory={Webstory.data}
+										isError={Webstory.isError}
+										isPlaying={isPlaying}
+										seekedFrame={seekedFrame}
+									/>
+								)}
 								{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
 								 <div
 									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
@@ -350,7 +354,13 @@ export default function PublishedStory({
 										isMuted={true}
 									/>
 								</div> */}
-								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
+								<div
+									className={cn(
+										isMobile
+											? "relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+											: "absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+									)}
+								>
 									<StoryScreen
 										playerClassName="rounded-tl-lg rounded-bl-lg"
 										Webstory={Webstory.data}
@@ -566,7 +576,7 @@ export default function PublishedStory({
 									)}
 								</div>
 							</div>
-							{/* 
+							{/*
 								<p>
 													{(Webstory.data.user?.videoCount ?? 0) +
 														(Webstory.data.user?.storyCount ?? 0)}{" "}
