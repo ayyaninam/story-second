@@ -174,6 +174,7 @@ interface ToRemotionInputPropsParams {
 	bottomVideoURL?: string;
 	backgroundAudioURL?: string;
 	enableBackgroundAudioFadeOutEffect: boolean;
+	renderedVideoURL?: string;
 }
 
 export const toRemotionInputProps = async ({
@@ -182,6 +183,7 @@ export const toRemotionInputProps = async ({
 	bottomVideoURL,
 	backgroundAudioURL,
 	enableBackgroundAudioFadeOutEffect,
+	renderedVideoURL,
 }: ToRemotionInputPropsParams): Promise<RemotionPlayerInputProps> => {
 	switch (variant) {
 		case "landscape":
@@ -201,6 +203,7 @@ export const toRemotionInputProps = async ({
 				segments,
 				backgroundAudioURL,
 				enableBackgroundAudioFadeOutEffect,
+				renderedVideoURL,
 			};
 		case "split":
 			const bottomVideoDurationInFrames = Math.ceil(
@@ -264,6 +267,7 @@ export const toRemotionInputProps = async ({
 				variant,
 				bottomVideoURL: bottomVideoURL as string,
 				segments: segmentsWithLastSegmentCutoff,
+				renderedVideoURL,
 			};
 	}
 };

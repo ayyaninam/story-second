@@ -103,5 +103,8 @@ export const webStoryToRemotionInputProps = async (
 		backgroundAudioURL: audioURL
 			? Format.GetPublicBucketObjectUrl(audioURL)
 			: undefined,
+		renderedVideoURL: story.renderedVideoKey
+			? Format.GetPublicBucketObjectUrl(story.renderedVideoKey)
+			: undefined,
 	});
 };
