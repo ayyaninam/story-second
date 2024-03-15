@@ -15,6 +15,7 @@ import {
 	RenderPlayPauseButton,
 	RenderFullscreenButton,
 	CallbackListener,
+	RenderPoster,
 } from "@remotion/player";
 
 import {
@@ -30,6 +31,7 @@ import {
 import { useRouter } from "next/router";
 import useWebstoryContext from "../providers/WebstoryContext";
 import { cn } from "@/utils";
+import { AbsoluteFill, Img } from "remotion";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
@@ -48,6 +50,7 @@ type RemotionPlayerProps = {
 	seekedFrame?: number;
 	isPlaying?: boolean;
 	isMuted?: boolean;
+	coverImageURL?: string;
 	playerClassName?: string;
 } & Omit<Partial<ComponentProps<typeof Player>>, "component">;
 
@@ -66,6 +69,7 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 			playerClassName,
 			isPlaying,
 			isMuted,
+			coverImageURL,
 			...props
 		},
 		ref
@@ -311,6 +315,24 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 			return () => observer.disconnect();
 		}, []);
 
+		const renderPoster: RenderPoster = useCallback(
+			({ height, width, isBuffering }) => {
+				if (isBuffering) {
+					return null;
+				}
+
+				if (coverImageURL) {
+					return (
+						<AbsoluteFill>
+							<Img src={coverImageURL} />
+						</AbsoluteFill>
+					);
+				}
+				return null;
+			},
+			[coverImageURL]
+		);
+
 		// TODO: responsive styles
 		const style: React.CSSProperties = {
 			width: "100%",
@@ -337,6 +359,8 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 					renderPlayPauseButton={renderPlayPauseButton}
 					renderFullscreenButton={renderFullscreenButton}
 					moveToBeginningWhenEnded={false}
+					renderPoster={renderPoster}
+					showPosterWhenUnplayed
 					{...props}
 				/>
 			</div>

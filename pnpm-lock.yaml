@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@remotion/player@4.0.106':
-    hash: olsbn46pdlcjpc5vx2fngup2ne
-    path: patches/@remotion__player@4.0.106.patch
-
 dependencies:
   '@auth0/nextjs-auth0':
     specifier: ^3.5.0
@@ -74,17 +69,17 @@ dependencies:
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@remotion/gif':
-    specifier: 4.0.106
-    version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+    specifier: 4.0.126
+    version: 4.0.126(react-dom@18.2.0)(react@18.2.0)
   '@remotion/media-utils':
-    specifier: 4.0.106
-    version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+    specifier: 4.0.126
+    version: 4.0.126(react-dom@18.2.0)(react@18.2.0)
   '@remotion/player':
-    specifier: 4.0.106
-    version: 4.0.106(patch_hash=olsbn46pdlcjpc5vx2fngup2ne)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 4.0.126
+    version: 4.0.126(react-dom@18.2.0)(react@18.2.0)
   '@remotion/transitions':
-    specifier: 4.0.106
-    version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+    specifier: 4.0.126
+    version: 4.0.126(react-dom@18.2.0)(react@18.2.0)
   '@stripe/react-stripe-js':
     specifier: ^2.5.1
     version: 2.5.1(@stripe/stripe-js@3.0.7)(react-dom@18.2.0)(react@18.2.0)
@@ -161,8 +156,8 @@ dependencies:
     specifier: ^5.1.0
     version: 5.1.0(react@18.2.0)
   remotion:
-    specifier: 4.0.106
-    version: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+    specifier: 4.0.126
+    version: 4.0.126(react-dom@18.2.0)(react@18.2.0)
   sharp:
     specifier: ^0.33.2
     version: 0.33.2
@@ -3132,66 +3127,65 @@ packages:
       '@babel/runtime': 7.23.9
     dev: false
 
-  /@remotion/gif@4.0.106(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ahsx1czT/LIFuXVFm6fEherPGqx/EOiBm96lTlC0tfSQ+ruB6PPCdWYtg9o0MiaavGaDZeEc511vUto6MRZ2RA==}
+  /@remotion/gif@4.0.126(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-jHYGD6wGmvM/eZQGp5M5QqzOU22k4S0Jt0V7VqMOcYSRWK0kuoQY4y0MSv1Gwzt5AxZmpvawXP6JT7XMXv/4Fg==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+      remotion: 4.0.126(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /@remotion/media-utils@4.0.106(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-SJ5jYFdZc1+2A4c1uvsxvkjx59NC4LtLXWBbDCZkzhwrY1Av1M/kKWT6uawC1zKBti6B1RxpjJgHO5oEG6+vlA==}
+  /@remotion/media-utils@4.0.126(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-e9Wn23wH32xzKXf1z7iEtzoTGm4uJWM4ntVQ/PpnfUxseGkbMYUQMU7pXjKayECab8Esy+r1xftJOzgqsYgDnA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+      remotion: 4.0.126(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /@remotion/paths@4.0.106:
-    resolution: {integrity: sha512-IoKx6AEaA2BNlvbWbS5V9fikdT+23+c88fI9fmzEaZStyzesfhlfy+dTlwv7BwQvUXf2WDvmRK2sBA0YSjxepg==}
+  /@remotion/paths@4.0.126:
+    resolution: {integrity: sha512-HA3sRuE80uEleFu8m0uJ4v9uuBiWrpQ0ujQ2pYfYtPmWPFk8ntyo1CE35RdMAyK6cuydPA8F2qLlIcB3PGThQQ==}
     dev: false
 
-  /@remotion/player@4.0.106(patch_hash=olsbn46pdlcjpc5vx2fngup2ne)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-GhRVLKETGa/VZ5HpuyU6n1c4XaPcne0NeadufZ5/dbvwZqN3obHF+rN3qbsdnmE8JAIyxnPZgpegPU8Ob/oD1Q==}
+  /@remotion/player@4.0.126(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-OjJ+QI38RwBqqhGTSDIWIT9pYWSyXZiuDnVN5ZYpZw3EW0eOZ/IyZgzDIGKcOTe2oEWapm39U+vTFj/NMRfW9A==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+      remotion: 4.0.126(react-dom@18.2.0)(react@18.2.0)
     dev: false
-    patched: true
 
-  /@remotion/shapes@4.0.106(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-hCSjahmVmmqxZT8dVyKvziPozy3vyRDFFPBTNt8oqoKgrUTK6JYBDPceOrImZ3PuUzVJXyg2D0ms8/K/m3QLBw==}
+  /@remotion/shapes@4.0.126(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-mIzMYCYntZ6QrFGvfQI+EHx56t0zNs+8WmusQOuhOdG+S4uwrLOE9Y9ZapfVcDK8qFQvvHDsNd+4b5dtCpMpiA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@remotion/paths': 4.0.106
+      '@remotion/paths': 4.0.126
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@remotion/transitions@4.0.106(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-hhFZPyM9J4DeZHqQtYulyWjMSASPFgHtyS36oRqO+F1zxALdCcnFZh1/b9wIzvSoh92POVMcYz1ziiVGv2LL4A==}
+  /@remotion/transitions@4.0.126(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-rONxLE+vMzegzdeGqaBgMy9h9/asLpIQOh7G+4ZG/7lsfzBxhm10r/gJKf8X4O9CzA5nc8OmNQLeM/4oQTvC9A==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@remotion/paths': 4.0.106
-      '@remotion/shapes': 4.0.106(react-dom@18.2.0)(react@18.2.0)
+      '@remotion/paths': 4.0.126
+      '@remotion/shapes': 4.0.126(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      remotion: 4.0.106(react-dom@18.2.0)(react@18.2.0)
+      remotion: 4.0.126(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@rollup/plugin-babel@5.3.1(@babel/core@7.23.9)(rollup@2.79.1):
@@ -6267,8 +6261,8 @@ packages:
       jsesc: 0.5.0
     dev: false
 
-  /remotion@4.0.106(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-wxixKD3aGw1a3nXW2gqmoeh8NkDyeZVTKettiPvsgjwnbniHsIDQCNWUFfcTRLpbmOsBBKePIizsXw43hiya+A==}
+  /remotion@4.0.126(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-mHwQDCoJegR276Nw9EKG6Tu83sCTZnaexJ2z+q5PIYGTKCSyDOqHSCiIGmJ1i+x4Pxb4lLM9S/36uwvJX8TUHg==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
