@@ -2,7 +2,7 @@ import { CreateInitialStoryQueryParams } from "./types";
 import { StoryOutputTypes } from "./utils/enums";
 
 class Routes {
-	public static defaultRedirect = "/feed";
+	public static defaultRedirect = "/feed/all";
 	public static authpage = "/auth/login";
 	static ViewStory(type: StoryOutputTypes, genre: string, id: string) {
 		return `/${this.StoryTypeToPath(type)}/${genre}/${id}`;
@@ -21,7 +21,7 @@ class Routes {
 		return "/library";
 	}
 	static Feed() {
-		return "/feed";
+		return "/feed/all";
 	}
 
 	static Generate(message?: string) {
@@ -33,7 +33,7 @@ class Routes {
 		const urlParams = this.CreateSearchParams(params);
 		return `/create?${urlParams}`;
 	}
-	static ToAuthPage(returnTo = "/feed", params?: Record<string, any>) {
+	static ToAuthPage(returnTo = "/feed/all", params?: Record<string, any>) {
 		let returnUrl = returnTo;
 
 		if (params && Object.keys(params).length > 0) {
@@ -45,13 +45,13 @@ class Routes {
 	static ToSubscriptionPage(message = "") {
 		return `/account?step=payment${message ? "&message=" + message : ""}`;
 	}
-	static Logout(returnTo = "/feed") {
+	static Logout(returnTo = "/feed/all") {
 		return `/auth/logout?returnTo=${returnTo}`;
 	}
-	static Login(returnTo = "/feed") {
+	static Login(returnTo = "/feed/all") {
 		return `/api/auth/login?returnTo=${encodeURIComponent(returnTo)}`;
 	}
-	static Signup(returnTo = "/feed") {
+	static Signup(returnTo = "/feed/all") {
 		return `/api/auth/signup?returnTo=${encodeURIComponent(returnTo)}`;
 	}
 	static EditScript(type: StoryOutputTypes, genre: string, id: string) {
