@@ -49,7 +49,7 @@ export const menuItems = [
 		icon: <LibraryIcon size={24} />,
 		text: "Library",
 		shortcut: "L",
-		redirectUrl: "/library",
+		redirectUrl: "/library/all",
 		cssVars: {
 			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
 			"--hover-background":

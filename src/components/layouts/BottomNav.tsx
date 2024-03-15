@@ -40,7 +40,7 @@ const BottomNav = ({ pageIndex }: { pageIndex: number }) => {
 						Generate
 					</div>
 				</Link>
-				<Link href="/library">
+				<Link href="/library/all">
 					<div className="flex flex-col items-center justify-around gap-1 text-sm">
 						<LibraryIcon size={24} /> {/* Library icon */}
 						Library

@@ -18,7 +18,7 @@ class Routes {
 		return res;
 	}
 	static Library() {
-		return "/library";
+		return "/library/all";
 	}
 	static Feed() {
 		return "/feed/all";
