@@ -85,6 +85,11 @@ const VideoPlayer: FC<
 				isPlaying={isPlaying}
 				seekedFrame={seekedFrame}
 				isMuted={isMuted}
+				coverImageURL={
+					Webstory?.coverImage
+						? Format.GetImageUrl(Webstory.coverImage)
+						: undefined
+				}
 			/>
 		);
 	}
