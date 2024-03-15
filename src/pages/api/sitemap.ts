@@ -41,6 +41,7 @@ async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	});
 
 	// NOTE: When enabled, check for the api response size
+	// https://nextjs.org/docs/messages/api-routes-response-size-limit
 	// const userSitemap = await users.map((user: string) => {
 	// 	return {
 	// 		url: `${env.NEXT_PUBLIC_BASE_URL}${user}`,

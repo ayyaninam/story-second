@@ -1,5 +1,5 @@
 User-Agent: *
 Allow: /
-Disallow: /private/
+Disallow: /library/
 
 Sitemap: https://story.com/sitemap.xml
