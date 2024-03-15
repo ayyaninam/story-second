@@ -69,6 +69,16 @@ const nextConfig = {
 				destination: "/video/:slug*", // Matched parameters can be used in the destination
 				permanent: true,
 			},
+      {
+        source: '/feed',
+        destination: '/feed/all',
+        permanent: true,
+      },
+      {
+        source: '/library',
+        destination: '/library/all',
+        permanent: true,
+      },
 		];
 	},
 	images: {

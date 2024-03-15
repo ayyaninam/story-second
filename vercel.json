@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/feed",
+      "destination": "/feed/all",
+      "permanent": true
+    },
+    {
+      "source": "/library",
+      "destination": "/library/all",
+      "permanent": true
+    }
+  ]
+}
