@@ -91,6 +91,8 @@ export const webStoryToRemotionInputProps = async (
 			}),
 	});
 
+	const audioURL = story.audios?.[0]?.["audioKey"];
+
 	return toRemotionInputProps({
 		variant,
 		segments,
@@ -98,5 +100,8 @@ export const webStoryToRemotionInputProps = async (
 			? Format.GetVideoUrl(story.originalMediaKey)
 			: undefined,
 		enableBackgroundAudioFadeOutEffect: false,
+		backgroundAudioURL: audioURL
+			? Format.GetPublicBucketObjectUrl(audioURL)
+			: undefined,
 	});
 };

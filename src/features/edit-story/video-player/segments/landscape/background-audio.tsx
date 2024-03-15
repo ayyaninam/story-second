@@ -3,7 +3,7 @@ import { AbsoluteFill, interpolate } from "remotion";
 import { AudioWithPremount } from "../../../components/audio-with-premount";
 import { THE_END_DURATION, VIDEO_FPS, PREMOUNT_FRAMES } from "../../constants";
 
-const volume = 0.1;
+const volume = 0.4;
 
 const BackgroundAudio = ({
 	backgroundAudioUrl,
