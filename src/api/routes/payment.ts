@@ -11,7 +11,7 @@ const payment = {
 	createSubscription: async ({
 		subscriptionPlan,
 		subscriptionPeriod,
-	}: mainSchema["CreateSubscriptionDTO"]): Promise<
+	}: mainSchema["SubscriptionDTO"]): Promise<
 		mainSchema["InternalTransactionDTOApiResponse"]
 	> =>
 		await publicProxyApiFetcher
