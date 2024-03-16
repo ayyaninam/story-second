@@ -64,7 +64,7 @@ const GenerateModalContent: React.FC<{
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
-		videoRatios[1]?.value.toString() || ""
+		videoRatios[0]?.value.toString() || ""
 	);
 	const [selectedVideoLength, setSelectedVideoLength] = useState(
 		StoryLengths.Short
