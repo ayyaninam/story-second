@@ -197,26 +197,26 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						>
 							{menuItem.icon}
 							{menuItem.text}
-							<div className="flex gap-2 flex-grow justify-end items-center opacity-65">
-								<Command
-									className="h-5 w-5 p-0.5"
-									style={{
-										borderRadius: "4px",
-										border: "1px solid rgba(255, 255, 255, 0.05)",
-										background: "rgba(255, 255, 255, 0.05)",
-									}}
-								/>
-								<span
-									className="flex h-5 w-5 text-sm text-white items-center justify-center"
-									style={{
-										borderRadius: "4px",
-										border: "1px solid rgba(255, 255, 255, 0.05)",
-										background: "rgba(255, 255, 255, 0.05)",
-									}}
-								>
-									{menuItem.shortcut}
-								</span>
-							</div>
+							{/*<div className="flex gap-2 flex-grow justify-end items-center opacity-65">*/}
+							{/*	<Command*/}
+							{/*		className="h-5 w-5 p-0.5"*/}
+							{/*		style={{*/}
+							{/*			borderRadius: "4px",*/}
+							{/*			border: "1px solid rgba(255, 255, 255, 0.05)",*/}
+							{/*			background: "rgba(255, 255, 255, 0.05)",*/}
+							{/*		}}*/}
+							{/*	/>*/}
+							{/*	<span*/}
+							{/*		className="flex h-5 w-5 text-sm text-white items-center justify-center"*/}
+							{/*		style={{*/}
+							{/*			borderRadius: "4px",*/}
+							{/*			border: "1px solid rgba(255, 255, 255, 0.05)",*/}
+							{/*			background: "rgba(255, 255, 255, 0.05)",*/}
+							{/*		}}*/}
+							{/*	>*/}
+							{/*		{menuItem.shortcut}*/}
+							{/*	</span>*/}
+							{/*</div>*/}
 						</Link>
 					))}
 				</div>
