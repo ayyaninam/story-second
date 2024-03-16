@@ -22,7 +22,7 @@ const Main: React.FC<RemotionPlayerPortraitInputProps> = (inputProps) => {
 	} = inputProps;
 
 	if (renderedVideoURL) {
-		return <OffthreadVideo src={renderedVideoURL} />;
+		return <OffthreadVideo src={renderedVideoURL} pauseWhenBuffering />;
 	}
 
 	return (

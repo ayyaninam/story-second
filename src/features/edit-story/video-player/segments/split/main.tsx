@@ -16,7 +16,7 @@ const Main: React.FC<RemotionPlayerSplitInputProps> = (inputProps) => {
 	const { segments, pagesDurationInFrames, renderedVideoURL } = inputProps;
 
 	if (renderedVideoURL) {
-		return <OffthreadVideo src={renderedVideoURL} />;
+		return <OffthreadVideo src={renderedVideoURL} pauseWhenBuffering />;
 	}
 
 	return (
