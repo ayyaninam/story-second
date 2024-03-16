@@ -39,7 +39,7 @@ export default function MobileGeneratePage({
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
 
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
-		videoRatios[0]?.value.toString() || ""
+		videoRatios[1]?.value.toString() || ""
 	);
 	const [selectedVideoLength, setSelectedVideoLength] = useState(
 		StoryLengths.Short
