@@ -1,13 +1,14 @@
-diff --git a/.idea/b56e58667569446796befe4896481e05.iml b/.idea/b56e58667569446796befe4896481e05.iml
+diff --git a/.idea/34669ebcb89995da839864c797939701.iml b/.idea/34669ebcb89995da839864c797939701.iml
 new file mode 100644
-index 0000000000000000000000000000000000000000..0b872d82d9c39f70bff219b3b4b60145430f8984
+index 0000000000000000000000000000000000000000..ecb78d50e59ce27e2d71f242220ae52ed38bfc5f
 --- /dev/null
-+++ b/.idea/b56e58667569446796befe4896481e05.iml
-@@ -0,0 +1,12 @@
++++ b/.idea/34669ebcb89995da839864c797939701.iml
+@@ -0,0 +1,13 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<module type="WEB_MODULE" version="4">
 +  <component name="NewModuleRootManager">
 +    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.idea/copilot/chatSessions" />
 +      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
 +      <excludeFolder url="file://$MODULE_DIR$/temp" />
 +      <excludeFolder url="file://$MODULE_DIR$/tmp" />
@@ -51,7 +52,7 @@ index 0000000000000000000000000000000000000000..03d9549ea8e4ada36fb3ecbc30fef081
 \ No newline at end of file
 diff --git a/.idea/modules.xml b/.idea/modules.xml
 new file mode 100644
-index 0000000000000000000000000000000000000000..0d594308f373a44b8f88a79d32a2184db1da494b
+index 0000000000000000000000000000000000000000..53682ab1b4ca065a5330d6d9bed95e051ec5273d
 --- /dev/null
 +++ b/.idea/modules.xml
 @@ -0,0 +1,8 @@
@@ -59,49 +60,18 @@ index 0000000000000000000000000000000000000000..0d594308f373a44b8f88a79d32a2184d
 +<project version="4">
 +  <component name="ProjectModuleManager">
 +    <modules>
-+      <module fileurl="file://$PROJECT_DIR$/.idea/b56e58667569446796befe4896481e05.iml" filepath="$PROJECT_DIR$/.idea/b56e58667569446796befe4896481e05.iml" />
++      <module fileurl="file://$PROJECT_DIR$/.idea/34669ebcb89995da839864c797939701.iml" filepath="$PROJECT_DIR$/.idea/34669ebcb89995da839864c797939701.iml" />
 +    </modules>
 +  </component>
 +</project>
 \ No newline at end of file
-diff --git a/.rollup.cache/Users/jonathanburger/remotion/packages/player/dist/esm/MediaVolumeSlider.js b/.rollup.cache/Users/jonathanburger/remotion/packages/player/dist/esm/MediaVolumeSlider.js
-index 396190d20ff799ad8f44f2271297f0185f9553de..606e627bfe7f65e7d782672154a19812a9092ef2 100644
---- a/.rollup.cache/Users/jonathanburger/remotion/packages/player/dist/esm/MediaVolumeSlider.js
-+++ b/.rollup.cache/Users/jonathanburger/remotion/packages/player/dist/esm/MediaVolumeSlider.js
-@@ -14,7 +14,7 @@ export const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
-     const inputRef = useRef(null);
-     const hover = useHoverState(parentDivRef);
-     // Need to import it from React to fix React 17 ESM support.
--    const randomId = 
-+    const randomId =
-     // eslint-disable-next-line react-hooks/rules-of-hooks
-     typeof React.useId === 'undefined' ? 'volume-slider' : React.useId();
-     const [randomClass] = useState(() => `__remotion-volume-slider-${random(randomId)}`.replace('.', ''));
-@@ -91,7 +91,7 @@ export const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
-             width: VOLUME_SLIDER_WIDTH,
-             backgroundImage: `linear-gradient(
- 				to right,
--				white ${mediaVolume * 100}%, rgba(255, 255, 255, 0) ${mediaVolume * 100}%
-+				#bb55f7 ${mediaVolume * 100}%, rgba(255, 255, 255, 0) ${mediaVolume * 100}%
- 			)`,
-         };
-         if (displayVerticalVolumeSlider) {
-@@ -121,7 +121,7 @@ export const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
- 		width: ${KNOB_SIZE}px;
- 	}
- `;
--    return (_jsxs("div", { ref: parentDivRef, style: parentDivStyle, children: [_jsx("style", { 
-+    return (_jsxs("div", { ref: parentDivRef, style: parentDivStyle, children: [_jsx("style", {
-                 // eslint-disable-next-line react/no-danger
-                 dangerouslySetInnerHTML: {
-                     __html: sliderStyle,
 diff --git a/dist/cjs/MediaVolumeSlider.js b/dist/cjs/MediaVolumeSlider.js
-index b753a9fca57eedc66a8f0d2b5de42620132249df..04dae45255b04bcbcbdf9a98237ceedef2421a2f 100644
+index 66d6adc4ae33df548fe654b4600bc50e9bae1444..031a59bde52d3d09a30b309d637d62aa85c0b6cd 100644
 --- a/dist/cjs/MediaVolumeSlider.js
 +++ b/dist/cjs/MediaVolumeSlider.js
 @@ -40,7 +40,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
      const inputRef = (0, react_1.useRef)(null);
-     const hover = (0, use_hover_state_js_1.useHoverState)(parentDivRef);
+     const hover = (0, use_hover_state_js_1.useHoverState)(parentDivRef, false);
      // Need to import it from React to fix React 17 ESM support.
 -    const randomId = 
 +    const randomId =
@@ -127,19 +97,19 @@ index b753a9fca57eedc66a8f0d2b5de42620132249df..04dae45255b04bcbcbdf9a98237ceede
                  dangerouslySetInnerHTML: {
                      __html: sliderStyle,
 diff --git a/dist/esm/index.mjs b/dist/esm/index.mjs
-index 548938a9c5a63f9701c1ed951393c82518b9462a..b095eb6cd518650738b692fe8f4d5073a104479f 100644
+index 2e907f8b0b2503140c8768938ea0b4e3d1498d61..9afc37367cec7c337e1113925d4e00f0b02c6d69 100644
 --- a/dist/esm/index.mjs
 +++ b/dist/esm/index.mjs
-@@ -761,7 +761,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+@@ -912,7 +912,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
      const inputRef = useRef(null);
-     const hover = useHoverState(parentDivRef);
+     const hover = useHoverState(parentDivRef, false);
      // Need to import it from React to fix React 17 ESM support.
 -    const randomId = 
 +    const randomId =
      // eslint-disable-next-line react-hooks/rules-of-hooks
      typeof React.useId === 'undefined' ? 'volume-slider' : React.useId();
      const [randomClass] = useState(() => `__remotion-volume-slider-${random(randomId)}`.replace('.', ''));
-@@ -838,7 +838,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+@@ -989,7 +989,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
              width: VOLUME_SLIDER_WIDTH,
              backgroundImage: `linear-gradient(
  				to right,
@@ -148,7 +118,7 @@ index 548938a9c5a63f9701c1ed951393c82518b9462a..b095eb6cd518650738b692fe8f4d5073
  			)`,
          };
          if (displayVerticalVolumeSlider) {
-@@ -868,7 +868,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
+@@ -1019,7 +1019,7 @@ const MediaVolumeSlider = ({ displayVerticalVolumeSlider }) => {
  		width: ${KNOB_SIZE$1}px;
  	}
  `;

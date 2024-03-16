@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@remotion/player@4.0.126':
+    hash: tflgcyrzocloy5iksnxla3g2uy
+    path: patches/@remotion__player@4.0.126.patch
+
 dependencies:
   '@auth0/nextjs-auth0':
     specifier: ^3.5.0
@@ -76,7 +81,7 @@ dependencies:
     version: 4.0.126(react-dom@18.2.0)(react@18.2.0)
   '@remotion/player':
     specifier: 4.0.126
-    version: 4.0.126(react-dom@18.2.0)(react@18.2.0)
+    version: 4.0.126(patch_hash=tflgcyrzocloy5iksnxla3g2uy)(react-dom@18.2.0)(react@18.2.0)
   '@remotion/transitions':
     specifier: 4.0.126
     version: 4.0.126(react-dom@18.2.0)(react@18.2.0)
@@ -3153,7 +3158,7 @@ packages:
     resolution: {integrity: sha512-HA3sRuE80uEleFu8m0uJ4v9uuBiWrpQ0ujQ2pYfYtPmWPFk8ntyo1CE35RdMAyK6cuydPA8F2qLlIcB3PGThQQ==}
     dev: false
 
-  /@remotion/player@4.0.126(react-dom@18.2.0)(react@18.2.0):
+  /@remotion/player@4.0.126(patch_hash=tflgcyrzocloy5iksnxla3g2uy)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-OjJ+QI38RwBqqhGTSDIWIT9pYWSyXZiuDnVN5ZYpZw3EW0eOZ/IyZgzDIGKcOTe2oEWapm39U+vTFj/NMRfW9A==}
     peerDependencies:
       react: '>=16.8.0'
@@ -3163,6 +3168,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       remotion: 4.0.126(react-dom@18.2.0)(react@18.2.0)
     dev: false
+    patched: true
 
   /@remotion/shapes@4.0.126(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-mIzMYCYntZ6QrFGvfQI+EHx56t0zNs+8WmusQOuhOdG+S4uwrLOE9Y9ZapfVcDK8qFQvvHDsNd+4b5dtCpMpiA==}
