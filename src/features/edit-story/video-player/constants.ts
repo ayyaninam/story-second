@@ -110,7 +110,8 @@ export const VIDEO_HEIGHT: Record<RemotionVariant, number> = {
 	split: 1280,
 };
 export const VIDEO_FPS = 30;
-export const SILENT_DURATION = 0; // in seconds
+// this must NOT be 0 bc it might make the audio sound before it should (on the remotion server)
+export const SILENT_DURATION = 0.1; // in seconds
 export const INCREASED_LAST_PAGE_DURATION = 2; // in seconds
 
 export const bigZIndexTrick = 40000;
