@@ -53,7 +53,7 @@ export const SegmentSplitPage = ({
 			fontSize: 40,
 			width: 500,
 			color: "#fff",
-			WebkitTextStroke: "2px #000",
+			"-webkit-text-stroke": "2px #000",
 			fontWeight: 900,
 		}),
 		[]
