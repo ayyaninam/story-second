@@ -99,5 +99,10 @@
 	"lint-staged": {
 		"*.{ts,tsx}": "eslint --cache --fix",
 		"*.--write": "prettier --write"
+	},
+	"pnpm": {
+		"patchedDependencies": {
+			"@remotion/player@4.0.126": "patches/@remotion__player@4.0.126.patch"
+		}
 	}
 }
