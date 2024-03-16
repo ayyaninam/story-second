@@ -6271,6 +6271,7 @@ export interface components {
        */
       scenes?: components["schemas"]["ReturnSceneDTO"][] | null;
       storyType?: components["schemas"]["StoryType"];
+      imageStyle?: components["schemas"]["ImageStyles"];
       /**
        * StoryDone
        * @description Whether the story text generation is done or not.
@@ -6425,6 +6426,7 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
+      imageStyle?: components["schemas"]["ImageStyles"];
       resolution?: components["schemas"]["DisplayResolution"];
       /**
        * AIContributionRate
