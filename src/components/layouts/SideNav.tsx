@@ -27,7 +27,7 @@ export const menuItems = [
 		icon: <FeedIcon size={24} />,
 		text: "Feed",
 		shortcut: "E",
-		redirectUrl: "/feed",
+		redirectUrl: "/feed/all",
 		cssVars: {
 			"--hover-border-color": "rgba(122,255,180,0.1)",
 			"--hover-background":
@@ -49,7 +49,7 @@ export const menuItems = [
 		icon: <LibraryIcon size={24} />,
 		text: "Library",
 		shortcut: "L",
-		redirectUrl: "/library",
+		redirectUrl: "/library/all",
 		cssVars: {
 			"--hover-border-color": "rgba(122, 255, 180, 0.2)",
 			"--hover-background":
@@ -113,7 +113,9 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	>(null);
 	useEffect(() => {
 		setUserName(
-			data?.data?.name?.split(" ")[0] + " " + data?.data?.lastName ||
+			data?.data?.name?.split(" ")[0] +
+				" " +
+				(data?.data?.lastName ? data?.data?.lastName : "") ||
 				"" ||
 				"Story.com"
 		);
@@ -195,33 +197,33 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						>
 							{menuItem.icon}
 							{menuItem.text}
-							<div className="flex gap-2 flex-grow justify-end items-center opacity-65">
-								<Command
-									className="h-5 w-5 p-0.5"
-									style={{
-										borderRadius: "4px",
-										border: "1px solid rgba(255, 255, 255, 0.05)",
-										background: "rgba(255, 255, 255, 0.05)",
-									}}
-								/>
-								<span
-									className="flex h-5 w-5 text-sm text-white items-center justify-center"
-									style={{
-										borderRadius: "4px",
-										border: "1px solid rgba(255, 255, 255, 0.05)",
-										background: "rgba(255, 255, 255, 0.05)",
-									}}
-								>
-									{menuItem.shortcut}
-								</span>
-							</div>
+							{/*<div className="flex gap-2 flex-grow justify-end items-center opacity-65">*/}
+							{/*	<Command*/}
+							{/*		className="h-5 w-5 p-0.5"*/}
+							{/*		style={{*/}
+							{/*			borderRadius: "4px",*/}
+							{/*			border: "1px solid rgba(255, 255, 255, 0.05)",*/}
+							{/*			background: "rgba(255, 255, 255, 0.05)",*/}
+							{/*		}}*/}
+							{/*	/>*/}
+							{/*	<span*/}
+							{/*		className="flex h-5 w-5 text-sm text-white items-center justify-center"*/}
+							{/*		style={{*/}
+							{/*			borderRadius: "4px",*/}
+							{/*			border: "1px solid rgba(255, 255, 255, 0.05)",*/}
+							{/*			background: "rgba(255, 255, 255, 0.05)",*/}
+							{/*		}}*/}
+							{/*	>*/}
+							{/*		{menuItem.shortcut}*/}
+							{/*	</span>*/}
+							{/*</div>*/}
 						</Link>
 					))}
 				</div>
 			</div>
 			<div className="w-full flex-col px-1.5 my-6 items-center text-accent-100">
 				<div className="mb-4 mx-3">
-					<Link href={"/feed"}>
+					<Link href={"/feed/all"}>
 						<StoryLogoFullWhite />
 					</Link>
 				</div>

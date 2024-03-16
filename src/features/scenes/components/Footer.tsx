@@ -128,7 +128,7 @@ const Footer = ({
 		scrollRef.current?.scroll({ left: 50, behavior: "smooth" });
 	}, []);
 
-	const generationStyle = story.settings?.style ?? StoryImageStyles.Realistic;
+	const generationStyle = WebstoryData.imageStyle ?? StoryImageStyles.Realistic;
 
 	const ungeneratedImages = story.scenes?.flatMap((scene) =>
 		scene.segments
@@ -702,8 +702,8 @@ const Footer = ({
 							<span className="text-purple-600">
 								{images.find(
 									(el) =>
-										el.key === story.settings?.style ??
-										(StoryImageStyles.Realistic as StoryImageStyles)
+										el.key === WebstoryData.imageStyle ??
+										(WebstoryData.imageStyle as StoryImageStyles)
 								)?.label ?? "Realistic"}
 							</span>
 						</span>

@@ -13,6 +13,7 @@ import {
 	toRemotionSegment,
 	processSegmentPromises,
 } from "./composer";
+import { getVideoMetadata } from "@remotion/media-utils";
 
 type WebStory = NonNullable<
 	mainSchema["ReturnVideoStoryDTO"] & {
@@ -91,11 +92,33 @@ export const webStoryToRemotionInputProps = async (
 			}),
 	});
 
+	const audioURL = story.audios?.[0]?.["audioKey"];
+
+	const renderedVideoURL =
+		story.renderedVideoKey && !story.invalidateRender
+			? Format.GetPublicBucketObjectUrl(story.renderedVideoKey)
+			: undefined;
+
+	let renderedVideoExists = true;
+	try {
+		if (renderedVideoURL) {
+			await getVideoMetadata(renderedVideoURL);
+		}
+	} catch (e) {
+		console.error(e);
+		renderedVideoExists = false;
+	}
+
 	return toRemotionInputProps({
 		variant,
 		segments,
 		bottomVideoURL: story.originalMediaKey
 			? Format.GetVideoUrl(story.originalMediaKey)
 			: undefined,
+		enableBackgroundAudioFadeOutEffect: false,
+		backgroundAudioURL: audioURL
+			? Format.GetPublicBucketObjectUrl(audioURL)
+			: undefined,
+		renderedVideoURL: renderedVideoExists ? renderedVideoURL : undefined,
 	});
 };

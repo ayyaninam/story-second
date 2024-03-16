@@ -1,3 +1,4 @@
+import { useMediaQuery } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import {
@@ -46,6 +47,7 @@ export default function PublishedStory({
 }) {
 	const router = useRouter();
 	const eventLogger = useEventLogger();
+	const isMobile = useMediaQuery("(max-width: 1024px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
 	const [storySegments, setStorySegments] = useState<
@@ -307,7 +309,7 @@ export default function PublishedStory({
 							className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
 							variant="outline"
 							onClick={() => {
-								router.push(Routes.Logout("/feed"));
+								router.push(Routes.Logout("/feed/all"));
 							}}
 						>
 							<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
@@ -331,13 +333,15 @@ export default function PublishedStory({
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								<StoryScreenBgBlur
-									blur="3xl"
-									Webstory={Webstory.data}
-									isError={Webstory.isError}
-									isPlaying={isPlaying}
-									seekedFrame={seekedFrame}
-								/>
+								{!isMobile && (
+									<StoryScreenBgBlur
+										blur="3xl"
+										Webstory={Webstory.data}
+										isError={Webstory.isError}
+										isPlaying={isPlaying}
+										seekedFrame={seekedFrame}
+									/>
+								)}
 								{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
 								 <div
 									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
@@ -350,7 +354,13 @@ export default function PublishedStory({
 										isMuted={true}
 									/>
 								</div> */}
-								<div className="absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg">
+								<div
+									className={cn(
+										isMobile
+											? "relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+											: "absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+									)}
+								>
 									<StoryScreen
 										playerClassName="rounded-tl-lg rounded-bl-lg"
 										Webstory={Webstory.data}
@@ -466,15 +476,24 @@ export default function PublishedStory({
 												onClick={async (e) => {
 													eventLogger("download_video_clicked");
 													setIsVideoDownloading(true);
-													const presignedUrl = await RenderVideo.mutateAsync({
-														id: storyData.id!,
-														accessToken: session.accessToken,
-													});
-													if (!presignedUrl) {
-														setIsVideoDownloading(false);
-														return;
+
+													let videoUrl;
+													if (
+														storyData.renderedVideoKey &&
+														!storyData.invalidateRender
+													) {
+														videoUrl = Format.GetPublicBucketObjectUrl(
+															storyData.renderedVideoKey
+														);
+													} else {
+														videoUrl = await RenderVideo.mutateAsync({
+															id: storyData.id!,
+															accessToken: session.accessToken,
+														});
 													}
-													window.location.href = presignedUrl;
+													if (videoUrl) {
+														window.location.href = videoUrl;
+													}
 													setIsVideoDownloading(false);
 												}}
 												className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
@@ -566,7 +585,7 @@ export default function PublishedStory({
 									)}
 								</div>
 							</div>
-							{/* 
+							{/*
 								<p>
 													{(Webstory.data.user?.videoCount ?? 0) +
 														(Webstory.data.user?.storyCount ?? 0)}{" "}
@@ -596,7 +615,7 @@ export default function PublishedStory({
 						</span>
 					</div>
 					<Link
-						href="/feed"
+						href="/feed/[genre]"
 						className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden md:flex flex-row gap-x-3 text-sm text-muted-foreground"
 					>
 						© 2024 Story.com - All rights reserved

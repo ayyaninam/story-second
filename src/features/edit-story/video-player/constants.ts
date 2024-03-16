@@ -47,8 +47,11 @@ export const CompositionPropsLandscape = z.object({
 	showLoadingVideo: z.boolean().nullish(),
 	enableAudio: z.boolean(),
 	enableSubtitles: z.boolean(),
+	enableBackgroundAudioFadeOutEffect: z.boolean(),
 	durationInFrames: z.number(),
 	segments: z.array(Segment),
+	renderedVideoURL: z.string().nullish(),
+	backgroundAudioURL: z.string().nullish(),
 });
 
 export const CompositionPropsPortrait = z.object({
@@ -56,8 +59,11 @@ export const CompositionPropsPortrait = z.object({
 	showLoadingVideo: z.boolean().nullish(),
 	enableAudio: z.boolean(),
 	enableSubtitles: z.boolean(),
+	enableBackgroundAudioFadeOutEffect: z.boolean(),
 	durationInFrames: z.number(),
 	segments: z.array(Segment),
+	renderedVideoURL: z.string().nullish(),
+	backgroundAudioURL: z.string().nullish(),
 });
 
 export const CompositionPropsSplit = z.object({
@@ -66,10 +72,10 @@ export const CompositionPropsSplit = z.object({
 	enableAudio: z.boolean(),
 	enableSubtitles: z.boolean(),
 	durationInFrames: z.number(),
-	topEndDurationInFrames: z.number(),
 	pagesDurationInFrames: z.number(),
 	bottomVideoURL: z.string(),
 	segments: z.array(Segment),
+	renderedVideoURL: z.string().nullish(),
 });
 
 export const CompositionProps = z.discriminatedUnion("variant", [
@@ -104,7 +110,8 @@ export const VIDEO_HEIGHT: Record<RemotionVariant, number> = {
 	split: 1280,
 };
 export const VIDEO_FPS = 30;
-export const SILENT_DURATION = 0.4; // in seconds
+// this must NOT be 0 bc it might make the audio sound before it should (on the remotion server)
+export const SILENT_DURATION = 0.1; // in seconds
 export const INCREASED_LAST_PAGE_DURATION = 2; // in seconds
 
 export const bigZIndexTrick = 40000;
@@ -118,3 +125,5 @@ export const bigZIndexTrick = 40000;
 export const PREMOUNT_FRAMES = 1.5 * VIDEO_FPS;
 
 export const TO_THE_END_OF_VIDEO = 999999;
+
+export const THE_END_DURATION = 3 * VIDEO_FPS;

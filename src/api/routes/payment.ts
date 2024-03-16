@@ -1,22 +1,21 @@
-import { getJwt } from "@/utils/jwt";
 import { mainSchema } from "../schema";
-import { authFetcher } from "@/lib/fetcher";
+import { publicProxyApiFetcher } from "@/lib/fetcher";
 
 const payment = {
 	addCard: async (): Promise<mainSchema["StringApiResponse"]> =>
-		await authFetcher(getJwt()).post(`api/Payment/AddCard`).json(),
+		await publicProxyApiFetcher.post(`proxyApi/Payment/AddCard`).json(),
 	removeCard: async (): Promise<mainSchema["StringApiResponse"]> =>
-		await authFetcher(getJwt()).post(`api/Payment/RemoveCard`).json(),
+		await publicProxyApiFetcher.post(`proxyApi/Payment/RemoveCard`).json(),
 	syncCards: async (): Promise<mainSchema["StringApiResponse"]> =>
-		await authFetcher(getJwt()).post(`api/Payment/SyncCards`).json(),
+		await publicProxyApiFetcher.post(`proxyApi/Payment/SyncCards`).json(),
 	createSubscription: async ({
 		subscriptionPlan,
 		subscriptionPeriod,
-	}: mainSchema["CreateSubscriptionDTO"]): Promise<
+	}: mainSchema["SubscriptionDTO"]): Promise<
 		mainSchema["InternalTransactionDTOApiResponse"]
 	> =>
-		await authFetcher(getJwt())
-			.post(`api/Payment/CreateSubscription`, {
+		await publicProxyApiFetcher
+			.post(`proxyApi/Payment/CreateSubscription`, {
 				json: {
 					subscriptionPlan,
 					subscriptionPeriod,
@@ -24,7 +23,9 @@ const payment = {
 			})
 			.json(),
 	cancelSubscription: async (): Promise<mainSchema["StringApiResponse"]> =>
-		await authFetcher(getJwt()).post(`api/Payment/CancelSubscription`).json(),
+		await publicProxyApiFetcher
+			.post(`proxyApi/Payment/CancelSubscription`)
+			.json(),
 	confirmSubscription: async ({
 		paymentIntentId,
 		subscriptionId,
@@ -33,8 +34,8 @@ const payment = {
 	}: mainSchema["ConfirmSubscriptionDTO"]): Promise<
 		mainSchema["StringApiResponse"]
 	> =>
-		await authFetcher(getJwt())
-			.post(`api/Payment/ConfirmSubscription`, {
+		await publicProxyApiFetcher
+			.post(`proxyApi/Payment/ConfirmSubscription`, {
 				json: {
 					paymentIntentId,
 					subscriptionId,
@@ -50,8 +51,8 @@ const payment = {
 		subscriptionPlan: number;
 		subscriptionPeriod: number;
 	}): Promise<mainSchema["InternalTransactionDTOApiResponse"]> =>
-		await authFetcher(getJwt())
-			.post(`api/Payment/UpgradeSubscription`, {
+		await publicProxyApiFetcher
+			.post(`proxyApi/Payment/UpgradeSubscription`, {
 				json: {
 					subscriptionPlan,
 					subscriptionPeriod,
@@ -64,8 +65,8 @@ const payment = {
 	}: mainSchema["AdditionalCreditsDTO"]): Promise<
 		mainSchema["InternalTransactionDTOApiResponse"]
 	> =>
-		await authFetcher(getJwt())
-			.post(`api/Payment/RefillAllowance`, {
+		await publicProxyApiFetcher
+			.post(`proxyApi/Payment/RefillAllowance`, {
 				json: {
 					allowanceType,
 					quantity,
@@ -80,8 +81,8 @@ const payment = {
 	}: mainSchema["ConfirmPaymentDTO"]): Promise<
 		mainSchema["StringApiResponse"]
 	> =>
-		await authFetcher(getJwt())
-			.post(`api/Payment/VerifyPurchaseCredits`, {
+		await publicProxyApiFetcher
+			.post(`proxyApi/Payment/VerifyPurchaseCredits`, {
 				json: {
 					paymentIntentId,
 					amount,

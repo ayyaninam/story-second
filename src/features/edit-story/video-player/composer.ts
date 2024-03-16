@@ -1,4 +1,5 @@
 import sumBy from "lodash/sumBy";
+import { takeWhile } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import {
 	getVideoMetadata,
@@ -8,20 +9,25 @@ import {
 	RemotionSegment,
 	VIDEO_FPS,
 	INCREASED_LAST_PAGE_DURATION,
+	SILENT_DURATION,
 	PREMOUNT_FRAMES,
 	RemotionPlayerInputProps,
 	RemotionPageSegment,
 	RemotionVariant,
 	RemotionTransitionSegment,
-	SILENT_DURATION,
+	THE_END_DURATION,
 } from "./constants";
 
 const calculateSegmentDuration = async ({
+	variant,
 	audioURL,
 	isLastSegment,
+	storyText,
 }: {
+	variant: RemotionVariant;
 	audioURL: string | null;
 	isLastSegment: boolean;
+	storyText: string;
 }) => {
 	const minContentDuration = 0 * VIDEO_FPS;
 
@@ -39,13 +45,20 @@ const calculateSegmentDuration = async ({
 	const contentDuration = Math.max(
 		minContentDuration,
 		(audioDuration > 0 ? Math.ceil(audioDuration * VIDEO_FPS) : 0) +
-			(isLastSegment ? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS : 0)
+			(isLastSegment && variant !== "split"
+				? INCREASED_LAST_PAGE_DURATION * VIDEO_FPS
+				: 0)
 	);
+
+	const dotExtraDuration = storyText.endsWith(".") ? 8 : 0;
 
 	return {
 		contentDuration,
 		durationInFrames:
-			contentDuration + silentTime + (isLastSegment ? PREMOUNT_FRAMES : 0),
+			contentDuration +
+			silentTime +
+			(isLastSegment ? PREMOUNT_FRAMES : 0) +
+			dotExtraDuration,
 	};
 };
 
@@ -75,8 +88,10 @@ export const toRemotionSegment = async ({
 	seekId,
 }: ToRemotionSegmentProps): Promise<Omit<RemotionSegment, "index">[]> => {
 	const { contentDuration, durationInFrames } = await calculateSegmentDuration({
+		variant,
 		audioURL,
 		isLastSegment,
+		storyText,
 	});
 
 	let pageSegment: Omit<RemotionPageSegment, "index"> | null = {
@@ -165,12 +180,18 @@ interface ToRemotionInputPropsParams {
 	variant: RemotionVariant;
 	segments: RemotionSegment[];
 	bottomVideoURL?: string;
+	backgroundAudioURL?: string;
+	enableBackgroundAudioFadeOutEffect: boolean;
+	renderedVideoURL?: string;
 }
 
 export const toRemotionInputProps = async ({
 	variant,
 	segments,
 	bottomVideoURL,
+	backgroundAudioURL,
+	enableBackgroundAudioFadeOutEffect,
+	renderedVideoURL,
 }: ToRemotionInputPropsParams): Promise<RemotionPlayerInputProps> => {
 	switch (variant) {
 		case "landscape":
@@ -181,15 +202,16 @@ export const toRemotionInputProps = async ({
 					segment.type === "transition" ? 0 : segment.durationInFrames
 			);
 
-			const theEndPageFrames = 3 * VIDEO_FPS;
-
 			return {
 				showLoadingVideo: false,
 				variant,
-				durationInFrames: allPagesSegmentsFrames + theEndPageFrames,
+				durationInFrames: allPagesSegmentsFrames + THE_END_DURATION,
 				enableAudio: true,
 				enableSubtitles: true,
 				segments,
+				backgroundAudioURL,
+				enableBackgroundAudioFadeOutEffect,
+				renderedVideoURL,
 			};
 		case "split":
 			const bottomVideoDurationInFrames = Math.ceil(
@@ -197,30 +219,63 @@ export const toRemotionInputProps = async ({
 					VIDEO_FPS
 			);
 
-			const topVideoDurationInFrames = sumBy(
+			let prevDurationsInFrames = PREMOUNT_FRAMES;
+			let tookLastSegment = false;
+
+			const segmentsWithLastSegmentCutoff: RemotionSegment[] = takeWhile(
 				segments,
-				(segment: RemotionSegment) =>
-					segment.type === "transition" ? 0 : segment.durationInFrames
+				(segment) => {
+					if (tookLastSegment) {
+						return false;
+					}
+					if (segment.type !== "page") {
+						return true;
+					}
+
+					if (
+						prevDurationsInFrames + segment.durationInFrames >
+						bottomVideoDurationInFrames
+					) {
+						tookLastSegment = true;
+						return true;
+					}
+
+					prevDurationsInFrames += segment.durationInFrames;
+					return true;
+				}
 			);
 
-			const pagesDurationInFrames = Math.max(
-				bottomVideoDurationInFrames,
-				topVideoDurationInFrames
-			);
+			if (!tookLastSegment) {
+				prevDurationsInFrames -=
+					// @ts-ignore
+					segmentsWithLastSegmentCutoff[
+						segmentsWithLastSegmentCutoff.length - 1
+					].durationInFrames;
+			}
 
-			const theEndPageFramesInSplitFormat = 3 * VIDEO_FPS;
+			// @ts-ignore
+			segmentsWithLastSegmentCutoff[segmentsWithLastSegmentCutoff.length - 1] =
+				{
+					...segmentsWithLastSegmentCutoff[
+						segmentsWithLastSegmentCutoff.length - 1
+					],
+					durationInFrames:
+						bottomVideoDurationInFrames -
+						prevDurationsInFrames +
+						PREMOUNT_FRAMES,
+				};
 
 			return {
 				showLoadingVideo: false,
-				durationInFrames: pagesDurationInFrames + theEndPageFramesInSplitFormat,
+				durationInFrames:
+					bottomVideoDurationInFrames + (THE_END_DURATION + PREMOUNT_FRAMES),
 				enableAudio: false,
 				enableSubtitles: false,
-				topEndDurationInFrames:
-					pagesDurationInFrames - topVideoDurationInFrames,
-				pagesDurationInFrames,
+				pagesDurationInFrames: bottomVideoDurationInFrames + PREMOUNT_FRAMES,
 				variant,
 				bottomVideoURL: bottomVideoURL as string,
-				segments,
+				segments: segmentsWithLastSegmentCutoff,
+				renderedVideoURL,
 			};
 	}
 };

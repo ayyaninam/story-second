@@ -107,7 +107,7 @@ export const SegmentPortraitPage = ({
 			{inputProps.enableAudio && segment.audioURL && (
 				<AudioWithPremount
 					startAudioFrom={startAudioFrom}
-					audioURL={segment.audioURL}
+					src={segment.audioURL}
 				/>
 			)}
 		</AbsoluteFill>
