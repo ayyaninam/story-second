@@ -25,6 +25,7 @@ const SegmentIntermediate = ({ segment }: RenderSegmentProps) => {
 				src={segment.visual.videoURL}
 				style={imageStyles}
 				playbackRate={segment.playbackRate}
+				pauseWhenBuffering
 			/>
 
 			<LogoWatermark />
