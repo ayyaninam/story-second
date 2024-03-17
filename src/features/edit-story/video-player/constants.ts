@@ -122,7 +122,7 @@ export const bigZIndexTrick = 40000;
 // higher value means more video players existing one above other at the same time = more resources?
 // lower value increases the chance of flickering
 // todo: also this controls the transition duration, decouple this transition logic with the premount logic
-export const PREMOUNT_FRAMES = 0.5 * VIDEO_FPS;
+export const PREMOUNT_FRAMES = 1.5 * VIDEO_FPS;
 
 export const TO_THE_END_OF_VIDEO = 999999;
 
