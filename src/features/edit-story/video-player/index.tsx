@@ -31,7 +31,7 @@ import {
 import { useRouter } from "next/router";
 import useWebstoryContext from "../providers/WebstoryContext";
 import { cn } from "@/utils";
-import { AbsoluteFill, Img } from "remotion";
+import { useMediaQuery } from "usehooks-ts";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
@@ -77,6 +77,8 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 		const router = useRouter();
 		const [Webstory] = useWebstoryContext();
 		const ImageRatio = GetDisplayImageRatio(Webstory.resolution);
+
+		const isPhone = useMediaQuery("(max-width: 1024px)");
 
 		const player: React.CSSProperties = {
 			width: "100%",
@@ -343,26 +345,40 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 
 		return (
 			<div ref={containerRef} className="w-full h-full">
-				<Player
-					ref={playerRef}
-					component={DynamicMain}
-					inputProps={inputProps}
-					durationInFrames={inputProps.durationInFrames}
-					fps={VIDEO_FPS}
-					compositionHeight={VIDEO_HEIGHT[inputProps.variant]}
-					compositionWidth={VIDEO_WIDTH[inputProps.variant]}
-					style={style}
-					className={cn("lg:[&>div]:rounded-bl-lg ", playerClassName ?? "")}
-					autoPlay={false}
-					numberOfSharedAudioTags={0}
-					controls={!inputProps.showLoadingVideo}
-					renderPlayPauseButton={renderPlayPauseButton}
-					renderFullscreenButton={renderFullscreenButton}
-					moveToBeginningWhenEnded={false}
-					// renderPoster={renderPoster}
-					// showPosterWhenUnplayed
-					{...props}
-				/>
+				{isPhone && inputProps.renderedVideoURL ? (
+					<>
+						<video
+							controls
+							preload="metadata"
+							className="rounded-tl-lg rounded-tr-lg"
+							poster={coverImageURL}
+						>
+							<source src={inputProps.renderedVideoURL} type="video/mp4" />
+							Your browser does not support the video tag.
+						</video>
+					</>
+				) : (
+					<Player
+						ref={playerRef}
+						component={DynamicMain}
+						inputProps={inputProps}
+						durationInFrames={inputProps.durationInFrames}
+						fps={VIDEO_FPS}
+						compositionHeight={VIDEO_HEIGHT[inputProps.variant]}
+						compositionWidth={VIDEO_WIDTH[inputProps.variant]}
+						style={style}
+						className={cn("lg:[&>div]:rounded-bl-lg ", playerClassName ?? "")}
+						autoPlay={false}
+						numberOfSharedAudioTags={0}
+						controls={!inputProps.showLoadingVideo}
+						renderPlayPauseButton={renderPlayPauseButton}
+						renderFullscreenButton={renderFullscreenButton}
+						moveToBeginningWhenEnded={false}
+						// renderPoster={renderPoster}
+						// showPosterWhenUnplayed
+						{...props}
+					/>
+				)}
 			</div>
 		);
 	}
