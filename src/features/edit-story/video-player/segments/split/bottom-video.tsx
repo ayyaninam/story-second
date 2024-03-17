@@ -26,11 +26,7 @@ export function SegmentSplitSplitBottomVideo({
 	return (
 		<AbsoluteFill style={container}>
 			<AbsoluteFill style={videoContainer}>
-				<OffthreadVideo
-					src={bottomVideoURL}
-					style={videoStyles}
-					pauseWhenBuffering
-				/>
+				<OffthreadVideo src={bottomVideoURL} style={videoStyles} />
 			</AbsoluteFill>
 
 			<LogoWatermark />

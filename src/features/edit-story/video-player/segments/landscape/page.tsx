@@ -92,7 +92,6 @@ const SegmentPage = ({
 						src={segment.visual.videoURL}
 						style={imageStyles}
 						playbackRate={segment.playbackRate}
-						pauseWhenBuffering
 					/>
 				) : segment.visual?.format === "image" ? (
 					<Img src={segment.visual.imageURL} />

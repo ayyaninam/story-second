@@ -24,7 +24,6 @@ export function SegmentSplitIntermediate({ segment }: RenderSegmentProps) {
 				src={segment.visual.videoURL}
 				style={imageStyles}
 				playbackRate={segment.playbackRate}
-				pauseWhenBuffering
 			/>
 		</AbsoluteFill>
 	);
