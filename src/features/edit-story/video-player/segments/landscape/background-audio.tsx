@@ -20,7 +20,6 @@ const BackgroundAudio = ({
 				startAudioFrom={0}
 				src={backgroundAudioUrl}
 				loop
-				pauseWhenBuffering
 				volume={(f) =>
 					enableBackgroundAudioFadeOutEffect
 						? interpolate(
