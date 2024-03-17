@@ -90,10 +90,9 @@ export const SegmentPortraitPage = ({
 						src={segment.visual.videoURL}
 						style={imageStyles}
 						playbackRate={segment.playbackRate}
-						pauseWhenBuffering
 					/>
 				) : segment.visual?.format === "image" ? (
-					<Img src={segment.visual.imageURL} pauseWhenLoading />
+					<Img src={segment.visual.imageURL} />
 				) : null}
 			</AbsoluteFill>
 
@@ -109,7 +108,6 @@ export const SegmentPortraitPage = ({
 				<AudioWithPremount
 					startAudioFrom={startAudioFrom}
 					src={segment.audioURL}
-					pauseWhenBuffering
 				/>
 			)}
 		</AbsoluteFill>

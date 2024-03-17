@@ -52,7 +52,6 @@ const TheEndSegment = () => {
 				<Img
 					src={staticFile("remotion/logo-the-end-portrait.svg")}
 					style={animatedLogoWatermark}
-					pauseWhenLoading
 				/>
 			</AbsoluteFill>
 		</AbsoluteFill>

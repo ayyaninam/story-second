@@ -324,7 +324,7 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 				if (coverImageURL) {
 					return (
 						<AbsoluteFill>
-							<Img src={coverImageURL} pauseWhenLoading />
+							<Img src={coverImageURL} />
 						</AbsoluteFill>
 					);
 				}
