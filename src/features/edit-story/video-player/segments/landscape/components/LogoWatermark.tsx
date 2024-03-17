@@ -18,6 +18,7 @@ export const LogoWatermark = () => (
 			<Img
 				src={staticFile("remotion/logo-watermark-story.svg")}
 				style={logoWatermark}
+				pauseWhenLoading
 			/>
 		</div>
 	</AbsoluteFill>
