@@ -4,6 +4,7 @@ import { RemotionPlayerInputProps } from "./constants";
 import MainLandscape from "./segments/landscape/main";
 import MainPortrait from "./segments/portrait/main";
 import MainSplit from "./segments/split/main";
+import { LoadingSegmentPage } from "./segments/loading-page";
 
 export const Main: React.FC<RemotionPlayerInputProps> = (props) => {
 	const buffer = useBufferState();
@@ -24,6 +25,10 @@ export const Main: React.FC<RemotionPlayerInputProps> = (props) => {
 		// also I see on the docs that it's the good way "https://www.remotion.dev/docs/use-buffer-state#together-with-delayrender"
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	if (props.showLoadingVideo) {
+		return <LoadingSegmentPage />;
+	}
 
 	if (props.variant === "landscape") {
 		return <MainLandscape {...props} />;
