@@ -315,23 +315,23 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 			return () => observer.disconnect();
 		}, []);
 
-		const renderPoster: RenderPoster = useCallback(
-			({ height, width, isBuffering }) => {
-				if (isBuffering) {
-					return null;
-				}
-
-				if (coverImageURL) {
-					return (
-						<AbsoluteFill>
-							<Img src={coverImageURL} />
-						</AbsoluteFill>
-					);
-				}
-				return null;
-			},
-			[coverImageURL]
-		);
+		// const renderPoster: RenderPoster = useCallback(
+		// 	({ height, width, isBuffering }) => {
+		// 		if (isBuffering) {
+		// 			return null;
+		// 		}
+		//
+		// 		if (coverImageURL) {
+		// 			return (
+		// 				<AbsoluteFill>
+		// 					<Img src={coverImageURL} />
+		// 				</AbsoluteFill>
+		// 			);
+		// 		}
+		// 		return null;
+		// 	},
+		// 	[coverImageURL]
+		// );
 
 		// TODO: responsive styles
 		const style: React.CSSProperties = {
@@ -359,8 +359,8 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 					renderPlayPauseButton={renderPlayPauseButton}
 					renderFullscreenButton={renderFullscreenButton}
 					moveToBeginningWhenEnded={false}
-					renderPoster={renderPoster}
-					showPosterWhenUnplayed
+					// renderPoster={renderPoster}
+					// showPosterWhenUnplayed
 					{...props}
 				/>
 			</div>
