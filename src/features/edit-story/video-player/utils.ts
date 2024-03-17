@@ -119,7 +119,6 @@ export const webStoryToRemotionInputProps = async (
 		backgroundAudioURL: audioURL
 			? Format.GetPublicBucketObjectUrl(audioURL)
 			: undefined,
-		// disable it temporarily
-		// renderedVideoURL: renderedVideoExists ? renderedVideoURL : undefined,
+		renderedVideoURL: renderedVideoExists ? renderedVideoURL : undefined,
 	});
 };
