@@ -6287,6 +6287,11 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
+      /**
+       * IsRendering
+       * @description Whether the story is rendering or not.
+       */
+      isRendering?: boolean | null;
       resolution?: components["schemas"]["DisplayResolution"];
       /**
        * InvalidateRender
@@ -7891,11 +7896,7 @@ export interface operations {
     responses: {
       /** @description Success */
       200: {
-        content: {
-          "text/plain": components["schemas"]["StringApiResponse"];
-          "application/json": components["schemas"]["StringApiResponse"];
-          "text/json": components["schemas"]["StringApiResponse"];
-        };
+        content: never;
       };
       /** @description Unauthorized */
       401: {
