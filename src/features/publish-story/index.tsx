@@ -169,11 +169,25 @@ export default function PublishedStory({
 				)
 			);
 		} else {
+			if (story.isRendering) {
+				toast(
+					"Video is currently rendering. Please contact support if it has been over 5 minutes",
+					{
+						icon: "⚠️",
+					}
+				);
+				return;
+			}
+
 			await RenderVideo.mutateAsync({
 				id: storyData.id!,
 				accessToken: session.accessToken,
 			});
 			toast.success("Video is being rendered. Please check again in 2 minutes");
+
+			// here is code to refetch the webstory data to get the new isRendering value(true) without reloading page
+			// i tried to use it but it makes flicker the player when using it...
+			// await Webstory.refetch();
 		}
 	};
 
