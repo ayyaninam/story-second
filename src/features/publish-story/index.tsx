@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
@@ -35,6 +35,10 @@ import GenericModal from "@/components/ui/generic-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import useEventLogger from "@/utils/analytics";
 import { HTTPError } from "ky";
+import { useUserCanUseCredits } from "@/utils/payment";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
+import { AllowanceType } from "@/utils/enums";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -191,7 +195,29 @@ export default function PublishedStory({
 		}
 	};
 
+	const { userCanUseCredits } = useUserCanUseCredits();
+	const [openVideoCreditsDialog, setOpenVideoCreditsDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+
 	const handleCopyVideo = async () => {
+		const { error } = await userCanUseCredits({
+			variant: "video credits",
+			videoCredits: 1,
+		});
+
+		if (error) {
+			if (error === "not enough credits") {
+				setOpenVideoCreditsDialog(true);
+			} else if (
+				error === "not paid subscription" ||
+				error === "using custom plan"
+			) {
+				setOpenSubscriptionDialog(true);
+			}
+
+			return;
+		}
+
 		try {
 			const newStory = await CopyVideo.mutateAsync({
 				id: storyData.id as string,
@@ -652,6 +678,18 @@ export default function PublishedStory({
 					)}
 				</div>
 			</div>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.Videos}
+				open={openVideoCreditsDialog}
+				setOpen={setOpenVideoCreditsDialog}
+			/>
+
+			<UpgradeSubscriptionDialog
+				open={openSubscriptionDialog}
+				setOpen={setOpenSubscriptionDialog}
+			/>
 		</div>
 	);
 }
