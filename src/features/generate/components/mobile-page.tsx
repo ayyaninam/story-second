@@ -17,6 +17,7 @@ import {
 	StoryLanguages,
 	StoryLengths,
 	StoryOutputTypes,
+	AllowanceType,
 } from "@/utils/enums";
 import { ImageRatios } from "@/utils/image-ratio";
 import {
@@ -28,6 +29,9 @@ import Router, { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { submitToBackend } from "@/components/create-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { useUserCanUseCredits } from "@/utils/payment";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 export default function MobileGeneratePage({
 	fromLanding = false,
@@ -63,7 +67,60 @@ export default function MobileGeneratePage({
 		}
 	}, []);
 
+	const { userCanUseCredits } = useUserCanUseCredits();
+	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
+	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+
 	const onSubmit = async () => {
+		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
+			?.enumValue as StoryOutputTypes;
+		const isStoryBook = outputType === StoryOutputTypes.Story;
+
+		if (isStoryBook) {
+			const { error } = await userCanUseCredits({
+				variant: "story book",
+				storybookCredits: 1,
+			});
+
+			if (error) {
+				if (window.location.pathname === "/prompt") {
+					window.parent.location.href = "/generate";
+				} else if (error === "not enough credits") {
+					setOpenStoryBooksDialog(true);
+				} else if (
+					error === "not paid subscription" ||
+					error === "using custom plan"
+				) {
+					setOpenSubscriptionDialog(true);
+				}
+
+				setIsLoading(false);
+				return;
+			}
+		} else {
+			const { error } = await userCanUseCredits({
+				variant: "video credits",
+				videoCredits: 1,
+			});
+
+			if (error) {
+				if (window.location.pathname === "/prompt") {
+					window.parent.location.href = "/generate";
+				} else if (error === "not enough credits") {
+					setOpenCreditsDialog(true);
+				} else if (
+					error === "not paid subscription" ||
+					error === "using custom plan"
+				) {
+					setOpenSubscriptionDialog(true);
+				}
+
+				setIsLoading(false);
+				return;
+			}
+		}
+
 		const videoRatio =
 			tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
 		setIsLoading(true);
@@ -267,6 +324,25 @@ export default function MobileGeneratePage({
 						: "Generate Script From Prompt"}
 				</Button>
 			</div>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.Videos}
+				open={openCreditsDialog}
+				setOpen={setOpenCreditsDialog}
+			/>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.StoryBooks}
+				open={openStoryBooksDialog}
+				setOpen={setOpenStoryBooksDialog}
+			/>
+
+			<UpgradeSubscriptionDialog
+				open={openSubscriptionDialog}
+				setOpen={setOpenSubscriptionDialog}
+			/>
 		</div>
 	);
 }

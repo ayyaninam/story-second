@@ -78,14 +78,62 @@ const GenerateModalContent: React.FC<{
 	const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
 
 	const { invalidateUser } = useUpdateUser();
+
+	const { userCanUseCredits } = useUserCanUseCredits();
+
 	const onSubmit = async () => {
+		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
+			?.enumValue as StoryOutputTypes;
+		const isStoryBook = outputType === StoryOutputTypes.Story;
+
+		if (isStoryBook) {
+			const { error } = await userCanUseCredits({
+				variant: "story book",
+				storybookCredits: 1,
+			});
+
+			if (error) {
+				if (window.location.pathname === "/prompt") {
+					window.parent.location.href = "/generate";
+				} else if (error === "not enough credits") {
+					setOpenStoryBooksDialog(true);
+				} else if (
+					error === "not paid subscription" ||
+					error === "using custom plan"
+				) {
+					setOpenSubscriptionDialog(true);
+				}
+
+				setIsLoading(false);
+				return;
+			}
+		} else {
+			const { error } = await userCanUseCredits({
+				variant: "video credits",
+				videoCredits: 1,
+			});
+
+			if (error) {
+				if (window.location.pathname === "/prompt") {
+					window.parent.location.href = "/generate";
+				} else if (error === "not enough credits") {
+					setOpenCreditsDialog(true);
+				} else if (
+					error === "not paid subscription" ||
+					error === "using custom plan"
+				) {
+					setOpenSubscriptionDialog(true);
+				}
+
+				setIsLoading(false);
+				return;
+			}
+		}
+
 		eventLogger("generate_story");
 		const videoRatio =
 			tabIndex === 0 ? selectedVideoRatio : tabIndex === 2 ? "1:1" : "9:16";
 		setIsLoading(true);
-
-		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
-			?.enumValue as StoryOutputTypes;
 
 		const params: CreateInitialStoryQueryParams = {
 			input_type: StoryInputTypes.Text,
