@@ -98,8 +98,8 @@ const images = [
 ];
 
 const voiceTypes = {
-	// [VoiceType.GenericFemale]: "Generic Female",
-	[VoiceType.GenericMale]: "Generic Male",
+	[VoiceType.GenericFemale]: "Generic Female",
+	// [VoiceType.GenericMale]: "Generic Male",
 	// [VoiceType.Portuguese]: "Portuguese",
 	// [VoiceType.Custom]: "Custom",
 	// [VoiceType.None]: "None ",
@@ -662,7 +662,7 @@ const Footer = ({
 					>
 						<SelectTrigger className=" py-1.5 px-3 w-[180px]">
 							<Radio className="stroke-1 opacity-50 pr-1" />
-							<SelectValue placeholder="Generic Male" />
+							<SelectValue placeholder="Generic Female" />
 						</SelectTrigger>
 						<SelectContent>
 							{Object.entries(voiceTypes).map(([key, type]) => {

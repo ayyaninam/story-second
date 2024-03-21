@@ -93,6 +93,15 @@ const GenerateModalContent: React.FC<{
 			});
 
 			if (error) {
+				console.log("error", error);
+				if (error === "user not logged in") {
+					if (window.location.pathname === "/prompt") {
+						window.parent.location.href = "/auth/login?returnTo=/generate";
+					} else {
+						window.location.href = "/auth/login?returnTo=/generate";
+					}
+					return;
+				}
 				if (window.location.pathname === "/prompt") {
 					window.parent.location.href = "/generate";
 				} else if (error === "not enough credits") {
@@ -114,6 +123,15 @@ const GenerateModalContent: React.FC<{
 			});
 
 			if (error) {
+				console.log("error", error);
+				if (error === "user not logged in") {
+					if (window.location.pathname === "/prompt") {
+						window.parent.location.href = "/auth/login?returnTo=/generate";
+					} else {
+						window.location.href = "/auth/login?returnTo=/generate";
+					}
+					return;
+				}
 				if (window.location.pathname === "/prompt") {
 					window.parent.location.href = "/generate";
 				} else if (error === "not enough credits") {
