@@ -26,13 +26,18 @@ export const useUserCanUseCredits = () => {
 		variant: "credits" | "video credits" | "story book";
 	}): Promise<{
 		error?:
+			| "user not logged in"
 			| "not paid subscription"
 			| "not enough credits"
 			| "using custom plan";
 		success?: boolean;
 	}> => {
+		if (!data?.data) {
+			return { error: "user not logged in" };
+		}
+
 		if (!subscription) {
-			throw new Error("No subscription found - please contact our support!");
+			return { error: "not paid subscription" };
 		}
 
 		const userCredits = subscription.credits ?? 0;
