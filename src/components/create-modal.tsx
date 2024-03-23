@@ -82,6 +82,7 @@ const GenerateModalContent: React.FC<{
 	const { userCanUseCredits } = useUserCanUseCredits();
 
 	const onSubmit = async () => {
+		localStorage.setItem("prompt", input);
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
 			?.enumValue as StoryOutputTypes;
 		const isStoryBook = outputType === StoryOutputTypes.Story;
