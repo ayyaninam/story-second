@@ -73,6 +73,7 @@ export default function MobileGeneratePage({
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 
 	const onSubmit = async () => {
+		localStorage.setItem("prompt", input);
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
 			?.enumValue as StoryOutputTypes;
 		const isStoryBook = outputType === StoryOutputTypes.Story;
