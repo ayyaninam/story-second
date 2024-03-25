@@ -22,9 +22,9 @@ const DeletedSuceededDialog = ({
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Video deleted successfully!</DialogTitle>
+					<DialogTitle>Story deleted successfully!</DialogTitle>
 					<DialogDescription>
-						Your video was successfully deleted and removed from the Story.com
+						Your story was successfully deleted and removed from the Story.com
 						library.
 					</DialogDescription>
 				</DialogHeader>
