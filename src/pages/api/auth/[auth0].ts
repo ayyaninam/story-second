@@ -10,4 +10,5 @@ export default handleAuth({
 			scope: "openid profile email offline_access",
 		},
 	}),
+	logout: handleLogout({ returnTo: `${Routes.defaultRedirect}` }),
 });
