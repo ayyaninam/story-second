@@ -2,6 +2,14 @@ import { useMediaQuery } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
 	ChevronRight,
 	DownloadCloudIcon,
 	DownloadIcon,
@@ -10,6 +18,10 @@ import {
 	LogOutIcon,
 	Share2,
 	Video,
+	Heart,
+	Clipboard,
+	Facebook,
+	Twitter,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { ModeToggle } from "../edit-story/components/mode-toggle";
@@ -39,6 +51,13 @@ import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import { AllowanceType } from "@/utils/enums";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
+import isBrowser from "@/utils/isBrowser";
+import Whatsapp from "@/components/icons/whatsapp";
+import {
+	FacebookShareButton,
+	TwitterShareButton,
+	WhatsappShareButton,
+} from "react-share";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -143,6 +162,12 @@ export default function PublishedStory({
 			router.replace(path, undefined, { shallow: true });
 		}
 	}, [router.query]);
+
+	const [shareUrl, setShareUrl] = useState("");
+	useEffect(() => {
+		const url = window.location.href;
+		setShareUrl(url);
+	}, [router.asPath]);
 
 	const handleLikeVideo = async (liked: boolean) => {
 		if (!session.accessToken) {
@@ -444,23 +469,6 @@ export default function PublishedStory({
 										</p>
 									)}
 									<div className="flex flex-wrap gap-2">
-										{/*<Button*/}
-										{/*  className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"*/}
-										{/*  variant="outline"*/}
-										{/*  onClick={() => handleLikeVideo(!Interactions.data?.liked)}*/}
-										{/*>*/}
-										{/*  <Heart*/}
-										{/*    className="mr-2 h-4 w-4 md:h-5 md:w-5"*/}
-										{/*    style={{*/}
-										{/*      fill:*/}
-										{/*        isBrowser && Interactions.data?.liked*/}
-										{/*          ? "#EC4899"*/}
-										{/*          : undefined,*/}
-										{/*    }}*/}
-										{/*  />*/}
-										{/*  Like video*/}
-										{/*</Button>*/}
-
 										{!(User?.data?.data?.id === Webstory.data?.user?.id) &&
 											Webstory.data?.storyType === 1 &&
 											Webstory.data?.imagesDone && (
@@ -495,19 +503,82 @@ export default function PublishedStory({
 													Video
 												</Button>
 											)}
+
 										<Button
 											className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 											variant="outline"
-											onClick={() => {
-												navigator.clipboard.writeText(window.location.href);
-												toast.success("Link copied to clipboard");
-											}}
+											onClick={() => handleLikeVideo(!Interactions.data?.liked)}
 										>
-											<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Share
-											{User?.data?.data?.id === Webstory.data?.user?.id &&
-												Webstory.data?.storyType !== 2 &&
-												" Video"}
+											<Heart
+												className="mr-2 h-4 w-4 md:h-5 md:w-5"
+												style={{
+													fill:
+														isBrowser && Interactions.data?.liked
+															? "#EC4899"
+															: undefined,
+													color:
+														isBrowser && Interactions.data?.liked
+															? "#EC4899"
+															: undefined,
+												}}
+											/>
+											{Interactions.data?.liked ? "Liked" : "Like"}
 										</Button>
+
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button
+													className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+													variant="outline"
+												>
+													<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" />{" "}
+													Share
+													{User?.data?.data?.id === Webstory.data?.user?.id &&
+														Webstory.data?.storyType !== 2 &&
+														" Video"}
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent>
+												<FacebookShareButton url={shareUrl} className="w-full">
+													<DropdownMenuItem className="cursor-pointer">
+														<Facebook className="h-5 w-5 mr-1.5" />
+														<span>Facebook</span>
+													</DropdownMenuItem>
+												</FacebookShareButton>
+												<TwitterShareButton
+													title={`${story.storyTitle}\n\n`}
+													url={shareUrl}
+													className="flex items-center w-full"
+												>
+													<DropdownMenuItem className="cursor-pointer w-full">
+														<Twitter className="h-5 w-5 mr-1.5" />
+														<span>Twitter</span>
+													</DropdownMenuItem>
+												</TwitterShareButton>
+												<WhatsappShareButton
+													aria-label="Share on Whatsapp"
+													url={shareUrl}
+													title={`Just stumbled upon "${story.storyTitle}" on Story.com and couldn't resist sharing! 🌟 \n\n${story.summary}\n\n`}
+													className="flex items-center w-full"
+												>
+													<DropdownMenuItem className="cursor-pointer w-full">
+														<span className="mr-1.5">
+															<Whatsapp size={20} />
+														</span>
+														<span>Whatsapp</span>
+													</DropdownMenuItem>
+												</WhatsappShareButton>
+												<DropdownMenuItem
+													className="cursor-pointer"
+													onClick={() => {
+														navigator.clipboard.writeText(window.location.href);
+														toast.success("Link copied to clipboard");
+													}}
+												>
+													<Clipboard className="h-5 w-5 mr-1.5" /> Copy Link
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
 										{(numVideoSegmentsReady ?? 0) <
 											(numTotalVideoSegments ?? 0) ||
 										!Webstory.data?.storyDone ? null : Webstory.data
