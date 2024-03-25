@@ -50,6 +50,7 @@ import { HTTPError } from "ky";
 import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import { AllowanceType } from "@/utils/enums";
+import DeleteVideoButton from "@/features/publish-story/delete-video-button";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import isBrowser from "@/utils/isBrowser";
 import Whatsapp from "@/components/icons/whatsapp";
@@ -624,6 +625,11 @@ export default function PublishedStory({
 												{RenderVideo.isPending ? "Loading" : "Download"}
 											</Button>
 										)}
+
+										{User?.data?.data?.id === Webstory.data?.user?.id &&
+											Webstory.data?.id && (
+												<DeleteVideoButton storyId={Webstory.data.id} />
+											)}
 									</div>
 
 									{isLoading ? (
