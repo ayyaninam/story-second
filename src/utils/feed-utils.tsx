@@ -1,5 +1,6 @@
 import { mainSchema } from "@/api/schema";
 import Format from "@/utils/format";
+import { VideoThumbnail } from "@/types";
 
 export const getGenreNameFromSlug = (genreSlug?: string | null) => {
 	return (
@@ -14,7 +15,7 @@ export const getGenreNameFromSlug = (genreSlug?: string | null) => {
 export const getGalleryThumbnails = (
 	stories: mainSchema["ReturnWebStoryDTO"][],
 	expandable?: boolean
-) => {
+): VideoThumbnail[] => {
 	let lastExpandedIndex = -7;
 	return stories.map((story, index) => {
 		const shouldExpand =
@@ -33,6 +34,7 @@ export const getGalleryThumbnails = (
 			topLevelCategory: getGenreNameFromSlug(story.topLevelCategory),
 			slug: story.slug,
 			expand: shouldExpand,
+			storyLikes: story.storyLikes,
 		};
 	});
 };
