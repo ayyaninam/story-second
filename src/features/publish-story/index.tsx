@@ -170,6 +170,9 @@ export default function PublishedStory({
 		setShareUrl(url);
 	}, [router.asPath]);
 
+	const [storyLikesUpdate, setStoryLikesUpdate] = useState(0);
+	const storyLikes = (storyData.storyLikes ?? 0) + storyLikesUpdate;
+
 	const handleLikeVideo = async (liked: boolean) => {
 		if (!session.accessToken) {
 			router.push(
@@ -185,6 +188,7 @@ export default function PublishedStory({
 		} else {
 			await LikeVideo.mutateAsync({ id: storyData.id!, params: { liked } });
 			await Interactions.refetch();
+			setStoryLikesUpdate((prev) => prev + (liked ? 1 : -1));
 		}
 	};
 	const handleRenderVideo = async () => {
@@ -523,7 +527,7 @@ export default function PublishedStory({
 															: undefined,
 												}}
 											/>
-											{Interactions.data?.liked ? "Liked" : "Like"}
+											{storyLikes}
 										</Button>
 
 										<DropdownMenu>
