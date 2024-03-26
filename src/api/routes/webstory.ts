@@ -1,4 +1,4 @@
-import { authFetcher, mlFetcher, publicFetcher } from "@/lib/fetcher";
+import { authFetcher, mlFetcher } from "@/lib/fetcher";
 import { mainSchema, mlSchema } from "../schema";
 import { getJwt } from "@/utils/jwt";
 import { CreateInitialStoryQueryParams } from "@/types";
@@ -43,6 +43,12 @@ const webstory = {
 
 		return data.data;
 	},
+	deleteStory: async ({
+		id,
+	}: {
+		id: string;
+	}): Promise<mainSchema["StringApiResponse"]> =>
+		await authFetcher(getJwt()).delete(`api/Webstory/${id}/Delete`).json(),
 };
 
 export default webstory;
