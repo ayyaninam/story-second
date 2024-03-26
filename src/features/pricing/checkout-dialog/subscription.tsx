@@ -251,7 +251,7 @@ const SubscriptionCheckoutDialog = ({
 			}
 		} catch (e: any) {
 			console.error("Error Paying Subscription: ", e.message);
-			toast.error("Error Paying Subscription");
+			toast.error("Error Paying Subscription: ", e.message);
 		} finally {
 			setSubmitting(false);
 		}
