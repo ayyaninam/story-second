@@ -1,8 +1,8 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
 import { Plus, Heart } from "lucide-react";
-import React, { useState } from "react";
 
 import GenerateIcon from "@/components/icons/dashboard/generate-icon";
 import Router, { useRouter } from "next/router";
@@ -28,6 +28,13 @@ export default function Navbar({
 
 	const { genre, id } = router.query;
 
+	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
+		queryFn: () => api.user.get(),
+		staleTime: 3000,
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
+		queryKey: [QueryKeys.USER],
+	});
+
 	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
 		queryFn: () => api.webstory.interactions(WebstoryData?.id as string),
 		staleTime: 3000,
@@ -36,8 +43,6 @@ export default function Navbar({
 	});
 
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
-
-	const [storyLikesUpdate, setStoryLikesUpdate] = useState(0);
 
 	const handleLikeVideo = async (liked: boolean) => {
 		if (!session.accessToken) {
@@ -60,7 +65,7 @@ export default function Navbar({
 		}
 	};
 
-	const storyLikes = (WebstoryData?.storyLikes ?? 0) + storyLikesUpdate;
+	const storyLikes = WebstoryData?.storyLikes ?? 0;
 
 	return (
 		<div className="flex flex-row justify-between items-center bg-background rounded-tl-lg rounded-tr-lg border-b-[0.5px] border-border p-4">
@@ -111,7 +116,10 @@ export default function Navbar({
 					<span className="min-w-3">{storyLikes}</span>
 				</Button>
 
-				<DeleteStorybookButton storyId={WebstoryData?.id!} />
+				{User?.data?.data?.id === WebstoryData?.user?.id &&
+					WebstoryData?.id && (
+						<DeleteStorybookButton storyId={WebstoryData?.id} />
+					)}
 				<Button
 					className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 					variant="default"
