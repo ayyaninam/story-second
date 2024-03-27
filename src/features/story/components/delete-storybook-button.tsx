@@ -40,7 +40,7 @@ const DeleteStorybookButton = ({ storyId }: DeleteStorybookButtonProps) => {
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-			<DialogTrigger>
+			<DialogTrigger asChild>
 				<Button
 					className="px-4 py-1.5 text-background text-white text-sm font-medium flex gap-2 items-center h-fit"
 					variant="destructive"
