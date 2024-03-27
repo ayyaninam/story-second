@@ -1,7 +1,7 @@
 import { mainSchema } from "@/api/schema";
 import { env } from "@/env.mjs";
 import cn from "@/utils/cn";
-import { DisplayAspectRatios } from "@/utils/enums";
+import { DisplayAspectRatios, StoryOutputTypes } from "@/utils/enums";
 import { ChevronRight, Edit2, Upload } from "lucide-react";
 import StoryScreen from "../story-screen";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -40,17 +40,12 @@ export default function PreviewEditor({
 				`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row m-auto`,
 				// Based on aspect ratio we need to adjust the parent width
 				// NOTE: taking 65% of the actual size on right (eg: 1080px, etc.)
-				ImageRatio.width === 1 && "md:max-w-[702px]", // 1080px
-				ImageRatio.width === 3 && "md:max-w-[585px]", // 900px
-				ImageRatio.width === 4 && "md:max-w-[832px]", // 1280px
+				ImageRatio.width === 1 && "md:max-w-[1200px]", // 1080px
 				ImageRatio.width === 9 && "max-w-[300px] md:max-w-[600px]", // 780px
 				ImageRatio.width === 16 && "md:max-w-[1200px]" // 1620px
 			)}
 		>
-			<div
-				className=" rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg w-full"
-				style={{ aspectRatio: ImageRatio.ratio }}
-			>
+			<div className=" rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg w-full">
 				<StoryScreen Webstory={WebstoryData} isError={isError} />
 			</div>
 			<div
@@ -63,7 +58,11 @@ export default function PreviewEditor({
 						<Edit2 className="absolute -top-0.5 -right-0.5 w-4 h-4 stroke-muted-foreground" />
 					)}
 					<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
-						<p className="text-purple-500">Video</p>
+						<p className="text-purple-500">
+							{WebstoryData?.storyType === StoryOutputTypes.Story
+								? "Storybook"
+								: "Video"}
+						</p>
 						<ChevronRight className="w-4 h-4" />
 						{isLoading ? (
 							<Skeleton className="w-[100px] h-[20px] rounded-full" />
@@ -91,7 +90,10 @@ export default function PreviewEditor({
 							);
 						}}
 					>
-						<Upload className={cn("mr-2 h-4 w-4")} /> Publish Video
+						<Upload className={cn("mr-2 h-4 w-4")} /> Publish{" "}
+						{WebstoryData?.storyType === StoryOutputTypes.Story
+							? "Story"
+							: "Video"}
 					</Button>
 
 					{isLoading ? (

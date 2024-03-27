@@ -7,11 +7,15 @@ import {
 	LayoutList,
 	Video,
 	Upload,
+	Scroll,
 } from "lucide-react";
 import { ModeToggle } from "@/features/edit-story/components/mode-toggle";
 import { env } from "@/env.mjs";
 
-const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
+const getBadgeData = (
+	view: "script" | "story" | "scene" | "preview",
+	isStoryBook = false
+) => {
 	switch (view) {
 		default:
 		case "script":
@@ -32,8 +36,14 @@ const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 					icon: <LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />,
 				},
 				bottom: {
-					text: "Next — Produce Animated Video Scenes",
-					icon: <Film className="stroke-accent-600 mr-1 h-4 w-4" />,
+					text: isStoryBook
+						? "View & Share The Final Storybook"
+						: "Next — Produce Animated Video Scenes",
+					icon: isStoryBook ? (
+						<Scroll className="stroke-accent-600 mr-1 h-4 w-4" />
+					) : (
+						<Film className="stroke-accent-600 mr-1 h-4 w-4" />
+					),
 				},
 			};
 		case "scene":
@@ -64,8 +74,9 @@ const getBadgeData = (view: "script" | "story" | "scene" | "preview") => {
 const EditorContainer: FC<{
 	children: ReactNode;
 	view: "script" | "story" | "scene" | "preview";
-}> = ({ children, view = "script" }) => {
-	const badgeData = getBadgeData(view);
+	isStoryBook?: boolean;
+}> = ({ children, view = "script", isStoryBook }) => {
+	const badgeData = getBadgeData(view, isStoryBook);
 	return (
 		<div className="relative z-0 w-full gap-1 items-center justify-center flex flex-col h-full px-2 lg:px-5 py-2">
 			<div className="hidden lg:flex justify-center mt-auto mb-auto">
