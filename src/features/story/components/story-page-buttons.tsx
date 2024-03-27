@@ -1,6 +1,13 @@
 import toast from "react-hot-toast";
 import React, { useState, useEffect } from "react";
-import { Heart, Share2, Facebook, Twitter, Clipboard } from "lucide-react";
+import {
+	Heart,
+	Share2,
+	Facebook,
+	Twitter,
+	Clipboard,
+	Edit,
+} from "lucide-react";
 import {
 	FacebookShareButton,
 	TwitterShareButton,
@@ -83,6 +90,23 @@ const StoryPageButtons = ({
 
 	return (
 		<div className="flex flex-wrap gap-2">
+			{User?.data?.data?.id === WebstoryData.user?.id && (
+				<Button
+					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+					variant="outline"
+					onClick={() =>
+						router.push(
+							Routes.EditScript(
+								WebstoryData.storyType,
+								WebstoryData.topLevelCategory!,
+								WebstoryData.slug!
+							)
+						)
+					}
+				>
+					<Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Story
+				</Button>
+			)}
 			<Button
 				className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 				variant="outline"

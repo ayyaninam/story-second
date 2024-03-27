@@ -144,7 +144,6 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 								</AvatarFallback>
 							</Avatar>
 							{/*# TODO: enable profile pages when ready*/}
-							{/*# TODO: replace with userDetails*/}
 							<Link
 								href={"/account"}
 								// href={"/" + user?.nickname || ""}

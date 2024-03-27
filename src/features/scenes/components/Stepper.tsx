@@ -1,8 +1,7 @@
 import { mainSchema } from "@/api/schema";
 import { Badge } from "@/components/ui/badge";
-import useWebstoryContext from "@/features/edit-story/providers/WebstoryContext";
 import Routes from "@/routes";
-import { StepperStep } from "@/utils/enums";
+import { StepperStep, StoryOutputTypes } from "@/utils/enums";
 import clsx from "clsx";
 import {
 	ChevronRight,
@@ -46,7 +45,9 @@ export default function Stepper({
 				(segment) => segment?.videoKey === null || segment?.imageKey === null
 			);
 
-		setDisableNavToPreview(!!allNull);
+		setDisableNavToPreview(
+			WebstoryData.storyType !== StoryOutputTypes.Story && !!allNull
+		);
 		setDisableNavToScenes(!!allNull);
 	}, [WebstoryData.scenes]);
 
@@ -105,7 +106,7 @@ export default function Stepper({
 				Storyboard
 			</Badge>
 			<ChevronRight className="w-4 h-4 opacity-50" />
-			{!isMobile && (
+			{!isMobile && WebstoryData.storyType !== StoryOutputTypes.Story && (
 				<>
 					<Badge
 						variant="outline"

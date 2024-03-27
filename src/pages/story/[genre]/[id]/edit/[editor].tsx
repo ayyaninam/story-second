@@ -127,7 +127,7 @@ export const getServerSideProps = withPageAuthRequired({
 				await api.video.getStoryServer(
 					genre,
 					id,
-					StoryOutputTypes.Video,
+					StoryOutputTypes.Story,
 					accessToken
 				),
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need

@@ -55,18 +55,6 @@ function LibraryHeroSection({
 							Generate a new script to edit
 							<RightArrow fill="white" fill_opacity="1" />
 						</Button>
-						{/*<Button*/}
-						{/*	size="sm"*/}
-						{/*	className="bg-white hover:bg-gray-100 flex gap-1.5 py-1.5 px-2.5 text-sm font-medium items-center h-fit border border-[#DEE0E3] text-primary"*/}
-						{/*	onClick={() => {*/}
-						{/*		// TODO: Integrate this with prompt box*/}
-						{/*		toast.success("Coming soon!")*/}
-						{/*	}}*/}
-						{/*>*/}
-						{/*	<BookScroll />*/}
-						{/*	New, blank script*/}
-						{/*	<RightArrow fill="#0F1324" fill_opacity="0.6" />*/}
-						{/*</Button>*/}
 					</div>
 				</div>
 				<Link
