@@ -6,8 +6,15 @@ import Navbar from "@/features/story/components/Navbar";
 import Book from "@/components/ui/story-book";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
+import { SessionType } from "@/hooks/useSaveSessionToken";
 
-const StoryBookPage = ({ storyData }: { storyData: WebStory | null }) => {
+const StoryBookPage = ({
+	storyData,
+	session,
+}: {
+	storyData: WebStory | null;
+	session: SessionType;
+}) => {
 	const router = useRouter();
 	const { genre, id } = router.query;
 
@@ -32,7 +39,7 @@ const StoryBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 
 	return (
 		<div className="bg-reverse flex flex-col h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)]">
-			<Navbar WebstoryData={story} />
+			<Navbar WebstoryData={story} session={session} />
 			<div className="flex justify-center items-center flex-grow px-2">
 				{story && <Book story={story} />}
 			</div>

@@ -81,6 +81,7 @@ export type VideoThumbnail = {
 	storyType: StoryOutputTypes;
 	topLevelCategory?: string | null;
 	slug?: string | null;
+	storyLikes?: number;
 };
 
 export type GalleryData = {

@@ -22,7 +22,7 @@ const PageLayout = ({
 			}}
 		>
 			<SideNav pageIndex={pageIndex} />
-			<div className="flex-1 overflow-y-scroll overflow-x-hidden lg:overflow-hidden rounded pb-[4.5rem] lg:pb-0">
+			<div className="flex-1 overflow-y-scroll overflow-x-hidden lg:overflow-hidden rounded lg:pb-0">
 				{children}
 			</div>
 			<BottomNav pageIndex={pageIndex} />

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { LibraryHeader } from "./components/header";
 import { VIDEO_ORIENTATIONS } from "@/constants/feed-constants";
 import LibraryHomePage from "./components/home-page";
@@ -6,6 +6,7 @@ import LibraryGalleryPage from "./components/gallery-page";
 import { FeedPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { useRouter } from "next/router";
 import { useDebounce } from "usehooks-ts";
+import DeletedSuceededDialog from "@/features/library/components/deleted-suceeded-dialog";
 
 function LibraryPage() {
 	const router = useRouter();
@@ -56,6 +57,10 @@ function LibraryPage() {
 		500
 	);
 
+	const [openDeleteSuceededDialog, setOpenDeleteSuceededDialog] = useState(
+		router.query.deleteSucceeded === "true"
+	);
+
 	return (
 		<div className="h-full overflow-y-scroll bg-background lg:rounded-lg flex-grow">
 			<LibraryHeader
@@ -78,6 +83,11 @@ function LibraryPage() {
 					filterOptions={filterOptions}
 				/>
 			)}
+
+			<DeletedSuceededDialog
+				open={openDeleteSuceededDialog}
+				setOpen={setOpenDeleteSuceededDialog}
+			/>
 		</div>
 	);
 }
