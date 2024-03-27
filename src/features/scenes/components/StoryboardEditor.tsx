@@ -22,6 +22,7 @@ import { useUpdateCategory } from "../mutations/UpdateCategory";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import { useMediaQuery } from "usehooks-ts";
 import useEventLogger from "@/utils/analytics";
+import TextareaAutosize from "react-textarea-autosize";
 
 export default function StoryboardEditor({
 	WebstoryData,
@@ -170,7 +171,7 @@ export default function StoryboardEditor({
 															})}
 														</div>
 														<div className="lg:w-[55%] lg:min-w-[55%] flex justify-between items-center p-2 ">
-															<div className="flex flex-wrap flex-row ">
+															<div className="flex flex-wrap flex-row w-full ">
 																{!isMobile &&
 																	scene.segments.map(
 																		(segment, segmentIndex) => (
@@ -181,7 +182,7 @@ export default function StoryboardEditor({
 																				}}
 																				className={cn(`flex flex-wrap w-full`)}
 																			>
-																				<AutosizeInput
+																				<TextareaAutosize
 																					onKeyDown={(e) => {
 																						if (e.key === "Enter") {
 																							handleEnter(
@@ -193,13 +194,13 @@ export default function StoryboardEditor({
 																						}
 																					}}
 																					name={segmentIndex.toString()}
-																					inputClassName={cn(
-																						"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:text-slate-950 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
+																					className={cn(
+																						"resize-none flex-wrap w-full active:outline-none bg-transparent text-primary focus:text-slate-950 focus:!bg-accent-200 hover:text-slate-950 hover:!bg-accent-100 rounded-sm px-1 m-0 focus:outline-none",
 																						segment.textStatus ===
 																							TextStatus.EDITED &&
 																							"text-slate-500"
 																					)}
-																					inputStyle={{
+																					style={{
 																						outline: "none",
 																						backgroundColor: "inherit",
 																					}}

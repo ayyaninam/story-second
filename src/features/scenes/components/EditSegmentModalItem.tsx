@@ -179,7 +179,7 @@ export default function EditSegmentModalItem({
 									</p>
 								)}
 							</div>
-							<div className="flex flex-wrap gap-2 justify-center ">
+							<div className="flex flex-wrap gap-2 justify-center md:justify-between">
 								<div className="flex items-center space-x-2">
 									<Switch
 										id="advanced-editing"
@@ -192,7 +192,7 @@ export default function EditSegmentModalItem({
 										Advanced Editing
 									</Label>
 								</div>
-								<div className="flex flex-wrap gap-2 justify-center items-center space-x-1 text-muted-foreground">
+								<div className="flex flex-wrap gap-2 justify-center items-center space-x-1 text-muted-foreground md:justify-between">
 									<label className="flex py-[4px] w-36 justify-center gap-1 h-fit bg-muted border-border border-[1px] pl-3 pr-2 rounded-md items-center cursor-pointer hover:text-slate-700 transition-colors ease-in-out font-medium text-sm">
 										<Input
 											onChange={async (e) => {
@@ -232,7 +232,7 @@ export default function EditSegmentModalItem({
 									</label>
 
 									<Button
-										className="flex py-1 gap-1 text-white h-fit  border-border border-[1px] rounded-md items-center"
+										className="flex py-1 text-white h-fit border-border border-[1px] rounded-md items-center"
 										variant="default"
 										onClick={() => {
 											eventLogger("regenerate_single_image");

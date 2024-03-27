@@ -73,7 +73,7 @@ const Editor = ({
 	sceneClassName?: string;
 	className?: string;
 	onInputChange?: (
-		e: React.ChangeEvent<HTMLInputElement>,
+		e: React.ChangeEvent<HTMLTextAreaElement>,
 		segmentIndex: number,
 		sceneIndex: number
 	) => void;
@@ -96,7 +96,7 @@ const Editor = ({
 	onEditScene?: (scene: Scene, sceneIndex: number) => void;
 	onDeleteScene?: (scene: Scene, sceneIndex: number) => void;
 	children: (props: {
-		refs: React.MutableRefObject<(HTMLInputElement | null)[][]>;
+		refs: React.MutableRefObject<(HTMLTextAreaElement | null)[][]>;
 		handleNavigation: ({
 			event,
 			totalScenes,
@@ -105,7 +105,7 @@ const Editor = ({
 			currentSegment,
 			segmentContentLength,
 		}: {
-			event: React.KeyboardEvent<HTMLInputElement>;
+			event: React.KeyboardEvent<HTMLTextAreaElement>;
 			totalScenes: number;
 			totalSegments: number;
 			currentScene: number;
@@ -118,7 +118,7 @@ const Editor = ({
 			currentScene,
 			currentSegment,
 		}: {
-			event: React.KeyboardEvent<HTMLInputElement>;
+			event: React.KeyboardEvent<HTMLTextAreaElement>;
 			totalScenes: number;
 			currentScene: number;
 			currentSegment: number;
@@ -130,7 +130,7 @@ const Editor = ({
 			segmentIndex: number
 		) => void;
 		handleInput: (
-			e: React.ChangeEvent<HTMLInputElement>,
+			e: React.ChangeEvent<HTMLTextAreaElement>,
 			scene: Scene,
 			sceneIndex: number,
 			segment: Segment,
@@ -138,7 +138,7 @@ const Editor = ({
 		) => void;
 	}) => React.ReactNode;
 }) => {
-	const refs = useRef<HTMLInputElement[][]>(
+	const refs = useRef<HTMLTextAreaElement[][]>(
 		// Putting an absurdly high number of scenes to make things simpler
 		Array.from({ length: 100 }, () => [])
 	);
@@ -181,7 +181,7 @@ const Editor = ({
 	});
 
 	const handleInput = (
-		e: React.ChangeEvent<HTMLInputElement>,
+		e: React.ChangeEvent<HTMLTextAreaElement>,
 		scene: Scene,
 		sceneIndex: number,
 		segment: Segment,
@@ -322,7 +322,7 @@ const Editor = ({
 		}
 	};
 
-	const focusInput = (autoSizeInput?: HTMLInputElement, atStart = false) => {
+	const focusInput = (autoSizeInput?: HTMLTextAreaElement, atStart = false) => {
 		autoSizeInput?.focus();
 		if (atStart) {
 			autoSizeInput?.setSelectionRange(0, 0);
@@ -342,7 +342,7 @@ const Editor = ({
 		currentSegment,
 		segmentContentLength,
 	}: {
-		event: React.KeyboardEvent<HTMLInputElement>;
+		event: React.KeyboardEvent<HTMLTextAreaElement>;
 		totalScenes: number;
 		totalSegments: number;
 		currentScene: number;
@@ -416,7 +416,7 @@ const Editor = ({
 		currentScene,
 		currentSegment,
 	}: {
-		event: React.KeyboardEvent<HTMLInputElement>;
+		event: React.KeyboardEvent<HTMLTextAreaElement>;
 		totalScenes: number;
 		currentScene: number;
 		currentSegment: number;

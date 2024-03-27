@@ -53,11 +53,7 @@ import DeleteVideoButton from "@/features/publish-story/delete-video-button";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import isBrowser from "@/utils/isBrowser";
 import Whatsapp from "@/components/icons/whatsapp";
-import {
-	FacebookShareButton,
-	TwitterShareButton,
-	WhatsappShareButton,
-} from "react-share";
+import { TwitterShareButton, WhatsappShareButton } from "react-share";
 
 const MAX_SUMMARY_LENGTH = 250;
 

@@ -63,6 +63,7 @@
 		"react-hot-toast": "^2.4.1",
 		"react-input-autosize": "^3.0.0",
 		"react-share": "^5.1.0",
+		"react-textarea-autosize": "^8.5.3",
 		"remotion": "4.0.126",
 		"sharp": "^0.33.2",
 		"stripe": "^14.17.0",
