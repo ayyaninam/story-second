@@ -295,11 +295,9 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 							</Button>
 						}
 						items={[
-							"1 video generation",
-							"1 story generation",
-							"20 tokens for your editing",
-							"Free plans do NOT replenish",
-							"20 credits",
+							"5 video generations",
+							"15 story generations",
+							"200 credits",
 						]}
 					/>
 					<PricingCard
@@ -343,14 +341,16 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 							</CheckoutDialog>
 						}
 						items={[
-							"3 videos / month",
-							"5 stories / month",
+							"8 videos / month",
+							// "3 videos / month",
+							"20 stories / month",
+							// "5 stories / month",
 							<>
 								$4 per additional video
 								<br />
 								$2 per additional story
 							</>,
-							"150 credits",
+							"300 credits",
 						]}
 					/>
 					<PricingCard

@@ -34,7 +34,7 @@ const UnsubscribeButton = () => {
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-			<DialogTrigger>
+			<DialogTrigger asChild>
 				<Button className="text-white bg-pink-700 hover:bg-pink-800">
 					Unsubscribe
 				</Button>
