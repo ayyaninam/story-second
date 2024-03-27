@@ -26,7 +26,7 @@ const GenericModal = ({
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-			<DialogTrigger>
+			<DialogTrigger asChild>
 				<Button className="text-white bg-accent-600 hover:bg-accent-700">
 					{buttonText}
 				</Button>

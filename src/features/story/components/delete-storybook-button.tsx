@@ -40,7 +40,7 @@ const DeleteStorybookButton = ({ storyId }: DeleteStorybookButtonProps) => {
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-			<DialogTrigger>
+			<DialogTrigger asChild>
 				<Button
 					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 					variant="outline"

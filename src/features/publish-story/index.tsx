@@ -20,7 +20,6 @@ import {
 	Video,
 	Heart,
 	Clipboard,
-	Facebook,
 	Twitter,
 } from "lucide-react";
 import { useRouter } from "next/router";
@@ -364,16 +363,16 @@ export default function PublishedStory({
 					<p className="text-sm">{Format.Title(Webstory.data?.storyTitle)}</p>
 				</div>
 				<div className="hidden md:block space-x-2">
-					<Button
-						className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
-						onClick={(e) => {
-							navigator.clipboard.writeText(window.location.href);
-							toast.success("Link copied to clipboard");
-						}}
-						variant="outline"
-					>
-						<Share2 className="mr-2 h-4 w-4" /> Share this video
-					</Button>
+					{/*<Button*/}
+					{/*	className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}*/}
+					{/*	onClick={(e) => {*/}
+					{/*		navigator.clipboard.writeText(window.location.href);*/}
+					{/*		toast.success("Link copied to clipboard");*/}
+					{/*	}}*/}
+					{/*	variant="outline"*/}
+					{/*>*/}
+					{/*	<Share2 className="mr-2 h-4 w-4" /> Share this video*/}
+					{/*</Button>*/}
 					{session?.accessToken && (
 						<Button
 							className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
@@ -544,12 +543,21 @@ export default function PublishedStory({
 												</Button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent>
-												<FacebookShareButton url={shareUrl} className="w-full">
-													<DropdownMenuItem className="cursor-pointer">
-														<Facebook className="h-5 w-5 mr-1.5" />
-														<span>Facebook</span>
-													</DropdownMenuItem>
-												</FacebookShareButton>
+												{/*<FacebookShareButton url={shareUrl} className="w-full">*/}
+												{/*	<DropdownMenuItem className="cursor-pointer">*/}
+												{/*		<Facebook className="h-5 w-5 mr-1.5" />*/}
+												{/*		<span>Facebook</span>*/}
+												{/*	</DropdownMenuItem>*/}
+												{/*</FacebookShareButton>*/}
+												<DropdownMenuItem
+													className="cursor-pointer"
+													onClick={() => {
+														navigator.clipboard.writeText(window.location.href);
+														toast.success("Link copied to clipboard");
+													}}
+												>
+													<Clipboard className="h-5 w-5 mr-1.5" /> Copy Link
+												</DropdownMenuItem>
 												<TwitterShareButton
 													title={`${story.storyTitle}\n\n`}
 													url={shareUrl}
@@ -573,15 +581,6 @@ export default function PublishedStory({
 														<span>Whatsapp</span>
 													</DropdownMenuItem>
 												</WhatsappShareButton>
-												<DropdownMenuItem
-													className="cursor-pointer"
-													onClick={() => {
-														navigator.clipboard.writeText(window.location.href);
-														toast.success("Link copied to clipboard");
-													}}
-												>
-													<Clipboard className="h-5 w-5 mr-1.5" /> Copy Link
-												</DropdownMenuItem>
 											</DropdownMenuContent>
 										</DropdownMenu>
 										{(numVideoSegmentsReady ?? 0) <
