@@ -75,7 +75,7 @@ const StoryBookPage = ({
 										</div>
 									</div>
 
-									<div className="p-6 min-w-[375px] flex flex-col justify-between lg:max-w-sm bg-description rounded-tl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-tr-lg">
+									<div className="p-6 min-w-[325px] flex flex-col justify-between lg:max-w-sm bg-description rounded-tl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-tr-lg">
 										<div className="relative space-y-2">
 											<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
 												<p className="text-purple-500">Storybook</p>
