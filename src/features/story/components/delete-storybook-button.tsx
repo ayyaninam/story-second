@@ -42,8 +42,8 @@ const DeleteStorybookButton = ({ storyId }: DeleteStorybookButtonProps) => {
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger asChild>
 				<Button
-					className="px-4 py-1.5 text-background text-white text-sm font-medium flex gap-2 items-center h-fit"
-					variant="destructive"
+					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+					variant="outline"
 				>
 					<Trash2 className="mr-2 h-4 w-4 md:h-5 md:w-5" />
 					Delete
