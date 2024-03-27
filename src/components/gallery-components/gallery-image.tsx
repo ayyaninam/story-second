@@ -5,6 +5,7 @@ import { cn } from "@/utils";
 import { GalleryData, VideoOrientation, VideoThumbnail } from "@/types";
 import Routes from "@/routes";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 function GalleryImage({
 	story,
@@ -13,22 +14,18 @@ function GalleryImage({
 	story: VideoThumbnail;
 	galleryDetails: GalleryData[VideoOrientation];
 }) {
-	const router = useRouter();
-
 	return (
-		<div
+		<Link
+			href={Routes.ViewStory(
+				story.storyType,
+				story.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all",
+				story.slug as string
+			)}
 			key={story.id}
 			className={cn(
-				"flex flex-col items-start rounded-[8px] border border-[#1f29371f] bg-white cursor-pointer",
+				"flex flex-col items-start rounded-[8px] border border-[#1f29371f] bg-white cursor-pointer hover:transform hover:scale-105 transition-transform duration-200 ease-in-out",
 				story.expand ? "row-span-2 col-span-2" : "row-span-1 col-span-1"
 			)}
-			onClick={() => {
-				const categoryId =
-					story.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all";
-				router.push(
-					Routes.ViewStory(story.storyType, categoryId, story.slug as string)
-				);
-			}}
 		>
 			<div
 				className={cn(
@@ -99,7 +96,7 @@ function GalleryImage({
 					</div>
 				</div>
 			</div>
-		</div>
+		</Link>
 	);
 }
 
