@@ -48,7 +48,7 @@ const PricingCard = ({
 			{items.map((item, index) => (
 				<div
 					key={index}
-					className="flex pl-0 pr-[57.06px] py-0 self-stretch w-full flex-[0_0_auto] items-start gap-[12px] relative"
+					className="flex pl-0 pr-[57.06px] py-0 self-stretch w-full flex-[0_0_auto] items-start gap-[12px] relative items-center"
 				>
 					{variant === "Free" ? (
 						<CheckIcon
