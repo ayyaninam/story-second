@@ -20,10 +20,7 @@ const bottomNavStyles: CSSProperties = {
 const BottomNav = ({ pageIndex }: { pageIndex: number }) => {
 	const { user, isLoading } = useUser();
 	return (
-		<div
-			className="lg:hidden bottom-0 p-1 fixed w-full"
-			style={bottomNavStyles}
-		>
+		<div className="lg:hidden p-1 sticky w-full" style={bottomNavStyles}>
 			<div className="flex items-center gap-2 p-2 justify-around">
 				{/* TODO: figure out why we need menu icon?*/}
 				{/*<MenuIcon color="#fff" height={34} width={34} />*/}
