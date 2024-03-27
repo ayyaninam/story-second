@@ -60,11 +60,11 @@ function GalleryImage({
 				>
 					<div className="flex flex-row justify-between items-center gap-2">
 						{story.topLevelCategory && (
-							<div className="min-h-full px-4 text-white text-xs font-normal w-fit bg-[#ffffff1f] flex py-0.5 rounded  items-center gap-1 justify-center truncate">
+							<div className="min-h-full px-2 md:px-4 text-white text-xs font-normal w-fit bg-[#ffffff1f] flex py-0.5 rounded  items-center gap-1 justify-left">
 								{story.topLevelCategory}
 							</div>
 						)}
-						<div className="min-h-full px-4 text-white text-xs font-normal w-fit bg-[#ffffff1f] flex py-0.5 rounded  items-center gap-1">
+						<div className="min-h-full px-2 md:px-4 text-white text-xs font-normal w-fit bg-[#ffffff1f] flex py-0.5 rounded  items-center gap-1">
 							<Heart className="mr-1 h-4 w-4" />
 							<span>{story.storyLikes}</span>
 						</div>
