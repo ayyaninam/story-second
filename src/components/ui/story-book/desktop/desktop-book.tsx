@@ -136,30 +136,28 @@ const DesktopBook = ({ story }: BookProps) => {
 	const canGoNextPage = currentPages[1].pageNumber + 2 <= pageArray.length;
 
 	return (
-		<div className="w-[1200px] mb-[200px]">
-			<div className="flex aspect-[3/2] flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
-				<div className={styles.bookWrapper}>
-					<PageView
-						story={story}
-						page={currentPages[0]}
-						canChangePage={canGoPrevPage}
-						changePage={() => changePage(false)}
-					/>
-					<PageView
-						story={story}
-						page={currentPages[1]}
-						canChangePage={canGoNextPage}
-						changePage={() => changePage(true)}
-					/>
+		<div className="flex aspect-[3/2] flex-1 rounded-2xl px-8 py-2 bg-accent-button border-primary-500">
+			<div className={styles.bookWrapper}>
+				<PageView
+					story={story}
+					page={currentPages[0]}
+					canChangePage={canGoPrevPage}
+					changePage={() => changePage(false)}
+				/>
+				<PageView
+					story={story}
+					page={currentPages[1]}
+					canChangePage={canGoNextPage}
+					changePage={() => changePage(true)}
+				/>
 
-					{animatedPages && (
-						<AnimatedPage
-							story={story}
-							pages={animatedPages}
-							turnDirection={turnDirection}
-						/>
-					)}
-				</div>
+				{animatedPages && (
+					<AnimatedPage
+						story={story}
+						pages={animatedPages}
+						turnDirection={turnDirection}
+					/>
+				)}
 			</div>
 		</div>
 	);
