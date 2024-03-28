@@ -185,6 +185,7 @@ export default function StoryboardEditor({
 																				<TextareaAutosize
 																					onKeyDown={(e) => {
 																						if (e.key === "Enter") {
+																							e.preventDefault();
 																							handleEnter(
 																								scene,
 																								sceneIndex,
