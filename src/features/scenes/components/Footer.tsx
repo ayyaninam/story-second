@@ -28,6 +28,7 @@ import {
 	StoryImageStyles,
 	VoiceType,
 	AllowanceType,
+	StoryOutputTypes,
 } from "@/utils/enums";
 import clsx from "clsx";
 import api from "@/api";
@@ -522,7 +523,7 @@ const Footer = ({
 			</div>
 		),
 		storyboard: () => (
-			<div className="flex gap-2 w-full justify-end items-end py-2 h-full flex-wrap">
+			<div className="flex gap-2 w-full justify-end items-center py-2 h-full flex-wrap">
 				<div>
 					<Button
 						variant="outline"
@@ -550,29 +551,51 @@ const Footer = ({
 					</Button>
 				</div>
 				<div>
-					<Button
-						onClick={async () => {
-							await GenerateVideoScenesMutation.mutateAsync();
-							invalidateUser();
-						}}
-						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
-						disabled={
-							GenerateVideoScenesMutation.isPending || !WebstoryData.storyDone
-						}
-					>
-						<StoryLogo />
-						{GenerateVideoScenesMutation.isPending ? (
-							<p className="font-bold text-slate-50">Generating...</p>
-						) : (
-							<p className="font-bold text-slate-50">Generate Video Scenes</p>
-						)}
-						<ArrowRight className="w-4 h-4 opacity-50" />
-					</Button>
+					{WebstoryData.storyType === StoryOutputTypes.Story ? (
+						<Button
+							disabled={!!ungeneratedImages.length || !WebstoryData.storyDone}
+							onClick={() => {
+								if (!ungeneratedImages.length) {
+									router.push(
+										Routes.ViewStory(
+											story.type,
+											story.topLevelCategory,
+											story.slug
+										)
+									);
+								}
+							}}
+							className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
+						>
+							<StoryLogo size={24} />
+							<p className="font-bold">Share & Export Story</p>
+							<ArrowRight className="w-4 h-4 opacity-50" />
+						</Button>
+					) : (
+						<Button
+							onClick={async () => {
+								await GenerateVideoScenesMutation.mutateAsync();
+								invalidateUser();
+							}}
+							className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
+							disabled={
+								GenerateVideoScenesMutation.isPending || !WebstoryData.storyDone
+							}
+						>
+							<StoryLogo />
+							{GenerateVideoScenesMutation.isPending ? (
+								<p className="font-bold text-slate-50">Generating...</p>
+							) : (
+								<p className="font-bold text-slate-50">Generate Video Scenes</p>
+							)}
+							<ArrowRight className="w-4 h-4 opacity-50" />
+						</Button>
+					)}
 				</div>
 			</div>
 		),
 		scene: () => (
-			<div className="flex gap-2 w-full justify-end items-end py-2 h-full flex-wrap">
+			<div className="flex gap-2 w-full justify-end items-center py-2 h-full flex-wrap">
 				<div>
 					<Button
 						variant="outline"
@@ -619,7 +642,7 @@ const Footer = ({
 			</div>
 		),
 		preview: () => (
-			<div className="flex gap-2 w-full justify-end items-end py-2 h-full">
+			<div className="flex gap-2 w-full justify-end items-center py-2 h-full">
 				<div className="flex flex-col">
 					<Button
 						disabled={
@@ -641,7 +664,11 @@ const Footer = ({
 						className="bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white  space-x-1.5"
 					>
 						<StoryLogo size={24} />
-						<p className="font-bold">Share & Export Video</p>
+						{WebstoryData.storyType === StoryOutputTypes.Story ? (
+							<p className="font-bold">Share & Export Story</p>
+						) : (
+							<p className="font-bold">Share & Export Video</p>
+						)}
 						<ArrowRight className="w-4 h-4 opacity-50" />
 					</Button>
 				</div>

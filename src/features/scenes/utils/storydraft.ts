@@ -12,6 +12,7 @@ import {
 	SceneModifications,
 	SegmentModifications,
 	StoryImageStyles,
+	StoryOutputTypes,
 	VoiceType,
 } from "@/utils/enums";
 import { SceneModificationData, SegmentModificationData } from "@/types";
@@ -34,52 +35,88 @@ export const WebstoryToStoryDraft = (
 		displayResolution: Webstory.resolution,
 		resolution:
 			Webstory.scenes?.[0]?.videoSegments?.[0]?.imageResolution ??
+			Webstory.scenes?.[0]?.storySegments?.[0]?.imageResolution ??
 			AspectRatios["576x1024"],
 		scenes:
 			Webstory.scenes?.map((scene) => ({
 				id: scene.id!,
 				index: scene.index!,
 				segments:
-					scene.videoSegments?.map((segment) => {
-						let imageStatus = StoryStatus.READY;
-						if (segment.imageKey && !segment.imageRegenerating)
-							imageStatus = StoryStatus.COMPLETE;
-						else if (segment.imageRegenerating)
-							imageStatus = StoryStatus.PENDING;
-						else if (!segment.imageKey) imageStatus = StoryStatus.READY;
+					(Webstory.storyType !== StoryOutputTypes.Story
+						? scene.videoSegments?.map((segment) => {
+								let imageStatus = StoryStatus.READY;
+								if (segment.imageKey && !segment.imageRegenerating)
+									imageStatus = StoryStatus.COMPLETE;
+								else if (segment.imageRegenerating)
+									imageStatus = StoryStatus.PENDING;
+								else if (!segment.imageKey) imageStatus = StoryStatus.READY;
 
-						let videoStatus = StoryStatus.READY;
-						if (segment.videoKey && !segment.videoRegenerating)
-							videoStatus = StoryStatus.COMPLETE;
-						else if (segment.videoRegenerating)
-							videoStatus = StoryStatus.PENDING;
-						else if (!segment.videoKey) videoStatus = StoryStatus.READY;
-						return {
-							settings: {
-								prompt: segment.imagePrompt!,
-								denoising: segment.imageCFGScale ?? 2,
-								style: segment.imageStyle!,
-								seed: segment.imageSeed!,
-								samplingSteps: segment.imageSamplingSteps ?? 8,
-							},
-							audioKey: segment.femaleAudioKey!,
-							audioStatus: segment.femaleAudioKey
-								? StoryStatus.COMPLETE
-								: StoryStatus.PENDING,
-							id: segment.index!,
-							imageKey: segment.imageKey!,
-							imageStatus,
-							textContent: segment.textContent!,
-							textStatus: TextStatus.UNEDITED,
-							videoKey: segment.videoKey!,
-							videoStatus,
-						};
-					}) ?? [],
-				status: scene.videoSegments?.every(
-					(el) => el.videoKey && !el.videoRegenerating && el.imageKey
-				)
-					? StoryStatus.COMPLETE
-					: StoryStatus.PENDING,
+								let videoStatus = StoryStatus.READY;
+								if (segment.videoKey && !segment.videoRegenerating)
+									videoStatus = StoryStatus.COMPLETE;
+								else if (segment.videoRegenerating)
+									videoStatus = StoryStatus.PENDING;
+								else if (!segment.videoKey) videoStatus = StoryStatus.READY;
+								return {
+									settings: {
+										prompt: segment.imagePrompt!,
+										denoising: segment.imageCFGScale ?? 2,
+										style: segment.imageStyle!,
+										seed: segment.imageSeed!,
+										samplingSteps: segment.imageSamplingSteps ?? 8,
+									},
+									audioKey: segment.femaleAudioKey!,
+									audioStatus: segment.femaleAudioKey
+										? StoryStatus.COMPLETE
+										: StoryStatus.PENDING,
+									id: segment.index!,
+									imageKey: segment.imageKey!,
+									imageStatus,
+									textContent: segment.textContent!,
+									textStatus: TextStatus.UNEDITED,
+									videoKey: segment.videoKey!,
+									videoStatus,
+								};
+							})
+						: scene.storySegments?.map((segment) => {
+								let imageStatus = StoryStatus.READY;
+								if (segment.imageKey && !segment.imageRegenerating)
+									imageStatus = StoryStatus.COMPLETE;
+								else if (segment.imageRegenerating)
+									imageStatus = StoryStatus.PENDING;
+								else if (!segment.imageKey) imageStatus = StoryStatus.READY;
+
+								return {
+									settings: {
+										prompt: segment.imagePrompt!,
+										denoising: segment.imageCFGScale ?? 2,
+										style: segment.imageStyle!,
+										seed: segment.imageSeed!,
+										samplingSteps: segment.imageSamplingSteps ?? 8,
+									},
+									id: segment.index!,
+									audioKey: segment.femaleAudioKey!,
+									audioStatus: segment.femaleAudioKey
+										? StoryStatus.COMPLETE
+										: StoryStatus.PENDING,
+									imageKey: segment.imageKey!,
+									imageStatus,
+									textContent: segment.textContent!,
+									textStatus: TextStatus.UNEDITED,
+								};
+							})) ?? [],
+				status:
+					Webstory.storyType === StoryOutputTypes.Story
+						? scene.storySegments?.every(
+								(el) => el.imageKey && !el.imageRegenerating
+							)
+							? StoryStatus.COMPLETE
+							: StoryStatus.PENDING
+						: scene.videoSegments?.every(
+									(el) => el.videoKey && !el.videoRegenerating && el.imageKey
+							  )
+							? StoryStatus.COMPLETE
+							: StoryStatus.PENDING,
 				description: scene.sceneDescription!,
 			})) ?? [],
 		status: StoryStatus.COMPLETE,

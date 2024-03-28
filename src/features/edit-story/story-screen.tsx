@@ -1,11 +1,13 @@
 import Format from "@/utils/format";
 import ImageLoader from "./components/image-loader";
 import VideoPlayer, { VideoPlayerHandler } from "./components/video-player";
-import { FC, useEffect, useState, useRef, forwardRef } from "react";
+import React, { FC, useEffect, useState, useRef, forwardRef } from "react";
 import { prefetch } from "remotion";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { VideoPlayerProps } from "@/types";
 import { mainSchema } from "@/api/schema";
+import { StoryOutputTypes } from "@/utils/enums";
+import Book from "@/components/ui/story-book";
 
 export const loadingTexts = [
 	"Starting your story",
@@ -140,12 +142,6 @@ const StoryScreen: FC<
 			(hasOriginalTrendsVideoKey &&
 				!fetchedVideos.includes(Format.GetVideoUrl(originalTrendsVideoKey!)));
 
-		const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
-
-		const seekToSegment = (segment: mainSchema["ReturnVideoSegmentDTO"]) => {
-			videoPlayerRef.current?.seekToSegment(segment);
-		};
-
 		if (isError)
 			return (
 				<div
@@ -158,7 +154,9 @@ const StoryScreen: FC<
 					</p>
 				</div>
 			);
-		else if (areImagesLoading) {
+		else if (Webstory?.storyType === StoryOutputTypes.Story) {
+			return <Book story={Webstory} />;
+		} else if (areImagesLoading) {
 			return (
 				<div
 					className={`bg-slate-300 rounded-t-lg ${roundedClassName ? roundedClassName : "lg:rounded-tr-none lg:rounded-bl-lg"} flex justify-center items-end`}
