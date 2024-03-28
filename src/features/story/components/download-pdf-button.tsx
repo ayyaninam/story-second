@@ -1,0 +1,57 @@
+import React, { ReactElement } from "react";
+import dynamic from "next/dynamic";
+import StorybookAmazonPDF from "@/components/pdf/storybook/amazon";
+import StorybookRpiPDF from "@/components/pdf/storybook/rpi";
+import CoverRpiPDF from "@/components/pdf/cover/rpi";
+import CoverAmazonPDF from "@/components/pdf/cover/amazon";
+import { WebStory } from "@/components/ui/story-book/constants";
+import { Button } from "@/components/ui/button";
+
+const ReactPDFDownloadLink = dynamic(
+	() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+	{
+		ssr: false,
+		loading: () => <p>Loading...</p>,
+	}
+);
+
+type Variant =
+	| "storybook-rpi"
+	| "storybook-amazon"
+	| "cover-rpi"
+	| "cover-amazon";
+
+interface DownloadPDFButton {
+	storyData: WebStory;
+	variant: Variant;
+}
+
+const DownloadPDFButton = ({ storyData, variant }: DownloadPDFButton) => {
+	const document = (
+		{
+			"storybook-amazon": <StorybookAmazonPDF storyData={storyData} />,
+			"storybook-rpi": <StorybookRpiPDF storyData={storyData} />,
+			"cover-rpi": <CoverRpiPDF storyData={storyData} />,
+			"cover-amazon": <CoverAmazonPDF storyData={storyData} />,
+		} as Record<Variant, ReactElement>
+	)[variant];
+
+	return (
+		<Button variant="accent" asChild className="cursor-pointer">
+			<ReactPDFDownloadLink
+				document={document}
+				fileName={`${storyData.storyTitle}_${variant}.pdf`}
+			>
+				{({ loading, error }) =>
+					error
+						? "Error loading PDF..."
+						: loading
+							? "Loading PDF..."
+							: "Download now!"
+				}
+			</ReactPDFDownloadLink>
+		</Button>
+	);
+};
+
+export default DownloadPDFButton;

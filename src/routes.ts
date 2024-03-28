@@ -10,6 +10,9 @@ class Routes {
 	static EditStory(type: StoryOutputTypes, genre: string, id: string) {
 		return `/${this.StoryTypeToPath(type)}/${genre}/${id}/edit`;
 	}
+	static DownloadPdfStory(type: StoryOutputTypes, genre: string, id: string) {
+		return `/${this.StoryTypeToPath(type)}/${genre}/${id}/download-pdf`;
+	}
 	static Landing(errorMessage?: string) {
 		let res = "/";
 		if (errorMessage) {
