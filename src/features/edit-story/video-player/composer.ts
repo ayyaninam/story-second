@@ -29,7 +29,7 @@ const calculateSegmentDuration = async ({
 	isLastSegment: boolean;
 	storyText: string;
 }) => {
-	const minContentDuration = 0 * VIDEO_FPS;
+	const minContentDuration = variant === "split" ? 101 : 0; // 101 because it's the result of this formula: 3.3667 * VIDEO_FPS(which is 30) = 101
 
 	const silentTime = 2 * SILENT_DURATION * VIDEO_FPS;
 
