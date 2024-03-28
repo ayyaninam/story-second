@@ -47,6 +47,7 @@ function SegmentImage({
 	handleSubmitEditSegments: () => void;
 }) {
 	const imageAspectRatio = GetDisplayImageRatio(story.displayResolution).ratio;
+	console.log("imageAspectRatio", imageAspectRatio);
 	const isPopupOpen =
 		imageRegenerationSegmentDetails?.segmentIndex === segmentIndex &&
 		imageRegenerationSegmentDetails?.sceneIndex === sceneIndex;

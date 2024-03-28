@@ -14,6 +14,7 @@ import Editor from "./Editor";
 import { cn } from "@/utils";
 import Format from "@/utils/format";
 import AutosizeInput from "react-input-autosize";
+import TextareaAutosize from "react-textarea-autosize";
 import TooltipComponent from "@/components/ui/tooltip-component";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import CategorySelect from "@/components/ui/CategorySelect";
@@ -104,7 +105,7 @@ export default function ScriptEditor({
 													{story.scenes.map((scene, sceneIndex) => (
 														<div
 															key={sceneIndex}
-															className="flex flex-wrap flex-col w-fit"
+															className="flex flex-wrap flex-col max-w-full"
 														>
 															{/*<TooltipComponent*/}
 															{/*  align="start"*/}
@@ -116,16 +117,17 @@ export default function ScriptEditor({
 															</div>
 															{/*</TooltipComponent>*/}
 
-															<div className="flex flex-wrap flex-row">
+															<div className="flex flex-wrap flex-row max-w-full">
 																{scene.segments.map((segment, segmentIndex) => (
 																	<span
 																		key={segmentIndex}
 																		style={{
 																			backgroundColor: "transparent",
 																		}}
-																		className={cn(`flex flex-wrap `)}
+																		className={cn(`flex flex-wrap w-full`)}
 																	>
-																		<AutosizeInput
+																		<TextareaAutosize
+																			maxRows={10}
 																			autoComplete="false"
 																			disabled={!WebstoryData?.storyDone}
 																			onKeyDown={(e) => {
@@ -161,12 +163,12 @@ export default function ScriptEditor({
 																				}
 																			}}
 																			name={segmentIndex.toString()}
-																			inputClassName={cn(
-																				"active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 focus:outline-none",
+																			className={cn(
+																				"flex overflow-hidden resize-none flex-wrap w-full active:outline-none bg-transparent text-primary hover:text-slate-950 focus:text-slate-950 focus:!bg-accent-200 hover:!bg-accent-100 rounded-sm px-1 focus:outline-none",
 																				segment.textStatus ===
 																					TextStatus.EDITED && "text-purple-500"
 																			)}
-																			inputStyle={{
+																			style={{
 																				outline: "none",
 																				backgroundColor: "inherit",
 																			}}

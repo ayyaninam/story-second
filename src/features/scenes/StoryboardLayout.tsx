@@ -7,7 +7,7 @@ import { GetDisplayImageRatio } from "@/utils/image-ratio";
 import { mainSchema } from "@/api/schema";
 import useWebstoryContext from "../edit-story/providers/WebstoryContext";
 import Stepper from "./components/Stepper";
-import { StepperStep } from "@/utils/enums";
+import { StepperStep, StoryOutputTypes } from "@/utils/enums";
 import Navbar from "./components/Navbar";
 import StoryboardEditor from "./components/StoryboardEditor";
 import EditorContainer from "./components/EditorContainer";
@@ -52,7 +52,10 @@ export default function EditScript({
 
 			{/* MainSection */}
 			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>
-				<EditorContainer view="story">
+				<EditorContainer
+					view="story"
+					isStoryBook={WebstoryData.storyType === StoryOutputTypes.Story}
+				>
 					<StoryboardEditor
 						ImageRatio={ImageRatio}
 						WebstoryData={Webstory.data}

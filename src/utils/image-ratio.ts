@@ -16,22 +16,10 @@ export const ImageRatios = {
 		ratio: 16 / 9,
 		enumValue: AspectRatios["1024x576"],
 	},
-	"4x3": {
-		width: 4,
-		height: 3,
-		ratio: 4 / 3,
-		enumValue: AspectRatios["1024x576"], // TODO: Remove this
-	},
-	"3x4": {
-		width: 3,
-		height: 4,
-		ratio: 3 / 4,
-		enumValue: AspectRatios["1024x576"], // TODO: Remove this
-	},
 	"1x1": {
 		width: 1,
 		height: 1,
-		ratio: 1 / 1,
+		ratio: 1,
 		enumValue: AspectRatios["1024x1024"],
 	},
 	"8x9": {
@@ -59,6 +47,12 @@ export const DisplayImageRatios = {
 		height: 9,
 		ratio: 16 / 9,
 		enumValue: DisplayAspectRatios["1024x576"],
+	},
+	"1x1": {
+		width: 1,
+		height: 1,
+		ratio: 1,
+		enumValue: DisplayAspectRatios["1024x1024"],
 	},
 };
 

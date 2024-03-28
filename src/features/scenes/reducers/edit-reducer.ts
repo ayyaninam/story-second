@@ -33,11 +33,11 @@ export type Segment = {
 	settings?: Settings;
 	textContent: string;
 	imageKey: string;
-	videoKey: string;
+	videoKey?: string;
 	audioKey: string;
 	textStatus: TextStatus;
 	imageStatus: StoryStatus;
-	videoStatus: StoryStatus;
+	videoStatus?: StoryStatus;
 	audioStatus: StoryStatus;
 	alternateImageKeys?: string[];
 	alternateImagesStatus?: StoryStatus;

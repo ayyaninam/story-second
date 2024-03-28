@@ -43,10 +43,10 @@ export const TheEndRightView = ({ story }: TheEndViewProps) => {
 			</p>
 
 			<div className="flex gap-2 lg:gap-4 flex-col">
-				<FacebookShareButton url={shareUrl} className="flex items-center gap-4">
-					<Facebook size={24} />
-					<span>Share it on Facebook</span>
-				</FacebookShareButton>
+				{/*<FacebookShareButton url={shareUrl} className="flex items-center gap-4">*/}
+				{/*	<Facebook size={24} />*/}
+				{/*	<span>Share it on Facebook</span>*/}
+				{/*</FacebookShareButton>*/}
 
 				<TwitterShareButton
 					title={`${story.storyTitle}\n\n`}
