@@ -19,13 +19,16 @@ import {
 	Settings,
 	StoryStatus,
 } from "../reducers/edit-reducer";
-import { StoryImageStyles } from "@/utils/enums";
+import { StoryImageStyles, StoryOutputTypes } from "@/utils/enums";
 import { keys } from "@/utils/enumKeys";
 import Format from "@/utils/format";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { GetDisplayImageRatio } from "@/utils/image-ratio";
-import { MAX_SEGMENT_LENGTH } from "@/constants/constants";
+import {
+	MAX_SEGMENT_LENGTH,
+	MAX_SEGMENT_LENGTH_BOOK,
+} from "@/constants/constants";
 import {
 	Select,
 	SelectContent,
@@ -85,6 +88,11 @@ export default function EditSegmentModalItem({
 	const UploadImage = useMutation({ mutationFn: api.video.uploadSegmentImage });
 
 	const [regeneratingImage, setRegeneratingImage] = useState(false);
+
+	const MAX_LENGTH =
+		story.type === StoryOutputTypes.Story
+			? MAX_SEGMENT_LENGTH_BOOK
+			: MAX_SEGMENT_LENGTH;
 	return (
 		<TooltipProvider>
 			<div className="flex bg-primary-foreground rounded-md border-border border-[1px] p-2 m-2 gap-2">
@@ -161,19 +169,20 @@ export default function EditSegmentModalItem({
 								<div className="relative w-full h-fit">
 									<ScrollText className="h-6 w-6 stroke-slate-400 stroke-1 p-1 absolute top-[calc(50%-0.75rem)] left-1 " />
 									<Unlock className="h-6 w-6 stroke-slate-400 stroke-1 p-1 absolute top-[calc(50%-0.75rem)] right-1 " />
-									<Input
+									<Textarea
 										value={segment.textContent}
 										onChange={(e) => {
-											if (e.target.value.length < MAX_SEGMENT_LENGTH)
+											if (e.target.value.length < MAX_LENGTH)
 												onSegmentEdit({
 													...segment,
 													textContent: e.target.value,
 												});
 										}}
-										className="pl-10 h-7 active:outline-none active:border-none focus-visible:ring-accent-300 focus-visible:ring-1 text-slate-900"
+										placeholder={"Write your text here"}
+										className="min-h-fit overflow-hidden resize-none pl-10 py-1 active:outline-none active:border-none focus-visible:ring-accent-300 focus-visible:ring-1 text-slate-900"
 									/>
 								</div>
-								{segment.textContent.length >= MAX_SEGMENT_LENGTH - 1 && (
+								{segment.textContent.length >= MAX_LENGTH - 1 && (
 									<p className="text-xs text-red-500">
 										Character Limit Reached
 									</p>

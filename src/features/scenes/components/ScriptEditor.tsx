@@ -127,7 +127,7 @@ export default function ScriptEditor({
 																		className={cn(`flex flex-wrap w-full`)}
 																	>
 																		<TextareaAutosize
-																			maxRows={5}
+																			maxRows={10}
 																			autoComplete="false"
 																			disabled={!WebstoryData?.storyDone}
 																			onKeyDown={(e) => {

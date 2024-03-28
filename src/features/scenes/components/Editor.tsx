@@ -48,10 +48,13 @@ import { mainSchema } from "@/api/schema";
 import { GenerateStoryDiff, WebstoryToStoryDraft } from "../utils/storydraft";
 import {
 	MAX_SEGMENT_LENGTH,
+	MAX_SEGMENT_LENGTH_BOOK,
 	MAX_SEGMENT_WORD_LENGTH,
+	MAX_SEGMENT_WORD_LENGTH_BOOK,
 } from "@/constants/constants";
 import { useSubmitEditScenesAndSegments } from "../mutations/SaveScenesAndSegments";
 import toast from "react-hot-toast";
+import { StoryOutputTypes } from "@/utils/enums";
 
 const Editor = ({
 	Webstory,
@@ -145,6 +148,16 @@ const Editor = ({
 
 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory), story);
 
+	const MAX_LENGTH =
+		story.type === StoryOutputTypes.Story
+			? MAX_SEGMENT_LENGTH_BOOK
+			: MAX_SEGMENT_LENGTH;
+
+	const MAX_WORD_LENGTH =
+		story.type === StoryOutputTypes.Story
+			? MAX_SEGMENT_WORD_LENGTH_BOOK
+			: MAX_SEGMENT_WORD_LENGTH;
+
 	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
 
 	useEffect(() => {
@@ -193,8 +206,8 @@ const Editor = ({
 		if (
 			// (No break) space or punctuation
 			([" ", "\u00A0"].includes(content.slice(-1)) &&
-				content.length > MAX_SEGMENT_WORD_LENGTH) ||
-			content.length > MAX_SEGMENT_LENGTH
+				content.length > MAX_WORD_LENGTH) ||
+			content.length > MAX_LENGTH
 		) {
 			dispatch({
 				type: "edit_segment",
