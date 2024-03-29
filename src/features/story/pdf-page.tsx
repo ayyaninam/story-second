@@ -114,8 +114,8 @@ const StoryBookDownloadPdfPage = ({
 
 	const handlePurchasePdf = async () => {
 		const { error } = await userCanUseCredits({
-			variant: "video credits",
-			videoCredits: pdfCreditsCost,
+			variant: "credits",
+			credits: pdfCreditsCost,
 		});
 
 		if (error) {
