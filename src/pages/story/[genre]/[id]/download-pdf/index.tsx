@@ -47,7 +47,7 @@ export default function PublishPage({
 					}}
 				/>
 				{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
-				<StoryBookDownloadPdfPage storyData={storyData} session={session} />
+				<StoryBookDownloadPdfPage storyData={storyData} />
 			</HydrationBoundary>
 		</PageLayout>
 	);
