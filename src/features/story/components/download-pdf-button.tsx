@@ -6,6 +6,7 @@ import CoverRpiPDF from "@/components/pdf/cover/rpi";
 import CoverAmazonPDF from "@/components/pdf/cover/amazon";
 import { WebStory } from "@/components/ui/story-book/constants";
 import { Button } from "@/components/ui/button";
+import Ebook from "@/components/pdf/ebook";
 
 const ReactPDFDownloadLink = dynamic(
 	() => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -19,7 +20,8 @@ type Variant =
 	| "storybook-rpi"
 	| "storybook-amazon"
 	| "cover-rpi"
-	| "cover-amazon";
+	| "cover-amazon"
+	| "ebook";
 
 interface DownloadPDFButton {
 	storyData: WebStory;
@@ -33,6 +35,7 @@ const DownloadPDFButton = ({ storyData, variant }: DownloadPDFButton) => {
 			"storybook-rpi": <StorybookRpiPDF storyData={storyData} />,
 			"cover-rpi": <CoverRpiPDF storyData={storyData} />,
 			"cover-amazon": <CoverAmazonPDF storyData={storyData} />,
+			ebook: <Ebook storyData={storyData} />,
 		} as Record<Variant, ReactElement>
 	)[variant];
 

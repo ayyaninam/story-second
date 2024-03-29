@@ -1,17 +1,13 @@
 import { useRouter } from "next/router";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { WebStory } from "@/components/ui/story-book/constants";
 import api from "@/api";
 import Navbar from "@/features/story/components/Navbar";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
-import { SessionType } from "@/hooks/useSaveSessionToken";
-import { cn } from "@/utils";
 import { ChevronLeft } from "lucide-react";
 import Format from "@/utils/format";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useMediaQuery } from "usehooks-ts";
 import {
 	PdfType,
 	CreditSpendType,
@@ -32,13 +28,10 @@ const MAX_SUMMARY_LENGTH = 250;
 
 const StoryBookDownloadPdfPage = ({
 	storyData,
-	session,
 }: {
 	storyData: WebStory | null;
-	session: SessionType;
 }) => {
 	const router = useRouter();
-	const isMobile = useMediaQuery("(max-width: 768px)");
 	const { genre, id } = router.query;
 
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
@@ -412,9 +405,9 @@ const StoryBookDownloadPdfPage = ({
 										</p>
 
 										<div className="flex flex-row justify-end mt-4">
-											{!UserPurchase?.data?.data?.[itemType] && storyData ? (
+											{UserPurchase?.data?.data?.[itemType] && storyData ? (
 												<DownloadPDFButton
-													variant="storybook-amazon"
+													variant="ebook"
 													storyData={storyData}
 												/>
 											) : (
