@@ -45,10 +45,24 @@ export default function StoryScenes({
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],
 		initialData: WebstoryData,
-		// Disable once all the videoKeys are obtained
+		refetchInterval: enableQuery ? 1000 : false,// Disable once all the videoKeys are obtained
 	});
 
-	const isLoading = Webstory.isLoading || !Webstory.data;
+	useEffect(() => {
+        console.log("Webstory.data", Webstory.data);
+        if (Webstory.data) {
+            if (
+                Webstory.data?.scenes
+                    ?.flatMap((el) => el?.videoSegments)
+                    ?.every((segment) => !!segment?.videoKey) &&
+                Webstory.data?.scenes?.flatMap((el) => el.videoSegments)?.length > 0
+            ) {
+                console.log("All video segments are ready");
+                setEnableQuery(false);
+            }
+            setStory(Webstory.data);
+        }
+    }, [Webstory.data]);const isLoading = Webstory.isLoading || !Webstory.data;
 	const ImageRatio = GetDisplayImageRatio(Webstory.data.resolution);
 
 	return (
