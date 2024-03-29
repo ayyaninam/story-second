@@ -107,7 +107,7 @@ const StoryBookDownloadPdfPage = ({
 		enabled: !User?.data?.data?.id || !story?.id,
 	});
 
-	const videoCreditsCost = {
+	const pdfCreditsCost = {
 		[options.downloadWatermarkedEBookPDF]: 2000,
 		[options.downloadOriginalEBookPDF]: 2500,
 	}[selectedOption];
@@ -115,7 +115,7 @@ const StoryBookDownloadPdfPage = ({
 	const handlePurchasePdf = async () => {
 		const { error } = await userCanUseCredits({
 			variant: "video credits",
-			videoCredits: videoCreditsCost,
+			videoCredits: pdfCreditsCost,
 		});
 
 		if (error) {
@@ -425,7 +425,7 @@ const StoryBookDownloadPdfPage = ({
 												/>
 											) : (
 												<Button variant="accent" onClick={handlePurchasePdf}>
-													Continue [{videoCreditsCost} credits]
+													Continue [{pdfCreditsCost} credits]
 												</Button>
 											)}
 										</div>
@@ -440,6 +440,7 @@ const StoryBookDownloadPdfPage = ({
 			<CheckoutDialog
 				variant="credits"
 				allowanceType={AllowanceType.Credits}
+				defaultQuantity={pdfCreditsCost}
 				open={openCreditsDialog}
 				setOpen={setOpenCreditsDialog}
 			/>

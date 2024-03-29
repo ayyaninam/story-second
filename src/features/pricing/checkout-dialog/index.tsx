@@ -40,6 +40,7 @@ const CheckoutDialog = (props: CheckoutDialogProps) => {
 				{props.variant === "credits" ? (
 					<CreditsCheckoutDialog
 						allowanceType={props.allowanceType}
+						defaultQuantity={props.defaultQuantity}
 						onClose={() => setOpen(false)}
 					/>
 				) : props.variant === "subscription" ? (
