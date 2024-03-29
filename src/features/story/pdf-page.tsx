@@ -414,7 +414,7 @@ const StoryBookDownloadPdfPage = ({
 										</p>
 
 										<div className="flex flex-row justify-end mt-4">
-											{!UserPurchase?.data?.data?.[itemType] && storyData ? (
+											{UserPurchase?.data?.data?.[itemType] && storyData ? (
 												<DownloadPDFButton
 													variant={
 														pdfType === PdfType.EBookPDF
