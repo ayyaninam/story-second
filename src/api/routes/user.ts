@@ -50,6 +50,16 @@ const user = {
 			.post(`proxyApi/User/${id}/Payments`, { json: { creditSpendType } })
 			.json<mainSchema["Int32BooleanDictionaryApiResponse"]>();
 	},
+	pdfPayment: async ({
+		id,
+		creditSpendType,
+	}: mainSchema["PaymentTypeDTO"] & {
+		id: string;
+	}) => {
+		return await publicProxyApiFetcher
+			.post(`proxyApi/User/${id}/PDFPayment`, { json: { creditSpendType } })
+			.json<mainSchema["StringApiResponse"]>();
+	},
 };
 
 export default user;

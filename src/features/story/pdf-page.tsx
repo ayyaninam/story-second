@@ -8,12 +8,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { ChevronLeft } from "lucide-react";
 import Format from "@/utils/format";
 import { Button } from "@/components/ui/button";
-import {
-	PdfType,
-	CreditSpendType,
-	AllowanceType,
-	SubscriptionPlan,
-} from "@/utils/enums";
+import { PdfType, CreditSpendType, AllowanceType } from "@/utils/enums";
 import Image from "next/image";
 import Link from "next/link";
 import EBookPDF from "../../../public/pdfs/samples/Ebook.webp";
@@ -23,6 +18,7 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import toast from "react-hot-toast";
 import Routes from "@/routes";
 import DownloadPDFButton from "@/features/story/components/download-pdf-button";
+import { useUserCanUseCredits } from "@/utils/payment";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -32,6 +28,7 @@ const StoryBookDownloadPdfPage = ({
 	storyData: WebStory | null;
 }) => {
 	const router = useRouter();
+	const { userCanUseCredits } = useUserCanUseCredits();
 	const { genre, id } = router.query;
 
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
@@ -77,13 +74,6 @@ const StoryBookDownloadPdfPage = ({
 		options.downloadWatermarkedEBookPDF
 	);
 
-	const myItemSubTypes = {
-		[options.downloadWatermarkedEBookPDF]: 6,
-		[options.downloadOriginalEBookPDF]: 6,
-		[options.downloadWatermarkedStoryBookPDF]: 5,
-		[options.downloadOriginalStoryBookPDF]: 5,
-	};
-
 	const itemType = useMemo(() => {
 		if (
 			options.downloadWatermarkedEBookPDF === selectedOption &&
@@ -113,18 +103,37 @@ const StoryBookDownloadPdfPage = ({
 			}),
 		staleTime: 3000,
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER_PAYMENT],
+		queryKey: [QueryKeys.USER_PAYMENT, router.asPath],
 		enabled: !User?.data?.data?.id || !story?.id,
 	});
 
-	const handlePurchasePdf = () => {
-		if (
-			User.data?.data?.subscription?.subscriptionPlan === SubscriptionPlan.Free
-		) {
-			toast.error("You need to upgrade to a paid plan to download this PDF.");
+	const videoCreditsCost = {
+		[options.downloadWatermarkedEBookPDF]: 2000,
+		[options.downloadOriginalEBookPDF]: 2500,
+	}[selectedOption];
+
+	const handlePurchasePdf = async () => {
+		const { error } = await userCanUseCredits({
+			variant: "video credits",
+			videoCredits: videoCreditsCost,
+		});
+
+		if (error) {
+			if (error === "not enough credits") {
+				setOpenCreditsDialog(true);
+			}
+
 			return;
 		}
-		setOpenCreditsDialog(true);
+
+		await api.user.pdfPayment({
+			id: story?.id!,
+			creditSpendType: itemType,
+		});
+
+		toast.success("Your purchase was successful!");
+		await UserPurchase.refetch();
+		await User.refetch();
 	};
 
 	if (!story) {
@@ -405,14 +414,18 @@ const StoryBookDownloadPdfPage = ({
 										</p>
 
 										<div className="flex flex-row justify-end mt-4">
-											{UserPurchase?.data?.data?.[itemType] && storyData ? (
+											{!UserPurchase?.data?.data?.[itemType] && storyData ? (
 												<DownloadPDFButton
-													variant="ebook"
+													variant={
+														pdfType === PdfType.EBookPDF
+															? "ebook"
+															: "storybook-rpi"
+													}
 													storyData={storyData}
 												/>
 											) : (
 												<Button variant="accent" onClick={handlePurchasePdf}>
-													Continue [2000 credits]
+													Continue [{videoCreditsCost} credits]
 												</Button>
 											)}
 										</div>

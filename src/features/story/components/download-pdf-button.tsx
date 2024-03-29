@@ -50,7 +50,7 @@ const DownloadPDFButton = ({ storyData, variant }: DownloadPDFButton) => {
 						? "Error loading PDF..."
 						: loading
 							? "Loading PDF..."
-							: "Download now!"
+							: "Download PDF"
 				}
 			</ReactPDFDownloadLink>
 		</Button>
