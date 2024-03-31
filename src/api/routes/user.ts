@@ -40,6 +40,26 @@ const user = {
 			.put("proxyApi/User/EmailNotificationPreferences", { json: data })
 			.json<mainSchema["StringApiResponse"]>();
 	},
+	getUserPurchase: async ({
+		id,
+		creditSpendType,
+	}: mainSchema["CheckPaymentStatusDTO"] & {
+		id: string;
+	}) => {
+		return await publicProxyApiFetcher
+			.post(`proxyApi/User/${id}/Payments`, { json: { creditSpendType } })
+			.json<mainSchema["Int32BooleanDictionaryApiResponse"]>();
+	},
+	pdfPayment: async ({
+		id,
+		creditSpendType,
+	}: mainSchema["PaymentTypeDTO"] & {
+		id: string;
+	}) => {
+		return await publicProxyApiFetcher
+			.post(`proxyApi/User/${id}/PDFPayment`, { json: { creditSpendType } })
+			.json<mainSchema["StringApiResponse"]>();
+	},
 };
 
 export default user;
