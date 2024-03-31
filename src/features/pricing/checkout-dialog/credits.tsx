@@ -16,6 +16,7 @@ import { SubscriptionPlan, AllowanceType } from "@/utils/enums";
 
 import { useStripeSetup, useUser } from "../hooks";
 import CheckoutDialogContent from "./content";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 const getCost = {
 	[SubscriptionPlan.Basic]: {
@@ -115,6 +116,7 @@ const CreditsCheckoutDialog = ({
 	}
 
 	const showPaymentCard = userHasCard && !userWantsToChangePayment;
+	const { invalidateUser } = useUpdateUser();
 
 	const onRefillAllowance = async () => {
 		if (submitting) return;
@@ -122,6 +124,7 @@ const CreditsCheckoutDialog = ({
 		setSubmitting(true);
 
 		const handleCreditsSuccessful = () => {
+			invalidateUser();
 			toast.success("Credits Added successfully!");
 			onClose();
 		};

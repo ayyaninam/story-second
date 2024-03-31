@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import Routes from "@/routes";
 import DownloadPDFButton from "@/features/story/components/download-pdf-button";
 import { useUserCanUseCredits } from "@/utils/payment";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -32,6 +33,7 @@ const StoryBookDownloadPdfPage = ({
 	const { genre, id } = router.query;
 
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 	const [showFullDescription, setShowFullDescription] = useState(false);
 
 	const Webstory = useQuery({
@@ -119,6 +121,9 @@ const StoryBookDownloadPdfPage = ({
 		});
 
 		if (error) {
+			if (error === "using custom plan" || error === "not paid subscription") {
+				setOpenSubscriptionDialog(true);
+			}
 			if (error === "not enough credits") {
 				setOpenCreditsDialog(true);
 			}
@@ -319,14 +324,14 @@ const StoryBookDownloadPdfPage = ({
 																<strong>Cost:</strong> 2000 Credits
 															</li>
 														</ul>
-														{UserPurchase.data?.data?.[
-															options.downloadWatermarkedEBookPDF
-														] && (
-															<p className="text-sm text-green-500">
-																You already own this edition, hit download to
-																view the PDF!
-															</p>
-														)}
+														{/*{UserPurchase.data?.data?.[*/}
+														{/*	options.downloadWatermarkedEBookPDF*/}
+														{/*] && (*/}
+														{/*	<p className="text-sm text-green-500">*/}
+														{/*		You already own this edition, hit download to*/}
+														{/*		view the PDF!*/}
+														{/*	</p>*/}
+														{/*)}*/}
 													</div>
 
 													<ul className="flex flex-col gap-2">
@@ -373,14 +378,14 @@ const StoryBookDownloadPdfPage = ({
 																	<strong>Cost:</strong> 2500 Credits
 																</li>
 															</ul>
-															{UserPurchase?.data?.data?.[
-																options.downloadOriginalEBookPDF
-															] && (
-																<p className="text-sm text-green-500">
-																	You already own this edition, hit download to
-																	view the PDF!
-																</p>
-															)}
+															{/*{UserPurchase?.data?.data?.[*/}
+															{/*	options.downloadOriginalEBookPDF*/}
+															{/*] && (*/}
+															{/*	<p className="text-sm text-green-500">*/}
+															{/*		You already own this edition, hit download to*/}
+															{/*		view the PDF!*/}
+															{/*	</p>*/}
+															{/*)}*/}
 														</div>
 
 														<ul className="flex flex-col gap-2">
@@ -443,6 +448,11 @@ const StoryBookDownloadPdfPage = ({
 				defaultQuantity={pdfCreditsCost}
 				open={openCreditsDialog}
 				setOpen={setOpenCreditsDialog}
+			/>
+
+			<UpgradeSubscriptionDialog
+				open={openSubscriptionDialog}
+				setOpen={setOpenSubscriptionDialog}
 			/>
 		</div>
 	);
