@@ -11,8 +11,6 @@ import { Button } from "@/components/ui/button";
 import { PdfType, CreditSpendType, AllowanceType } from "@/utils/enums";
 import Image from "next/image";
 import Link from "next/link";
-import StoryBookPDF from "/public/pdfs/samples/StoryBook.webp";
-import EBookPDF from "/public/pdfs/samples/Ebook.webp";
 import { mainSchema } from "@/api/schema";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import toast from "react-hot-toast";
@@ -256,7 +254,10 @@ const StoryBookDownloadPdfPage = ({
 															</Button>
 														</div>
 														<div className="border-2 border-black">
-															<Image alt="Story Cover" src={EBookPDF} />
+															<Image
+																alt="Story Cover"
+																src="/public/pdfs/samples/Ebook.webp"
+															/>
 														</div>
 													</div>
 												</div>
@@ -290,7 +291,10 @@ const StoryBookDownloadPdfPage = ({
 															</Button>
 														</div>
 														<div className="border-2 border-black">
-															<Image alt="Story Cover" src={StoryBookPDF} />
+															<Image
+																alt="Story Cover"
+																src="/public/pdfs/samples/StoryBook.webp"
+															/>
 														</div>
 													</div>
 												</div>
