@@ -73,6 +73,7 @@ export default function MobileGeneratePage({
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 
 	const onSubmit = async () => {
+		setIsLoading(true);
 		localStorage.setItem("prompt", input);
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
 			?.enumValue as StoryOutputTypes;
@@ -85,6 +86,15 @@ export default function MobileGeneratePage({
 			});
 
 			if (error) {
+				console.log(error);
+				if (error === "user not logged in") {
+					if (window.location.pathname === "/prompt") {
+						window.parent.location.href = "/auth/login?returnTo=/generate";
+					} else {
+						window.location.href = "/auth/login?returnTo=/generate";
+					}
+					return;
+				}
 				if (window.location.pathname === "/prompt") {
 					window.parent.location.href = "/generate";
 				} else if (error === "not enough credits") {
@@ -106,6 +116,15 @@ export default function MobileGeneratePage({
 			});
 
 			if (error) {
+				console.log(error);
+				if (error === "user not logged in") {
+					if (window.location.pathname === "/prompt") {
+						window.parent.location.href = "/auth/login?returnTo=/generate";
+					} else {
+						window.location.href = "/auth/login?returnTo=/generate";
+					}
+					return;
+				}
 				if (window.location.pathname === "/prompt") {
 					window.parent.location.href = "/generate";
 				} else if (error === "not enough credits") {

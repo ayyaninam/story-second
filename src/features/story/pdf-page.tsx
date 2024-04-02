@@ -256,7 +256,9 @@ const StoryBookDownloadPdfPage = ({
 														<div className="border-2 border-black">
 															<Image
 																alt="Story Cover"
-																src="/public/pdfs/samples/Ebook.webp"
+																src="/pdfs/samples/Ebook.webp"
+																width={512}
+																height={512}
 															/>
 														</div>
 													</div>
@@ -293,7 +295,9 @@ const StoryBookDownloadPdfPage = ({
 														<div className="border-2 border-black">
 															<Image
 																alt="Story Cover"
-																src="/public/pdfs/samples/StoryBook.webp"
+																src="/pdfs/samples/StoryBook.webp"
+																width={512}
+																height={512}
 															/>
 														</div>
 													</div>
