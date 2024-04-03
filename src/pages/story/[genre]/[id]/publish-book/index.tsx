@@ -103,6 +103,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 			queryKey: [QueryKeys.USER],
 		});
+	} else {
+		return {
+			redirect: {
+				destination: `/auth/login?returnTo=/story/${genre}/${id}/publish-book`,
+				permanent: false,
+			},
+		};
 	}
 
 	return {

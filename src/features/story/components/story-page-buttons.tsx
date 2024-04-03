@@ -204,14 +204,16 @@ const StoryPageButtons = ({
 				Download PDF
 			</Button>
 
-			<Button
-				className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-				variant="outline"
-				onClick={handleClickPublishBook}
-			>
-				<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-				Publish on Amazon
-			</Button>
+			{User?.data?.data?.id === WebstoryData?.user?.id && WebstoryData?.id && (
+				<Button
+					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+					variant="outline"
+					onClick={handleClickPublishBook}
+				>
+					<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+					Publish on Amazon
+				</Button>
+			)}
 
 			{User?.data?.data?.id === WebstoryData?.user?.id && WebstoryData?.id && (
 				<DeleteStorybookButton storyId={WebstoryData.id} />

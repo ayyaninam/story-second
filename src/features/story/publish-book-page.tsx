@@ -85,8 +85,8 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 	});
 
 	const creditsCost = {
-		[options.publish]: 2000,
-		[options.publishPDF]: 2500,
+		[options.publishPDF]: 5000,
+		[options.publish]: 10000,
 	}[selectedOption];
 
 	const handlePublishBook = async () => {
@@ -98,8 +98,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 		if (error) {
 			if (error === "using custom plan" || error === "not paid subscription") {
 				setOpenSubscriptionDialog(true);
-			}
-			if (error === "not enough credits") {
+			} else if (error === "not enough credits") {
 				setOpenCreditsDialog(true);
 			}
 
@@ -107,36 +106,20 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 		}
 
 		// logEvent('view_story_amazon_publish_clicked');
-		// Login
-		if (!user && showAuthModal) {
-			try {
-				return await showAuthModal({
-					returnTo: `${window.location.pathname}?onRedirect=claim&claim=${claimingToken}`,
-					textToDisplay:
-						"You need to be a logged in user to publish this story to Amazon. Please login to continue.",
-				});
-			} catch (e) {
-				return;
-			}
-		}
-
 		// avoid small PDFs on Amazon
 		if (
 			story &&
 			(story.scenes?.flatMap((item) => item.storySegments)?.length ?? 0) < 8
 		) {
 			toast.error(
-				"Your story is too short to be published. Please add more content to your story before publishing."
+				"Your story is too short to be published. We require stories to have at least 8 pages."
 			);
 			return;
 		}
 
-		toast.success("good");
-
-		// await router.push({
-		// 	pathname: `[slug]/publish-book`,
-		// 	query: { slug, category },
-		// });
+		await router.push({
+			pathname: `/story/${genre}/${id}/publish-book/form`,
+		});
 	};
 
 	if (!story) {
@@ -146,7 +129,6 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 	return (
 		<div className="bg-reverse flex flex-col min-h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)]">
 			<Navbar WebstoryData={story} />
-
 			<div className="flex flex-col justify-start lg:justify-center items-center min-h-[calc(100vh-175px)] px-4 py-6">
 				<div className="w-full max-w-[1600px] h-full min-h-[750px] flex flex-col justify-center">
 					<div className="flex bg-reverse p-2 gap-x-1.5">
@@ -220,137 +202,142 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 									</div>
 
 									<div className="relative w-full bg-white p-6 border-t-2 lg:border-t-0 lg:border-l-2">
-										<section className="border-gold border-5 rounded-2xl p-6 grid grid-cols-1 gap-4 sm:grid-cols-[250px,1fr] w-full mb-2">
-											<div className="flex flex-col gap-2">
-												<div
-													key={options.publishPDF}
-													className={`flex flex-col gap-2 p-4 rounded-md cursor-pointer
+										<div className="flex flex-col gap-2">
+											<div
+												key={options.publishPDF}
+												className={`flex flex-col gap-2 p-4 rounded-md cursor-pointer
         ${
 					selectedOption === options.publishPDF
-						? "border-4 border-brand-fill bg-brand-light shadow-xl"
-						: "border-2 border-light-gray opacity-50"
+						? "border-2 border-slate-600 bg-brand-light shadow-xl"
+						: "border-2 border-light-gray opacity-80"
 				}`}
-													onClick={() => setSelectedOption(options.publishPDF)}
-												>
-													<div className="flex flex-col gap-1">
-														<h3 className="font-semibold text-lg">
-															Standard Edition: Self-Publish Kit
-														</h3>
-														<ul>
-															<li className="tracking-wide leading-loose">
-																<strong>Cost:</strong> $50 USD
-															</li>
-														</ul>
-													</div>
-
-													<ul className="flex flex-col gap-2">
-														<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2">
-															<ul className="list-disc pl-5">
-																<li className="tracking-wide leading-loose">
-																	Receive meticulously crafted,{" "}
-																	<strong>
-																		Amazon-formatted book and cover PDFs
-																	</strong>
-																	, along with precise listing details.
-																</li>
-																<li className="tracking-wide leading-loose">
-																	<strong>Ownership & Royalties:</strong> You
-																	will own the copyrights and receive 100% of
-																	the royalties.
-																</li>
-															</ul>
-														</div>
+												onClick={() => setSelectedOption(options.publishPDF)}
+											>
+												<div className="flex flex-col gap-1">
+													<h3 className="font-semibold text-lg">
+														Standard Edition: Self-Publish Kit
+													</h3>
+													<ul>
+														<li className="tracking-wide leading-loose">
+															<strong>Cost:</strong> $50 USD
+														</li>
 													</ul>
 												</div>
 
-												<div
-													key={options.publish}
-													className={`flex flex-col gap-2 p-4 rounded-md cursor-pointer
+												<ul className="flex flex-col gap-2">
+													<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2">
+														<ul className="list-disc pl-5">
+															<li className="tracking-wide leading-loose">
+																Receive meticulously crafted,{" "}
+																<strong>
+																	Amazon-formatted book and cover PDFs
+																</strong>
+																, along with precise listing details.
+															</li>
+															<li className="tracking-wide leading-loose">
+																<strong>Ownership & Royalties:</strong> You will
+																own the copyrights and receive 100% of the
+																royalties.
+															</li>
+														</ul>
+													</div>
+												</ul>
+											</div>
+
+											<div
+												key={options.publish}
+												className={`flex flex-col gap-2 p-4 rounded-md cursor-pointer
         ${
 					selectedOption === options.publish
-						? "border-4 border-brand-fill bg-brand-light shadow-xl"
-						: "border-2 border-light-gray opacity-50"
+						? "border-2 border-slate-600 bg-brand-light shadow-xl"
+						: "border-2 border-light-gray opacity-80"
 				}`}
-													onClick={() => setSelectedOption(options.publish)}
-												>
-													<div className="flex flex-col gap-1">
-														<h3 className="font-semibold text-lg">
-															Premium Edition: Fully Managed Publish Package
-														</h3>
-														<ul>
+												onClick={() => setSelectedOption(options.publish)}
+											>
+												<div className="flex flex-col gap-1">
+													<h3 className="font-semibold text-lg">
+														Premium Edition: Fully Managed Publish Package
+													</h3>
+													<ul>
+														<li className="tracking-wide leading-loose">
+															<strong>Cost:</strong> $150 USD
+														</li>
+													</ul>
+												</div>
+
+												<ul className="flex flex-col gap-2">
+													<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2">
+														<ul className="list-disc pl-5">
 															<li className="tracking-wide leading-loose">
-																<strong>Cost:</strong> $150 USD
+																Includes everything from the{" "}
+																<strong>Self-Publish Kit.</strong>
+															</li>
+															<li className="tracking-wide leading-loose">
+																<strong>Hassle-Free Experience:</strong> We
+																manage the entire publication and sales process
+																for you, ensuring your story reaches a wider
+																audience without any hassle.
+															</li>
+															<li className="tracking-wide leading-loose">
+																<strong>Peace of Mind:</strong> Your story is in
+																experienced hands, allowing you to focus on your
+																next creative endeavor while we ensure your
+																published work gains the recognition it
+																deserves.
 															</li>
 														</ul>
 													</div>
-
-													<ul className="flex flex-col gap-2">
-														<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2">
-															<ul className="list-disc pl-5">
-																<li className="tracking-wide leading-loose">
-																	Includes everything from the{" "}
-																	<strong>Self-Publish Kit.</strong>
-																</li>
-																<li className="tracking-wide leading-loose">
-																	<strong>Hassle-Free Experience:</strong> We
-																	manage the entire publication and sales
-																	process for you, ensuring your story reaches a
-																	wider audience without any hassle.
-																</li>
-																<li className="tracking-wide leading-loose">
-																	<strong>Peace of Mind:</strong> Your story is
-																	in experienced hands, allowing you to focus on
-																	your next creative endeavor while we ensure
-																	your published work gains the recognition it
-																	deserves.
-																</li>
-															</ul>
-														</div>
-													</ul>
-												</div>
-												{/*<p className="tracking-wide leading-loose text-xs"><strong>Important Notice: </strong>U.S. Copyright law requires a human touch in AI-generated content for commercial use. After choosing your package, we ask users to edit personal their story, ensuring compliance and originality.</p>*/}
-												<p className="tracking-wide leading-loose">
-													Click &quot;Continue&quot; to proceed with your chosen
-													package and share your story with the world!
-												</p>
+												</ul>
 											</div>
-										</section>
-										<div className="flex flex-row-reverse items-center gap-5 flex-wrap max-sm:pb-10">
-											{selectedOption === options.publishPDF &&
-											UserPurchase.data?.data?.[options.publishPDF] ? (
-												<button
-													onClick={handlePublishBook}
-													className="btn-primary w-full sm:w-max"
-													disabled={saving}
-												>
-													Continue
-												</button>
-											) : selectedOption === options.publish &&
-											  UserPurchase.data?.data?.[options.publish] ? (
-												<button
-													onClick={handlePublishBook}
-													className="btn-primary w-full sm:w-max"
-													disabled={saving}
-												>
-													Continue
-												</button>
-											) : (
-												<Button
-													variant="outline"
-													onClick={handlePublishBook}
-													className="w-full sm:w-max"
-													disabled={saving}
-												>
-													Continue [x credits]
-												</Button>
-											)}
+											{/*<p className="tracking-wide leading-loose text-xs"><strong>Important Notice: </strong>U.S. Copyright law requires a human touch in AI-generated content for commercial use. After choosing your package, we ask users to edit personal their story, ensuring compliance and originality.</p>*/}
+											<p className="tracking-wide leading-loose">
+												Click &quot;Continue&quot; to proceed with your chosen
+												package and share your story with the world!
+											</p>
+										</div>
+										<p className="tracking-wide leading-loose font-semibold text-sm">
+											Note: This is NOT an accepted format for publishing on
+											Amazon.
+										</p>
 
-											{/*<Link*/}
-											{/*	href={`/library/${category}/${slug}`}*/}
-											{/*	className="btn-secondary mr-auto"*/}
-											{/*>*/}
-											{/*	Back*/}
-											{/*</Link>*/}
+										<div className="flex flex-row justify-end mt-4">
+											<div className="flex flex-row-reverse items-center gap-5 flex-wrap max-sm:pb-10">
+												{selectedOption === options.publishPDF &&
+												UserPurchase.data?.data?.[options.publishPDF] ? (
+													<Button
+														onClick={handlePublishBook}
+														className="btn-primary w-full sm:w-max"
+														disabled={saving}
+													>
+														Continue
+													</Button>
+												) : selectedOption === options.publish &&
+												  UserPurchase.data?.data?.[options.publish] ? (
+													<Button
+														onClick={handlePublishBook}
+														className="btn-primary w-full sm:w-max"
+														disabled={saving}
+													>
+														Continue
+													</Button>
+												) : (
+													<Button
+														variant="accent"
+														onClick={handlePublishBook}
+														className="w-full sm:w-max"
+														disabled={saving}
+													>
+														Continue [{creditsCost} credits]
+													</Button>
+												)}
+
+												{/*<Link*/}
+												{/*	href={`/library/${category}/${slug}`}*/}
+												{/*	className="btn-secondary mr-auto"*/}
+												{/*>*/}
+												{/*	Back*/}
+												{/*</Link>*/}
+											</div>
 										</div>
 									</div>
 								</div>

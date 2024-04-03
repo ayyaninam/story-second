@@ -1,5 +1,4 @@
-import { authFetcher } from "@/lib/fetcher";
-import { getJwt } from "@/utils/jwt";
+import { publicFetcher, publicProxyApiFetcher } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
 
 const amazon = {
@@ -8,20 +7,29 @@ const amazon = {
 	}: {
 		id: string;
 	}): Promise<mainSchema["AmazonRequestPaymentTypeDTO"]> =>
-		await authFetcher(getJwt()).post(`api/Amazon/${id}/Payment`).json(),
+		await publicProxyApiFetcher.post(`proxyApi/Amazon/${id}/Payment`).json(),
 
-	allBooksRevenue: async ({
-		CurrentPage,
-		PageSize,
+	getMetadata: async ({
+		id,
 	}: {
-		CurrentPage: number;
-		PageSize: number;
-	}): Promise<mainSchema["AmazonBooksRevenueDTOPagedListApiResponse"]> =>
-		await authFetcher(getJwt())
-			.get(`api/Amazon/AllAmazonBooksRevenue`, {
-				searchParams: { CurrentPage, PageSize },
-			})
+		id: string;
+	}): Promise<mainSchema["ReturnBookMetaDataDTOApiResponse"]> =>
+		await publicProxyApiFetcher
+			.get(`proxyApi/WebStory/GetMetaData/${id}`)
 			.json(),
+
+	// allBooksRevenue: async ({
+	// 	CurrentPage,
+	// 	PageSize,
+	// }: {
+	// 	CurrentPage: number;
+	// 	PageSize: number;
+	// }): Promise<mainSchema["AmazonBooksRevenueDTOPagedListApiResponse"]> =>
+	// 	await publicProxyApiFetcher
+	// 		.get(`api/Amazon/AllAmazonBooksRevenue`, {
+	// 			searchParams: { CurrentPage, PageSize },
+	// 		})
+	// 		.json(),
 };
 
 export default amazon;
