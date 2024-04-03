@@ -16,6 +16,7 @@ import { StoryOutputTypes } from "@/utils/enums";
 import LibraryAccentStyle from "@/features/library/library-accent-style";
 import FeedAccentStyle from "@/features/feed/feed-accent-style";
 import AmazonPublishForm from "@/features/story/components/amazon-publish-form";
+import AmazonConfirmPage from "@/features/story/components/amazon-confirm-page";
 
 export default function PublishBook({
 	storyData,
@@ -47,7 +48,7 @@ export default function PublishBook({
 					}}
 				/>
 				{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
-				<AmazonPublishForm storyData={storyData} />
+				<AmazonConfirmPage storyData={storyData} />
 			</HydrationBoundary>
 		</PageLayout>
 	);

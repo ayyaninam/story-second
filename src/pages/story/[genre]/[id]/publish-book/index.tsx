@@ -112,6 +112,15 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		};
 	}
 
+	if (storyData?.user?.id !== user?.data?.id) {
+		return {
+			redirect: {
+				destination: `/story/${genre}/${id}`,
+				permanent: false,
+			},
+		};
+	}
+
 	return {
 		props: {
 			session: { accessToken: accessToken || "" },

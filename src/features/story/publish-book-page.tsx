@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { WebStory } from "@/components/ui/story-book/constants";
 import api from "@/api";
 import Navbar from "@/features/story/components/Navbar";
@@ -10,12 +10,10 @@ import Format from "@/utils/format";
 import { Button } from "@/components/ui/button";
 import { PdfType, CreditSpendType, AllowanceType } from "@/utils/enums";
 import Image from "next/image";
-import Link from "next/link";
 import { mainSchema } from "@/api/schema";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import toast from "react-hot-toast";
 import Routes from "@/routes";
-import DownloadPDFButton from "@/features/story/components/download-pdf-button";
 import { useUserCanUseCredits } from "@/utils/payment";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
@@ -78,11 +76,20 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 				id: story?.id!,
 				creditSpendType: Object.values(options),
 			}),
-		staleTime: 3000,
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.USER_PAYMENT, router.asPath],
-		enabled: !User?.data?.data?.id || !story?.id,
 	});
+
+	useEffect(() => {
+		if (
+			UserPurchase.data?.data?.[options.publishPDF] ||
+			UserPurchase.data?.data?.[options.publish]
+		) {
+			router.push({
+				pathname: `/story/${genre}/${id}/publish-book/form`,
+			});
+		}
+	}, [UserPurchase]);
 
 	const creditsCost = {
 		[options.publishPDF]: 5000,
@@ -117,9 +124,16 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 			return;
 		}
 
+		await api.user.amazonPayment({
+			id: story?.id!,
+			creditSpendType: selectedOption,
+		});
+
 		await router.push({
 			pathname: `/story/${genre}/${id}/publish-book/form`,
 		});
+		await UserPurchase.refetch();
+		await User.refetch();
 	};
 
 	if (!story) {
@@ -260,7 +274,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 													</h3>
 													<ul>
 														<li className="tracking-wide leading-loose">
-															<strong>Cost:</strong> $150 USD
+															<strong>Cost:</strong> $100 USD
 														</li>
 													</ul>
 												</div>

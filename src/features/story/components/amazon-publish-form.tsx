@@ -20,10 +20,15 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AmazonMarketplace, MARKET_PLACES } from "@/constants/amazon-constants";
+import {
+	AmazonMarketplace,
+	AmazonPublishLifecycle,
+	MARKET_PLACES,
+} from "@/constants/amazon-constants";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
+import Error from "@/components/FormError";
 
 const publishingSchema = z
 	.object({
@@ -38,15 +43,15 @@ const publishingSchema = z
 			.string()
 			.min(20, "Summary must be at least 20 characters")
 			.max(1000, "Summary must be less than 1000 characters"),
-		minAge: z
+		ageGroupMin: z
 			.number()
 			.min(1, "Minimum age must be at least 1")
 			.max(18, "Minimum age must be less than 19"),
-		maxAge: z
+		ageGroupMax: z
 			.number()
 			.min(1, "Maximum age must be at least 1")
 			.max(18, "Maximum age must be less than 19"),
-		marketplace: z.enum([
+		amazonMarketplace: z.enum([
 			AmazonMarketplace.US,
 			AmazonMarketplace.CA,
 			AmazonMarketplace.MX,
@@ -61,9 +66,9 @@ const publishingSchema = z
 			AmazonMarketplace.NL,
 			AmazonMarketplace.UK,
 		]),
-		keywords: z.array(z.string()).min(1, "At least one keyword is required"),
+		seoKeywords: z.array(z.string()).min(1, "At least one keyword is required"),
 	})
-	.refine((schema) => schema.minAge <= schema.maxAge, {
+	.refine((schema) => schema.ageGroupMin <= schema.ageGroupMax, {
 		message: "Minimum age must be less than or equal to maximum age",
 	});
 
@@ -73,6 +78,14 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 	const router = useRouter();
 	const { genre, id } = router.query as { genre: string; id: string };
 	const [showFullDescription, setShowFullDescription] = useState(false);
+
+	const formMethods = useForm({
+		resolver: zodResolver(publishingSchema),
+		mode: "onBlur",
+	});
+
+	const { register, handleSubmit, watch, setValue, control, formState } =
+		formMethods;
 
 	const { data: story, isLoading } = useQuery({
 		queryFn: () =>
@@ -92,28 +105,21 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 	});
 
 	const ages = Array.from({ length: 18 }, (_, i) => i + 1);
-	const [selectedMinAge, setSelectedMinAge] = useState<number>(ages[0] || 1);
-	const [selectedMaxAge, setSelectedMaxAge] = useState<number>(ages[-1] || 18);
-	const [selectedMarketplace, setSelectedMarketplace] =
-		useState<AmazonMarketplace>(
-			MARKET_PLACES[0]?.value || AmazonMarketplace.US
-		);
-	const [keywords, setKeywords] = useState([""]);
+	const selectedageGroupMin = watch("ageGroupMin", ages[0]);
+	const selectedageGroupMax = watch("ageGroupMax", ages[ages.length - 1]);
+	const selectedMarketplace = watch(
+		"amazonMarketplace",
+		MARKET_PLACES[0]?.value || AmazonMarketplace.US
+	);
 
-	const formMethods = useForm({
-		resolver: zodResolver(publishingSchema),
-		mode: "onBlur",
-	});
+	const handleageGroupMinSelect = (age: number | string) =>
+		setValue("ageGroupMin", age);
+	const handleageGroupMaxSelect = (age: number | string) =>
+		setValue("ageGroupMax", age);
+	const handleMarketplaceSelect = (marketplace: AmazonMarketplace) =>
+		setValue("amazonMarketplace", marketplace);
 
-	const { register, handleSubmit, control, formState } = formMethods;
-
-	const onSubmit = async (data: any) => {
-		// Process the form data here
-		console.log(data);
-		toast.success("Publishing in progress...");
-		// Example redirection or API call
-		// await router.push(Routes.StoryPublished(genre, id));
-	};
+	const [seoKeywords, setseoKeywords] = useState([""]);
 
 	useEffect(() => {
 		if (metadata?.data) {
@@ -122,12 +128,17 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 				subtitle: metadata.data.subtitle || "",
 				author: metadata.data.author || "",
 				summary: metadata.data.summary || "",
-				seoKeywords: metadata.data.seoKeywords
+				ageGroupMin: metadata?.data?.ageGroupMin
+					? parseInt(metadata.data.ageGroupMin, 10)
+					: ages[0],
+				ageGroupMax: metadata?.data?.ageGroupMax
+					? parseInt(metadata.data.ageGroupMax, 10)
+					: ages[ages.length - 1],
+				amazonMarketplace:
+					metadata?.data?.amazonMarketplace || AmazonMarketplace.US,
+				seoKeywords: metadata?.data?.seoKeywords
 					? metadata.data.seoKeywords.split(", ")
-					: [],
-				ageGroupMin: metadata.data.ageGroupMin || "",
-				ageGroupMax: metadata.data.ageGroupMax || "",
-				amazonMarketplace: metadata.data.amazonMarketplace || "",
+					: [""],
 			};
 			formMethods.reset(formValues);
 		}
@@ -143,18 +154,31 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 		return null;
 	}
 
-	const handlePublish = async () => {
-		// Logic to handle direct publishing goes here
-		toast.success("Publishing in progress...");
-		// Example of navigation, adjust as needed
-		// await router.push(Routes.StoryPublished(genre, id));
+	const onSubmit = async (data: any) => {
+		console.log(data);
+		try {
+			const request = { ...data };
+			request.seoKeywords = data.seoKeywords.join(", ");
+			request.AmazonPublishLifecycle = AmazonPublishLifecycle.SelfPublished;
+
+			await api.amazon.validateMetadata({
+				id: story.id as string,
+				metadata: request,
+			});
+			toast.success("Publishing in progress...");
+			localStorage.setItem(id, JSON.stringify(request));
+			await router.push(`/story/${genre}/${id}/publish-book/confirm`);
+		} catch (error) {
+			console.error(error);
+			toast.error("Failed to publish book");
+		}
 	};
 
 	return (
-		<div className="bg-reverse flex flex-col min-h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)]">
+		<div className="bg-reverse flex flex-col min-h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)] overflow-auto">
 			<Navbar WebstoryData={story} />
-			<div className="flex flex-col justify-start lg:justify-center items-center min-h-[calc(100vh-175px)] px-4 py-6">
-				<div className="w-full max-w-[1600px] h-full min-h-[750px] flex flex-col justify-center">
+			<div className="flex flex-col justify-start lg:justify-center items-center px-4 py-6">
+				<div className="w-full max-w-[1600px] h-full flex flex-col justify-center">
 					<div className="flex bg-reverse p-2 gap-x-1.5">
 						<div className="relative w-full h-full lg:px-20 pb-10 items-center min-w-fit">
 							<div className="flex flex-col md:flex-row items-center justify-center h-full border-2">
@@ -241,6 +265,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 															{...register("firstName")}
 															className="w-full mt-2"
 														/>
+														<Error control={control} name="firstName" />
 													</div>
 
 													<div className="col-span-1 sm:col-span-2">
@@ -257,6 +282,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 															{...register("lastName")}
 															className="w-full mt-2"
 														/>
+														<Error control={control} name="lastName" />
 													</div>
 												</div>
 
@@ -272,17 +298,18 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 														minRows={5}
 														className="w-full mt-2 border-2 rounded-sm"
 													/>
+													<Error control={control} name="summary" />
 												</div>
 												<div className="flex space-x-4">
 													<div className="w-1/2">
-														<Label htmlFor="minAge">Min Age</Label>
+														<Label htmlFor="ageGroupMin">Min Age</Label>
 														<DropdownMenu>
 															<DropdownMenuTrigger asChild>
 																<Button
 																	className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3 w-full justify-between"
 																	variant="outline"
 																>
-																	{selectedMinAge}
+																	{selectedageGroupMin}
 																	<ChevronDown className="ml-2 h-4 w-4 md:h-5 md:w-5" />
 																</Button>
 															</DropdownMenuTrigger>
@@ -291,7 +318,9 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 																	<DropdownMenuItem
 																		key={age}
 																		className="cursor-pointer"
-																		onSelect={() => setSelectedMinAge(age)}
+																		onSelect={() =>
+																			handleageGroupMinSelect(age)
+																		}
 																	>
 																		<span>{age}</span>
 																	</DropdownMenuItem>
@@ -300,16 +329,14 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 														</DropdownMenu>
 													</div>
 													<div className="w-1/2">
-														<Label htmlFor="maxAge">Max Age</Label>
+														<Label htmlFor="ageGroupMax">Max Age</Label>
 														<DropdownMenu>
 															<DropdownMenuTrigger asChild>
 																<Button
 																	className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3 w-full justify-between"
 																	variant="outline"
 																>
-																	{selectedMaxAge === 18
-																		? "18+"
-																		: selectedMaxAge}
+																	{selectedageGroupMax}
 																	<ChevronDown className="ml-2 h-4 w-4 md:h-5 md:w-5" />
 																</Button>
 															</DropdownMenuTrigger>
@@ -318,16 +345,20 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 																	<DropdownMenuItem
 																		key={age}
 																		className="cursor-pointer"
-																		onSelect={() => setSelectedMaxAge(age)}
+																		onSelect={() =>
+																			handleageGroupMaxSelect(age)
+																		}
 																	>
-																		<span>{age === 18 ? "18+" : age}</span>
+																		<span>{age}</span>
 																	</DropdownMenuItem>
 																))}
 															</DropdownMenuContent>
 														</DropdownMenu>
 													</div>
 													<div className="w-full">
-														<Label htmlFor="marketplace">Marketplace</Label>
+														<Label htmlFor="amazonMarketplace">
+															Marketplace
+														</Label>
 														<DropdownMenu>
 															<DropdownMenuTrigger asChild>
 																<Button
@@ -339,15 +370,15 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 																</Button>
 															</DropdownMenuTrigger>
 															<DropdownMenuContent>
-																{MARKET_PLACES.map(({ key, value }) => (
+																{MARKET_PLACES.map((market) => (
 																	<DropdownMenuItem
-																		key={value}
-																		className="cursor-pointer w-full"
+																		key={market.value}
+																		className="cursor-pointer"
 																		onSelect={() =>
-																			setSelectedMarketplace(value)
+																			handleMarketplaceSelect(market.value)
 																		}
 																	>
-																		<span>{value}</span>
+																		<span>{market.value}</span>
 																	</DropdownMenuItem>
 																))}
 															</DropdownMenuContent>
@@ -355,13 +386,13 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 													</div>
 												</div>
 												<div className="w-full">
-													<Label htmlFor="keywords">Keywords</Label>
+													<Label htmlFor="seoKeywords">SEO Keywords</Label>
 													<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
 														{[...Array(7)].map((_, index) => (
 															<Input
 																key={index}
 																type="text"
-																{...register(`keywords[${index}]`)}
+																{...register(`seoKeywords[${index}]`)}
 																placeholder={`Keyword ${index + 1}`}
 																className="mt-2"
 															/>
