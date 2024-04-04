@@ -42,7 +42,7 @@ interface StorybookRpiPDFProps {
 
 const StorybookRpiPDF = ({ storyData }: StorybookRpiPDFProps) => (
 	<Document style={globalStyles.root}>
-		<LogoPagePDF />
+		{/*<LogoPagePDF />*/}
 		{/*<OwnerPagePDF />*/}
 		{/* todo: implement the QR Page */}
 		{/*<EmptyPagePDF />*/}

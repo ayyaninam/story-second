@@ -43,7 +43,7 @@ interface EBookPDFProps {
 
 const EBookPDF = ({ storyData }: EBookPDFProps) => (
 	<Document style={globalStyles.root}>
-		<LogoPagePDF />
+		{/*<LogoPagePDF />*/}
 		{/* todo: implement the QR page pdf */}
 		{/*<QRPagePDF />*/}
 		<TitlePagePDF storyData={storyData} />
