@@ -227,6 +227,18 @@ const AmazonDownloadPage = ({ storyData }: { storyData: WebStory }) => {
 														</table>
 													</div>
 												</div>
+												<div>
+													<p className="font-semibold">
+														Publishing Instructions:{" "}
+														<Link
+															href="/amazon-instructions"
+															target="_blank"
+															className="text-blue-600 hover:underline inline-block mt-2"
+														>
+															Click Here
+														</Link>
+													</p>
+												</div>
 											</div>
 										</div>
 									</div>
