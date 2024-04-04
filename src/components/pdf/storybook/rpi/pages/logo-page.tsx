@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 const LogoPagePDF = () => (
 	<Page size={pageSize} style={globalStyles.page}>
 		<Image style={styles.logo} src="/pdfs/viewer/logo.png" />
-		<Text style={styles.text}>©️ {new Date().getFullYear()} StoryBird.ai</Text>
+		<Text style={styles.text}>©️ {new Date().getFullYear()} Story.com</Text>
 	</Page>
 );
 

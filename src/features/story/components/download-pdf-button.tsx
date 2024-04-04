@@ -23,12 +23,17 @@ type Variant =
 	| "cover-amazon"
 	| "ebook";
 
-interface DownloadPDFButton {
+interface DownloadPDFButtonProps {
 	storyData: WebStory;
 	variant: Variant;
+	additionalClasses?: string;
 }
 
-const DownloadPDFButton = ({ storyData, variant }: DownloadPDFButton) => {
+const DownloadPDFButton = ({
+	storyData,
+	variant,
+	additionalClasses,
+}: DownloadPDFButtonProps) => {
 	const document = (
 		{
 			"storybook-amazon": <StorybookAmazonPDF storyData={storyData} />,
@@ -40,7 +45,7 @@ const DownloadPDFButton = ({ storyData, variant }: DownloadPDFButton) => {
 	)[variant];
 
 	return (
-		<Button variant="accent" asChild className="cursor-pointer">
+		<Button variant="accent" asChild className={additionalClasses}>
 			<ReactPDFDownloadLink
 				document={document}
 				fileName={`${storyData.storyTitle}_${variant}.pdf`}

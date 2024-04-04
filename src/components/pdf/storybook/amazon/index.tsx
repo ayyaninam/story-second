@@ -44,7 +44,7 @@ interface StorybookAmazonPDFProps {
 
 const StorybookAmazonPDF = ({ storyData }: StorybookAmazonPDFProps) => (
 	<Document style={globalStyles.root}>
-		<LogoPagePDF />
+		{/*<LogoPagePDF />*/}
 		{/* todo: implement the QRPage */}
 		{/*<EmptyPagePDF />*/}
 		{/*<QRPagePDF />*/}

@@ -15,9 +15,9 @@ import PageLayout from "@/components/layouts/PageLayout";
 import { StoryOutputTypes } from "@/utils/enums";
 import LibraryAccentStyle from "@/features/library/library-accent-style";
 import FeedAccentStyle from "@/features/feed/feed-accent-style";
-import StoryBookDownloadPdfPage from "@/features/story/pdf-page";
+import AmazonPublishForm from "@/features/story/components/amazon-publish-form";
 
-export default function PublishPage({
+export default function PublishBook({
 	storyData,
 	session,
 	isOwner,
@@ -47,13 +47,13 @@ export default function PublishPage({
 					}}
 				/>
 				{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
-				<StoryBookDownloadPdfPage storyData={storyData} />
+				<AmazonPublishForm storyData={storyData} />
 			</HydrationBoundary>
 		</PageLayout>
 	);
 }
 
-// PublishPage.getLayout = function getLayout(page: ReactElement) {
+// PublishBook.getLayout = function getLayout(page: ReactElement) {
 // 	return <PageLayout pageIndex={1}>{page}</PageLayout>;
 // };
 
@@ -106,12 +106,19 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	} else {
 		return {
 			redirect: {
-				destination: `/auth/login?returnTo=/story/${genre}/${id}/download-pdf`,
+				destination: `/auth/login?returnTo=/story/${genre}/${id}/publish-book`,
 				permanent: false,
 			},
 		};
 	}
-
+	if (storyData?.user?.id !== user?.data?.id) {
+		return {
+			redirect: {
+				destination: `/story/${genre}/${id}`,
+				permanent: false,
+			},
+		};
+	}
 	return {
 		props: {
 			session: { accessToken: accessToken || "" },
