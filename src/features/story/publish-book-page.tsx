@@ -97,6 +97,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 	}[selectedOption];
 
 	const handlePublishBook = async () => {
+		setSaving(true);
 		const { error } = await userCanUseCredits({
 			variant: "credits",
 			credits: creditsCost,
@@ -319,20 +320,22 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 												{selectedOption === options.publishPDF &&
 												UserPurchase.data?.data?.[options.publishPDF] ? (
 													<Button
+														variant="accent"
 														onClick={handlePublishBook}
-														className="btn-primary w-full sm:w-max"
+														className="w-full sm:w-max"
 														disabled={saving}
 													>
-														Continue
+														{saving ? "Loading" : `Continue`}
 													</Button>
 												) : selectedOption === options.publish &&
 												  UserPurchase.data?.data?.[options.publish] ? (
 													<Button
+														variant="accent"
 														onClick={handlePublishBook}
-														className="btn-primary w-full sm:w-max"
+														className="w-full sm:w-max"
 														disabled={saving}
 													>
-														Continue
+														{saving ? "Loading" : `Continue`}
 													</Button>
 												) : (
 													<Button
@@ -341,7 +344,9 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 														className="w-full sm:w-max"
 														disabled={saving}
 													>
-														Continue [{creditsCost} credits]
+														{saving
+															? "Loading"
+															: `Continue ${creditsCost} credits]`}
 													</Button>
 												)}
 

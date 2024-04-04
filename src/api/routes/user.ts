@@ -83,6 +83,18 @@ const user = {
 		}
 		return data.data;
 	},
+	getSingleUserAmazonItem: async (
+		id: string
+	): Promise<mainSchema["ReturnUserAmazonBookDTO"]> => {
+		const data: mainSchema["ReturnUserAmazonBookDTOApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/WebStory/GetSingleAmazonRequest/${id}`)
+				.json();
+		if (!data.data) {
+			throw new Error("Internal Server Error");
+		}
+		return data.data;
+	},
 	getAllUserAmazonItems: async (
 		params: PaginationParams
 	): Promise<mainSchema["ReturnUserAmazonBookDTOPagedList"]> => {

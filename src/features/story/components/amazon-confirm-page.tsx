@@ -54,26 +54,26 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 
 	const onSubmit = async () => {
 		try {
-			const data = localStorage.getItem(id as string);
-			if (!data) {
-				await router.push(Routes.ViewStory(story?.storyType, genre, id));
-				return;
-			}
-			const formData = JSON.parse(data);
-			if (UserPurchase.data?.data?.[options["publish"]])
-				formData.AmazonPublishLifecycle = AmazonPublishLifecycle.Requested;
-
-			await api.amazon.saveBookMetadata({
-				id: story?.id!,
-				metadata: formData,
-			});
+			// const data = localStorage.getItem(id as string);
+			// if (!data) {
+			// 	await router.push(Routes.ViewStory(story?.storyType, genre, id));
+			// 	return;
+			// }
+			// const formData = JSON.parse(data);
+			// if (UserPurchase.data?.data?.[options["publish"]])
+			// 	formData.AmazonPublishLifecycle = AmazonPublishLifecycle.Requested;
+			//
+			// await api.amazon.saveBookMetadata({
+			// 	id: story?.id!,
+			// 	metadata: formData,
+			// });
 			toast.success(
 				"Publish Request Successful. We'll reach out to you over email."
 			);
-			await router.push(Routes.ViewStory(story?.storyType, genre, id));
+			await router.push(`/story/${genre}/${id}/publish-book/download`);
 		} catch (error) {
 			toast.error(
-				"An error occurred while saving the metadata. Please try again later."
+				"An error occurred while submitting the form. Please contact our support."
 			);
 		}
 	};
@@ -159,7 +159,7 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 													</p>
 												</div>
 
-												<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2">
+												<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2 text-sm">
 													<ul className="list-disc pl-5">
 														<li className="tracking-wide leading-loose">
 															Receive meticulously crafted, Amazon-formatted
@@ -179,12 +179,12 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 														</li>
 													</ul>
 												</div>
-												<p className="tracking-wide leading-loose">
+												<p className="tracking-wide leading-loose text-sm">
 													<span className="font-semibold">Note: </span>Ensure
 													your story is in the final version for texts and
 													images before submitting this form.
 												</p>
-												<p className="tracking-wide leading-loose">
+												<p className="tracking-wide leading-loose text-sm">
 													Click &apos;Submit&apos; to confirm the details and
 													proceed with the publication. We&apos;ll send you the
 													PDFs and all the details you need, along with a guide
@@ -198,7 +198,7 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 														Congratulations on Choosing the Premium Edition:
 														Fully Managed Publish Package!
 													</h3>
-													<p className="tracking-wide leading-loose">
+													<p className="tracking-wide leading-loose text-sm">
 														You&apos;ve opted for a seamless and hassle-free
 														experience, and we&apos;re thrilled to manage the
 														entire publication and sales process for you!
@@ -206,7 +206,7 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 												</div>
 
 												<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2">
-													<ul className="list-disc pl-5">
+													<ul className="list-disc pl-5 text-sm">
 														<li className="tracking-wide leading-loose">
 															We manage the entire publication and sales
 															process, ensuring your story reaches a wider
@@ -222,12 +222,12 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 														</li>
 													</ul>
 												</div>
-												<p className="tracking-wide leading-loose">
+												<p className="tracking-wide leading-loose text-sm">
 													<span className="font-semibold">Note: </span>Ensure
 													your story is in the final version for texts and
 													images before submitting this form.
 												</p>
-												<p className="tracking-wide leading-loose">
+												<p className="tracking-wide leading-loose text-sm">
 													Click &apos;Submit&apos; to confirm the details and
 													let us start managing the publication of your book.
 													We&apos;ll keep you updated on every step, ensuring a

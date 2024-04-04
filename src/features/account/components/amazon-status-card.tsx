@@ -7,28 +7,28 @@ import { mainSchema } from "@/api/schema";
 import { CheckIcon } from "lucide-react";
 import { XIcon } from "react-share";
 
+export const displayStatus = (lifecycle: AmazonPublishLifecycle) => {
+	switch (lifecycle) {
+		case AmazonPublishLifecycle.Requested:
+			return "Requested";
+		case AmazonPublishLifecycle.Processing:
+			return "Submitted";
+		case AmazonPublishLifecycle.Published:
+			return "Accepted";
+		case AmazonPublishLifecycle.Rejected:
+			return "Rejected";
+		case AmazonPublishLifecycle.SelfPublished:
+			return "Self Published";
+		default:
+			return "Unknown Status";
+	}
+};
+
 const AmazonStatusCard = ({
 	data,
 }: {
 	data: mainSchema["ReturnUserAmazonBookDTO"];
 }) => {
-	const displayStatus = (lifecycle: AmazonPublishLifecycle) => {
-		switch (lifecycle) {
-			case AmazonPublishLifecycle.Requested:
-				return "Requested";
-			case AmazonPublishLifecycle.Processing:
-				return "Submitted";
-			case AmazonPublishLifecycle.Published:
-				return "Accepted";
-			case AmazonPublishLifecycle.Rejected:
-				return "Rejected";
-			case AmazonPublishLifecycle.SelfPublished:
-				return "Self Published";
-			default:
-				return "Unknown Status";
-		}
-	};
-
 	return (
 		<div className="border-2 border-gray-300 rounded-lg p-4 shadow-md">
 			<div className="flex flex-col md:flex-row gap-4 items-center">
@@ -62,6 +62,17 @@ const AmazonStatusCard = ({
 						className={`${data.amazonPublishLifecycle === AmazonPublishLifecycle.SelfPublished ? "hidden" : ""}`}
 					>
 						<ProgressBar lifecycle={data.amazonPublishLifecycle} />
+					</div>
+					<div
+						className={`${data.amazonPublishLifecycle === AmazonPublishLifecycle.SelfPublished ? "" : "hidden"}`}
+					>
+						<Link
+							href={`/story/${data.topLevelCategory}/${data.slug}/publish-book/download`}
+							className="text-blue-600 hover:underline"
+							rel="noopener noreferrer"
+						>
+							Download Page
+						</Link>
 					</div>
 				</div>
 			</div>

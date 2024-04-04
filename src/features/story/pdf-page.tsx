@@ -64,34 +64,26 @@ const StoryBookDownloadPdfPage = ({
 	const [pdfType, setPdfType] = useState<PdfType>(PdfType.StoryBookPDF);
 
 	const options = {
-		downloadWatermarkedEBookPDF: CreditSpendType.WatermarkedEBookPDF,
 		downloadOriginalEBookPDF: CreditSpendType.OriginalEBookPDF,
-		downloadWatermarkedStoryBookPDF: CreditSpendType.WatermarkedStoryBookPDF,
 		downloadOriginalStoryBookPDF: CreditSpendType.OriginalStoryBookPDF,
 	};
 
-	const [selectedOption, setSelectedOption] = useState<number>(
-		options.downloadWatermarkedEBookPDF
-	);
+	const legacyOptions = {
+		downloadWatermarkedEBookPDF: CreditSpendType.WatermarkedEBookPDF,
+		downloadWatermarkedStoryBookPDF: CreditSpendType.WatermarkedStoryBookPDF,
+	};
 
 	const itemType = useMemo(() => {
-		if (
-			options.downloadWatermarkedEBookPDF === selectedOption &&
-			pdfType === PdfType.EBookPDF
-		) {
-			return options.downloadWatermarkedEBookPDF;
-		} else if (
-			options.downloadOriginalEBookPDF === selectedOption &&
-			pdfType === PdfType.EBookPDF
-		) {
+		if (pdfType === PdfType.EBookPDF) {
 			return options.downloadOriginalEBookPDF;
-		} else if (
-			options.downloadWatermarkedEBookPDF === selectedOption &&
-			pdfType === PdfType.StoryBookPDF
-		) {
-			return options.downloadWatermarkedStoryBookPDF;
 		} else return options.downloadOriginalStoryBookPDF;
-	}, [selectedOption, pdfType]);
+	}, [pdfType]);
+
+	const legacyItemType = useMemo(() => {
+		if (pdfType === PdfType.EBookPDF) {
+			return legacyOptions.downloadWatermarkedEBookPDF;
+		} else return legacyOptions.downloadWatermarkedStoryBookPDF;
+	}, [pdfType]);
 
 	const UserPurchase = useQuery<
 		mainSchema["Int32BooleanDictionaryApiResponse"]
@@ -99,7 +91,10 @@ const StoryBookDownloadPdfPage = ({
 		queryFn: () =>
 			api.user.getUserPurchase({
 				id: story?.id!,
-				creditSpendType: Object.values(options),
+				creditSpendType: [
+					...Object.values(options),
+					...Object.values(legacyOptions),
+				],
 			}),
 		staleTime: 3000,
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
@@ -107,10 +102,7 @@ const StoryBookDownloadPdfPage = ({
 		enabled: !User?.data?.data?.id || !story?.id,
 	});
 
-	const pdfCreditsCost = {
-		[options.downloadWatermarkedEBookPDF]: 2000,
-		[options.downloadOriginalEBookPDF]: 2500,
-	}[selectedOption];
+	const pdfCreditsCost = 2500;
 
 	const handlePurchasePdf = async () => {
 		const { error } = await userCanUseCredits({
@@ -304,41 +296,20 @@ const StoryBookDownloadPdfPage = ({
 											</div>
 										</div>
 										<div>
-											<h2 className="font-semibold text-lg mb-2">
-												Select Book Edition
-											</h2>
 											<div className="flex lg:flex-row flex-col gap-2">
 												<div
-													className={`flex-1 flex flex-col gap-2 p-4 rounded-md cursor-pointer
-                                ${
-																	selectedOption ===
-																	options.downloadWatermarkedEBookPDF
-																		? "border-2 border-slate-600 bg-brand-light shadow-xl"
-																		: "border-2 border-light-gray opacity-80"
-																}`}
-													onClick={() =>
-														setSelectedOption(
-															options.downloadWatermarkedEBookPDF
-														)
-													}
+													className={`flex-1 flex flex-col gap-2 p-4 rounded-md`}
 												>
 													<div className="flex flex-col gap-1">
 														<h3 className="font-semibold text-lg">
-															Standard Edition: Grab Your Personal Copy!
+															Printable Edition: Grab Your Personal Copy!
 														</h3>
 														<ul>
 															<li className="tracking-wide leading-loose">
-																<strong>Cost:</strong> 2000 Credits
+																<strong>Cost:</strong> {pdfCreditsCost} Credits
+																[${pdfCreditsCost / 100} USD]
 															</li>
 														</ul>
-														{/*{UserPurchase.data?.data?.[*/}
-														{/*	options.downloadWatermarkedEBookPDF*/}
-														{/*] && (*/}
-														{/*	<p className="text-sm text-green-500">*/}
-														{/*		You already own this edition, hit download to*/}
-														{/*		view the PDF!*/}
-														{/*	</p>*/}
-														{/*)}*/}
 													</div>
 
 													<ul className="flex flex-col gap-2">
@@ -350,70 +321,16 @@ const StoryBookDownloadPdfPage = ({
 																	of your story, formatted for any device.
 																</li>
 																<li className="tracking-wide leading-loose">
-																	Print for personal or gift use. Commercial
-																	publication is not permitted; copyrights are
-																	retained by StoryBird{" "}
-																	{!ownStory ? " or the Story Author" : ""}.
+																	<strong>You obtain the copyrights</strong> and
+																	have the commercial rights to the story.
+																</li>
+																<li className="tracking-wide leading-loose">
+																	Optimized for printing and publication.
 																</li>
 															</ul>
 														</div>
 													</ul>
 												</div>
-
-												{ownStory && (
-													<div
-														key={options.downloadOriginalEBookPDF}
-														className={`flex-1 flex flex-col gap-2 p-4 rounded-md cursor-pointer
-												            ${
-																			selectedOption ===
-																			options.downloadOriginalEBookPDF
-																				? "border-2 border-slate-600 bg-brand-light shadow-xl"
-																				: "border-2 border-light-gray opacity-80"
-																		}`}
-														onClick={() =>
-															setSelectedOption(
-																options.downloadOriginalEBookPDF
-															)
-														}
-													>
-														<div className="flex flex-col gap-1">
-															<h3 className="font-semibold text-lg">
-																Premium Edition: Full Rights PDF Download!
-															</h3>
-															<ul>
-																<li className="tracking-wide leading-loose">
-																	<strong>Cost:</strong> 2500 Credits
-																</li>
-															</ul>
-															{/*{UserPurchase?.data?.data?.[*/}
-															{/*	options.downloadOriginalEBookPDF*/}
-															{/*] && (*/}
-															{/*	<p className="text-sm text-green-500">*/}
-															{/*		You already own this edition, hit download to*/}
-															{/*		view the PDF!*/}
-															{/*	</p>*/}
-															{/*)}*/}
-														</div>
-
-														<ul className="flex flex-col gap-2">
-															<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2">
-																<ul className="list-disc pl-5 text-sm">
-																	<li className="tracking-wide leading-loose">
-																		Includes all features and benefits from the{" "}
-																		<strong>Standard Edition.</strong>
-																	</li>
-																	<li className="tracking-wide leading-loose">
-																		<strong>You obtain the copyrights</strong>{" "}
-																		and have the commercial rights to the story.
-																	</li>
-																	<li className="tracking-wide leading-loose">
-																		Optimized for printing and publication.
-																	</li>
-																</ul>
-															</div>
-														</ul>
-													</div>
-												)}
 											</div>
 										</div>
 										<p className="tracking-wide leading-loose font-semibold text-sm">
@@ -426,7 +343,9 @@ const StoryBookDownloadPdfPage = ({
 										</p>
 
 										<div className="flex flex-row justify-end mt-4">
-											{UserPurchase?.data?.data?.[itemType] && storyData ? (
+											{(UserPurchase?.data?.data?.[itemType] ||
+												UserPurchase?.data?.data?.[legacyItemType]) &&
+											storyData ? (
 												<DownloadPDFButton
 													variant={
 														pdfType === PdfType.EBookPDF

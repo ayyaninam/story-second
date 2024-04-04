@@ -56,7 +56,7 @@ const UserItemCard = ({
 						CreditSpendType.VideoLandscapeSubtitle,
 					].includes(data.creditSpendType!) ? (
 						data.itemUrl && (
-							<a
+							<Link
 								href={data.itemUrl}
 								download
 								className="text-blue-600 hover:underline"
@@ -64,7 +64,7 @@ const UserItemCard = ({
 								rel="noopener noreferrer"
 							>
 								Download
-							</a>
+							</Link>
 						)
 					) : (
 						<Link

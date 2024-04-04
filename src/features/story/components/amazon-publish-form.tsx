@@ -30,6 +30,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import Error from "@/components/FormError";
 
+const ages = Array.from({ length: 17 }, (_, i) => (i + 1).toString());
+ages.push("18+");
+const agesTuple: [string, ...string[]] = ["1", ...ages.slice(1)] as [
+	string,
+	...string[],
+];
+
 const publishingSchema = z
 	.object({
 		title: z.string().min(1, "Title is required"),
@@ -43,14 +50,8 @@ const publishingSchema = z
 			.string()
 			.min(20, "Summary must be at least 20 characters")
 			.max(1000, "Summary must be less than 1000 characters"),
-		ageGroupMin: z
-			.number()
-			.min(1, "Minimum age must be at least 1")
-			.max(18, "Minimum age must be less than 19"),
-		ageGroupMax: z
-			.number()
-			.min(1, "Maximum age must be at least 1")
-			.max(18, "Maximum age must be less than 19"),
+		ageGroupMin: z.union([z.literal("18+"), z.enum(agesTuple)]),
+		ageGroupMax: z.union([z.literal("18+"), z.enum(agesTuple)]),
 		amazonMarketplace: z.enum([
 			AmazonMarketplace.US,
 			AmazonMarketplace.CA,
@@ -68,9 +69,19 @@ const publishingSchema = z
 		]),
 		seoKeywords: z.array(z.string()).min(1, "At least one keyword is required"),
 	})
-	.refine((schema) => schema.ageGroupMin <= schema.ageGroupMax, {
-		message: "Minimum age must be less than or equal to maximum age",
-	});
+	.refine(
+		(data) => {
+			// Convert ageGroupMin and ageGroupMax from string to numbers for comparison, treating "18+" as 19 for logic purposes
+			const minAge =
+				data.ageGroupMin === "18+" ? 19 : parseInt(data.ageGroupMin, 10);
+			const maxAge =
+				data.ageGroupMax === "18+" ? 19 : parseInt(data.ageGroupMax, 10);
+			return minAge <= maxAge;
+		},
+		{
+			message: "Minimum age must be less than or equal to maximum age",
+		}
+	);
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -104,9 +115,8 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 		enabled: !!storyData.id,
 	});
 
-	const ages = Array.from({ length: 18 }, (_, i) => i + 1);
-	const selectedageGroupMin = watch("ageGroupMin", ages[0]);
-	const selectedageGroupMax = watch("ageGroupMax", ages[ages.length - 1]);
+	const selectedAgeGroupMin = watch("ageGroupMin", ages[0]);
+	const selectedAgeGroupMax = watch("ageGroupMax", ages[ages.length - 1]);
 	const selectedMarketplace = watch(
 		"amazonMarketplace",
 		MARKET_PLACES[0]?.value || AmazonMarketplace.US
@@ -119,8 +129,6 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 	const handleMarketplaceSelect = (marketplace: AmazonMarketplace) =>
 		setValue("amazonMarketplace", marketplace);
 
-	const [seoKeywords, setseoKeywords] = useState([""]);
-
 	useEffect(() => {
 		if (metadata?.data) {
 			const formValues = {
@@ -128,12 +136,8 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 				subtitle: metadata.data.subtitle || "",
 				author: metadata.data.author || "",
 				summary: metadata.data.summary || "",
-				ageGroupMin: metadata?.data?.ageGroupMin
-					? parseInt(metadata.data.ageGroupMin, 10)
-					: ages[0],
-				ageGroupMax: metadata?.data?.ageGroupMax
-					? parseInt(metadata.data.ageGroupMax, 10)
-					: ages[ages.length - 1],
+				ageGroupMin: metadata.data.ageGroupMin || "1",
+				ageGroupMax: metadata.data.ageGroupMax || "18+",
 				amazonMarketplace:
 					metadata?.data?.amazonMarketplace || AmazonMarketplace.US,
 				seoKeywords: metadata?.data?.seoKeywords
@@ -309,7 +313,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 																	className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3 w-full justify-between"
 																	variant="outline"
 																>
-																	{selectedageGroupMin}
+																	{selectedAgeGroupMin}
 																	<ChevronDown className="ml-2 h-4 w-4 md:h-5 md:w-5" />
 																</Button>
 															</DropdownMenuTrigger>
@@ -336,7 +340,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 																	className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3 w-full justify-between"
 																	variant="outline"
 																>
-																	{selectedageGroupMax}
+																	{selectedAgeGroupMax}
 																	<ChevronDown className="ml-2 h-4 w-4 md:h-5 md:w-5" />
 																</Button>
 															</DropdownMenuTrigger>
@@ -390,6 +394,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 													<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
 														{[...Array(7)].map((_, index) => (
 															<Input
+																disabled
 																key={index}
 																type="text"
 																{...register(`seoKeywords[${index}]`)}
@@ -399,6 +404,11 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 														))}
 													</div>
 												</div>
+
+												<Error control={control} name="seoKeywords" />
+												<Error control={control} name="ageGroupMin" />
+												<Error control={control} name="ageGroupMax" />
+												<Error control={control} name="amazonMarketplace" />
 
 												<div className="flex justify-end mt-4">
 													<Button
