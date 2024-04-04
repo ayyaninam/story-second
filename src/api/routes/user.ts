@@ -1,6 +1,7 @@
 import { authFetcher, publicProxyApiFetcher } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
 import { toFromData } from "@/utils/request";
+import { PaginationParams } from "@/types";
 
 const user = {
 	register: async (
@@ -69,6 +70,30 @@ const user = {
 		return await publicProxyApiFetcher
 			.post(`proxyApi/Amazon/${id}/Payment`, { json: { creditSpendType } })
 			.json<mainSchema["StringApiResponse"]>();
+	},
+	getAllUserItems: async (
+		params: PaginationParams
+	): Promise<mainSchema["ReturnUserStoryItemsDTOPagedList"]> => {
+		const data: mainSchema["ReturnUserStoryItemsDTOPagedListApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/StoryBook/GetAllPurchasedPDFs`, { searchParams: params })
+				.json();
+		if (!data.data) {
+			throw new Error("Internal Server Error");
+		}
+		return data.data;
+	},
+	legacyGetAllUserVideos: async (
+		params: PaginationParams
+	): Promise<mainSchema["ReturnUserStoryItemsDTOPagedList"]> => {
+		const data: mainSchema["ReturnUserStoryItemsDTOPagedListApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/WebStory/GetAllUserItems`, { searchParams: params })
+				.json();
+		if (!data.data) {
+			throw new Error("Internal Server Error");
+		}
+		return data.data;
 	},
 };
 

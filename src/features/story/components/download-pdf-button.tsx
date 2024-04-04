@@ -23,12 +23,12 @@ type Variant =
 	| "cover-amazon"
 	| "ebook";
 
-interface DownloadPDFButton {
+interface DownloadPDFButtonProps {
 	storyData: WebStory;
 	variant: Variant;
 }
 
-const DownloadPDFButton = ({ storyData, variant }: DownloadPDFButton) => {
+const DownloadPDFButton = ({ storyData, variant }: DownloadPDFButtonProps) => {
 	const document = (
 		{
 			"storybook-amazon": <StorybookAmazonPDF storyData={storyData} />,
