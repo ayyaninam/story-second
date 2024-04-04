@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import GenericPagination from "@/components/ui/generic-pagination";
 import UserItemCard from "@/features/account/components/user-item-card";
 import Link from "next/link";
-import {
-	keepPreviousData,
-	useQuery,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import { mainSchema } from "@/api/schema";
 import { QueryKeys } from "@/lib/queryKeys";

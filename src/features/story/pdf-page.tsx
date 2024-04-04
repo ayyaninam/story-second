@@ -144,11 +144,10 @@ const StoryBookDownloadPdfPage = ({
 	}
 
 	return (
-		<div className="bg-reverse flex flex-col min-h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)]">
+		<div className="bg-reverse flex flex-col min-h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)] overflow-auto">
 			<Navbar WebstoryData={story} />
-
-			<div className="flex flex-col justify-start lg:justify-center items-center min-h-[calc(100vh-175px)] px-4 py-6">
-				<div className="w-full max-w-[1600px] h-full min-h-[750px] flex flex-col justify-center">
+			<div className="flex flex-col justify-start lg:justify-center items-center px-4 py-6">
+				<div className="w-full max-w-[1600px] h-full flex flex-col justify-center">
 					<div className="flex bg-reverse p-2 gap-x-1.5">
 						<div className="relative w-full h-full lg:px-20 pb-10 items-center min-w-fit">
 							<div className="flex flex-col md:flex-row items-center justify-center h-full border-2">

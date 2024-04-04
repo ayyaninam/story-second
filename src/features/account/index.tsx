@@ -18,6 +18,7 @@ import { AccountsHeader } from "@/features/account/components/header";
 import Billing from "@/features/account/components/billing";
 import toast from "react-hot-toast";
 import MyItems from "@/features/account/MyItems";
+import AmazonStatus from "@/features/account/AmazonStatus";
 
 const profileSchema = z.object({
 	profileName: z
@@ -177,6 +178,12 @@ const AccountsPage = () => {
 									Billing
 								</ToggleGroupItem>
 								<ToggleGroupItem
+									value={"amazon-status"}
+									className="justify-center sm:justify-start text-center sm:text-left w-full"
+								>
+									Amazon Status
+								</ToggleGroupItem>
+								<ToggleGroupItem
 									value={"my-items"}
 									className="justify-center sm:justify-start text-center sm:text-left w-full"
 								>
@@ -222,6 +229,8 @@ const AccountsPage = () => {
 									{step === "my-items" && <MyItems />}
 
 									{step === "my-videos" && <MyItems legacy />}
+
+									{step === "amazon-status" && <AmazonStatus />}
 
 									{/*{step === "preferences" && (*/}
 									{/*	<>*/}

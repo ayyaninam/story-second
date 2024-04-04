@@ -83,6 +83,20 @@ const user = {
 		}
 		return data.data;
 	},
+	getAllUserAmazonItems: async (
+		params: PaginationParams
+	): Promise<mainSchema["ReturnUserAmazonBookDTOPagedList"]> => {
+		const data: mainSchema["ReturnUserAmazonBookDTOPagedListApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/WebStory/GetAllUserAmazonRequests`, {
+					searchParams: params,
+				})
+				.json();
+		if (!data.data) {
+			throw new Error("Internal Server Error");
+		}
+		return data.data;
+	},
 	legacyGetAllUserVideos: async (
 		params: PaginationParams
 	): Promise<mainSchema["ReturnUserStoryItemsDTOPagedList"]> => {
