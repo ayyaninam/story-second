@@ -17,6 +17,18 @@ const amazon = {
 		await publicProxyApiFetcher
 			.get(`proxyApi/WebStory/GetMetaData/${id}`)
 			.json(),
+	getAmazonCategories: async ({
+		id,
+		amazonMarketplace,
+	}: {
+		id: string;
+		amazonMarketplace: mainSchema["AmazonMarketplace"];
+	}): Promise<mainSchema["StringObjectDictionaryListApiResponse"]> =>
+		await publicProxyApiFetcher
+			.get(`proxyApi/WebStory/BookMetaData/${id}/Categories`, {
+				searchParams: amazonMarketplace,
+			})
+			.json(),
 
 	validateMetadata: async ({
 		id,
@@ -24,7 +36,7 @@ const amazon = {
 	}: {
 		id: string;
 		metadata: mainSchema["AmazonBookMetaDataDTO"];
-	}): Promise<string> =>
+	}): Promise<mainSchema["StringApiResponse"]> =>
 		await publicProxyApiFetcher
 			.post(`proxyApi/WebStory/ValidateBookMetadata/${id}`, {
 				json: metadata,

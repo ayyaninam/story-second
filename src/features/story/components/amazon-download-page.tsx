@@ -158,11 +158,13 @@ const AmazonDownloadPage = ({ storyData }: { storyData: WebStory }) => {
 																Recommended Categories
 															</p>
 															<ul className="mt-1 list-disc list-inside text-gray-600">
-																{amazonData.categories.map((category, i) => (
-																	<li key={i}>
-																		{createCategoryString(category)}
-																	</li>
-																))}
+																{amazonData.categories.map(
+																	(category, index) => (
+																		<div key={index} className="text-sm py-1">
+																			{createCategoryString(category)}
+																		</div>
+																	)
+																)}
 															</ul>
 														</div>
 													)}
@@ -230,13 +232,21 @@ const AmazonDownloadPage = ({ storyData }: { storyData: WebStory }) => {
 												<div>
 													<p className="font-semibold">
 														Publishing Instructions:{" "}
-														<Link
-															href="/amazon-instructions"
-															target="_blank"
-															className="text-blue-600 hover:underline inline-block mt-2"
-														>
-															Click Here
-														</Link>
+														{amazonData.amazonPublishLifecycle ===
+														AmazonPublishLifecycle.SelfPublished ? (
+															<Link
+																href="/amazon-instructions"
+																target="_blank"
+																className="text-blue-600 hover:underline inline-block mt-2"
+															>
+																Click Here
+															</Link>
+														) : (
+															<p className="font-normal inline-block mt-2 text-sm">
+																We&apos;ll publish the book on your behalf, no
+																action required.
+															</p>
+														)}
 													</p>
 												</div>
 											</div>

@@ -23,12 +23,12 @@ import {
 import {
 	AmazonMarketplace,
 	AmazonPublishLifecycle,
-	MARKET_PLACES,
 } from "@/constants/amazon-constants";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import Error from "@/components/FormError";
+import { createCategoryString } from "@/utils/categoryUtils";
 
 const ages = Array.from({ length: 17 }, (_, i) => (i + 1).toString());
 ages.push("18+");
@@ -36,6 +36,10 @@ const agesTuple: [string, ...string[]] = ["1", ...ages.slice(1)] as [
 	string,
 	...string[],
 ];
+
+const categorySchema: z.ZodSchema<any> = z.lazy(() =>
+	z.array(z.record(z.union([z.object({}), categorySchema])))
+);
 
 const publishingSchema = z
 	.object({
@@ -46,6 +50,7 @@ const publishingSchema = z
 		lastName: z.string().min(1, "Last name is required"),
 		prefixName: z.string().optional(),
 		suffixName: z.string().optional(),
+		categories: categorySchema,
 		summary: z
 			.string()
 			.min(20, "Summary must be at least 20 characters")
@@ -110,28 +115,55 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 	});
 
 	const { data: metadata, isLoading: isLoadingMetadata } = useQuery({
-		queryKey: ["AMAZON_METADATA", storyData.id],
+		queryKey: [QueryKeys.AMAZON_METADATA, storyData.id],
 		queryFn: () => api.amazon.getMetadata({ id: storyData.id as string }),
+		enabled: !!storyData.id,
+	});
+
+	const { data: categoryMetadata } = useQuery({
+		queryFn: () =>
+			api.amazon.getAmazonCategories({
+				id: storyData.id as string,
+				amazonMarketplace: {
+					amazonMarketplace:
+						metadata?.data?.amazonMarketplace || AmazonMarketplace.US,
+				},
+			}),
+		queryKey: [
+			QueryKeys.AMAZON_CATEGORIES,
+			storyData.id,
+			metadata?.data?.amazonMarketplace,
+		],
 		enabled: !!storyData.id,
 	});
 
 	const selectedAgeGroupMin = watch("ageGroupMin", ages[0]);
 	const selectedAgeGroupMax = watch("ageGroupMax", ages[ages.length - 1]);
-	const selectedMarketplace = watch(
-		"amazonMarketplace",
-		MARKET_PLACES[0]?.value || AmazonMarketplace.US
-	);
 
 	const handleageGroupMinSelect = (age: number | string) =>
 		setValue("ageGroupMin", age);
 	const handleageGroupMaxSelect = (age: number | string) =>
 		setValue("ageGroupMax", age);
-	const handleMarketplaceSelect = (marketplace: AmazonMarketplace) =>
-		setValue("amazonMarketplace", marketplace);
+
+	useEffect(() => {
+		if (storyData.amazonBook) {
+			toast.dismiss();
+			toast.success("Book already published");
+			router.push(`/story/${genre}/${id}/publish-book/download`);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (categoryMetadata?.data) {
+			setValue("categories", categoryMetadata.data);
+		}
+		console.log(formMethods.getValues());
+	}, [categoryMetadata]);
 
 	useEffect(() => {
 		if (metadata?.data) {
 			const formValues = {
+				...formMethods.getValues(),
 				title: metadata.data.title || "",
 				subtitle: metadata.data.subtitle || "",
 				author: metadata.data.author || "",
@@ -146,7 +178,8 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 			};
 			formMethods.reset(formValues);
 		}
-	}, [metadata, formMethods.reset]);
+		console.log(formMethods.getValues());
+	}, [metadata]);
 
 	if (isLoading) {
 		return <div>Loading story details...</div>; // Use your LoadingIndicator component or any loading UI
@@ -162,6 +195,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 		console.log(data);
 		try {
 			const request = { ...data };
+			request.categories = formMethods.getValues().categories;
 			request.seoKeywords = data.seoKeywords.join(", ");
 			request.AmazonPublishLifecycle = AmazonPublishLifecycle.SelfPublished;
 
@@ -171,6 +205,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 			});
 			toast.success("Publishing in progress...");
 			localStorage.setItem(id, JSON.stringify(request));
+			console.log(request);
 			await router.push(`/story/${genre}/${id}/publish-book/confirm`);
 		} catch (error) {
 			console.error(error);
@@ -300,7 +335,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 													<TextareaAutosize
 														{...register("summary")}
 														minRows={5}
-														className="w-full mt-2 border-2 rounded-sm"
+														className="w-full mt-2 border-2 rounded-sm p-2"
 													/>
 													<Error control={control} name="summary" />
 												</div>
@@ -359,43 +394,58 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 															</DropdownMenuContent>
 														</DropdownMenu>
 													</div>
-													<div className="w-full">
-														<Label htmlFor="amazonMarketplace">
-															Marketplace
-														</Label>
-														<DropdownMenu>
-															<DropdownMenuTrigger asChild>
-																<Button
-																	className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3 w-full justify-between"
-																	variant="outline"
-																>
-																	{selectedMarketplace}
-																	<ChevronDown className="ml-2 h-4 w-4 md:h-5 md:w-5" />
-																</Button>
-															</DropdownMenuTrigger>
-															<DropdownMenuContent>
-																{MARKET_PLACES.map((market) => (
-																	<DropdownMenuItem
-																		key={market.value}
-																		className="cursor-pointer"
-																		onSelect={() =>
-																			handleMarketplaceSelect(market.value)
-																		}
-																	>
-																		<span>{market.value}</span>
-																	</DropdownMenuItem>
-																))}
-															</DropdownMenuContent>
-														</DropdownMenu>
+													{/*<div className="w-full">*/}
+													{/*	<Label htmlFor="amazonMarketplace">*/}
+													{/*		Marketplace*/}
+													{/*	</Label>*/}
+													{/*	<DropdownMenu>*/}
+													{/*		<DropdownMenuTrigger asChild>*/}
+													{/*			<Button*/}
+													{/*				className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3 w-full justify-between"*/}
+													{/*				variant="outline"*/}
+													{/*			>*/}
+													{/*				{selectedMarketplace}*/}
+													{/*				<ChevronDown className="ml-2 h-4 w-4 md:h-5 md:w-5" />*/}
+													{/*			</Button>*/}
+													{/*		</DropdownMenuTrigger>*/}
+													{/*		<DropdownMenuContent>*/}
+													{/*			{MARKET_PLACES.map((market) => (*/}
+													{/*				<DropdownMenuItem*/}
+													{/*					key={market.value}*/}
+													{/*					className="cursor-pointer"*/}
+													{/*					onSelect={() =>*/}
+													{/*						handleMarketplaceSelect(market.value)*/}
+													{/*					}*/}
+													{/*				>*/}
+													{/*					<span>{market.value}</span>*/}
+													{/*				</DropdownMenuItem>*/}
+													{/*			))}*/}
+													{/*		</DropdownMenuContent>*/}
+													{/*	</DropdownMenu>*/}
+													{/*</div>*/}
+												</div>
+												<div className="w-full">
+													<Label htmlFor="categories">Categories</Label>
+													<div className="mt-2 bg-gray-100 p-2 rounded-md">
+														{categoryMetadata?.data ? (
+															categoryMetadata.data.map((category, index) => (
+																<div key={index} className="text-sm py-1">
+																	{createCategoryString(category)}
+																</div>
+															))
+														) : (
+															<p>Loading categories, please wait...</p>
+														)}
 													</div>
 												</div>
+
 												<div className="w-full">
 													<Label htmlFor="seoKeywords">SEO Keywords</Label>
 													<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
 														{[...Array(7)].map((_, index) => (
 															<Input
 																disabled
-																key={index}
+																key={`keyword-${index}`}
 																type="text"
 																{...register(`seoKeywords[${index}]`)}
 																placeholder={`Keyword ${index + 1}`}
@@ -405,20 +455,20 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 													</div>
 												</div>
 
-												<Error control={control} name="seoKeywords" />
-												<Error control={control} name="ageGroupMin" />
-												<Error control={control} name="ageGroupMax" />
-												<Error control={control} name="amazonMarketplace" />
+												{/*show all errors*/}
+												{Object.keys(formState.errors).map((key) => (
+													<Error key={key} control={control} name={key} />
+												))}
+												<Error control={control} name="categories" />
 
 												<div className="flex justify-end mt-4">
 													<Button
 														type="submit"
 														variant="accent"
 														className="btn-primary w-full sm:w-max"
-														// onClick={handlePublish}
 														isLoading={formState.isSubmitting}
 													>
-														Publish Now
+														Continue
 													</Button>
 												</div>
 											</form>

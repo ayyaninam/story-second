@@ -109,7 +109,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 			} else if (error === "not enough credits") {
 				setOpenCreditsDialog(true);
 			}
-
+			setSaving(false);
 			return;
 		}
 
@@ -122,6 +122,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 			toast.error(
 				"Your story is too short to be published. We require stories to have at least 8 pages."
 			);
+			setSaving(false);
 			return;
 		}
 
@@ -135,6 +136,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 		});
 		await UserPurchase.refetch();
 		await User.refetch();
+		setSaving(false);
 	};
 
 	if (!story) {
@@ -142,15 +144,15 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 	}
 
 	return (
-		<div className="bg-reverse flex flex-col min-h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)]">
+		<div className="bg-reverse flex flex-col min-h-[calc(100vh-75px)] lg:h-[calc(100vh-20px)] overflow-auto">
 			<Navbar WebstoryData={story} />
-			<div className="flex flex-col justify-start lg:justify-center items-center min-h-[calc(100vh-175px)] px-4 py-6">
-				<div className="w-full max-w-[1600px] h-full min-h-[750px] flex flex-col justify-center">
+			<div className="flex flex-col justify-start lg:justify-center items-center px-4 py-6">
+				<div className="w-full max-w-[1600px] h-full flex flex-col justify-center">
 					<div className="flex bg-reverse p-2 gap-x-1.5">
 						<div className="relative w-full h-full lg:px-20 pb-10 items-center min-w-fit">
 							<div className="flex flex-col md:flex-row items-center justify-center h-full border-2">
-								<div className="w-full h-full border-[1px] flex flex-col lg:flex-row justify-stretch lg:min-w-[900px]">
-									<div className="p-6 min-w-[300px] flex flex-col justify-between lg:max-w-sm bg-white">
+								<div className="w-full h-full border-[1px] flex flex-col lg:flex-row justify-stretch">
+									<div className="p-6 flex flex-col justify-between lg:max-w-sm bg-white">
 										<div className="space-y-2 flex flex-col items-start">
 											<Button
 												variant="link"
@@ -346,7 +348,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 													>
 														{saving
 															? "Loading"
-															: `Continue ${creditsCost} credits]`}
+															: `Continue ${creditsCost} credits`}
 													</Button>
 												)}
 

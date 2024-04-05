@@ -54,19 +54,19 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 
 	const onSubmit = async () => {
 		try {
-			// const data = localStorage.getItem(id as string);
-			// if (!data) {
-			// 	await router.push(Routes.ViewStory(story?.storyType, genre, id));
-			// 	return;
-			// }
-			// const formData = JSON.parse(data);
-			// if (UserPurchase.data?.data?.[options["publish"]])
-			// 	formData.AmazonPublishLifecycle = AmazonPublishLifecycle.Requested;
-			//
-			// await api.amazon.saveBookMetadata({
-			// 	id: story?.id!,
-			// 	metadata: formData,
-			// });
+			const data = localStorage.getItem(id as string);
+			if (!data) {
+				await router.push(Routes.ViewStory(story?.storyType, genre, id));
+				return;
+			}
+			const formData = JSON.parse(data);
+			if (UserPurchase.data?.data?.[options["publish"]])
+				formData.AmazonPublishLifecycle = AmazonPublishLifecycle.Requested;
+
+			await api.amazon.saveBookMetadata({
+				id: story?.id!,
+				metadata: formData,
+			});
 			toast.success(
 				"Publish Request Successful. We'll reach out to you over email."
 			);
@@ -242,7 +242,7 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 												className="btn-primary w-full sm:w-max"
 												onClick={onSubmit}
 											>
-												Submit
+												Publish Now
 											</Button>
 										</div>
 									</div>
