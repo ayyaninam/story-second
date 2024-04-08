@@ -145,8 +145,8 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 							</Avatar>
 							{/*# TODO: enable profile pages when ready*/}
 							<Link
-								href={"/account"}
-								// href={"/" + user?.nickname || ""}
+								// href={"/account"}
+								href={"/" + data?.data?.profileName!}
 							>
 								<span className="flex flex-col text-white gap-y-1">
 									<span>{userName}</span>

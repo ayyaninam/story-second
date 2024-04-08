@@ -32,7 +32,6 @@ const feed = {
 
 		const searchParams = {
 			...params,
-			topLevelCategory: "",
 		};
 
 		const data:
@@ -69,7 +68,6 @@ const feed = {
 				: `api/Video/${topLevelCategory}`;
 		const searchParams = {
 			...params,
-			topLevelCategory: "",
 		};
 
 		const data:
@@ -82,6 +80,85 @@ const feed = {
 
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
+		}
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
+	getUserStories: async ({
+		params,
+		profileName,
+		requireAuth = false,
+	}: {
+		params: FeedPageVideoQueryOptions;
+		profileName: string;
+		requireAuth?: boolean;
+	}) => {
+		let fetcher = publicFetcher;
+		if (requireAuth) {
+			fetcher = publicProxyApiFetcher;
+		}
+
+		const { topLevelCategory, storyType } = params;
+		// Determine the API endpoint based on the type of story
+		const endpoint =
+			storyType === StoryOutputTypes.Story
+				? `api/StoryBook/View/${profileName}/${topLevelCategory}`
+				: `api/Video/View/${profileName}/${topLevelCategory}`;
+		const searchParams = {
+			...params,
+		};
+
+		const data:
+			| mainSchema["ReturnWebStoryDTOPagedListApiResponse"]
+			| mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] = await fetcher
+			.get(endpoint, {
+				searchParams,
+			})
+			.json();
+
+		if (!data.succeeded) {
+		}
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data.data;
+	},
+	getUserStoriesServer: async ({
+		params,
+		accessToken,
+		profileName,
+	}: {
+		params: FeedPageVideoQueryOptions;
+		accessToken?: string | null;
+		profileName: string;
+	}) => {
+		let fetcher = publicFetcher;
+		if (accessToken) fetcher = authFetcher(accessToken);
+		// Determine the API endpoint based on the type of story
+		const { topLevelCategory, storyType } = params;
+
+		// Determine the API endpoint based on the type of story
+		const endpoint =
+			storyType === StoryOutputTypes.Story
+				? `api/StoryBook/View/${profileName}/${topLevelCategory}`
+				: `api/Video/View/${profileName}/${topLevelCategory}`;
+		const searchParams = {
+			...params,
+		};
+
+		const data:
+			| mainSchema["ReturnWebStoryDTOPagedListApiResponse"]
+			| mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] = await fetcher
+			.get(endpoint, {
+				searchParams,
+			})
+			.json();
+
+		if (!data.succeeded) {
 		}
 		if (!data.data) {
 			throw new Error("No data returned");
