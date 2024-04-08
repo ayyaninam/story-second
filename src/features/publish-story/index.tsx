@@ -678,7 +678,10 @@ export default function PublishedStory({
 											"lg:flex 2xl:hidden"
 									)}
 								/>
-								<div className="flex gap-x-2.5">
+								<Link
+									href={`/${Webstory.data?.user?.profileName}`}
+									className="flex gap-x-2.5"
+								>
 									{isLoading ? (
 										<Skeleton className="w-[44px] h-[44px] rounded-full" />
 									) : (
@@ -722,21 +725,8 @@ export default function PublishedStory({
 											)}
 										</span>
 									)}
-								</div>
+								</Link>
 							</div>
-							{/*
-								<p>
-													{(Webstory.data.user?.videoCount ?? 0) +
-														(Webstory.data.user?.storyCount ?? 0)}{" "}
-													Stories
-												</p>
-												<p className="text-slate-300"> • </p>
-								<a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
 						</div>
 					</div>
 					<div className="absolute bottom-10 left-4 items-center hidden md:flex flex-row gap-x-1">

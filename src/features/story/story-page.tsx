@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useMediaQuery } from "usehooks-ts";
 import StoryPageButtons from "@/features/story/components/story-page-buttons";
+import Link from "next/link";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -112,7 +113,10 @@ const StoryBookPage = ({
 												)}
 										</div>
 										<div className="lg:hidden my-2.5 bg-slate-200 self-stretch h-px" />
-										<div className="flex gap-x-2.5">
+										<Link
+											href={`/${Webstory.data?.user?.profileName}`}
+											className="flex gap-x-2.5"
+										>
 											<Avatar className="h-11 w-11">
 												<AvatarImage
 													src={story.user?.profilePicture ?? undefined}
@@ -148,7 +152,7 @@ const StoryBookPage = ({
 													</>
 												)}
 											</span>
-										</div>
+										</Link>
 									</div>
 								</div>
 							</div>
