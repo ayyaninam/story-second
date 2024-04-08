@@ -1,9 +1,18 @@
-import { authFetcher, publicProxyApiFetcher } from "@/lib/fetcher";
+import {
+	authFetcher,
+	publicFetcher,
+	publicProxyApiFetcher,
+} from "@/lib/fetcher";
 import { mainSchema } from "../schema";
 import { toFromData } from "@/utils/request";
 import { PaginationParams } from "@/types";
 
 const user = {
+	getUserProfile: async (profileName: string) => {
+		const response: mainSchema["OtherUserInfoDTOApiResponse"] =
+			await publicFetcher.get(`api/User/${profileName}`).json();
+		return response?.data;
+	},
 	register: async (
 		params: mainSchema["RegisterUserDTO"]
 	): Promise<mainSchema["UserInfoDTOApiResponse"]> => {
