@@ -1436,6 +1436,63 @@ export interface paths {
      */
     get: operations["GetSuggestedStories"];
   };
+  "/api/StoryBook/GetAllPurchasedPDFs": {
+    /** Get all User's Purchased PDFs for Storybooks. */
+    get: {
+      parameters: {
+        query?: {
+          CurrentPage?: number;
+          PageSize?: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
+            "application/json": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
+            "text/json": components["schemas"]["ReturnUserStoryItemsDTOPagedListApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/StoryBook/View/{profileName}/{topLevelCategory}": {
+    /** Get a list of the other user's stories based on pagination parameters */
+    get: {
+      parameters: {
+        query?: {
+          CurrentPage?: number;
+          PageSize?: number;
+          storyType?: components["schemas"]["StoryType"];
+          resolution?: components["schemas"]["DisplayResolution"];
+          isDescending?: boolean;
+        };
+        path: {
+          profileName: string;
+          topLevelCategory: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+            "application/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+            "text/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/TextToSpeech/DefaultAudio/{id}": {
     /**
      * Generate audio
@@ -2205,6 +2262,38 @@ export interface paths {
      */
     post: operations["CopyVideo"];
   };
+  "/api/Video/View/{profileName}/{topLevelCategory}": {
+    /** Get a list of the other user's stories based on pagination parameters */
+    get: {
+      parameters: {
+        query?: {
+          CurrentPage?: number;
+          PageSize?: number;
+          storyType?: components["schemas"]["StoryType"];
+          resolution?: components["schemas"]["DisplayResolution"];
+          isDescending?: boolean;
+        };
+        path: {
+          profileName: string;
+          topLevelCategory: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+            "application/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+            "text/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/WebStory/NoAuth": {
     /** Request a new anonymous story based on the provided parameters */
     post: {
@@ -2273,34 +2362,6 @@ export interface paths {
             "text/plain": components["schemas"]["StringApiResponse"];
             "application/json": components["schemas"]["StringApiResponse"];
             "text/json": components["schemas"]["StringApiResponse"];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/WebStory/View/{profileName}": {
-    /** Get a list of the other user's stories based on pagination parameters */
-    get: {
-      parameters: {
-        query?: {
-          CurrentPage?: number;
-          PageSize?: number;
-        };
-        path: {
-          profileName: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
-            "application/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
-            "text/json": components["schemas"]["ReturnOtherUserWebStoryDTOPagedListApiResponse"];
           };
         };
         /** @description Unauthorized */
@@ -3424,6 +3485,7 @@ export interface components {
        * @description The amount of credits to buy.
        */
       quantity?: number;
+      creditSpendType?: components["schemas"]["CreditSpendType"];
     };
     /**
      * Format: int32
@@ -3853,7 +3915,7 @@ export interface components {
      * @description The type of credit spend
      * @enum {integer}
      */
-    CreditSpendType: StoryGeneration | StorySegmentEdit | AudioGeneration | AudioRegeneration | ImageRegeneration | AmazonPublishing | AmazonPublishingPDFOnly | WatermarkedEBookPDF | OriginalEBookPDF | RegenerateSegmentWithAI | AddNewPage | VideoLandscape | VideoPortrait | VideoLandscapeSubtitle | ImageScribble | EnrollStoryInContest | WatermarkedStoryBookPDF | OriginalStoryBookPDF | OneStoryBookGeneration | OneVideoGeneration;
+    CreditSpendType: StoryGeneration | StorySegmentEdit | AudioGeneration | AudioRegeneration | ImageRegeneration | AmazonPublishing | AmazonPublishingPDFOnly | WatermarkedEBookPDF | OriginalEBookPDF | RegenerateSegmentWithAI | AddNewPage | VideoLandscape | VideoPortrait | VideoLandscapeSubtitle | ImageScribble | EnrollStoryInContest | WatermarkedStoryBookPDF | OriginalStoryBookPDF | OneStoryBookGeneration | OneVideoGeneration | RegenerateVideoSegment;
     DiscountCode: {
       /** Format: uuid */
       id?: string;
@@ -4163,6 +4225,18 @@ export interface components {
        * @description The user's bio.
        */
       bio?: string | null;
+      /**
+       * StoryCount
+       * Format: int32
+       * @description The number of stories the user has.
+       */
+      storyCount?: number;
+      /**
+       * VideoCount
+       * Format: int32
+       * @description The number of videos the user has.
+       */
+      videoCount?: number;
     };
     /** @description Represents the standard response format for API requests. */
     OtherUserInfoDTOApiResponse: {
@@ -5163,6 +5237,11 @@ export interface components {
        * @description Whether the story image generation is done or not.
        */
       imagesDone?: boolean;
+      /**
+       * VideosDone
+       * @description Whether the video generation for all segments is done or not.
+       */
+      videosDone?: boolean;
       resolution?: components["schemas"]["DisplayResolution"];
       /**
        * StoryTitle

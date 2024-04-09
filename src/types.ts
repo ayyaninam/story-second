@@ -72,6 +72,11 @@ const VIDEO_ORIENTATION_IDS = Object.values(VIDEO_ORIENTATIONS).map(
 
 export type VideoOrientation = (typeof VIDEO_ORIENTATION_IDS)[number];
 
+export type PaginationParams = {
+	CurrentPage?: number;
+	PageSize?: number;
+};
+
 export type VideoThumbnail = {
 	id?: string;
 	expand?: boolean;

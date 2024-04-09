@@ -1,5 +1,4 @@
-import { authFetcher } from "@/lib/fetcher";
-import { getJwt } from "@/utils/jwt";
+import { publicFetcher, publicProxyApiFetcher } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
 
 const amazon = {
@@ -8,20 +7,67 @@ const amazon = {
 	}: {
 		id: string;
 	}): Promise<mainSchema["AmazonRequestPaymentTypeDTO"]> =>
-		await authFetcher(getJwt()).post(`api/Amazon/${id}/Payment`).json(),
+		await publicProxyApiFetcher.post(`proxyApi/Amazon/${id}/Payment`).json(),
 
-	allBooksRevenue: async ({
-		CurrentPage,
-		PageSize,
+	getMetadata: async ({
+		id,
 	}: {
-		CurrentPage: number;
-		PageSize: number;
-	}): Promise<mainSchema["AmazonBooksRevenueDTOPagedListApiResponse"]> =>
-		await authFetcher(getJwt())
-			.get(`api/Amazon/AllAmazonBooksRevenue`, {
-				searchParams: { CurrentPage, PageSize },
+		id: string;
+	}): Promise<mainSchema["ReturnBookMetaDataDTOApiResponse"]> =>
+		await publicProxyApiFetcher
+			.get(`proxyApi/WebStory/GetMetaData/${id}`)
+			.json(),
+	getAmazonCategories: async ({
+		id,
+		amazonMarketplace,
+	}: {
+		id: string;
+		amazonMarketplace: mainSchema["AmazonMarketplace"];
+	}): Promise<mainSchema["StringObjectDictionaryListApiResponse"]> =>
+		await publicProxyApiFetcher
+			.get(`proxyApi/WebStory/BookMetaData/${id}/Categories`, {
+				searchParams: amazonMarketplace,
 			})
 			.json(),
+
+	validateMetadata: async ({
+		id,
+		metadata,
+	}: {
+		id: string;
+		metadata: mainSchema["AmazonBookMetaDataDTO"];
+	}): Promise<mainSchema["StringApiResponse"]> =>
+		await publicProxyApiFetcher
+			.post(`proxyApi/WebStory/ValidateBookMetadata/${id}`, {
+				json: metadata,
+			})
+			.json(),
+
+	saveBookMetadata: async ({
+		id,
+		metadata,
+	}: {
+		id: string;
+		metadata: mainSchema["AmazonBookMetaDataDTO"];
+	}): Promise<string> =>
+		await publicProxyApiFetcher
+			.post(`proxyApi/WebStory/SaveBookMetadata/${id}`, {
+				json: metadata,
+			})
+			.json(),
+
+	// allBooksRevenue: async ({
+	// 	CurrentPage,
+	// 	PageSize,
+	// }: {
+	// 	CurrentPage: number;
+	// 	PageSize: number;
+	// }): Promise<mainSchema["AmazonBooksRevenueDTOPagedListApiResponse"]> =>
+	// 	await publicProxyApiFetcher
+	// 		.get(`api/Amazon/AllAmazonBooksRevenue`, {
+	// 			searchParams: { CurrentPage, PageSize },
+	// 		})
+	// 		.json(),
 };
 
 export default amazon;

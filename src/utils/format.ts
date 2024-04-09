@@ -1,4 +1,5 @@
 import { env } from "@/env.mjs";
+import dayjs, { Dayjs } from "dayjs";
 
 class Format {
 	private static GetBucketObjectUrl(
@@ -55,6 +56,14 @@ class Format {
 	public static Pluralize(string: string | undefined | null, n: number) {
 		if (!string || n === 1) return string;
 		else return string + "s";
+	}
+
+	public static DateDisplay(val: string | Dayjs) {
+		let date = val;
+		if (typeof date === "string") {
+			date = dayjs(date);
+		}
+		return date.format("DD MMM, YYYY");
 	}
 }
 export default Format;

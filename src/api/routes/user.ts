@@ -1,8 +1,18 @@
-import { authFetcher, publicProxyApiFetcher } from "@/lib/fetcher";
+import {
+	authFetcher,
+	publicFetcher,
+	publicProxyApiFetcher,
+} from "@/lib/fetcher";
 import { mainSchema } from "../schema";
 import { toFromData } from "@/utils/request";
+import { PaginationParams } from "@/types";
 
 const user = {
+	getUserProfile: async (profileName: string) => {
+		const response: mainSchema["OtherUserInfoDTOApiResponse"] =
+			await publicFetcher.get(`api/User/${profileName}`).json();
+		return response?.data;
+	},
 	register: async (
 		params: mainSchema["RegisterUserDTO"]
 	): Promise<mainSchema["UserInfoDTOApiResponse"]> => {
@@ -39,6 +49,86 @@ const user = {
 		return await publicProxyApiFetcher
 			.put("proxyApi/User/EmailNotificationPreferences", { json: data })
 			.json<mainSchema["StringApiResponse"]>();
+	},
+	getUserPurchase: async ({
+		id,
+		creditSpendType,
+	}: mainSchema["CheckPaymentStatusDTO"] & {
+		id: string;
+	}) => {
+		return await publicProxyApiFetcher
+			.post(`proxyApi/User/${id}/Payments`, { json: { creditSpendType } })
+			.json<mainSchema["Int32BooleanDictionaryApiResponse"]>();
+	},
+	pdfPayment: async ({
+		id,
+		creditSpendType,
+	}: mainSchema["PaymentTypeDTO"] & {
+		id: string;
+	}) => {
+		return await publicProxyApiFetcher
+			.post(`proxyApi/User/${id}/PDFPayment`, { json: { creditSpendType } })
+			.json<mainSchema["StringApiResponse"]>();
+	},
+	amazonPayment: async ({
+		id,
+		creditSpendType,
+	}: mainSchema["PaymentTypeDTO"] & {
+		id: string;
+	}) => {
+		return await publicProxyApiFetcher
+			.post(`proxyApi/Amazon/${id}/Payment`, { json: { creditSpendType } })
+			.json<mainSchema["StringApiResponse"]>();
+	},
+	getAllUserItems: async (
+		params: PaginationParams
+	): Promise<mainSchema["ReturnUserStoryItemsDTOPagedList"]> => {
+		const data: mainSchema["ReturnUserStoryItemsDTOPagedListApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/StoryBook/GetAllPurchasedPDFs`, { searchParams: params })
+				.json();
+		if (!data.data) {
+			throw new Error("Internal Server Error");
+		}
+		return data.data;
+	},
+	getSingleUserAmazonItem: async (
+		id: string
+	): Promise<mainSchema["ReturnUserAmazonBookDTO"]> => {
+		const data: mainSchema["ReturnUserAmazonBookDTOApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/WebStory/GetSingleAmazonRequest/${id}`)
+				.json();
+		if (!data.data) {
+			throw new Error("Internal Server Error");
+		}
+		return data.data;
+	},
+	getAllUserAmazonItems: async (
+		params: PaginationParams
+	): Promise<mainSchema["ReturnUserAmazonBookDTOPagedList"]> => {
+		const data: mainSchema["ReturnUserAmazonBookDTOPagedListApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/WebStory/GetAllUserAmazonRequests`, {
+					searchParams: params,
+				})
+				.json();
+		if (!data.data) {
+			throw new Error("Internal Server Error");
+		}
+		return data.data;
+	},
+	legacyGetAllUserVideos: async (
+		params: PaginationParams
+	): Promise<mainSchema["ReturnUserStoryItemsDTOPagedList"]> => {
+		const data: mainSchema["ReturnUserStoryItemsDTOPagedListApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/WebStory/GetAllUserItems`, { searchParams: params })
+				.json();
+		if (!data.data) {
+			throw new Error("Internal Server Error");
+		}
+		return data.data;
 	},
 };
 

@@ -21,6 +21,7 @@ import {
 	Heart,
 	Clipboard,
 	Twitter,
+	BookOpen,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { ModeToggle } from "../edit-story/components/mode-toggle";
@@ -44,6 +45,7 @@ import StoryLogo from "../../../public/auth-prompt/story-logo";
 import Link from "next/link";
 import GenericModal from "@/components/ui/generic-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { DisplayAspectRatios } from "@/utils/enums";
 import useEventLogger from "@/utils/analytics";
 import { HTTPError } from "ky";
 import { useUserCanUseCredits } from "@/utils/payment";
@@ -394,7 +396,9 @@ export default function PublishedStory({
 								ImageRatio.width === 3 && "md:max-w-[900px]",
 								ImageRatio.width === 4 && "md:max-w-[1280px]",
 								ImageRatio.width === 9 && "md:max-w-[780px]",
-								ImageRatio.width === 16 && "md:max-w-[1620px]"
+								ImageRatio.width === 16 && "md:max-w-[1620px]",
+								ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+									"lg:flex-col 2xl:flex-row"
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
@@ -449,7 +453,11 @@ export default function PublishedStory({
 
 							{/* </Loading> */}
 							<div
-								className={`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`}
+								className={cn(
+									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`,
+									ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+										"lg:max-w-[100%] 2xl:max-w-sm"
+								)}
 							>
 								<div className="relative space-y-2">
 									<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
@@ -625,6 +633,15 @@ export default function PublishedStory({
 											</Button>
 										)}
 
+										<Button
+											className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+											variant="outline"
+											disabled={isVideoDownloading}
+										>
+											<DownloadIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+											{isVideoDownloading ? "Loading" : "Download"}
+										</Button>
+
 										{User?.data?.data?.id === Webstory.data?.user?.id &&
 											Webstory.data?.id && (
 												<DeleteVideoButton storyId={Webstory.data.id} />
@@ -654,8 +671,17 @@ export default function PublishedStory({
 											</Button>
 										)}
 								</div>
-								<div className="lg:hidden my-2.5 bg-slate-200 self-stretch h-px" />
-								<div className="flex gap-x-2.5">
+								<div
+									className={cn(
+										"lg:hidden my-2.5 bg-slate-200 self-stretch h-px",
+										ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+											"lg:flex 2xl:hidden"
+									)}
+								/>
+								<Link
+									href={`/${Webstory.data?.user?.profileName}`}
+									className="flex gap-x-2.5"
+								>
 									{isLoading ? (
 										<Skeleton className="w-[44px] h-[44px] rounded-full" />
 									) : (
@@ -699,21 +725,8 @@ export default function PublishedStory({
 											)}
 										</span>
 									)}
-								</div>
+								</Link>
 							</div>
-							{/*
-								<p>
-													{(Webstory.data.user?.videoCount ?? 0) +
-														(Webstory.data.user?.storyCount ?? 0)}{" "}
-													Stories
-												</p>
-												<p className="text-slate-300"> • </p>
-								<a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
 						</div>
 					</div>
 					<div className="absolute bottom-10 left-4 items-center hidden md:flex flex-row gap-x-1">

@@ -6,7 +6,9 @@ import {
 	Facebook,
 	Twitter,
 	Clipboard,
+	FileText,
 	Edit,
+	BookOpen,
 } from "lucide-react";
 import {
 	FacebookShareButton,
@@ -87,6 +89,26 @@ const StoryPageButtons = ({
 		const url = window.location.href;
 		setShareUrl(url);
 	}, [router.asPath]);
+
+	const handleClickDownloadPdf = () => {
+		router.push(
+			Routes.DownloadPdfStory(
+				WebstoryData?.storyType,
+				genre!.toString(),
+				id!.toString()
+			)
+		);
+	};
+
+	const handleClickPublishBook = () => {
+		router.push(
+			Routes.PublishBook(
+				WebstoryData?.storyType,
+				genre!.toString(),
+				id!.toString()
+			)
+		);
+	};
 
 	return (
 		<div className="flex flex-wrap gap-2">
@@ -172,6 +194,26 @@ const StoryPageButtons = ({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
+
+			<Button
+				className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+				variant="outline"
+				onClick={handleClickDownloadPdf}
+			>
+				<FileText className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+				Download PDF
+			</Button>
+
+			{User?.data?.data?.id === WebstoryData?.user?.id && WebstoryData?.id && (
+				<Button
+					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+					variant="outline"
+					onClick={handleClickPublishBook}
+				>
+					<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+					Publish on Amazon
+				</Button>
+			)}
 
 			{User?.data?.data?.id === WebstoryData?.user?.id && WebstoryData?.id && (
 				<DeleteStorybookButton storyId={WebstoryData.id} />

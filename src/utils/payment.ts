@@ -5,6 +5,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 
 import api from "@/api";
 import { SubscriptionPlan } from "@/utils/enums";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 export const useUserCanUseCredits = () => {
 	const { data } = useQuery({
@@ -13,6 +14,7 @@ export const useUserCanUseCredits = () => {
 	});
 
 	const subscription = data?.data?.subscription;
+	const { invalidateUser } = useUpdateUser();
 
 	const userCanUseCredits = async ({
 		credits,
@@ -32,6 +34,7 @@ export const useUserCanUseCredits = () => {
 			| "using custom plan";
 		success?: boolean;
 	}> => {
+		await invalidateUser();
 		if (!data?.data) {
 			return { error: "user not logged in" };
 		}
