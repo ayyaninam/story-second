@@ -247,7 +247,7 @@ const StoryBookDownloadPdfPage = ({
 														<div className="border-2 border-black">
 															<Image
 																alt="Story Cover"
-																src="/pdfs/samples/Ebook.webp"
+																src="/pdfs/samples/EBook.webp"
 																width={512}
 																height={512}
 															/>
