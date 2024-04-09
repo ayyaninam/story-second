@@ -312,10 +312,6 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 												package and share your story with the world!
 											</p>
 										</div>
-										<p className="tracking-wide leading-loose font-semibold text-sm">
-											Note: This is NOT an accepted format for publishing on
-											Amazon.
-										</p>
 
 										<div className="flex flex-row justify-end mt-4">
 											<div className="flex flex-row-reverse items-center gap-5 flex-wrap max-sm:pb-10">
