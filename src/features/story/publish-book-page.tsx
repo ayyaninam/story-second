@@ -236,7 +236,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 													</h3>
 													<ul>
 														<li className="tracking-wide leading-loose">
-															<strong>Cost:</strong> $50 USD
+															<strong>Cost:</strong> $50 USD [5k credits]
 														</li>
 													</ul>
 												</div>
@@ -277,7 +277,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 													</h3>
 													<ul>
 														<li className="tracking-wide leading-loose">
-															<strong>Cost:</strong> $100 USD
+															<strong>Cost:</strong> $100 USD [10k credits]
 														</li>
 													</ul>
 												</div>

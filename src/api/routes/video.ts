@@ -235,6 +235,21 @@ const video = {
 		if (!data.data) return null;
 		return data?.data;
 	},
+	copyStory: async ({
+		id,
+		accessToken,
+	}: {
+		id: string;
+		accessToken?: string;
+	}): Promise<mainSchema["ReturnWebStoryDTO"] | null> => {
+		const data: mainSchema["ReturnWebStoryDTOApiResponse"] = await authFetcher(
+			accessToken ?? getJwt()
+		)
+			.post(`api/StoryBook/CopyStoryBook/${id}`)
+			.json();
+		if (!data.data) return null;
+		return data?.data;
+	},
 };
 
 export default video;

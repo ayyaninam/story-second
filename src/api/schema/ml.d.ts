@@ -223,7 +223,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 32816054
+       * @default 44412687
        */
       seed?: number;
       /**
@@ -274,7 +274,7 @@ export interface components {
       image_sampling_steps?: number;
       /**
        * Image Seed
-       * @default 95580045
+       * @default 31388118
        */
       image_seed?: number;
       /**

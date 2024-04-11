@@ -15,8 +15,6 @@ import PageLayout from "@/components/layouts/PageLayout";
 import { StoryOutputTypes } from "@/utils/enums";
 import LibraryAccentStyle from "@/features/library/library-accent-style";
 import FeedAccentStyle from "@/features/feed/feed-accent-style";
-import AmazonPublishForm from "@/features/story/components/amazon-publish-form";
-import AmazonConfirmPage from "@/features/story/components/amazon-confirm-page";
 import AmazonDownloadPage from "@/features/story/components/amazon-download-page";
 
 export default function DownloadAmazonBook({
@@ -89,18 +87,24 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 	});
+
 	if (accessToken) {
-		await queryClient.prefetchQuery({
+		const amazonBookStoryData = await queryClient.fetchQuery({
 			queryFn: async () =>
-				await api.webstory.interactions(storyData?.id as string, accessToken),
-			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-			queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
+				await api.amazon.getMetaDataServer({
+					id: storyData?.id as string,
+					accessToken: accessToken as string,
+				}),
+			// eslint-disable-next-line @tanstack/query/exhaustive-deps
+			queryKey: [QueryKeys.AMAZON_BOOK_METADATA, ctx.resolvedUrl],
 		});
-		await queryClient.prefetchQuery({
-			queryFn: async () => await api.user.get(),
-			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-			queryKey: [QueryKeys.USER],
-		});
+		storyData.storyTitle = amazonBookStoryData.data?.title;
+		if (storyData.user) {
+			storyData.user.name =
+				amazonBookStoryData.data?.firstName ||
+				"" + amazonBookStoryData.data?.middleName;
+			storyData.user.lastName = amazonBookStoryData.data?.lastName;
+		}
 	} else {
 		return {
 			redirect: {

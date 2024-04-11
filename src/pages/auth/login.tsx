@@ -35,6 +35,7 @@ export default function LoginPage() {
 					title: "Get Started",
 					description: "Login to your account",
 				}}
+				noindex
 			/>
 			<style jsx global>
 				{`

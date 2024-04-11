@@ -1,4 +1,8 @@
-import { publicFetcher, publicProxyApiFetcher } from "@/lib/fetcher";
+import {
+	authFetcher,
+	publicFetcher,
+	publicProxyApiFetcher,
+} from "@/lib/fetcher";
 import { mainSchema } from "../schema";
 
 const amazon = {
@@ -17,6 +21,20 @@ const amazon = {
 		await publicProxyApiFetcher
 			.get(`proxyApi/WebStory/GetMetaData/${id}`)
 			.json(),
+
+	getMetaDataServer: async ({
+		id,
+		accessToken,
+	}: {
+		id: string;
+		accessToken: string;
+	}): Promise<mainSchema["ReturnBookMetaDataDTOApiResponse"]> =>
+		await authFetcher(accessToken)
+			.get(`api/WebStory/GetMetaData/${id}`, {
+				searchParams: { id },
+			})
+			.json(),
+
 	getAmazonCategories: async ({
 		id,
 		amazonMarketplace,
