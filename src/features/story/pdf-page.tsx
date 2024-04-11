@@ -96,10 +96,10 @@ const StoryBookDownloadPdfPage = ({
 					...Object.values(legacyOptions),
 				],
 			}),
-		staleTime: 3000,
+		staleTime: 0,
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.USER_PAYMENT, router.asPath],
-		enabled: !User?.data?.data?.id || !story?.id,
+		enabled: !!User?.data?.data?.id || !!story?.id,
 	});
 
 	const pdfCreditsCost = 2500;
@@ -130,6 +130,12 @@ const StoryBookDownloadPdfPage = ({
 		await UserPurchase.refetch();
 		await User.refetch();
 	};
+
+	console.log(UserPurchase.data?.data);
+	console.log(
+		"Purchased?" + UserPurchase.data?.data?.[itemType] ||
+			UserPurchase.data?.data?.[legacyItemType]
+	);
 
 	if (!story) {
 		return null;
@@ -247,7 +253,7 @@ const StoryBookDownloadPdfPage = ({
 														<div className="border-2 border-black">
 															<Image
 																alt="Story Cover"
-																src="/pdfs/samples/Ebook.webp"
+																src="/pdfs/samples/EBook.webp"
 																width={512}
 																height={512}
 															/>
