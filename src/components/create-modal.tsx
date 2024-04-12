@@ -85,6 +85,7 @@ const GenerateModalContent: React.FC<{
 	const { user } = useUser();
 
 	const onSubmit = async () => {
+		localStorage.setItem("prompt", input);
 		if (!user) {
 			if (window.location.pathname === "/prompt") {
 				window.parent.location.href = "/auth/login?returnTo=/generate";
@@ -93,7 +94,6 @@ const GenerateModalContent: React.FC<{
 			}
 			return;
 		}
-		localStorage.setItem("prompt", input);
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
 			?.enumValue as StoryOutputTypes;
 		const isStoryBook = outputType === StoryOutputTypes.Story;
