@@ -36,10 +36,10 @@ function Feed({
 				openGraph={{
 					images: [
 						{
-							url: "/og-assets/og-feed.png",
+							url: userData?.profilePicture ?? "/og-assets/og-feed.png",
 							width: 1200,
 							height: 630,
-							alt: "Feed Story.com",
+							alt: userData.profileName || "User Profile",
 						},
 					],
 				}}
