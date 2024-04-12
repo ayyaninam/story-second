@@ -16,6 +16,7 @@ import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import UserProfilePage from "@/features/user-feed";
 import { fetchUserFeedStories } from "@/utils/fetch-user-stories";
 import api from "@/api";
+import Format from "@/utils/format";
 
 function Feed({
 	session,
@@ -27,15 +28,21 @@ function Feed({
 	return (
 		<HydrationBoundary state={dehydratedState}>
 			<NextSeo
-				title="Feed"
-				description="Feed our massive colleciton of videos, storybooks, and more"
+				title={
+					`${userData?.name || ""}${userData?.lastName ? " " + userData?.lastName : ""}` ||
+					userData.profileName ||
+					"User Profile"
+				}
+				description={`${userData?.bio || ""}`}
 				openGraph={{
 					images: [
 						{
-							url: "/og-assets/og-feed.png",
+							url: userData?.profilePicture
+								? Format.GetImageUrl(userData.profilePicture)
+								: "/og-assets/og-feed.png",
 							width: 1200,
 							height: 630,
-							alt: "Feed Story.com",
+							alt: userData.profileName || "User Profile",
 						},
 					],
 				}}
