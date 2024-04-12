@@ -10,7 +10,7 @@ async function fetchFromApi(endpoint: string) {
 		}
 		const { data } = await response.json();
 		// limit to 30k responses
-		return data.slice(0, 30000);
+		return data.slice(0, 15000);
 	} catch (error) {
 		console.error(env.NEXT_PUBLIC_API_URL + endpoint);
 		console.error(`Error fetching data from API: ${error}`);
@@ -76,9 +76,3 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse) {
 		res.status(500).end();
 	}
 }
-
-export const config = {
-	api: {
-		responseLimit: "20mb",
-	},
-};
