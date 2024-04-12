@@ -39,6 +39,7 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import useEventLogger from "@/utils/analytics";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import StoryLogo from "../../public/auth-prompt/story-logo";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 /**
  * Story generation form.
@@ -81,7 +82,17 @@ const GenerateModalContent: React.FC<{
 
 	const { userCanUseCredits } = useUserCanUseCredits();
 
+	const { user } = useUser();
+
 	const onSubmit = async () => {
+		if (!user) {
+			if (window.location.pathname === "/prompt") {
+				window.parent.location.href = "/auth/login?returnTo=/generate";
+			} else {
+				window.location.href = "/auth/login?returnTo=/generate";
+			}
+			return;
+		}
 		localStorage.setItem("prompt", input);
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
 			?.enumValue as StoryOutputTypes;
@@ -347,13 +358,13 @@ export const submitToBackend = async (
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
 	const data = JSON.stringify(params);
-
+	console.log(data);
 	try {
 		localStorage.setItem("prompt", params.prompt || "");
 		const json: { storyPath: string } = await publicProxyApiFetcher
 			.post("api/story/create", { body: data })
 			.json();
-
+		console.log(json);
 		invalidateUser();
 
 		if (json.storyPath == null) {
