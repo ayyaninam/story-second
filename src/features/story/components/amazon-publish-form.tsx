@@ -54,7 +54,7 @@ const publishingSchema = z
 		summary: z
 			.string()
 			.min(20, "Summary must be at least 20 characters")
-			.max(1000, "Summary must be less than 1000 characters"),
+			.max(4000, "Summary must be less than 4000 characters"),
 		ageGroupMin: z.union([z.literal("18+"), z.enum(agesTuple)]),
 		ageGroupMax: z.union([z.literal("18+"), z.enum(agesTuple)]),
 		amazonMarketplace: z.enum([
@@ -162,6 +162,9 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 
 	useEffect(() => {
 		if (metadata?.data) {
+			if (metadata.data.ageGroupMin === "0") {
+				metadata.data.ageGroupMin = "1";
+			}
 			const formValues = {
 				...formMethods.getValues(),
 				title: metadata.data.title || "",
