@@ -27,8 +27,12 @@ function Feed({
 	return (
 		<HydrationBoundary state={dehydratedState}>
 			<NextSeo
-				title="Feed"
-				description="Feed our massive colleciton of videos, storybooks, and more"
+				title={
+					`${userData?.name || ""}${userData?.lastName ? " " + userData?.lastName : ""}` ||
+					userData.profileName ||
+					"User Profile"
+				}
+				description={`${userData?.bio || ""}`}
 				openGraph={{
 					images: [
 						{
