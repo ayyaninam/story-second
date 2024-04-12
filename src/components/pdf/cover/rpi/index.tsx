@@ -114,7 +114,7 @@ const CoverRpiPDF = ({ storyData }: coverRpiPDFProps) => {
 							src="/pdf/logo-bw-outline.png"
 						/>
 						<Text style={styles.copyrightText}>
-							©️ {new Date().getFullYear()} StoryBird.ai
+							©️ {new Date().getFullYear()} Story.com
 						</Text>
 					</div>
 				</div>

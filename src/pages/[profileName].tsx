@@ -16,6 +16,7 @@ import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import UserProfilePage from "@/features/user-feed";
 import { fetchUserFeedStories } from "@/utils/fetch-user-stories";
 import api from "@/api";
+import Format from "@/utils/format";
 
 function Feed({
 	session,
@@ -36,7 +37,9 @@ function Feed({
 				openGraph={{
 					images: [
 						{
-							url: userData?.profilePicture ?? "/og-assets/og-feed.png",
+							url: userData?.profilePicture
+								? Format.GetImageUrl(userData.profilePicture)
+								: "/og-assets/og-feed.png",
 							width: 1200,
 							height: 630,
 							alt: userData.profileName || "User Profile",
