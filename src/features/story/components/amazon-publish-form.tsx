@@ -173,8 +173,8 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 				middleName: metadata.data.middleName || "",
 				lastName: metadata.data.lastName || "",
 				summary: metadata.data.summary || "",
-				ageGroupMin: metadata.data.ageGroupMin?.toString() || "1",
-				ageGroupMax: metadata.data.ageGroupMax?.toString() || "18+",
+				ageGroupMin: metadata.data.ageGroupMin || "1",
+				ageGroupMax: metadata.data.ageGroupMax || "18+",
 				amazonMarketplace:
 					metadata?.data?.amazonMarketplace || AmazonMarketplace.US,
 				seoKeywords: metadata?.data?.seoKeywords
