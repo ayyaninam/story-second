@@ -633,15 +633,6 @@ export default function PublishedStory({
 											</Button>
 										)}
 
-										<Button
-											className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-											variant="outline"
-											disabled={isVideoDownloading}
-										>
-											<DownloadIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-											{isVideoDownloading ? "Loading" : "Download"}
-										</Button>
-
 										{User?.data?.data?.id === Webstory.data?.user?.id &&
 											Webstory.data?.id && (
 												<DeleteVideoButton storyId={Webstory.data.id} />

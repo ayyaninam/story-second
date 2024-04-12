@@ -312,8 +312,8 @@ const StoryBookDownloadPdfPage = ({
 														</h3>
 														<ul>
 															<li className="tracking-wide leading-loose">
-																<strong>Cost:</strong> {pdfCreditsCost} Credits
-																[${pdfCreditsCost / 100} USD]
+																<strong>Cost:</strong> ${pdfCreditsCost / 100}{" "}
+																USD [{pdfCreditsCost} Credits]
 															</li>
 														</ul>
 													</div>

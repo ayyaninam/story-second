@@ -98,7 +98,7 @@ export const languages = [
 		enumValue: StoryLanguages.Japanese,
 	},
 	{
-		icon: "/flags/ch.svg",
+		icon: "/flags/cn.svg",
 		value: "Chinese",
 		enumValue: StoryLanguages.Chinese,
 	},

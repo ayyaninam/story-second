@@ -9,6 +9,7 @@ import {
 	FileText,
 	Edit,
 	BookOpen,
+	Video,
 } from "lucide-react";
 import {
 	FacebookShareButton,
@@ -31,6 +32,10 @@ import Routes from "@/routes";
 import { useRouter } from "next/router";
 import { SessionType } from "@/hooks/useSaveSessionToken";
 import DeleteStorybookButton from "./delete-storybook-button";
+import GenericModal from "@/components/ui/generic-modal";
+import { HTTPError } from "ky";
+import { useUserCanUseCredits } from "@/utils/payment";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 const StoryPageButtons = ({
 	WebstoryData,
@@ -80,10 +85,89 @@ const StoryPageButtons = ({
 			});
 		}
 	};
+	const { invalidateUser } = useUpdateUser();
 
 	const storyLikes = WebstoryData?.storyLikes ?? 0;
-
+	const CopyStory = useMutation({
+		mutationFn: api.video.copyStory,
+	});
 	const [shareUrl, setShareUrl] = useState("");
+	const { userCanUseCredits } = useUserCanUseCredits();
+	const [openVideoCreditsDialog, setOpenVideoCreditsDialog] = useState(false);
+	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+
+	const handleCopyStory = async () => {
+		const { error } = await userCanUseCredits({
+			variant: "story book",
+			storybookCredits: 1,
+		});
+
+		if (error) {
+			if (error === "not enough credits") {
+				setOpenVideoCreditsDialog(true);
+			} else if (
+				error === "not paid subscription" ||
+				error === "using custom plan"
+			) {
+				setOpenSubscriptionDialog(true);
+			}
+
+			return;
+		}
+
+		try {
+			const newStory = await CopyStory.mutateAsync({
+				id: WebstoryData.id as string,
+				accessToken: session.accessToken,
+			});
+
+			if (newStory) {
+				invalidateUser();
+				router.push(
+					Routes.ViewStory(
+						newStory.storyType,
+						newStory.topLevelCategory!,
+						newStory.slug!
+					)
+				);
+				toast.success("Video added to your library");
+			} else {
+				// Handle null newStory case if needed
+				toast.error("Failed to add video to your library. Please try again.");
+			}
+		} catch (error) {
+			if (error instanceof HTTPError) {
+				switch (error.response.status) {
+					case 401: {
+						// Handle unauthorized error
+						toast.error("You need to log in to perform this action.");
+						router.push(
+							Routes.ToAuthPage(
+								Routes.ViewStory(
+									WebstoryData.storyType,
+									router.query.genre!.toString(),
+									router.query.id!.toString()
+								)
+							)
+						);
+						break;
+					}
+					case 402: {
+						toast.error("Not enough balance to copy video.");
+						break;
+					}
+					default: {
+						toast.error("Unable to copy video. Please try again.");
+						console.error(error.message, error.response.status);
+					}
+				}
+			} else {
+				// Handle non-HTTPError errors
+				toast.error("An unexpected error occurred. Please try again.");
+				console.error(error);
+			}
+		}
+	};
 
 	useEffect(() => {
 		const url = window.location.href;
@@ -91,6 +175,13 @@ const StoryPageButtons = ({
 	}, [router.asPath]);
 
 	const handleClickDownloadPdf = () => {
+		if (WebstoryData?.user?.id !== User?.data?.data?.id) {
+			toast.dismiss();
+			toast.error(
+				"Please add this story to your library before downloading. You can do this by clicking the 'Make a story like this' button."
+			);
+			return;
+		}
 		router.push(
 			Routes.DownloadPdfStory(
 				WebstoryData?.storyType,
@@ -112,6 +203,21 @@ const StoryPageButtons = ({
 
 	return (
 		<div className="flex flex-wrap gap-2">
+			{!(User?.data?.data?.id === WebstoryData?.user?.id) &&
+				// WebstoryData?.storyType === 0 &&
+				WebstoryData?.imagesDone && (
+					<GenericModal
+						title="Duplicate Story"
+						description="We'll add a story to your library with the same plot that you can make your own and edit! This action will cost 1 story credit"
+						buttonText={
+							<span className="flex flex-row">
+								<Video className="mr-1 h-4 w-4 md:h-5 md:w-5" />
+								Make a story like this
+							</span>
+						}
+						confirmAction={handleCopyStory}
+					/>
+				)}
 			{User?.data?.data?.id === WebstoryData.user?.id && (
 				<Button
 					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"

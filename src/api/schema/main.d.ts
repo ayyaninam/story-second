@@ -1493,6 +1493,13 @@ export interface paths {
       };
     };
   };
+  "/api/StoryBook/CopyStoryBook/{id}": {
+    /**
+     * Copy a storybook
+     * @description Copy a storybook based on the provided story id
+     */
+    post: operations["CopyStoryBook"];
+  };
   "/api/TextToSpeech/DefaultAudio/{id}": {
     /**
      * Generate audio
@@ -5094,8 +5101,12 @@ export interface components {
       title?: string | null;
       /** @description The subtitle of the book. */
       subtitle?: string | null;
-      /** @description The author of the book. */
-      author?: string | null;
+      /** @description The first name of the author of the book. */
+      firstName?: string | null;
+      /** @description The middle name of the author of the book. */
+      middleName?: string | null;
+      /** @description The last name of the author of the book. */
+      lastName?: string | null;
       /** @description GPT generated summary of the book. */
       summary?: string | null;
       /** @description Categories */
@@ -7833,6 +7844,31 @@ export interface operations {
     responses: {
       /** @description Success */
       200: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Copy a storybook
+   * @description Copy a storybook based on the provided story id
+   */
+  CopyStoryBook: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "text/plain": components["schemas"]["ReturnWebStoryDTOApiResponse"];
+          "application/json": components["schemas"]["ReturnWebStoryDTOApiResponse"];
+          "text/json": components["schemas"]["ReturnWebStoryDTOApiResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
         content: never;
       };
     };
