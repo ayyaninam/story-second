@@ -36,6 +36,9 @@ import GenericModal from "@/components/ui/generic-modal";
 import { HTTPError } from "ky";
 import { useUserCanUseCredits } from "@/utils/payment";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import CheckoutDialog from "@/features/pricing/checkout-dialog";
+import { AllowanceType } from "@/utils/enums";
+import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 
 const StoryPageButtons = ({
 	WebstoryData,
@@ -48,6 +51,8 @@ const StoryPageButtons = ({
 	const queryClient = useQueryClient();
 
 	const { genre, id } = router.query;
+
+	const [dialogOpen, setDialogOpen] = useState(false);
 
 	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
 		queryFn: () => api.user.get(),
@@ -97,6 +102,17 @@ const StoryPageButtons = ({
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
 
 	const handleCopyStory = async () => {
+		if (!User?.data?.data) {
+			router.push(
+				Routes.ToAuthPage(
+					Routes.ViewStory(
+						WebstoryData.storyType,
+						genre!.toString(),
+						id!.toString()
+					)
+				)
+			);
+		}
 		const { error } = await userCanUseCredits({
 			variant: "story book",
 			storybookCredits: 1,
@@ -175,11 +191,24 @@ const StoryPageButtons = ({
 	}, [router.asPath]);
 
 	const handleClickDownloadPdf = () => {
+		if (!User?.data) {
+			router.push(
+				Routes.ToAuthPage(
+					Routes.ViewStory(
+						WebstoryData.storyType,
+						genre!.toString(),
+						id!.toString()
+					)
+				)
+			);
+			return;
+		}
 		if (WebstoryData?.user?.id !== User?.data?.data?.id) {
 			toast.dismiss();
 			toast.error(
-				"Please add this story to your library before downloading. You can do this by clicking the 'Make a story like this' button."
+				"Please add this story to your library before downloading it's PDF."
 			);
+			setDialogOpen(true);
 			return;
 		}
 		router.push(
@@ -202,129 +231,147 @@ const StoryPageButtons = ({
 	};
 
 	return (
-		<div className="flex flex-wrap gap-2">
-			{!(User?.data?.data?.id === WebstoryData?.user?.id) &&
-				// WebstoryData?.storyType === 0 &&
-				WebstoryData?.imagesDone && (
-					<GenericModal
-						title="Duplicate Story"
-						description="We'll add a story to your library with the same plot that you can make your own and edit! This action will cost 1 story credit"
-						buttonText={
-							<span className="flex flex-row">
-								<Video className="mr-1 h-4 w-4 md:h-5 md:w-5" />
-								Make a story like this
-							</span>
-						}
-						confirmAction={handleCopyStory}
-					/>
-				)}
-			{User?.data?.data?.id === WebstoryData.user?.id && (
-				<Button
-					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-					variant="outline"
-					onClick={() =>
-						router.push(
-							Routes.EditScript(
-								WebstoryData.storyType,
-								WebstoryData.topLevelCategory!,
-								WebstoryData.slug!
-							)
-						)
-					}
-				>
-					<Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Story
-				</Button>
-			)}
-			<Button
-				className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-				variant="outline"
-				onClick={() => handleLikeVideo(!Interactions.data?.liked)}
-			>
-				<Heart
-					className="mr-2 h-4 w-4 md:h-5 md:w-5"
-					style={{
-						fill: Interactions.data?.liked ? "#EC4899" : undefined,
-						color: Interactions.data?.liked ? "#EC4899" : undefined,
-					}}
-				/>
-				{storyLikes}
-			</Button>
-
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
+		<>
+			<div className="flex flex-wrap gap-2">
+				{!(User?.data?.data?.id === WebstoryData?.user?.id) &&
+					WebstoryData?.storyType === 0 &&
+					WebstoryData?.imagesDone && (
+						<GenericModal
+							title="Duplicate Story"
+							description="We'll add a story to your library with the same plot that you can make your own and edit! This action will cost 1 story credit"
+							buttonText={
+								<span className="flex flex-row">
+									<Video className="mr-1 h-4 w-4 md:h-5 md:w-5" />
+									Make a story like this
+								</span>
+							}
+							confirmAction={handleCopyStory}
+							dialogOpen={dialogOpen}
+							setDialogOpen={setDialogOpen}
+						/>
+					)}
+				{User?.data?.data?.id === WebstoryData.user?.id && (
 					<Button
 						className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 						variant="outline"
+						onClick={() =>
+							router.push(
+								Routes.EditScript(
+									WebstoryData.storyType,
+									WebstoryData.topLevelCategory!,
+									WebstoryData.slug!
+								)
+							)
+						}
 					>
-						<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Share
+						<Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit Story
 					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent>
-					<FacebookShareButton url={shareUrl} className="w-full">
-						<DropdownMenuItem className="cursor-pointer">
-							<Facebook className="h-5 w-5 mr-1.5" />
-							<span>Facebook</span>
-						</DropdownMenuItem>
-					</FacebookShareButton>
-					<TwitterShareButton
-						title={`${WebstoryData.storyTitle}\n\n`}
-						url={shareUrl}
-						className="flex items-center w-full"
-					>
-						<DropdownMenuItem className="cursor-pointer w-full">
-							<Twitter className="h-5 w-5 mr-1.5" />
-							<span>Twitter</span>
-						</DropdownMenuItem>
-					</TwitterShareButton>
-					<WhatsappShareButton
-						aria-label="Share on Whatsapp"
-						url={shareUrl}
-						title={`Just stumbled upon "${WebstoryData.storyTitle}" on Story.com and couldn't resist sharing! 🌟 \n\n${WebstoryData.summary}\n\n`}
-						className="flex items-center w-full"
-					>
-						<DropdownMenuItem className="cursor-pointer w-full">
-							<span className="mr-1.5">
-								<Whatsapp size={20} />
-							</span>
-							<span>Whatsapp</span>
-						</DropdownMenuItem>
-					</WhatsappShareButton>
-					<DropdownMenuItem
-						className="cursor-pointer"
-						onClick={() => {
-							navigator.clipboard.writeText(window.location.href);
-							toast.success("Link copied to clipboard");
-						}}
-					>
-						<Clipboard className="h-5 w-5 mr-1.5" /> Copy Link
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-
-			<Button
-				className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-				variant="outline"
-				onClick={handleClickDownloadPdf}
-			>
-				<FileText className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-				Download PDF
-			</Button>
-
-			{User?.data?.data?.id === WebstoryData?.user?.id && WebstoryData?.id && (
+				)}
 				<Button
 					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 					variant="outline"
-					onClick={handleClickPublishBook}
+					onClick={() => handleLikeVideo(!Interactions.data?.liked)}
 				>
-					<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-					Publish on Amazon
+					<Heart
+						className="mr-2 h-4 w-4 md:h-5 md:w-5"
+						style={{
+							fill: Interactions.data?.liked ? "#EC4899" : undefined,
+							color: Interactions.data?.liked ? "#EC4899" : undefined,
+						}}
+					/>
+					{storyLikes}
 				</Button>
-			)}
 
-			{User?.data?.data?.id === WebstoryData?.user?.id && WebstoryData?.id && (
-				<DeleteStorybookButton storyId={WebstoryData.id} />
-			)}
-		</div>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+							variant="outline"
+						>
+							<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Share
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<FacebookShareButton url={shareUrl} className="w-full">
+							<DropdownMenuItem className="cursor-pointer">
+								<Facebook className="h-5 w-5 mr-1.5" />
+								<span>Facebook</span>
+							</DropdownMenuItem>
+						</FacebookShareButton>
+						<TwitterShareButton
+							title={`${WebstoryData.storyTitle}\n\n`}
+							url={shareUrl}
+							className="flex items-center w-full"
+						>
+							<DropdownMenuItem className="cursor-pointer w-full">
+								<Twitter className="h-5 w-5 mr-1.5" />
+								<span>Twitter</span>
+							</DropdownMenuItem>
+						</TwitterShareButton>
+						<WhatsappShareButton
+							aria-label="Share on Whatsapp"
+							url={shareUrl}
+							title={`Just stumbled upon "${WebstoryData.storyTitle}" on Story.com and couldn't resist sharing! 🌟 \n\n${WebstoryData.summary}\n\n`}
+							className="flex items-center w-full"
+						>
+							<DropdownMenuItem className="cursor-pointer w-full">
+								<span className="mr-1.5">
+									<Whatsapp size={20} />
+								</span>
+								<span>Whatsapp</span>
+							</DropdownMenuItem>
+						</WhatsappShareButton>
+						<DropdownMenuItem
+							className="cursor-pointer"
+							onClick={() => {
+								navigator.clipboard.writeText(window.location.href);
+								toast.success("Link copied to clipboard");
+							}}
+						>
+							<Clipboard className="h-5 w-5 mr-1.5" /> Copy Link
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+
+				<Button
+					className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+					variant="outline"
+					onClick={handleClickDownloadPdf}
+				>
+					<FileText className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+					Download PDF
+				</Button>
+
+				{User?.data?.data?.id === WebstoryData?.user?.id &&
+					WebstoryData?.id && (
+						<Button
+							className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+							variant="outline"
+							onClick={handleClickPublishBook}
+						>
+							<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+							Publish on Amazon
+						</Button>
+					)}
+
+				{User?.data?.data?.id === WebstoryData?.user?.id &&
+					WebstoryData?.id && (
+						<DeleteStorybookButton storyId={WebstoryData.id} />
+					)}
+			</div>
+
+			<CheckoutDialog
+				variant="credits"
+				allowanceType={AllowanceType.Videos}
+				open={openVideoCreditsDialog}
+				setOpen={setOpenVideoCreditsDialog}
+			/>
+
+			<UpgradeSubscriptionDialog
+				open={openSubscriptionDialog}
+				setOpen={setOpenSubscriptionDialog}
+			/>
+		</>
 	);
 };
 

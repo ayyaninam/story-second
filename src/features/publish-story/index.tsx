@@ -225,8 +225,20 @@ export default function PublishedStory({
 	const { userCanUseCredits } = useUserCanUseCredits();
 	const [openVideoCreditsDialog, setOpenVideoCreditsDialog] = useState(false);
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+	const [dialogOpen, setDialogOpen] = useState(false);
 
 	const handleCopyVideo = async () => {
+		if (!User?.data?.data) {
+			router.push(
+				Routes.ToAuthPage(
+					Routes.ViewStory(
+						storyData.storyType,
+						router.query.genre!.toString(),
+						router.query.id!.toString()
+					)
+				)
+			);
+		}
 		const { error } = await userCanUseCredits({
 			variant: "video credits",
 			videoCredits: 1,
@@ -490,6 +502,8 @@ export default function PublishedStory({
 														</span>
 													}
 													confirmAction={handleCopyVideo}
+													dialogOpen={dialogOpen}
+													setDialogOpen={setDialogOpen}
 												/>
 											)}
 										{User?.data?.data?.id === Webstory.data?.user?.id &&

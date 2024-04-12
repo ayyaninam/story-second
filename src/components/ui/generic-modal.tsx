@@ -15,14 +15,17 @@ const GenericModal = ({
 	description,
 	buttonText,
 	confirmAction,
+	dialogOpen,
+	setDialogOpen,
 }: {
 	title: string;
 	description: string;
 	buttonText: string | ReactNode;
 	confirmAction: () => Promise<void>;
+	dialogOpen: boolean;
+	setDialogOpen: (open: boolean) => void;
 }) => {
 	const [submitting, setSubmitting] = useState(false);
-	const [dialogOpen, setDialogOpen] = useState(false);
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
