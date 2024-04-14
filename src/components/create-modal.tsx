@@ -68,7 +68,7 @@ const GenerateModalContent: React.FC<{
 		videoRatios[0]?.value.toString() || ""
 	);
 	const [selectedVideoLength, setSelectedVideoLength] = useState(
-		StoryLengths.Medium
+		StoryLengths.Short
 	);
 	const [selectedLanguage, setSelectedLanguage] = useState(
 		languages[0]?.value || "English"
