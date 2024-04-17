@@ -81,7 +81,8 @@ export default function PublishedStory({
 			api.video.get(
 				router.query.genre!.toString(),
 				router.query.id!.toString(),
-				storyData.storyType
+				storyData.storyType,
+				true
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],

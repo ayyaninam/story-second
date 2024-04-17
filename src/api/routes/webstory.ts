@@ -28,7 +28,9 @@ const webstory = {
 		token?: string
 	): Promise<mainSchema["ReturnStoryInteractionDTO"]> => {
 		const data: mainSchema["ReturnStoryInteractionDTOApiResponse"] =
-			await publicProxyApiFetcher.get(`api/WebStory/${id}/Interactions`).json();
+			await publicProxyApiFetcher
+				.get(`proxyApi/WebStory/${id}/Interactions`)
+				.json();
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
 		}
@@ -44,7 +46,7 @@ const webstory = {
 	}: {
 		id: string;
 	}): Promise<mainSchema["StringApiResponse"]> =>
-		await publicProxyApiFetcher.delete(`api/Webstory/${id}/Delete`).json(),
+		await publicProxyApiFetcher.delete(`proxyApi/Webstory/${id}/Delete`).json(),
 };
 
 export default webstory;

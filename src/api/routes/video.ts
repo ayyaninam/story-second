@@ -15,7 +15,7 @@ const video = {
 		contentType: string;
 	}): Promise<mainSchema["UploadToS3DTOApiResponse"]> => {
 		return await publicProxyApiFetcher
-			.get(`api/Video/PreSignedUrl`, { searchParams: params })
+			.get(`proxyApi/Video/PreSignedUrl`, { searchParams: params })
 			.json();
 	},
 	get: async (
@@ -131,7 +131,7 @@ const video = {
 		body.append("image", params.image);
 		body.append("index", params.index.toString());
 		const data: string = await publicProxyApiFetcher
-			.post(`api/WebStory/SaveStorySegmentImage/${params.id}`, {
+			.post(`proxyApi/WebStory/SaveStorySegmentImage/${params.id}`, {
 				body: body,
 			})
 			.json();
@@ -205,7 +205,7 @@ const video = {
 		accessToken?: string;
 	}): Promise<string | undefined | null> => {
 		const data: mainSchema["StringApiResponse"] = await publicProxyApiFetcher
-			.put(`api/Video/${id}/RenderVideo`, {
+			.put(`proxyApi/Video/${id}/RenderVideo`, {
 				searchParams: { storyItemSubType: 2 },
 			})
 			.json();
@@ -222,7 +222,7 @@ const video = {
 		accessToken?: string;
 	}): Promise<mainSchema["ReturnVideoStoryDTO"] | null> => {
 		const data: mainSchema["ReturnVideoStoryDTOApiResponse"] =
-			await publicProxyApiFetcher.post(`api/Video/CopyVideo/${id}`).json();
+			await publicProxyApiFetcher.post(`proxyApi/Video/CopyVideo/${id}`).json();
 		if (!data.data) return null;
 		return data?.data;
 	},
@@ -234,7 +234,7 @@ const video = {
 	}): Promise<mainSchema["ReturnWebStoryDTO"] | null> => {
 		const data: mainSchema["ReturnWebStoryDTOApiResponse"] =
 			await publicProxyApiFetcher
-				.post(`api/StoryBook/CopyStoryBook/${id}`)
+				.post(`proxyApi/StoryBook/CopyStoryBook/${id}`)
 				.json();
 		if (!data.data) return null;
 		return data?.data;
