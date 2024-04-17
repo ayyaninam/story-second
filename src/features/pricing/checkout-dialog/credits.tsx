@@ -19,6 +19,11 @@ import CheckoutDialogContent from "./content";
 import useUpdateUser from "@/hooks/useUpdateUser";
 
 const getCost = {
+	[SubscriptionPlan.Free]: {
+		[AllowanceType.Videos]: 5,
+		[AllowanceType.StoryBooks]: 3,
+		[AllowanceType.Credits]: 0.01,
+	},
 	[SubscriptionPlan.Basic]: {
 		[AllowanceType.Videos]: 4,
 		[AllowanceType.StoryBooks]: 2,
@@ -64,12 +69,14 @@ export interface CreditsCheckoutDialogProps {
 	allowanceType: AllowanceType;
 	defaultQuantity?: number;
 	onClose: () => void;
+	skipSubscriptionCheck?: boolean;
 }
 
 const CreditsCheckoutDialog = ({
 	allowanceType,
 	defaultQuantity,
 	onClose,
+	skipSubscriptionCheck = false,
 }: CreditsCheckoutDialogProps) => {
 	const { user, updateUserDataAfter1Second } = useUser();
 	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
@@ -109,7 +116,10 @@ const CreditsCheckoutDialog = ({
 	const userHasCard = user ? getUserHasCard(user) : false;
 	const userSubscriptionPlan: SubscriptionPlan | undefined =
 		user?.subscription?.subscriptionPlan;
-	if (userSubscriptionPlan === SubscriptionPlan.Free) {
+	if (
+		userSubscriptionPlan === SubscriptionPlan.Free &&
+		!skipSubscriptionCheck
+	) {
 		throw new Error(
 			"The user shouldn't open the credits modal when using the free plan"
 		);

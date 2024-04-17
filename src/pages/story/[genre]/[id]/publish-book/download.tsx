@@ -2,7 +2,6 @@ import api from "@/api";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import React from "react";
-import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import {
 	HydrationBoundary,
 	QueryClient,
@@ -19,11 +18,9 @@ import AmazonDownloadPage from "@/features/story/components/amazon-download-page
 
 export default function DownloadAmazonBook({
 	storyData,
-	session,
 	isOwner,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	useSaveSessionToken(session.accessToken);
 	return (
 		<PageLayout pageIndex={isOwner ? 2 : 0}>
 			<HydrationBoundary state={dehydratedState}>
@@ -123,7 +120,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	}
 	return {
 		props: {
-			session: { accessToken: accessToken || "" },
 			storyData: storyData || null,
 			isOwner: user?.data?.id === storyData?.user?.id,
 			dehydratedState: dehydrate(queryClient),
