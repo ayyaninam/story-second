@@ -38,7 +38,7 @@ export default function ChallengesIcon() {
 							cy="24"
 							r="13.8"
 							stroke="url(#paint2_linear_1887_8528)"
-							stroke-width="0.4"
+							strokeWidth="0.4"
 						/>
 					</g>
 					<g filter="url(#filter3_d_1887_8528)">
@@ -256,8 +256,8 @@ export default function ChallengesIcon() {
 					y2="40"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stopColor="white" stop-opacity="0.12" />
-					<stop offset="1" stopColor="white" stop-opacity="0" />
+					<stop stopColor="white" stopOpacity="0.12" />
+					<stop offset="1" stopColor="white" stopOpacity="0" />
 				</linearGradient>
 				<linearGradient
 					id="paint1_linear_1887_8528"

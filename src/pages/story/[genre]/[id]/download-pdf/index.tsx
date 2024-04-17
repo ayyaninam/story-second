@@ -47,7 +47,7 @@ export default function PublishPage({
 }
 
 PublishPage.getLayout = function getLayout(page: ReactElement) {
-	return <PageLayout pageIndex={1}>{page}</PageLayout>;
+	return <PageLayout pageIndex={2}>{page}</PageLayout>;
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

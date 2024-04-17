@@ -12,19 +12,15 @@ import { NextSeo } from "next-seo";
 import PageLayout from "@/components/layouts/PageLayout";
 import FeedAccentStyle from "@/features/feed/feed-accent-style";
 import { getSession } from "@auth0/nextjs-auth0";
-import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import UserProfilePage from "@/features/user-feed";
 import { fetchUserFeedStories } from "@/utils/fetch-user-stories";
 import api from "@/api";
 import Format from "@/utils/format";
 
 function Feed({
-	session,
 	dehydratedState,
 	userData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	useSaveSessionToken(session.accessToken);
-
 	return (
 		<HydrationBoundary state={dehydratedState}>
 			<NextSeo
@@ -61,7 +57,6 @@ export default Feed;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 	const queryClient = new QueryClient();
-	const session = await getSession(context.req, context.res);
 
 	const { genre, profileName } = context.params as {
 		genre: string;
@@ -72,8 +67,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		page: string;
 		sort: string;
 	};
-
-	console.log(genre, profileName);
 
 	await fetchUserFeedStories(
 		{
@@ -97,7 +90,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 	return {
 		props: {
 			dehydratedState: dehydrate(queryClient),
-			session: { ...session },
 			userData,
 		},
 	};

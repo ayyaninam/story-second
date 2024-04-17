@@ -341,20 +341,34 @@ const StoryPageButtons = ({
 					Download PDF
 				</Button>
 
-				{WebstoryData.canEdit && (
-					<>
-						<Button
-							className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-							variant="outline"
-							onClick={handleClickPublishBook}
-						>
-							<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-							Publish on Amazon
-						</Button>
+				{WebstoryData.canEdit &&
+					(!WebstoryData.amazonBook ? (
+						<>
+							<Button
+								className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+								variant="outline"
+								onClick={handleClickPublishBook}
+							>
+								<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+								Publish on Amazon
+							</Button>
 
-						<DeleteStorybookButton storyId={WebstoryData.id!} />
-					</>
-				)}
+							<DeleteStorybookButton storyId={WebstoryData.id!} />
+						</>
+					) : (
+						<>
+							<Button
+								className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+								variant="outline"
+								onClick={() => {
+									router.push(`/account?step=amazon-status`);
+								}}
+							>
+								<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+								Check Amazon Status
+							</Button>
+						</>
+					))}
 			</div>
 
 			<CheckoutDialog
