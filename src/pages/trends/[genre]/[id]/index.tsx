@@ -21,12 +21,11 @@ import FeedAccentStyle from "@/features/feed/feed-accent-style";
 export default function PublishPage({
 	storyData,
 	session,
-	isOwner,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	useSaveSessionToken(session.accessToken);
 	return (
-		<PageLayout pageIndex={isOwner ? 2 : 0}>
+		<PageLayout pageIndex={storyData.canEdit ? 2 : 0}>
 			<HydrationBoundary state={dehydratedState}>
 				<NextSeo
 					title={storyData?.storyTitle || undefined}
@@ -47,7 +46,7 @@ export default function PublishPage({
 						],
 					}}
 				/>
-				{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
+				{storyData.canEdit ? <LibraryAccentStyle /> : <FeedAccentStyle />}
 				<WebStoryProvider initialValue={storyData}>
 					<PublishedStory storyData={storyData} session={session} />
 				</WebStoryProvider>
@@ -55,10 +54,6 @@ export default function PublishPage({
 		</PageLayout>
 	);
 }
-
-// PublishPage.getLayout = function getLayout(page: ReactElement) {
-// 	return <PageLayout pageIndex={1}>{page}</PageLayout>;
-// };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	let accessToken: string | undefined = undefined;
@@ -80,12 +75,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 	const queryClient = new QueryClient();
 	try {
-		const user = await queryClient.fetchQuery({
-			queryFn: async () => await api.user.getServer(accessToken),
-			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-			queryKey: [QueryKeys.USER],
-		});
-		console.log(user);
 		const storyData = await queryClient.fetchQuery({
 			queryFn: async () =>
 				await api.video.getStoryServer(
@@ -97,24 +86,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 			queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 		});
-		// if (session?.accessToken) {
-		// 	await queryClient.prefetchQuery({
-		// 		queryFn: async () =>
-		// 			await api.webstory.interactions(
-		// 				storyData?.id as string,
-		// 				session?.accessToken
-		// 			),
-		// 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		// 		queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
-		// 	});
-		// }
-		const isOwner = user?.data?.id === storyData?.user?.id;
-		// const isOwner = false;
 		return {
 			props: {
 				session: { accessToken: accessToken || "" },
 				storyData: storyData,
-				isOwner: isOwner,
 				dehydratedState: dehydrate(queryClient),
 			},
 		};

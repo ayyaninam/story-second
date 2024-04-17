@@ -10,6 +10,7 @@ import Format from "@/utils/format";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useMediaQuery } from "usehooks-ts";
 import useEventLogger from "@/utils/analytics";
+import toast from "react-hot-toast";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -83,10 +84,11 @@ export function AccountsHeader({ user }: { user: any }) {
 							className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 							variant="default"
 							onClick={() => {
-								eventLogger("create_new_clicked", {
-									sourceUrl: router.asPath,
-								});
-								router.push(Routes.Generate());
+								toast.success("Test");
+								// eventLogger("create_new_clicked", {
+								// 	sourceUrl: router.asPath,
+								// });
+								// router.push(Routes.Generate());
 							}}
 						>
 							<Plus className="h-4 w-4" /> Create New

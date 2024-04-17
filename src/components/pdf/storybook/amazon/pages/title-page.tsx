@@ -14,7 +14,7 @@ interface StorybookPDFProps {
 }
 
 const TitlePagePDF = ({ storyData }: StorybookPDFProps) => (
-	<Page size={pageSize} style={globalStyles.page}>
+	<Page size={pageSize} style={{ ...globalStyles.page, padding: "40px" }}>
 		<Text style={styles.text}>{storyData?.storyTitle}</Text>
 	</Page>
 );
