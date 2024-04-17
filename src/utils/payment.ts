@@ -84,13 +84,15 @@ export const useUserCanUseCredits = () => {
 			}
 			if (variant === "video credits") {
 				toast.error(
-					"You do not have enough Video credits to perform this action"
+					"You do not have enough Video credits to perform this action. Please purchase more credits."
 				);
 			} else if (variant === "credits") {
-				toast.error("You do not have enough credits to perform this action");
+				toast.error(
+					"You do not have enough credits to perform this action. Please purchase more credits."
+				);
 			} else if (variant === "story book") {
 				toast.error(
-					"You do not have enough StoryBook credits to perform this action"
+					"You do not have enough StoryBook credits to perform this action. Please purchase more credits."
 				);
 			}
 

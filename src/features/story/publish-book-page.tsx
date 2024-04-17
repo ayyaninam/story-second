@@ -108,6 +108,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 		const { error } = await userCanUseCredits({
 			variant: "credits",
 			credits: creditsCost,
+			skipSubscriptionCheck: true,
 		});
 
 		if (error) {
@@ -364,6 +365,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 				defaultQuantity={creditsCost}
 				open={openCreditsDialog}
 				setOpen={setOpenCreditsDialog}
+				skipSubscriptionCheck
 			/>
 
 			<UpgradeSubscriptionDialog
