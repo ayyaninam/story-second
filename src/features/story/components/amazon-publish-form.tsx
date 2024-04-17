@@ -72,7 +72,7 @@ const publishingSchema = z
 			AmazonMarketplace.NL,
 			AmazonMarketplace.UK,
 		]),
-		seoKeywords: z.array(z.string()).min(1, "At least one keyword is required"),
+		seoKeywords: z.array(z.string()).optional(),
 	})
 	.refine(
 		(data) => {
@@ -165,6 +165,13 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 			if (metadata.data.ageGroupMin === "0") {
 				metadata.data.ageGroupMin = "1";
 			}
+			const seoKeywordsFromMetadata = metadata.data.seoKeywords
+				? metadata.data.seoKeywords.split(", ")
+				: [];
+			// Ensure the array has exactly 7 elements, filling missing ones with empty strings
+			const seoKeywords = Array(7)
+				.fill("-")
+				.map((_, index) => seoKeywordsFromMetadata[index] || "-");
 			const formValues = {
 				...formMethods.getValues(),
 				title: metadata.data.title || "",
@@ -177,9 +184,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 				ageGroupMax: metadata.data.ageGroupMax || "18+",
 				amazonMarketplace:
 					metadata?.data?.amazonMarketplace || AmazonMarketplace.US,
-				seoKeywords: metadata?.data?.seoKeywords
-					? metadata.data.seoKeywords.split(", ")
-					: [""],
+				seoKeywords: seoKeywords,
 			};
 			formMethods.reset(formValues);
 		}
@@ -216,6 +221,10 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 			console.error(error);
 			toast.error("Failed to publish book");
 		}
+	};
+
+	const onInvalid = (errors: any) => {
+		console.log(errors);
 	};
 
 	return (
@@ -284,7 +293,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 									<div className="relative w-full bg-white p-6 border-t-2 lg:border-t-0 lg:border-l-2">
 										<FormProvider {...formMethods}>
 											<form
-												onSubmit={handleSubmit(onSubmit)}
+												onSubmit={handleSubmit(onSubmit, onInvalid)}
 												className="space-y-4"
 											>
 												<div>
@@ -462,7 +471,9 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 
 												{/*show all errors*/}
 												{Object.keys(formState.errors).map((key) => (
-													<Error key={key} control={control} name={key} />
+													<div className="w-full" key={key}>
+														<Error control={control} name={key} />
+													</div>
 												))}
 												<Error control={control} name="categories" />
 

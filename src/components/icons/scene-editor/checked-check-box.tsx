@@ -16,7 +16,7 @@ export default function CheckedCheckBox() {
 			<path
 				d="M6 8.28571L8.91667 12L14 6"
 				stroke="white"
-				stroke-width="1.5"
+				strokeWidth="1.5"
 				stroke-linejoin="round"
 			/>
 			<defs>

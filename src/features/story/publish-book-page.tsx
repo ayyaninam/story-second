@@ -55,9 +55,6 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 	});
 
 	const story = Webstory.data;
-	const ownStory = story?.user?.id === User?.data?.data?.id;
-
-	const [pdfType, setPdfType] = useState<PdfType>(PdfType.StoryBookPDF);
 
 	const options = {
 		publish: CreditSpendType.AmazonPublishing,
@@ -98,6 +95,16 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 
 	const handlePublishBook = async () => {
 		setSaving(true);
+		if (
+			story &&
+			(story.scenes?.flatMap((item) => item.storySegments)?.length ?? 0) < 8
+		) {
+			toast.error(
+				"Your story is too short to be published. We require stories to have at least 8 pages."
+			);
+			setSaving(false);
+			return;
+		}
 		const { error } = await userCanUseCredits({
 			variant: "credits",
 			credits: creditsCost,
@@ -109,19 +116,6 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 			} else if (error === "not enough credits") {
 				setOpenCreditsDialog(true);
 			}
-			setSaving(false);
-			return;
-		}
-
-		// logEvent('view_story_amazon_publish_clicked');
-		// avoid small PDFs on Amazon
-		if (
-			story &&
-			(story.scenes?.flatMap((item) => item.storySegments)?.length ?? 0) < 8
-		) {
-			toast.error(
-				"Your story is too short to be published. We require stories to have at least 8 pages."
-			);
 			setSaving(false);
 			return;
 		}
