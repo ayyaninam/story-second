@@ -10,12 +10,12 @@ import { StoryOutputTypes } from "@/utils/enums";
 import { FeedPageVideoQueryOptions, RegenerateVideoSegments } from "@/types";
 
 const video = {
-	getUploadUrl: async (
-		params: { fileName: string; contentType: string },
-		accessToken?: string
-	): Promise<mainSchema["UploadToS3DTOApiResponse"]> => {
-		return await authFetcher(accessToken || getJwt())
-			.get(`api/Video/PreSignedUrl`, { searchParams: params })
+	getUploadUrl: async (params: {
+		fileName: string;
+		contentType: string;
+	}): Promise<mainSchema["UploadToS3DTOApiResponse"]> => {
+		return await publicProxyApiFetcher
+			.get(`proxyApi/Video/PreSignedUrl`, { searchParams: params })
 			.json();
 	},
 	get: async (
@@ -130,12 +130,9 @@ const video = {
 		const body = new FormData();
 		body.append("image", params.image);
 		body.append("index", params.index.toString());
-		const data: string = await authFetcher(params.accessToken ?? getJwt())
-			.post(`api/WebStory/SaveStorySegmentImage/${params.id}`, {
+		const data: string = await publicProxyApiFetcher
+			.post(`proxyApi/WebStory/SaveStorySegmentImage/${params.id}`, {
 				body: body,
-				headers: {
-					Authorization: "Bearer " + (params.accessToken ?? getJwt()),
-				},
 			})
 			.json();
 
@@ -203,15 +200,12 @@ const video = {
 	},
 	render: async ({
 		id,
-		accessToken,
 	}: {
 		id: string;
 		accessToken?: string;
 	}): Promise<string | undefined | null> => {
-		const data: mainSchema["StringApiResponse"] = await authFetcher(
-			accessToken ?? getJwt()
-		)
-			.put(`api/Video/${id}/RenderVideo`, {
+		const data: mainSchema["StringApiResponse"] = await publicProxyApiFetcher
+			.put(`proxyApi/Video/${id}/RenderVideo`, {
 				searchParams: { storyItemSubType: 2 },
 			})
 			.json();
@@ -223,30 +217,25 @@ const video = {
 	},
 	copyVideo: async ({
 		id,
-		accessToken,
 	}: {
 		id: string;
 		accessToken?: string;
 	}): Promise<mainSchema["ReturnVideoStoryDTO"] | null> => {
 		const data: mainSchema["ReturnVideoStoryDTOApiResponse"] =
-			await authFetcher(accessToken ?? getJwt())
-				.post(`api/Video/CopyVideo/${id}`)
-				.json();
+			await publicProxyApiFetcher.post(`proxyApi/Video/CopyVideo/${id}`).json();
 		if (!data.data) return null;
 		return data?.data;
 	},
 	copyStory: async ({
 		id,
-		accessToken,
 	}: {
 		id: string;
 		accessToken?: string;
 	}): Promise<mainSchema["ReturnWebStoryDTO"] | null> => {
-		const data: mainSchema["ReturnWebStoryDTOApiResponse"] = await authFetcher(
-			accessToken ?? getJwt()
-		)
-			.post(`api/StoryBook/CopyStoryBook/${id}`)
-			.json();
+		const data: mainSchema["ReturnWebStoryDTOApiResponse"] =
+			await publicProxyApiFetcher
+				.post(`proxyApi/StoryBook/CopyStoryBook/${id}`)
+				.json();
 		if (!data.data) return null;
 		return data?.data;
 	},

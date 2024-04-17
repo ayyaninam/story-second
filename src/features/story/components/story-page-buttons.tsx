@@ -134,7 +134,6 @@ const StoryPageButtons = ({
 		try {
 			const newStory = await CopyStory.mutateAsync({
 				id: WebstoryData.id as string,
-				accessToken: session.accessToken,
 			});
 
 			if (newStory) {
@@ -203,7 +202,7 @@ const StoryPageButtons = ({
 			);
 			return;
 		}
-		if (WebstoryData?.user?.id !== User?.data?.data?.id) {
+		if (!WebstoryData.canEdit) {
 			toast.dismiss();
 			toast.error(
 				"Please add this story to your library before downloading it's PDF."
@@ -233,9 +232,9 @@ const StoryPageButtons = ({
 	return (
 		<>
 			<div className="flex flex-wrap gap-2">
-				{!(User?.data?.data?.id === WebstoryData?.user?.id) &&
-					WebstoryData?.storyType === 0 &&
-					WebstoryData?.imagesDone && (
+				{!WebstoryData.canEdit &&
+					WebstoryData.storyType === 0 &&
+					WebstoryData.imagesDone && (
 						<GenericModal
 							title="Duplicate Story"
 							description="We'll add a story to your library with the same plot that you can make your own and edit! This action will cost 1 story credit"
@@ -250,7 +249,7 @@ const StoryPageButtons = ({
 							setDialogOpen={setDialogOpen}
 						/>
 					)}
-				{User?.data?.data?.id === WebstoryData.user?.id && (
+				{WebstoryData.canEdit && (
 					<Button
 						className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 						variant="outline"
@@ -342,8 +341,8 @@ const StoryPageButtons = ({
 					Download PDF
 				</Button>
 
-				{User?.data?.data?.id === WebstoryData?.user?.id &&
-					WebstoryData?.id && (
+				{WebstoryData.canEdit && (
+					<>
 						<Button
 							className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 							variant="outline"
@@ -352,12 +351,10 @@ const StoryPageButtons = ({
 							<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />
 							Publish on Amazon
 						</Button>
-					)}
 
-				{User?.data?.data?.id === WebstoryData?.user?.id &&
-					WebstoryData?.id && (
-						<DeleteStorybookButton storyId={WebstoryData.id} />
-					)}
+						<DeleteStorybookButton storyId={WebstoryData.id!} />
+					</>
+				)}
 			</div>
 
 			<CheckoutDialog

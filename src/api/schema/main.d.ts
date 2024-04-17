@@ -6398,7 +6398,12 @@ export interface components {
        * @description The final rendered video key.
        */
       renderedVideoKey?: string | null;
+      /**
+       * Audios
+       * @description Background audio files attached to this story.
+       */
       audios?: components["schemas"]["WebStoryAudioDTO"][] | null;
+      canEdit?: boolean;
     };
     /** @description Represents the standard response format for API requests. */
     ReturnVideoStoryDTOApiResponse: {
@@ -6574,6 +6579,11 @@ export interface components {
        * @description A list of contests the story is enrolled in.
        */
       storyContests?: components["schemas"]["StoryContestsDTO"][] | null;
+      /**
+       * IsOwner
+       * @description Whether the user can edit the story.
+       */
+      canEdit?: boolean;
     };
     /** @description Represents the standard response format for API requests. */
     ReturnWebStoryDTOApiResponse: {
