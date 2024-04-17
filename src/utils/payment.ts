@@ -21,11 +21,13 @@ export const useUserCanUseCredits = () => {
 		videoCredits,
 		storybookCredits,
 		variant,
+		skipSubscriptionCheck = false,
 	}: {
 		credits?: number;
 		videoCredits?: number;
 		storybookCredits?: number;
 		variant: "credits" | "video credits" | "story book";
+		skipSubscriptionCheck?: boolean;
 	}): Promise<{
 		error?:
 			| "user not logged in"
@@ -55,7 +57,10 @@ export const useUserCanUseCredits = () => {
 					: userStoryCredits >= storybookCredits;
 
 		if (!enoughBalance) {
-			if (subscription.subscriptionPlan === SubscriptionPlan.Free) {
+			if (
+				subscription.subscriptionPlan === SubscriptionPlan.Free &&
+				!skipSubscriptionCheck
+			) {
 				toast.success(
 					"You're on a free plan, please upgrade to a paid plan to continue",
 					{
@@ -64,7 +69,10 @@ export const useUserCanUseCredits = () => {
 				);
 				return { error: "not paid subscription", success: false };
 			}
-			if (subscription.subscriptionPlan === SubscriptionPlan.Custom) {
+			if (
+				subscription.subscriptionPlan === SubscriptionPlan.Custom &&
+				!skipSubscriptionCheck
+			) {
 				toast.success(
 					"You're on a custom plan, please upgrade to a regular plan to continue",
 					{

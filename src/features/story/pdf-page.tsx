@@ -108,6 +108,7 @@ const StoryBookDownloadPdfPage = ({
 		const { error } = await userCanUseCredits({
 			variant: "credits",
 			credits: pdfCreditsCost,
+			skipSubscriptionCheck: true,
 		});
 
 		if (error) {
@@ -380,6 +381,7 @@ const StoryBookDownloadPdfPage = ({
 				defaultQuantity={pdfCreditsCost}
 				open={openCreditsDialog}
 				setOpen={setOpenCreditsDialog}
+				skipSubscriptionCheck
 			/>
 
 			<UpgradeSubscriptionDialog
