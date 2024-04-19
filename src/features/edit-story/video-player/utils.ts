@@ -50,18 +50,18 @@ export const webStoryToRemotionInputProps = async (
 			.map((segment, index, segments) => {
 				let audioKey = null;
 				switch (selectedVoice) {
-					case VoiceType.GenericMale:
-						audioKey = segment.maleAudioKey;
-						break;
+					// case VoiceType.GenericMale:
+					// 	audioKey = segment.maleAudioKey;
+					// 	break;
 					case VoiceType.GenericFemale:
 						audioKey = segment.femaleAudioKey;
 						break;
-					case VoiceType.Portuguese:
-						audioKey = segment.portugueseAudioKey;
-						break;
-					case VoiceType.Custom:
-						audioKey = segment.customAudioKey;
-						break;
+					// case VoiceType.Portuguese:
+					// 	audioKey = segment.portugueseAudioKey;
+					// 	break;
+					// case VoiceType.Custom:
+					// 	audioKey = segment.customAudioKey;
+					// 	break;
 				}
 				const audioURL = audioKey
 					? Format.GetPublicBucketObjectUrl(audioKey)
