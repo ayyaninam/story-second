@@ -1089,7 +1089,11 @@ export interface paths {
       responses: {
         /** @description Success */
         200: {
-          content: never;
+          content: {
+            "text/plain": components["schemas"]["AccountLinkApiResponse"];
+            "application/json": components["schemas"]["AccountLinkApiResponse"];
+            "text/json": components["schemas"]["AccountLinkApiResponse"];
+          };
         };
         /** @description Unauthorized */
         401: {
@@ -1104,7 +1108,11 @@ export interface paths {
       responses: {
         /** @description Success */
         200: {
-          content: never;
+          content: {
+            "text/plain": components["schemas"]["BooleanApiResponse"];
+            "application/json": components["schemas"]["BooleanApiResponse"];
+            "text/json": components["schemas"]["BooleanApiResponse"];
+          };
         };
         /** @description Unauthorized */
         401: {
@@ -1119,7 +1127,11 @@ export interface paths {
       responses: {
         /** @description Success */
         200: {
-          content: never;
+          content: {
+            "text/plain": components["schemas"]["AccountLinkApiResponse"];
+            "application/json": components["schemas"]["AccountLinkApiResponse"];
+            "text/json": components["schemas"]["AccountLinkApiResponse"];
+          };
         };
         /** @description Unauthorized */
         401: {
@@ -1134,7 +1146,11 @@ export interface paths {
       responses: {
         /** @description Success */
         200: {
-          content: never;
+          content: {
+            "text/plain": components["schemas"]["LoginLinkApiResponse"];
+            "application/json": components["schemas"]["LoginLinkApiResponse"];
+            "text/json": components["schemas"]["LoginLinkApiResponse"];
+          };
         };
         /** @description Unauthorized */
         401: {
@@ -3450,6 +3466,25 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    AccountLink: {
+      rawJObject?: {
+        [key: string]: components["schemas"]["JToken"];
+      } | null;
+      stripeResponse?: components["schemas"]["StripeResponse"];
+      object?: string | null;
+      /** Format: date-time */
+      created?: string;
+      /** Format: date-time */
+      expiresAt?: string;
+      url?: string | null;
+    };
+    /** @description Represents the standard response format for API requests. */
+    AccountLinkApiResponse: {
+      data?: components["schemas"]["AccountLink"];
+      succeeded?: boolean;
+      message?: string | null;
+      status?: components["schemas"]["ApiResponseStatus"];
+    };
     /** @description DTO used to add credits to a user account from admin panel */
     AddCreditsDTO: {
       /**
@@ -4133,6 +4168,11 @@ export interface components {
      * Format: int32
      * @enum {integer}
      */
+    HttpStatusCode: Continue | SwitchingProtocols | Processing | EarlyHints | OK | Created | Accepted | NonAuthoritativeInformation | NoContent | ResetContent | PartialContent | MultiStatus | AlreadyReported | IMUsed | MultipleChoices | Ambiguous | MovedPermanently | Moved | Found | Redirect | SeeOther | RedirectMethod | NotModified | UseProxy | Unused | TemporaryRedirect | RedirectKeepVerb | PermanentRedirect | BadRequest | Unauthorized | PaymentRequired | Forbidden | NotFound | MethodNotAllowed | NotAcceptable | ProxyAuthenticationRequired | RequestTimeout | Conflict | Gone | LengthRequired | PreconditionFailed | RequestEntityTooLarge | RequestUriTooLong | UnsupportedMediaType | RequestedRangeNotSatisfiable | ExpectationFailed | MisdirectedRequest | UnprocessableEntity | Locked | FailedDependency | UpgradeRequired | PreconditionRequired | TooManyRequests | RequestHeaderFieldsTooLarge | UnavailableForLegalReasons | InternalServerError | NotImplemented | BadGateway | ServiceUnavailable | GatewayTimeout | HttpVersionNotSupported | VariantAlsoNegotiates | InsufficientStorage | LoopDetected | NotExtended | NetworkAuthenticationRequired;
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
     ImageResolution: _512x512 | _1024x1024 | _1024x576 | _576x1024 | _1152x1024 | _1024x1152;
     /**
      * Format: int32
@@ -4171,6 +4211,7 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    JToken: components["schemas"]["JToken"][];
     /**
      * Format: int32
      * @description KYC Lifecycle.
@@ -4198,6 +4239,23 @@ export interface components {
        * @description The user's password.
        */
       password?: string;
+    };
+    LoginLink: {
+      rawJObject?: {
+        [key: string]: components["schemas"]["JToken"];
+      } | null;
+      stripeResponse?: components["schemas"]["StripeResponse"];
+      object?: string | null;
+      /** Format: date-time */
+      created?: string;
+      url?: string | null;
+    };
+    /** @description Represents the standard response format for API requests. */
+    LoginLinkApiResponse: {
+      data?: components["schemas"]["LoginLink"];
+      succeeded?: boolean;
+      message?: string | null;
+      status?: components["schemas"]["ApiResponseStatus"];
     };
     ManualImageRegenerationDTO: {
       /** Format: uuid */
@@ -4453,6 +4511,16 @@ export interface components {
        * @description The reason the AmazonBook was rejected by Amazon.
        */
       amazonRejectReason?: string | null;
+      /**
+       * Slug
+       * @description The unique slug of the WebStory.
+       */
+      slug?: string | null;
+      /**
+       * TopLevelCategory
+       * @description The category of the story.
+       */
+      topLevelCategory?: string | null;
       /**
        * StoryTitle
        * @description The title of the story.
@@ -5060,19 +5128,9 @@ export interface components {
     };
     /** @description DTO used to return Amazon Publish status of a book. */
     ReturnAmazonBookDTO: {
-      /**
-       * Format: uuid
-       * @description The ID of the web story.
-       */
-      webStoryId?: string;
       amazonPublishLifecycle?: components["schemas"]["AmazonPublishLifecycle"];
       /** @description The amazon link of the story book (if published). */
       amazonUrl?: string | null;
-      /**
-       * Format: date-time
-       * @description The date the book was requested to be processed on Amazon.
-       */
-      created?: string;
     };
     /** @description DTO returned with an anonymously created WebStory. */
     ReturnAnonymousStoryDTO: {
@@ -5858,11 +5916,6 @@ export interface components {
        * @description The key of the frame interpolation in the video storage.
        */
       frameInterpolationKey?: string | null;
-      /**
-       * LastImageKey
-       * @description The key of the last image in the image storage.
-       */
-      lastImageKey?: string | null;
       imageStyle?: components["schemas"]["ImageStyles"];
       /**
        * ImagePrompt
@@ -5894,45 +5947,10 @@ export interface components {
        */
       imageAltText?: string | null;
       /**
-       * MaleAudioKey
-       * @description The key of the audio for Male Voice.
-       */
-      maleAudioKey?: string | null;
-      /**
-       * MaleAudioGenerating
-       * @description Whether the story has a male voice clip that is generating.
-       */
-      maleAudioGenerating?: boolean;
-      /**
        * FemaleAudioKey
        * @description The key of the audio for Female Voice.
        */
       femaleAudioKey?: string | null;
-      /**
-       * FemaleAudioGenerating
-       * @description Whether the story has a female voice clip that is generating.
-       */
-      femaleAudioGenerating?: boolean;
-      /**
-       * CustomAudioKey
-       * @description The key of the audio for Custom Voice.
-       */
-      customAudioKey?: string | null;
-      /**
-       * CustomAudioGenerating
-       * @description Whether the story has a custom voice clip that is generating.
-       */
-      customAudioGenerating?: boolean;
-      /**
-       * PortugueseAudioKey
-       * @description The key of the audio for Portuguese Voice.
-       */
-      portugueseAudioKey?: string | null;
-      /**
-       * PortugueseAudioGenerating
-       * @description Whether the story has a portuguese voice clip that is generating.
-       */
-      portugueseAudioGenerating?: boolean;
     };
     /** @description Smaller return model for a user. */
     ReturnTinyUserDTO: {
@@ -5974,12 +5992,6 @@ export interface components {
        * @description The number of videos the user has.
        */
       videoCount?: number;
-      /**
-       * Created
-       * Format: date-time
-       * @description The date and time the user was created.
-       */
-      created?: string;
     };
     /** @description DTO used to return Amazon Publish Status data to user. */
     ReturnUserAmazonBookDTO: {
@@ -6284,25 +6296,10 @@ export interface components {
        */
       videoFPS?: number | null;
       /**
-       * MaleAudioKey
-       * @description The key of the audio for Male Voice.
-       */
-      maleAudioKey?: string | null;
-      /**
        * FemaleAudioKey
        * @description The key of the audio for Female Voice.
        */
       femaleAudioKey?: string | null;
-      /**
-       * CustomAudioKey
-       * @description The key of the audio for Custom Voice.
-       */
-      customAudioKey?: string | null;
-      /**
-       * PortugueseAudioKey
-       * @description The key of the audio for Portuguese Voice.
-       */
-      portugueseAudioKey?: string | null;
     };
     /** @description DTO used to return a public Video. */
     ReturnVideoStoryDTO: {
@@ -6344,11 +6341,6 @@ export interface components {
        * @description The top level category of the story
        */
       topLevelCategory?: string | null;
-      /**
-       * IsPublic
-       * @description Whether the story is public or not.
-       */
-      isPublic?: boolean;
       user?: components["schemas"]["ReturnTinyUserDTO"];
       /**
        * CoverImage
@@ -6498,11 +6490,6 @@ export interface components {
        * @description The top level category of the story
        */
       topLevelCategory?: string | null;
-      /**
-       * IsPublic
-       * @description Whether the story is public or not.
-       */
-      isPublic?: boolean;
       user?: components["schemas"]["ReturnTinyUserDTO"];
       /**
        * Scenes
@@ -6529,56 +6516,15 @@ export interface components {
       imageStyle?: components["schemas"]["ImageStyles"];
       resolution?: components["schemas"]["DisplayResolution"];
       /**
-       * AIContributionRate
-       * Format: float
-       * @description The similarity of the story to the original AI generated story.
-       */
-      aiContributionRate?: number;
-      /**
-       * HasMaleVoice
-       * @description Whether the story has a male voice audio option generated/generating.
-       */
-      hasMaleVoice?: boolean;
-      /**
        * HasFemaleVoice
        * @description Whether the story has a female voice audio option generated/generating.
        */
       hasFemaleVoice?: boolean;
       /**
-       * HasCustomVoice
-       * @description Whether the story has a custom voice audio option generated/generating.
-       */
-      hasCustomVoice?: boolean;
-      /**
-       * HasPortugueseVoice
-       * @description Whether the story has a portuguese voice audio option generated/generating.
-       */
-      hasPortugueseVoice?: boolean;
-      /**
-       * MaleVoiceDone
-       * @description Whether the male voice is done generating
-       */
-      maleVoiceDone?: boolean;
-      /**
        * FemaleVoiceDone
        * @description Whether the female voice is done generating
        */
       femaleVoiceDone?: boolean;
-      /**
-       * CustomVoiceDone
-       * @description Whether the custom voice is done generating
-       */
-      customVoiceDone?: boolean;
-      /**
-       * PortugueseVoiceDone
-       * @description Whether the portuguese voice is done generating.
-       */
-      portugueseVoiceDone?: boolean;
-      /**
-       * StoryContests
-       * @description A list of contests the story is enrolled in.
-       */
-      storyContests?: components["schemas"]["StoryContestsDTO"][] | null;
       /**
        * IsOwner
        * @description Whether the user can edit the story.
@@ -6914,6 +6860,10 @@ export interface components {
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
     };
+    StringStringIEnumerableKeyValuePair: {
+      key?: string | null;
+      value?: string[] | null;
+    };
     /**
      * Format: int32
      * @description Stripe Connect Account Status
@@ -6943,6 +6893,15 @@ export interface components {
       /** Format: uuid */
       userId?: string;
       user?: components["schemas"]["UserAccount"];
+    };
+    StripeResponse: {
+      statusCode?: components["schemas"]["HttpStatusCode"];
+      headers?: components["schemas"]["StringStringIEnumerableKeyValuePair"][] | null;
+      /** Format: date-time */
+      date?: string | null;
+      idempotencyKey?: string | null;
+      requestId?: string | null;
+      content?: string | null;
     };
     /** @description Request body for creating a subscription. */
     SubscriptionDTO: {

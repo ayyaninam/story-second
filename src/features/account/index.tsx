@@ -19,6 +19,8 @@ import Billing from "@/features/account/components/billing";
 import toast from "react-hot-toast";
 import MyItems from "@/features/account/MyItems";
 import AmazonStatus from "@/features/account/AmazonStatus";
+import Payouts from "@/features/account/PayoutsForm";
+import UpdateKYCForm from "@/features/account/UpdateKYC";
 
 const profileSchema = z.object({
 	profileName: z
@@ -70,7 +72,7 @@ const AccountsPage = () => {
 			toast.dismiss();
 			toast.error(message as string);
 		}
-	}, []);
+	}, [message]);
 
 	const { data, isPending, refetch } = useQuery({
 		queryKey: [QueryKeys.USER],
@@ -178,6 +180,18 @@ const AccountsPage = () => {
 									Billing
 								</ToggleGroupItem>
 								<ToggleGroupItem
+									value="payouts"
+									className="justify-center sm:justify-start text-center sm:text-left w-full"
+								>
+									Payouts
+								</ToggleGroupItem>
+								{/*<ToggleGroupItem*/}
+								{/*	value="updateKYC"*/}
+								{/*	className="justify-center sm:justify-start text-center sm:text-left w-full"*/}
+								{/*>*/}
+								{/*	Update KYC*/}
+								{/*</ToggleGroupItem>*/}
+								<ToggleGroupItem
 									value={"amazon-status"}
 									className="justify-center sm:justify-start text-center sm:text-left w-full"
 								>
@@ -225,6 +239,10 @@ const AccountsPage = () => {
 									)}
 
 									{step === "payment" && <Billing />}
+
+									{step === "payouts" && <Payouts />}
+
+									{step === "updateKYC" && <UpdateKYCForm />}
 
 									{step === "my-items" && <MyItems />}
 
