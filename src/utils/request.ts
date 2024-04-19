@@ -1,4 +1,4 @@
-const toFromData = (values: Record<string, any>) => {
+const toFormData = (values: Record<string, any>) => {
 	const formData = new FormData();
 	Object.entries(values).forEach(([key, value]) => {
 		formData.append(key, value);
@@ -7,4 +7,4 @@ const toFromData = (values: Record<string, any>) => {
 	return formData;
 };
 
-export { toFromData };
+export { toFormData };
