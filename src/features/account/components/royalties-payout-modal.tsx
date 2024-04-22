@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 export default function RoyaltiesPayoutDialog({
 	canWithdraw,
@@ -19,6 +20,7 @@ export default function RoyaltiesPayoutDialog({
 }) {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
+	const { invalidateUser } = useUpdateUser();
 
 	const handleConfirmClick = async () => {
 		// Assuming canWithdraw is a state or comes from props/context
@@ -39,6 +41,7 @@ export default function RoyaltiesPayoutDialog({
 		} finally {
 			setSubmitting(false);
 			setDialogOpen(false);
+			invalidateUser();
 		}
 	};
 
@@ -46,12 +49,12 @@ export default function RoyaltiesPayoutDialog({
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger asChild>
 				<Button className="text-white bg-pink-700 hover:bg-pink-800">
-					Confirm Royalties Payout
+					Withdraw Royalties
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="left-[50%] translate-x-[-50%] top-1/4 fixed">
 				<DialogHeader>
-					<DialogTitle>Confirm Royalties Payout</DialogTitle>
+					<DialogTitle>Withdraw Royalties</DialogTitle>
 					<DialogDescription>
 						<p>
 							You&apos;re all set to withdraw your royalties! This is a
