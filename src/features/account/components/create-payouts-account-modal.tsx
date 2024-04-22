@@ -164,17 +164,25 @@ export const CountryListBox = ({
 	);
 };
 
-const payoutAccountSchema = z.object({
-	accountType: z.enum(["Individual", "Business"]),
-	firstName: z.string().min(1, "First name is required").optional(),
-	lastName: z.string().min(1, "Last name is required").optional(),
-	companyName: z.string().min(1, "Company name is required").optional(),
-	country: z.string().min(1, "Country is required"),
-	dateOfBirth: z.date(),
-	phoneNumber: z.string().min(1, "Phone number is required"),
-	bio: z.string().min(1, "Bio is required"),
-	// Assuming `profileName` is the username and `email` is always provided and disabled (hence not validated here)
-});
+const payoutAccountSchema = z
+	.object({
+		accountType: z.enum(["Individual", "Business"]),
+		firstName: z.string().optional(), // Made optional initially
+		lastName: z.string().optional(), // Made optional initially
+		companyName: z.string().optional(), // Made optional initially
+		country: z.string().min(1, "Country is required"),
+	})
+	.refine(
+		(data) =>
+			data.accountType === "Individual"
+				? data.firstName && data.lastName
+				: data.companyName,
+		{
+			message:
+				"First name and last name are required for individuals, and company name is required for businesses.",
+			path: ["accountType"], // Adjust the path as necessary, or use multiple paths if you want to highlight specific fields
+		}
+	);
 
 const CreatePayoutsAccountModal = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -212,8 +220,10 @@ const CreatePayoutsAccountModal = () => {
 				country: selectedCountry,
 			});
 
-			if (payoutAccountResponse.data.url) {
-				window.location.href = payoutAccountResponse.data.url;
+			console.log(payoutAccountResponse);
+
+			if (payoutAccountResponse.url) {
+				window.location.href = payoutAccountResponse.url;
 			} else {
 				toast.error("Failed to create payout account");
 			}
