@@ -1,11 +1,8 @@
-import { InferGetServerSidePropsType } from "next";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 import React, { ReactElement } from "react";
 import PageLayout from "@/components/layouts/PageLayout";
 import AccountsPage from "@/features/account";
-import { getServerSidePropsStub } from "@/utils/getServerSidePropsStub";
-import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 
 export default function ProfilePage() {
 	return <AccountsPage />;

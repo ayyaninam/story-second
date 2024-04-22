@@ -4,8 +4,16 @@ import {
 	publicProxyApiFetcher,
 } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
-import { toFromData } from "@/utils/request";
+import { toFormData } from "@/utils/request";
 import { PaginationParams } from "@/types";
+
+// interface updateKYCFormParams {
+// 	Address: string;
+// 	Country: string;
+// 	PhotoID: string;
+// 	PhotoIDType: string;
+// 	PhotoIDNumber: string;
+// }
 
 const user = {
 	getUserProfile: async (profileName: string) => {
@@ -34,9 +42,25 @@ const user = {
 	updateDetails: async <T>(data: T & Record<string, any>) => {
 		return await publicProxyApiFetcher
 			.patch("proxyApi/User/Details", {
-				body: toFromData(data),
+				body: toFormData(data),
 			})
 			.json<mainSchema["StringApiResponse"]>();
+	},
+	updateKYC: async (data: FormData): Promise<mainSchema["UserInfoDTO"]> => {
+		console.log(data);
+		console.log(toFormData(data));
+		for (let [key, value] of data.entries()) {
+			console.log(key, value);
+		}
+		const response = await publicProxyApiFetcher
+			.post("proxyApi/User/UpdateKYC", {
+				body: data,
+			})
+			.json<mainSchema["UserInfoDTOApiResponse"]>();
+		if (!response.data) {
+			throw new Error("Internal Server Error");
+		}
+		return response.data;
 	},
 	toggleStoryPrivacy: async () => {
 		return await publicProxyApiFetcher
@@ -129,6 +153,62 @@ const user = {
 			throw new Error("Internal Server Error");
 		}
 		return data.data;
+	},
+	checkStripeConnectAccount: async (): Promise<
+		mainSchema["StripeConnectAccountStatus"]
+	> => {
+		const response = await publicProxyApiFetcher
+			.get(`proxyApi/Payment/CheckStripeConnectAccount`)
+			.json<mainSchema["StripeConnectAccountStatusApiResponse"]>();
+		if (!response.data) {
+			throw new Error("Internal Server Error");
+		}
+		return response.data;
+	},
+	stripeAccountSetupLink: async (): Promise<mainSchema["AccountLink"]> => {
+		const response = await publicProxyApiFetcher
+			.get(`proxyApi/Payment/SetupLink`)
+			.json<mainSchema["AccountLinkApiResponse"]>();
+		if (!response.data) {
+			throw new Error("Internal Server Error");
+		}
+		return response.data;
+	},
+	getStripeAccountLink: async (): Promise<mainSchema["AccountLink"]> => {
+		const response = await publicProxyApiFetcher
+			.get(`proxyApi/Payment/AccountLink`)
+			.json<mainSchema["AccountLinkApiResponse"]>();
+		if (!response.data) {
+			throw new Error("Internal Server Error");
+		}
+		return response.data;
+	},
+	setupPaymentAccount: async (
+		params: mainSchema["CreatePayoutAccountDTO"]
+	): Promise<any> => {
+		const response = await publicProxyApiFetcher
+			.post(`proxyApi/Payment/PayoutAccount`, { json: params })
+			.json<any>();
+		if (!response.data) {
+			throw new Error("Internal Server Error");
+		}
+		return response.data;
+	},
+	getAllAmazonBooksRevenue: async (
+		params: PaginationParams
+	): Promise<mainSchema["AmazonBooksRevenueDTOPagedList"]> => {
+		const response = await publicProxyApiFetcher
+			.get(`proxyApi/Amazon/AllAmazonBooksRevenue`, { searchParams: params })
+			.json<mainSchema["AmazonBooksRevenueDTOPagedListApiResponse"]>();
+		if (!response.data) {
+			throw new Error("Internal Server Error");
+		}
+		return response.data;
+	},
+	withdrawFunds: async () => {
+		return await publicProxyApiFetcher
+			.post(`proxyApi/Payment/WithdrawAmazonBalance`)
+			.json<mainSchema["StringApiResponse"]>();
 	},
 };
 
