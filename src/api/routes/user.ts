@@ -137,6 +137,7 @@ const user = {
 					searchParams: params,
 				})
 				.json();
+		console.log("DATA:", data);
 		if (!data.data) {
 			throw new Error("Internal Server Error");
 		}
@@ -155,11 +156,12 @@ const user = {
 		return data.data;
 	},
 	checkStripeConnectAccount: async (): Promise<
-		mainSchema["StripeConnectAccountStatus"]
+		mainSchema["StripeConnectAccountStatusDTO"]
 	> => {
 		const response = await publicProxyApiFetcher
 			.get(`proxyApi/Payment/CheckStripeConnectAccount`)
-			.json<mainSchema["StripeConnectAccountStatusApiResponse"]>();
+			.json<mainSchema["StripeConnectAccountStatusDTOApiResponse"]>();
+		console.log("RESPONSE:", response);
 		if (!response.data) {
 			throw new Error("Internal Server Error");
 		}
