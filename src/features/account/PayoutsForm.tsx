@@ -45,17 +45,21 @@ const Payouts = () => {
 		queryFn: () => {
 			return api.user.stripeAccountSetupLink();
 		},
+		retry: false,
 	});
 	const { data: stripeAccountStatus } = useQuery({
 		queryKey: [QueryKeys.STRIPE_CONNECT_ACCOUNT],
 		queryFn: () => api.user.checkStripeConnectAccount(),
+		retry: false,
 	});
 	const { data: stripeAccountLink } = useQuery<any>({
 		queryKey: [QueryKeys.STRIPE_ACCOUNT_LINK],
 		queryFn: () => api.user.getStripeAccountLink(),
+		retry: false,
 	});
 	const withdrawFunds = useMutation({
 		mutationFn: api.user.withdrawFunds,
+		retry: false,
 	});
 
 	const revenueExists =
@@ -63,18 +67,23 @@ const Payouts = () => {
 
 	const canWithdraw =
 		user?.data?.kycVerified === kycStatus.Completed &&
-		stripeAccountStatus === checkStripeAccountEnum.Onboarded &&
+		stripeAccountStatus?.stripeConnectAccountStatus ===
+			checkStripeAccountEnum.Onboarded &&
 		user?.data?.totalUnclaimedRoyalties! > 0;
 
 	console.log(
-		user?.data?.kycVerified,
-		user?.data?.kycVerified === kycStatus.Completed
+		"stripeaccountstatus",
+		stripeAccountStatus,
+		stripeAccountStatus?.stripeConnectAccountStatus ===
+			checkStripeAccountEnum.DoesNotExist,
+		stripeAccountStatus?.stripeConnectAccountStatus ===
+			checkStripeAccountEnum.OnboardingIncomplete,
+		stripeAccountStatus?.stripeConnectAccountStatus ===
+			checkStripeAccountEnum.Onboarded
 	);
-	console.log(stripeAccountStatus === checkStripeAccountEnum.Onboarded);
-	console.log(user?.data?.totalUnclaimedRoyalties!);
 
 	function renderActionButton() {
-		switch (stripeAccountStatus) {
+		switch (stripeAccountStatus?.stripeConnectAccountStatus) {
 			case checkStripeAccountEnum.DoesNotExist:
 				return <CreatePayoutsAccountModal />;
 			case checkStripeAccountEnum.OnboardingIncomplete:
@@ -155,8 +164,9 @@ const Payouts = () => {
 					{!isLoading &&
 						(revenueExists ? (
 							<>
-								{(stripeAccountStatus === checkStripeAccountEnum.DoesNotExist ||
-									stripeAccountStatus ===
+								{(stripeAccountStatus?.stripeConnectAccountStatus ===
+									checkStripeAccountEnum.DoesNotExist ||
+									stripeAccountStatus?.stripeConnectAccountStatus ===
 										checkStripeAccountEnum.OnboardingIncomplete) && (
 									<div className="flex flex-col gap-4 p-4">
 										<h1 className="text-xl font-semibold">
@@ -206,7 +216,8 @@ const Payouts = () => {
 									</div>
 								)}
 
-								{stripeAccountStatus === checkStripeAccountEnum.Onboarded && (
+								{stripeAccountStatus?.stripeConnectAccountStatus ===
+									checkStripeAccountEnum.Onboarded && (
 									<>
 										{user?.data?.kycVerified === null ? (
 											<div className="flex flex-col gap-4 p-4 text-warning-500">
@@ -255,7 +266,7 @@ const Payouts = () => {
 										</div>
 									</>
 								)}
-								{stripeAccountStatus ===
+								{stripeAccountStatus?.stripeConnectAccountStatus ===
 									checkStripeAccountEnum.OnboardingIncomplete && (
 									<div className="flex flex-col gap-4 p-4">
 										<p className="text-md font-semibold">

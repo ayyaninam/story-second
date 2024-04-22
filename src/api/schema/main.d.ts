@@ -1166,9 +1166,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": components["schemas"]["StripeConnectAccountStatusApiResponse"];
-            "application/json": components["schemas"]["StripeConnectAccountStatusApiResponse"];
-            "text/json": components["schemas"]["StripeConnectAccountStatusApiResponse"];
+            "text/plain": components["schemas"]["StripeConnectAccountStatusDTOApiResponse"];
+            "application/json": components["schemas"]["StripeConnectAccountStatusDTOApiResponse"];
+            "text/json": components["schemas"]["StripeConnectAccountStatusDTOApiResponse"];
           };
         };
         /** @description Unauthorized */
@@ -6870,9 +6870,13 @@ export interface components {
      * @enum {integer}
      */
     StripeConnectAccountStatus: DoesNotExist | OnboardingIncomplete | Onboarded;
+    /** @description Response body for checking payout account status (Onboarding Status). */
+    StripeConnectAccountStatusDTO: {
+      stripeConnectAccountStatus?: components["schemas"]["StripeConnectAccountStatus"];
+    };
     /** @description Represents the standard response format for API requests. */
-    StripeConnectAccountStatusApiResponse: {
-      data?: components["schemas"]["StripeConnectAccountStatus"];
+    StripeConnectAccountStatusDTOApiResponse: {
+      data?: components["schemas"]["StripeConnectAccountStatusDTO"];
       succeeded?: boolean;
       message?: string | null;
       status?: components["schemas"]["ApiResponseStatus"];
