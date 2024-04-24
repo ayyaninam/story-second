@@ -87,10 +87,14 @@ export default function PublishedStory({
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],
 		refetchInterval: (data) => {
-			if (data?.state?.data?.storyDone) {
-				return false;
+			if (
+				data?.state?.data?.storyDone &&
+				data?.state?.data?.videosDone &&
+				data?.state?.data?.imagesDone
+			) {
+				return false; // stop polling
 			}
-			return 1000;
+			return 1000; // continue polling
 		},
 		// Disable once all the videoKeys are obtained
 		// enabled: enableQuery,
