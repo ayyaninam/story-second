@@ -41,9 +41,9 @@ const getCost = {
 	},
 	// Ideally this never occurs
 	[SubscriptionPlan.Custom]: {
-		[AllowanceType.Videos]: 99,
-		[AllowanceType.StoryBooks]: 99,
-		[AllowanceType.Credits]: 99,
+		[AllowanceType.Videos]: 2,
+		[AllowanceType.StoryBooks]: 1,
+		[AllowanceType.Credits]: 0.01,
 	},
 };
 
