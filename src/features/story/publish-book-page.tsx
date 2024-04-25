@@ -244,12 +244,15 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 																<strong>
 																	Amazon-formatted book and cover PDFs
 																</strong>
-																, along with precise listing details.
+																of your book manuscript and cover page.
+															</li>
+															<li>
+															Receive detailed <strong>steps for publishing your book</strong> on Amazon.
 															</li>
 															<li className="tracking-wide leading-loose">
 																<strong>Ownership & Royalties:</strong> You will
-																own the copyrights and receive 100% of the
-																royalties.
+																own the copyrights to your story and receive 100% of the
+																royalties from all sales.
 															</li>
 														</ul>
 													</div>
@@ -282,20 +285,17 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 														<ul className="list-disc pl-5">
 															<li className="tracking-wide leading-loose">
 																Includes everything from the{" "}
-																<strong>Self-Publish Kit.</strong>
+																<strong>Standard Edition: Self-Publish Kit.</strong>
 															</li>
 															<li className="tracking-wide leading-loose">
 																<strong>Hassle-Free Experience:</strong> We
 																manage the entire publication and sales process
-																for you, ensuring your story reaches a wider
-																audience without any hassle.
+																for you, so you can get the royalties straight to your account.
 															</li>
 															<li className="tracking-wide leading-loose">
 																<strong>Peace of Mind:</strong> Your story is in
 																experienced hands, allowing you to focus on your
-																next creative endeavor while we ensure your
-																published work gains the recognition it
-																deserves.
+																next creative endeavor.
 															</li>
 														</ul>
 													</div>
