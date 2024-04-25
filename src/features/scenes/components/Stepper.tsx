@@ -11,8 +11,14 @@ import {
 	ScanEye,
 } from "lucide-react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import { useSubmitEditScenesAndSegments } from "@/features/scenes/mutations/SaveScenesAndSegments";
+import {
+	EditStoryAction,
+	EditStoryDraft,
+} from "@/features/scenes/reducers/edit-reducer";
+import toast from "react-hot-toast";
 
 const activeStyles =
 	"border border-accent-500 bg-accent-100 text-accent-900 stepper-box-shadow";
@@ -21,15 +27,20 @@ const baseStyles = `bg-primary-foreground font-normal text-sm cursor-pointer tra
 export default function Stepper({
 	step,
 	WebstoryData,
+	story,
+	dispatch,
 }: {
 	step: StepperStep;
 	WebstoryData: mainSchema["ReturnVideoStoryDTO"];
+	story: EditStoryDraft;
+	dispatch: React.Dispatch<EditStoryAction>;
 }) {
 	const router = useRouter();
 	const isMobile = useMediaQuery("(max-width: 640px)");
 	const [currentHover, setCurrentHover] = useState<StepperStep>(step);
 	const [disableNavToScenes, setDisableNavToScenes] = useState(true);
 	const [disableNavToPreview, setDisableNavToPreview] = useState(true);
+	const SaveEdits = useSubmitEditScenesAndSegments(dispatch);
 
 	useEffect(() => {
 		const allNull = WebstoryData.scenes
@@ -51,6 +62,13 @@ export default function Stepper({
 		setDisableNavToScenes(!!allNull);
 	}, [WebstoryData.scenes]);
 
+	const saveEdits = async () => {
+		await SaveEdits.mutateAsync({
+			updatedStory: story,
+			prevStory: WebstoryData,
+		});
+	};
+
 	return (
 		<div className="w-full bg-background border-border border-[1px] py-2 min-h-8 flex items-center justify-center">
 			<Badge
@@ -60,15 +78,17 @@ export default function Stepper({
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
-				onClick={() =>
+				onClick={() => {
+					console.log("saveEdits");
+					saveEdits();
 					router.push(
 						Routes.EditScript(
 							WebstoryData.storyType,
 							WebstoryData.topLevelCategory!,
 							WebstoryData.slug!
 						)
-					)
-				}
+					);
+				}}
 				variant="outline"
 				className={clsx(baseStyles, {
 					[activeStyles]:
@@ -86,15 +106,17 @@ export default function Stepper({
 				onMouseLeave={() => {
 					setCurrentHover(step);
 				}}
-				onClick={() =>
+				onClick={() => {
+					console.log("saveEdits");
+					saveEdits();
 					router.push(
 						Routes.EditStoryboard(
 							WebstoryData.storyType,
 							WebstoryData.topLevelCategory!,
 							WebstoryData.slug!
 						)
-					)
-				}
+					);
+				}}
 				variant="outline"
 				className={clsx(baseStyles, {
 					[activeStyles]:
@@ -117,6 +139,7 @@ export default function Stepper({
 							if (!disableNavToScenes) setCurrentHover(step);
 						}}
 						onClick={() => {
+							saveEdits();
 							if (!disableNavToScenes)
 								router.push(
 									Routes.EditScenes(
@@ -148,6 +171,7 @@ export default function Stepper({
 					if (!disableNavToPreview) setCurrentHover(step);
 				}}
 				onClick={() => {
+					saveEdits();
 					if (!disableNavToPreview)
 						router.push(
 							Routes.EditStory(

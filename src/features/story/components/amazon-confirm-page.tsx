@@ -161,10 +161,13 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 
 												<div className="border-gold border-b-2 border-t-2 rounded-2xl p-2 text-sm">
 													<ul className="list-disc pl-5">
-														<li className="tracking-wide leading-loose">
-															Receive meticulously crafted, Amazon-formatted
-															book and cover PDFs.
-														</li>
+													<li className="tracking-wide leading-loose">
+																Receive meticulously crafted,{" "}
+																<strong>
+																	Amazon-formatted book and cover PDFs
+																</strong>
+																of your book manuscript and cover page.
+															</li>
 														<li className="tracking-wide leading-loose">
 															Get precise listing details, including categories,
 															keywords, and more.
@@ -186,7 +189,7 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 												</p>
 												<p className="tracking-wide leading-loose text-sm">
 													Click &apos;Submit&apos; to confirm the details and
-													proceed with the publication. We&apos;ll send you the
+													proceed with the publication. We&apos;ll give you the
 													PDFs and all the details you need, along with a guide
 													to follow for publication!
 												</p>
@@ -209,8 +212,7 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 													<ul className="list-disc pl-5 text-sm">
 														<li className="tracking-wide leading-loose">
 															We manage the entire publication and sales
-															process, ensuring your story reaches a wider
-															audience without any hassle.
+															process, ensuring your story is out for public without any hassle.
 														</li>
 														<li className="tracking-wide leading-loose">
 															Your story is in experienced hands, allowing you

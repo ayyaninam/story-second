@@ -364,6 +364,27 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						</Button>
 					</Link>
 				)}
+				<div className="flex items-center justify-between text-white text-center">
+					<div></div>
+					<Link
+						href={"/faqs"}
+						className="mt-2 text-white text-sm font-normal hover:text-accent-300 underline-offset-4 underline"
+					>
+						FAQs
+					</Link>
+					<div></div>
+					<Button
+						variant="link"
+						onClick={() => {
+							// @ts-ignore - Intercom is vanilla JS
+							Intercom("show");
+						}}
+						className="mt-2 text-white text-sm font-normal hover:text-accent-300 underline"
+					>
+						Contact Us
+					</Button>
+					<div></div>
+				</div>
 			</div>
 		</div>
 	);
