@@ -255,7 +255,7 @@ const StoryPageButtons = ({
 						variant="outline"
 						onClick={() =>
 							router.push(
-								Routes.EditScript(
+								Routes.EditStoryboard(
 									WebstoryData.storyType,
 									WebstoryData.topLevelCategory!,
 									WebstoryData.slug!
