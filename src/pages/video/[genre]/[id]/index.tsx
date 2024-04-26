@@ -85,7 +85,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 			queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 		});
-		const isOwner = storyData?.canEdit || false;
 		return {
 			props: {
 				session: { accessToken: accessToken || "" },

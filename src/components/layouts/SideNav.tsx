@@ -47,7 +47,7 @@ export const menuItems = [
 	},
 	{
 		icon: <LibraryIcon size={24} />,
-		text: "Library",
+		text: "My Library",
 		shortcut: "L",
 		redirectUrl: "/library/all",
 		cssVars: {

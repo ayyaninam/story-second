@@ -485,7 +485,7 @@ export default function PublishedStory({
 													variant="outline"
 													onClick={() =>
 														router.push(
-															Routes.EditScript(
+															Routes.EditStoryboard(
 																storyData.storyType,
 																storyData.topLevelCategory!,
 																storyData.slug!

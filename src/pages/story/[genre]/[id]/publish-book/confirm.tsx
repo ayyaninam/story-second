@@ -1,7 +1,7 @@
 import api from "@/api";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getAccessToken } from "@auth0/nextjs-auth0";
-import React from "react";
+import React, { ReactElement } from "react";
 import useSaveSessionToken from "@/hooks/useSaveSessionToken";
 import {
 	HydrationBoundary,
@@ -21,42 +21,39 @@ import AmazonConfirmPage from "@/features/story/components/amazon-confirm-page";
 export default function PublishBook({
 	storyData,
 	session,
-	isOwner,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	useSaveSessionToken(session.accessToken);
 	return (
-		<PageLayout pageIndex={isOwner ? 2 : 0}>
-			<HydrationBoundary state={dehydratedState}>
-				<NextSeo
-					title={storyData?.storyTitle || undefined}
-					description={
-						storyData?.summary ||
-						"Find your videos, trends, storybooks, all in one place"
-					}
-					openGraph={{
-						images: [
-							{
-								url: storyData?.coverImage
-									? Format.GetImageUrl(storyData.coverImage)
-									: "/og-assets/og-story.png",
-								width: 1200,
-								height: 630,
-								alt: storyData?.storyTitle || "Story.com",
-							},
-						],
-					}}
-				/>
-				{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
-				<AmazonConfirmPage storyData={storyData} />
-			</HydrationBoundary>
-		</PageLayout>
+		<HydrationBoundary state={dehydratedState}>
+			<NextSeo
+				title={storyData?.storyTitle || undefined}
+				description={
+					storyData?.summary ||
+					"Find your videos, trends, storybooks, all in one place"
+				}
+				openGraph={{
+					images: [
+						{
+							url: storyData?.coverImage
+								? Format.GetImageUrl(storyData.coverImage)
+								: "/og-assets/og-story.png",
+							width: 1200,
+							height: 630,
+							alt: storyData?.storyTitle || "Story.com",
+						},
+					],
+				}}
+			/>
+			<LibraryAccentStyle />
+			<AmazonConfirmPage storyData={storyData} />
+		</HydrationBoundary>
 	);
 }
 
-// PublishBook.getLayout = function getLayout(page: ReactElement) {
-// 	return <PageLayout pageIndex={1}>{page}</PageLayout>;
-// };
+PublishBook.getLayout = function getLayout(page: ReactElement) {
+	return <PageLayout pageIndex={2}>{page}</PageLayout>;
+};
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	let accessToken: string | undefined = undefined;
@@ -76,11 +73,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	}
 
 	const queryClient = new QueryClient();
-	const user = await queryClient.fetchQuery({
-		queryFn: async () => await api.user.getServer(accessToken),
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER],
-	});
+
 	const storyData = await queryClient.fetchQuery({
 		queryFn: async () =>
 			await api.video.getStoryServer(
@@ -112,7 +105,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			},
 		};
 	}
-	if (storyData?.user?.id !== user?.data?.id) {
+	if (!storyData?.canEdit) {
 		return {
 			redirect: {
 				destination: `/story/${genre}/${id}`,
@@ -124,7 +117,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		props: {
 			session: { accessToken: accessToken || "" },
 			storyData: storyData || null,
-			isOwner: user?.data?.id === storyData?.user?.id,
 			dehydratedState: dehydrate(queryClient),
 		},
 	};

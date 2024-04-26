@@ -13,42 +13,42 @@ import { NextSeo } from "next-seo";
 import PageLayout from "@/components/layouts/PageLayout";
 import { StoryOutputTypes } from "@/utils/enums";
 import LibraryAccentStyle from "@/features/library/library-accent-style";
-import FeedAccentStyle from "@/features/feed/feed-accent-style";
 import AmazonDownloadPage from "@/features/story/components/amazon-download-page";
 
 export default function DownloadAmazonBook({
 	storyData,
-	isOwner,
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
-		<PageLayout pageIndex={isOwner ? 2 : 0}>
-			<HydrationBoundary state={dehydratedState}>
-				<NextSeo
-					title={storyData?.storyTitle || undefined}
-					description={
-						storyData?.summary ||
-						"Find your videos, trends, storybooks, all in one place"
-					}
-					openGraph={{
-						images: [
-							{
-								url: storyData?.coverImage
-									? Format.GetImageUrl(storyData.coverImage)
-									: "/og-assets/og-story.png",
-								width: 1200,
-								height: 630,
-								alt: storyData?.storyTitle || "Story.com",
-							},
-						],
-					}}
-				/>
-				{isOwner ? <LibraryAccentStyle /> : <FeedAccentStyle />}
-				<AmazonDownloadPage storyData={storyData} />
-			</HydrationBoundary>
-		</PageLayout>
+		<HydrationBoundary state={dehydratedState}>
+			<NextSeo
+				title={storyData?.storyTitle || undefined}
+				description={
+					storyData?.summary ||
+					"Find your videos, trends, storybooks, all in one place"
+				}
+				openGraph={{
+					images: [
+						{
+							url: storyData?.coverImage
+								? Format.GetImageUrl(storyData.coverImage)
+								: "/og-assets/og-story.png",
+							width: 1200,
+							height: 630,
+							alt: storyData?.storyTitle || "Story.com",
+						},
+					],
+				}}
+			/>
+			<LibraryAccentStyle />
+			<AmazonDownloadPage storyData={storyData} />
+		</HydrationBoundary>
 	);
 }
+
+DownloadAmazonBook.getLayout = function getLayout(page: React.ReactElement) {
+	return <PageLayout pageIndex={2}>{page}</PageLayout>;
+};
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	let accessToken: string | undefined = undefined;
@@ -68,11 +68,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	}
 
 	const queryClient = new QueryClient();
-	const user = await queryClient.fetchQuery({
-		queryFn: async () => await api.user.getServer(accessToken),
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER],
-	});
+
 	const storyData = await queryClient.fetchQuery({
 		queryFn: async () =>
 			await api.video.getStoryServer(
@@ -110,7 +106,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			},
 		};
 	}
-	if (storyData?.user?.id !== user?.data?.id) {
+	if (!storyData?.canEdit) {
 		return {
 			redirect: {
 				destination: `/story/${genre}/${id}`,
@@ -121,7 +117,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 	return {
 		props: {
 			storyData: storyData || null,
-			isOwner: user?.data?.id === storyData?.user?.id,
 			dehydratedState: dehydrate(queryClient),
 		},
 	};

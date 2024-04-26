@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
 	EditStoryAction,
 	EditStoryDraft,
@@ -55,6 +55,7 @@ import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import useEventLogger from "@/utils/analytics";
+import toast from "react-hot-toast";
 const images = [
 	{
 		key: StoryImageStyles.Auto,
@@ -431,6 +432,25 @@ const Footer = ({
 		},
 	};
 
+	const regenAudioHandler = async () => {
+		setRegenerateAudioLoading(true);
+		await RegenerateAllAudio.mutateAsync();
+		setRegenerateAudioLoading(false);
+	};
+
+	useEffect(() => {
+		if (
+			view === "preview" &&
+			WebstoryData.storyDone &&
+			ungeneratedAudios.length &&
+			!regenerateAudioLoading
+		) {
+			toast.dismiss();
+			toast.success("Auto generating remaining audio");
+			regenAudioHandler().then();
+		}
+	}, []);
+
 	const { invalidateUser } = useUpdateUser();
 
 	const [selectedScenesGenButton, setSelectedScenesGenButton] = useState<
@@ -710,10 +730,7 @@ const Footer = ({
 							regenerateAudioLoading
 						}
 						onClick={() => {
-							setRegenerateAudioLoading(true);
-							RegenerateAllAudio.mutateAsync().then(() => {
-								setRegenerateAudioLoading(false);
-							});
+							regenAudioHandler().then();
 						}}
 					>
 						{regenerateAudioLoading ? "Regenerating" : "Regenerate Audio"}
