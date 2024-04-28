@@ -14,9 +14,8 @@ const webstory = {
 		image_style: number;
 		url: string;
 		story_type: number;
+		error?: string;
 	}> => {
-		console.log("formData: ", params);
-		console.log("token: ", token);
 		return await mlFetcher(token)
 			.post(`create`, {
 				body: JSON.stringify(params),
