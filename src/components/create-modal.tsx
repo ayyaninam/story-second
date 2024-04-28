@@ -386,8 +386,7 @@ export const submitToBackend = async (
 					break;
 				}
 				default: {
-					toast.error("Unable to generate your story. Please try again.");
-					console.error(error.message, error.response.status);
+					toast.error("Unable to generate your story: " + error.message);
 				}
 			}
 		}
