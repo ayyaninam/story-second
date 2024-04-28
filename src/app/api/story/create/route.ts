@@ -23,7 +23,12 @@ const postHandler: AppRouteHandlerFn = async (request: NextRequest) => {
 	}
 
 	const story = await api.webstory.create(params, accessToken);
-	const { url, story_type } = story;
+	const { url, story_type, error } = story;
+
+	if (error) {
+		console.log("error: ", error);
+		return NextResponse.json({ error }, { status: 500, statusText: error });
+	}
 
 	const [genre, id] = url.split("/");
 
