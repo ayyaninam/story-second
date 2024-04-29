@@ -29,7 +29,7 @@ export default function PublishPage({
 		"@type": "Book",
 		name: storyData.storyTitle!,
 		description: storyData.summary!,
-		thumbnailUrl: storyData.coverImage!,
+		thumbnailUrl: Format.GetImageUrl(storyData.coverImage!),
 		numberOfPages: storyData.scenes?.reduce(
 			(total, scene) => total + (scene.storySegments?.length || 0),
 			0

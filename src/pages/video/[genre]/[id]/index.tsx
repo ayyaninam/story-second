@@ -31,11 +31,11 @@ export default function PublishPage({
 		"@type": "VideoObject",
 		name: storyData.storyTitle!,
 		description: storyData.summary!,
-		thumbnailUrl: storyData.coverImage!,
+		thumbnailUrl: Format.GetImageUrl(storyData.coverImage!),
 		uploadDate: storyData.created,
 		contentUrl: storyData.renderedVideoKey
 			? storyData.renderedVideoKey
-			: `$https://story.com/video/${storyData.topLevelCategory}/${storyData.id}`,
+			: `https://story.com/video/${storyData.topLevelCategory}/${storyData.id}`,
 		transcript: storyData.scenes
 			?.map((scene) =>
 				scene.videoSegments?.map((segment) => segment.textContent).join(" ")
