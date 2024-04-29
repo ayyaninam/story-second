@@ -20,6 +20,7 @@ import { mainSchema } from "@/api/schema";
 import { calculateDaysBetweenDates } from "@/utils/daytime";
 import useEventLogger from "@/utils/analytics";
 import { useRouter } from "next/router";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
@@ -102,9 +103,12 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	const router = useRouter();
 	const eventLogger = useEventLogger();
 
+	const { user, isLoading } = useUser();
+
 	const { data, isPending } = useQuery({
 		queryKey: [QueryKeys.USER],
 		queryFn: () => api.user.get(),
+		enabled: user && !isLoading,
 	});
 
 	const [userName, setUserName] = useState("Story.com");
