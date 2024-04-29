@@ -67,6 +67,7 @@
 		"react-share": "^5.1.0",
 		"react-textarea-autosize": "^8.5.3",
 		"remotion": "4.0.126",
+		"schema-dts": "^1.1.2",
 		"sharp": "^0.33.2",
 		"stripe": "^14.17.0",
 		"tailwind-merge": "^2.2.1",
