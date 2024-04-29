@@ -1,8 +1,18 @@
 import { env } from "@/env.mjs";
 import { handleAuth, handleLogin, handleLogout } from "@auth0/nextjs-auth0";
 import Routes from "@/routes";
+import { QueryClient } from "@tanstack/react-query";
+import { NextApiRequest, NextApiResponse } from "next";
 
-// handleCallback
+// Custom logout logic
+const customLogout = async (req: NextApiRequest, res: NextApiResponse) => {
+	const queryClient = new QueryClient();
+	queryClient.clear(); // Clear React Query cache
+	handleLogout({
+		returnTo: `${Routes.defaultRedirect}`,
+	})(req, res);
+};
+
 export default handleAuth({
 	login: handleLogin({
 		authorizationParams: {
@@ -10,5 +20,5 @@ export default handleAuth({
 			scope: "openid profile email offline_access",
 		},
 	}),
-	logout: handleLogout({ returnTo: `${Routes.defaultRedirect}` }),
+	logout: customLogout,
 });
