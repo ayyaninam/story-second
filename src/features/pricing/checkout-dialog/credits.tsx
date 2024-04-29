@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import api from "@/api";
 import {
@@ -16,8 +16,14 @@ import { SubscriptionPlan, AllowanceType } from "@/utils/enums";
 
 import { useStripeSetup, useUser } from "../hooks";
 import CheckoutDialogContent from "./content";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 const getCost = {
+	[SubscriptionPlan.Free]: {
+		[AllowanceType.Videos]: 5,
+		[AllowanceType.StoryBooks]: 3,
+		[AllowanceType.Credits]: 0.01,
+	},
 	[SubscriptionPlan.Basic]: {
 		[AllowanceType.Videos]: 4,
 		[AllowanceType.StoryBooks]: 2,
@@ -35,9 +41,9 @@ const getCost = {
 	},
 	// Ideally this never occurs
 	[SubscriptionPlan.Custom]: {
-		[AllowanceType.Videos]: 99,
-		[AllowanceType.StoryBooks]: 99,
-		[AllowanceType.Credits]: 99,
+		[AllowanceType.Videos]: 2,
+		[AllowanceType.StoryBooks]: 1,
+		[AllowanceType.Credits]: 0.01,
 	},
 };
 
@@ -61,22 +67,27 @@ const creditQuantityValues = [100, 200, 500, 1000] as const;
 
 export interface CreditsCheckoutDialogProps {
 	allowanceType: AllowanceType;
+	defaultQuantity?: number;
 	onClose: () => void;
+	skipSubscriptionCheck?: boolean;
 }
 
 const CreditsCheckoutDialog = ({
 	allowanceType,
+	defaultQuantity,
 	onClose,
+	skipSubscriptionCheck = false,
 }: CreditsCheckoutDialogProps) => {
 	const { user, updateUserDataAfter1Second } = useUser();
 	const { setupStripe, onAddCard, confirmPayment } = useStripeSetup();
 
 	const [quantity, setQuantity] = useState(
-		allowanceType === AllowanceType.StoryBooks
-			? 1
-			: allowanceType === AllowanceType.Videos
+		defaultQuantity ??
+			(allowanceType === AllowanceType.StoryBooks
 				? 1
-				: 200
+				: allowanceType === AllowanceType.Videos
+					? 1
+					: 200)
 	);
 	const [amount, setAmount] = useState(0);
 	const [itemCost, setItemCost] = useState(0);
@@ -86,23 +97,36 @@ const CreditsCheckoutDialog = ({
 	const [userWantsToChangePayment, setUserWantsToChangePayment] =
 		useState(false);
 
-	const quantityValues =
-		allowanceType === AllowanceType.StoryBooks
-			? storyBooksQuantityValues
-			: allowanceType === AllowanceType.Videos
-				? videoQuantityValues
-				: creditQuantityValues;
+	const quantityValues = useMemo(() => {
+		let values =
+			allowanceType === AllowanceType.StoryBooks
+				? storyBooksQuantityValues
+				: allowanceType === AllowanceType.Videos
+					? videoQuantityValues
+					: creditQuantityValues;
+
+		if (defaultQuantity) {
+			// @ts-ignore
+			values = [...values, defaultQuantity];
+		}
+
+		return values;
+	}, [allowanceType, defaultQuantity]);
 
 	const userHasCard = user ? getUserHasCard(user) : false;
 	const userSubscriptionPlan: SubscriptionPlan | undefined =
 		user?.subscription?.subscriptionPlan;
-	if (userSubscriptionPlan === SubscriptionPlan.Free) {
+	if (
+		userSubscriptionPlan === SubscriptionPlan.Free &&
+		!skipSubscriptionCheck
+	) {
 		throw new Error(
 			"The user shouldn't open the credits modal when using the free plan"
 		);
 	}
 
 	const showPaymentCard = userHasCard && !userWantsToChangePayment;
+	const { invalidateUser } = useUpdateUser();
 
 	const onRefillAllowance = async () => {
 		if (submitting) return;
@@ -110,6 +134,7 @@ const CreditsCheckoutDialog = ({
 		setSubmitting(true);
 
 		const handleCreditsSuccessful = () => {
+			invalidateUser();
 			toast.success("Credits Added successfully!");
 			onClose();
 		};
@@ -204,7 +229,7 @@ const CreditsCheckoutDialog = ({
 						value={String(quantity)}
 						onValueChange={(newValue) => setQuantity(Number(newValue))}
 					>
-						<SelectTrigger className="w-[60px] font-normal">
+						<SelectTrigger className="w-[75px] font-normal">
 							<SelectValue aria-label={String(quantity)}>
 								{quantity}
 							</SelectValue>

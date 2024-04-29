@@ -32,6 +32,7 @@ import useUpdateUser from "@/hooks/useUpdateUser";
 import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function MobileGeneratePage({
 	fromLanding = false,
@@ -71,10 +72,19 @@ export default function MobileGeneratePage({
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
 	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+	const { user } = useUser();
 
 	const onSubmit = async () => {
-		setIsLoading(true);
 		localStorage.setItem("prompt", input);
+		if (!user) {
+			if (window.location.pathname === "/prompt") {
+				window.parent.location.href = "/auth/login?returnTo=/generate";
+			} else {
+				window.location.href = "/auth/login?returnTo=/generate";
+			}
+			return;
+		}
+		setIsLoading(true);
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
 			?.enumValue as StoryOutputTypes;
 		const isStoryBook = outputType === StoryOutputTypes.Story;

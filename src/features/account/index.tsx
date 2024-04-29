@@ -17,6 +17,10 @@ import user from "@/api/routes/user";
 import { AccountsHeader } from "@/features/account/components/header";
 import Billing from "@/features/account/components/billing";
 import toast from "react-hot-toast";
+import MyItems from "@/features/account/MyItems";
+import AmazonStatus from "@/features/account/AmazonStatus";
+import Payouts from "@/features/account/PayoutsForm";
+import UpdateKYCForm from "@/features/account/UpdateKYC";
 
 const profileSchema = z.object({
 	profileName: z
@@ -68,7 +72,7 @@ const AccountsPage = () => {
 			toast.dismiss();
 			toast.error(message as string);
 		}
-	}, []);
+	}, [message]);
 
 	const { data, isPending, refetch } = useQuery({
 		queryKey: [QueryKeys.USER],
@@ -175,6 +179,36 @@ const AccountsPage = () => {
 								>
 									Billing
 								</ToggleGroupItem>
+								<ToggleGroupItem
+									value="payouts"
+									className="justify-center sm:justify-start text-center sm:text-left w-full"
+								>
+									Payouts
+								</ToggleGroupItem>
+								{/*<ToggleGroupItem*/}
+								{/*	value="updateKYC"*/}
+								{/*	className="justify-center sm:justify-start text-center sm:text-left w-full"*/}
+								{/*>*/}
+								{/*	Update KYC*/}
+								{/*</ToggleGroupItem>*/}
+								<ToggleGroupItem
+									value={"amazon-status"}
+									className="justify-center sm:justify-start text-center sm:text-left w-full"
+								>
+									Amazon Status
+								</ToggleGroupItem>
+								<ToggleGroupItem
+									value={"my-items"}
+									className="justify-center sm:justify-start text-center sm:text-left w-full"
+								>
+									My PDFs
+								</ToggleGroupItem>
+								<ToggleGroupItem
+									value={"my-videos"}
+									className="justify-center sm:justify-start text-center sm:text-left w-full"
+								>
+									My Videos [storybird.ai]
+								</ToggleGroupItem>
 								{/*<ToggleGroupItem*/}
 								{/*	value="preferences"*/}
 								{/*	className="justify-center sm:justify-start text-center sm:text-left w-full"*/}
@@ -205,6 +239,16 @@ const AccountsPage = () => {
 									)}
 
 									{step === "payment" && <Billing />}
+
+									{step === "payouts" && <Payouts />}
+
+									{step === "updateKYC" && <UpdateKYCForm />}
+
+									{step === "my-items" && <MyItems />}
+
+									{step === "my-videos" && <MyItems legacy />}
+
+									{step === "amazon-status" && <AmazonStatus />}
 
 									{/*{step === "preferences" && (*/}
 									{/*	<>*/}

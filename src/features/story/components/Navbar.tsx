@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
@@ -16,7 +16,13 @@ export default function Navbar({
 }) {
 	const router = useRouter();
 	const eventLogger = useEventLogger();
-
+	const createNewButton: CSSProperties = {
+		background:
+			"linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Colors-accent-700, #157A6E)",
+		boxShadow:
+			" 0px -1px 12px 0px rgba(255, 255, 255, 0.12) inset, 0px 0px 0px 1px #157A6E",
+		borderRadius: "6px",
+	};
 	return (
 		<div className="flex flex-row justify-between items-center bg-background rounded-tl-lg rounded-tr-lg border-b-[0.5px] border-border p-4">
 			<div className="flex gap-x-2.5 items-center">
@@ -52,6 +58,7 @@ export default function Navbar({
 				<Button
 					className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 					variant="default"
+					style={createNewButton}
 					onClick={() => {
 						eventLogger("create_new_clicked", {
 							sourceUrl: router.asPath,

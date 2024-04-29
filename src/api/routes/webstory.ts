@@ -1,7 +1,5 @@
-import { authFetcher, mlFetcher } from "@/lib/fetcher";
-import { mainSchema, mlSchema } from "../schema";
-import { getJwt } from "@/utils/jwt";
-import { CreateInitialStoryQueryParams } from "@/types";
+import { mlFetcher, publicProxyApiFetcher } from "@/lib/fetcher";
+import { mainSchema } from "../schema";
 
 const webstory = {
 	create: async (
@@ -16,9 +14,8 @@ const webstory = {
 		image_style: number;
 		url: string;
 		story_type: number;
+		error?: string;
 	}> => {
-		console.log("formData: ", params);
-		console.log("token: ", token);
 		return await mlFetcher(token)
 			.post(`create`, {
 				body: JSON.stringify(params),
@@ -30,8 +27,8 @@ const webstory = {
 		token?: string
 	): Promise<mainSchema["ReturnStoryInteractionDTO"]> => {
 		const data: mainSchema["ReturnStoryInteractionDTOApiResponse"] =
-			await authFetcher(token || getJwt())
-				.get(`api/WebStory/${id}/Interactions`)
+			await publicProxyApiFetcher
+				.get(`proxyApi/WebStory/${id}/Interactions`)
 				.json();
 		if (!data.succeeded) {
 			// TODO:figure out error boundaries
@@ -48,7 +45,7 @@ const webstory = {
 	}: {
 		id: string;
 	}): Promise<mainSchema["StringApiResponse"]> =>
-		await authFetcher(getJwt()).delete(`api/Webstory/${id}/Delete`).json(),
+		await publicProxyApiFetcher.delete(`proxyApi/Webstory/${id}/Delete`).json(),
 };
 
 export default webstory;

@@ -11,6 +11,7 @@ type CheckoutDialogProps =
 			children?: ReactNode;
 			open?: boolean;
 			setOpen?: (open: boolean) => void;
+			skipSubscriptionCheck?: boolean;
 	  } & Omit<CreditsCheckoutDialogProps, "onClose">)
 	| ({
 			variant: "subscription";
@@ -18,6 +19,7 @@ type CheckoutDialogProps =
 			children?: ReactNode;
 			open?: boolean;
 			setOpen?: (open: boolean) => void;
+			skipSubscriptionCheck?: boolean;
 	  } & Omit<SubscriptionCheckoutDialogProps, "onClose">);
 
 const CheckoutDialog = (props: CheckoutDialogProps) => {
@@ -40,7 +42,9 @@ const CheckoutDialog = (props: CheckoutDialogProps) => {
 				{props.variant === "credits" ? (
 					<CreditsCheckoutDialog
 						allowanceType={props.allowanceType}
+						defaultQuantity={props.defaultQuantity}
 						onClose={() => setOpen(false)}
+						skipSubscriptionCheck={props.skipSubscriptionCheck}
 					/>
 				) : props.variant === "subscription" ? (
 					<SubscriptionCheckoutDialog

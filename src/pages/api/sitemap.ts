@@ -9,7 +9,8 @@ async function fetchFromApi(endpoint: string) {
 			throw new Error(`Failed to fetch from API: ${response.statusText}`);
 		}
 		const { data } = await response.json();
-		return data;
+		// limit to 30k responses
+		return data.slice(0, 15000);
 	} catch (error) {
 		console.error(env.NEXT_PUBLIC_API_URL + endpoint);
 		console.error(`Error fetching data from API: ${error}`);
@@ -42,15 +43,15 @@ async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	// NOTE: When enabled, check for the api response size
 	// https://nextjs.org/docs/messages/api-routes-response-size-limit
-	// const userSitemap = await users.map((user: string) => {
-	// 	return {
-	// 		url: `${env.NEXT_PUBLIC_BASE_URL}${user}`,
-	// 		changeFrequency: "weekly",
-	// 		priority: 0.5,
-	// 	};
-	// });
+	const userSitemap = await users.map((user: string) => {
+		return {
+			url: `${env.NEXT_PUBLIC_BASE_URL}${user}`,
+			changeFrequency: "weekly",
+			priority: 0.5,
+		};
+	});
 
-	return [...staticSitemap, ...categorySitemap];
+	return [...staticSitemap, ...categorySitemap, ...userSitemap];
 }
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse) {

@@ -5,6 +5,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 
 import api from "@/api";
 import { SubscriptionPlan } from "@/utils/enums";
+import useUpdateUser from "@/hooks/useUpdateUser";
 
 export const useUserCanUseCredits = () => {
 	const { data } = useQuery({
@@ -13,17 +14,20 @@ export const useUserCanUseCredits = () => {
 	});
 
 	const subscription = data?.data?.subscription;
+	const { invalidateUser } = useUpdateUser();
 
 	const userCanUseCredits = async ({
 		credits,
 		videoCredits,
 		storybookCredits,
 		variant,
+		skipSubscriptionCheck = false,
 	}: {
 		credits?: number;
 		videoCredits?: number;
 		storybookCredits?: number;
 		variant: "credits" | "video credits" | "story book";
+		skipSubscriptionCheck?: boolean;
 	}): Promise<{
 		error?:
 			| "user not logged in"
@@ -32,6 +36,7 @@ export const useUserCanUseCredits = () => {
 			| "using custom plan";
 		success?: boolean;
 	}> => {
+		await invalidateUser();
 		if (!data?.data) {
 			return { error: "user not logged in" };
 		}
@@ -52,7 +57,10 @@ export const useUserCanUseCredits = () => {
 					: userStoryCredits >= storybookCredits;
 
 		if (!enoughBalance) {
-			if (subscription.subscriptionPlan === SubscriptionPlan.Free) {
+			if (
+				subscription.subscriptionPlan === SubscriptionPlan.Free &&
+				!skipSubscriptionCheck
+			) {
 				toast.success(
 					"You're on a free plan, please upgrade to a paid plan to continue",
 					{
@@ -61,7 +69,10 @@ export const useUserCanUseCredits = () => {
 				);
 				return { error: "not paid subscription", success: false };
 			}
-			if (subscription.subscriptionPlan === SubscriptionPlan.Custom) {
+			if (
+				subscription.subscriptionPlan === SubscriptionPlan.Custom &&
+				!skipSubscriptionCheck
+			) {
 				toast.success(
 					"You're on a custom plan, please upgrade to a regular plan to continue",
 					{
@@ -73,13 +84,15 @@ export const useUserCanUseCredits = () => {
 			}
 			if (variant === "video credits") {
 				toast.error(
-					"You do not have enough Video credits to perform this action"
+					"You do not have enough Video credits to perform this action. Please purchase more credits."
 				);
 			} else if (variant === "credits") {
-				toast.error("You do not have enough credits to perform this action");
+				toast.error(
+					"You do not have enough credits to perform this action. Please purchase more credits."
+				);
 			} else if (variant === "story book") {
 				toast.error(
-					"You do not have enough StoryBook credits to perform this action"
+					"You do not have enough StoryBook credits to perform this action. Please purchase more credits."
 				);
 			}
 

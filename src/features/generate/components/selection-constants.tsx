@@ -29,14 +29,14 @@ export const LanguageSelect = ({
 		<SelectContent>
 			{languages.map((lang, index) => (
 				<SelectItem key={index} value={lang.value}>
-					<div className="flex gap-2">
-						<Image
-							width={16}
-							height={16}
-							alt={lang.value.toString()}
-							src={lang.icon}
-							className="rounded-full"
-						/>
+					<div className="flex gap-2 pl-2">
+						{/*<Image*/}
+						{/*	width={16}*/}
+						{/*	height={16}*/}
+						{/*	alt={lang.value.toString()}*/}
+						{/*	src={lang.icon}*/}
+						{/*	className="rounded-full"*/}
+						{/*/>*/}
 						{lang.value}
 					</div>
 				</SelectItem>

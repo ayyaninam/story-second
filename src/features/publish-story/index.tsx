@@ -5,8 +5,6 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -27,7 +25,7 @@ import { ModeToggle } from "../edit-story/components/mode-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/api";
 import { QueryKeys } from "@/lib/queryKeys";
 import StoryScreen from "../edit-story/story-screen";
@@ -44,6 +42,7 @@ import StoryLogo from "../../../public/auth-prompt/story-logo";
 import Link from "next/link";
 import GenericModal from "@/components/ui/generic-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { DisplayAspectRatios } from "@/utils/enums";
 import useEventLogger from "@/utils/analytics";
 import { HTTPError } from "ky";
 import { useUserCanUseCredits } from "@/utils/payment";
@@ -69,10 +68,6 @@ export default function PublishedStory({
 	const isMobile = useMediaQuery("(max-width: 1024px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [enableQuery, setEnableQuery] = useState(true);
-	const [storySegments, setStorySegments] = useState<
-		mainSchema["ReturnVideoSegmentDTO"][] | null
-	>();
-	const [index, setIndex] = useState(0);
 	const [story, setStory] = useWebstoryContext();
 
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
@@ -86,15 +81,24 @@ export default function PublishedStory({
 			api.video.get(
 				router.query.genre!.toString(),
 				router.query.id!.toString(),
-				storyData.storyType
+				storyData.storyType,
+				true
 			),
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],
-		refetchInterval: enableQuery ? 1000 : false,
+		refetchInterval: (data) => {
+			if (
+				data?.state?.data?.storyDone &&
+				data?.state?.data?.videosDone &&
+				data?.state?.data?.imagesDone
+			) {
+				return false; // stop polling
+			}
+			return 1000; // continue polling
+		},
 		// Disable once all the videoKeys are obtained
 		// enabled: enableQuery,
 	});
-	const queryClient = useQueryClient();
 
 	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
 		queryFn: () => api.webstory.interactions(Webstory.data?.id as string),
@@ -121,34 +125,6 @@ export default function PublishedStory({
 
 	const ImageRatio = GetDisplayImageRatio(Webstory.data?.resolution);
 	const isLoading = Webstory.isLoading || !Webstory.data;
-
-	useEffect(() => {
-		if (Webstory.data) {
-			if (
-				Webstory.data?.scenes
-					?.flatMap((el) => el?.videoSegments)
-					?.every((segment) => !!segment?.videoKey) &&
-				Webstory.data?.scenes?.flatMap((el) => el.videoSegments)?.length > 0
-			) {
-				console.log("All video segments are ready");
-				setEnableQuery(false);
-				setStorySegments(
-					Webstory?.data?.scenes?.flatMap((el) => el?.videoSegments!)
-				);
-			}
-			setStory(Webstory.data);
-		}
-	}, [Webstory.data]);
-
-	useEffect(() => {
-		const interval = storySegments
-			? setInterval(() => {
-					setIndex((prev) => (prev + 1) % storySegments.length);
-				}, 5000)
-			: undefined;
-
-		return () => clearInterval(interval);
-	});
 
 	useEffect(() => {
 		if (router.query.liked) {
@@ -210,7 +186,6 @@ export default function PublishedStory({
 
 			await RenderVideo.mutateAsync({
 				id: storyData.id!,
-				accessToken: session.accessToken,
 			});
 			toast.success("Video is being rendered. Please check again in 2 minutes");
 
@@ -223,8 +198,20 @@ export default function PublishedStory({
 	const { userCanUseCredits } = useUserCanUseCredits();
 	const [openVideoCreditsDialog, setOpenVideoCreditsDialog] = useState(false);
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+	const [dialogOpen, setDialogOpen] = useState(false);
 
 	const handleCopyVideo = async () => {
+		if (!User?.data?.data) {
+			router.push(
+				Routes.ToAuthPage(
+					Routes.ViewStory(
+						storyData.storyType,
+						router.query.genre!.toString(),
+						router.query.id!.toString()
+					)
+				)
+			);
+		}
 		const { error } = await userCanUseCredits({
 			variant: "video credits",
 			videoCredits: 1,
@@ -246,7 +233,6 @@ export default function PublishedStory({
 		try {
 			const newStory = await CopyVideo.mutateAsync({
 				id: storyData.id as string,
-				accessToken: session.accessToken,
 			});
 
 			if (newStory) {
@@ -394,7 +380,9 @@ export default function PublishedStory({
 								ImageRatio.width === 3 && "md:max-w-[900px]",
 								ImageRatio.width === 4 && "md:max-w-[1280px]",
 								ImageRatio.width === 9 && "md:max-w-[780px]",
-								ImageRatio.width === 16 && "md:max-w-[1620px]"
+								ImageRatio.width === 16 && "md:max-w-[1620px]",
+								ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+									"lg:flex-col 2xl:flex-row"
 							)}
 						>
 							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
@@ -449,7 +437,11 @@ export default function PublishedStory({
 
 							{/* </Loading> */}
 							<div
-								className={`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`}
+								className={cn(
+									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`,
+									ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+										"lg:max-w-[100%] 2xl:max-w-sm"
+								)}
 							>
 								<div className="relative space-y-2">
 									<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
@@ -469,9 +461,9 @@ export default function PublishedStory({
 										</p>
 									)}
 									<div className="flex flex-wrap gap-2">
-										{!(User?.data?.data?.id === Webstory.data?.user?.id) &&
+										{!Webstory.data?.canEdit &&
 											Webstory.data?.storyType === 1 &&
-											Webstory.data?.imagesDone && (
+											Webstory.data?.videosDone && (
 												<GenericModal
 													title="Duplicate Video"
 													description="We'll add a video to your library with the same plot that you can make your own and edit! This action will cost 1 video credit"
@@ -482,16 +474,18 @@ export default function PublishedStory({
 														</span>
 													}
 													confirmAction={handleCopyVideo}
+													dialogOpen={dialogOpen}
+													setDialogOpen={setDialogOpen}
 												/>
 											)}
-										{User?.data?.data?.id === Webstory.data?.user?.id &&
+										{Webstory.data?.canEdit &&
 											Webstory.data?.storyType !== 2 && (
 												<Button
 													className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 													variant="outline"
 													onClick={() =>
 														router.push(
-															Routes.EditScript(
+															Routes.EditStoryboard(
 																storyData.storyType,
 																storyData.topLevelCategory!,
 																storyData.slug!
@@ -533,9 +527,6 @@ export default function PublishedStory({
 												>
 													<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" />{" "}
 													Share
-													{User?.data?.data?.id === Webstory.data?.user?.id &&
-														Webstory.data?.storyType !== 2 &&
-														" Video"}
 												</Button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent>
@@ -599,7 +590,6 @@ export default function PublishedStory({
 													} else {
 														videoUrl = await RenderVideo.mutateAsync({
 															id: storyData.id!,
-															accessToken: session.accessToken,
 														});
 													}
 													if (videoUrl) {
@@ -625,10 +615,9 @@ export default function PublishedStory({
 											</Button>
 										)}
 
-										{User?.data?.data?.id === Webstory.data?.user?.id &&
-											Webstory.data?.id && (
-												<DeleteVideoButton storyId={Webstory.data.id} />
-											)}
+										{Webstory.data?.canEdit && Webstory.data?.id && (
+											<DeleteVideoButton storyId={Webstory.data.id} />
+										)}
 									</div>
 
 									{isLoading ? (
@@ -654,8 +643,17 @@ export default function PublishedStory({
 											</Button>
 										)}
 								</div>
-								<div className="lg:hidden my-2.5 bg-slate-200 self-stretch h-px" />
-								<div className="flex gap-x-2.5">
+								<div
+									className={cn(
+										"lg:hidden my-2.5 bg-slate-200 self-stretch h-px",
+										ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+											"lg:flex 2xl:hidden"
+									)}
+								/>
+								<Link
+									href={`/${Webstory.data?.user?.profileName}`}
+									className="flex gap-x-2.5"
+								>
 									{isLoading ? (
 										<Skeleton className="w-[44px] h-[44px] rounded-full" />
 									) : (
@@ -699,21 +697,8 @@ export default function PublishedStory({
 											)}
 										</span>
 									)}
-								</div>
+								</Link>
 							</div>
-							{/*
-								<p>
-													{(Webstory.data.user?.videoCount ?? 0) +
-														(Webstory.data.user?.storyCount ?? 0)}{" "}
-													Stories
-												</p>
-												<p className="text-slate-300"> • </p>
-								<a
-													className="p-0 m-0 text-muted-foreground font-normal"
-													href="#"
-												>
-													See all
-												</a> */}
 						</div>
 					</div>
 					<div className="absolute bottom-10 left-4 items-center hidden md:flex flex-row gap-x-1">

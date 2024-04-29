@@ -20,6 +20,7 @@ import { mainSchema } from "@/api/schema";
 import { calculateDaysBetweenDates } from "@/utils/daytime";
 import useEventLogger from "@/utils/analytics";
 import { useRouter } from "next/router";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
@@ -47,7 +48,7 @@ export const menuItems = [
 	},
 	{
 		icon: <LibraryIcon size={24} />,
-		text: "Library",
+		text: "My Library",
 		shortcut: "L",
 		redirectUrl: "/library/all",
 		cssVars: {
@@ -102,9 +103,12 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	const router = useRouter();
 	const eventLogger = useEventLogger();
 
+	const { user, isLoading } = useUser();
+
 	const { data, isPending } = useQuery({
 		queryKey: [QueryKeys.USER],
 		queryFn: () => api.user.get(),
+		enabled: user && !isLoading,
 	});
 
 	const [userName, setUserName] = useState("Story.com");
@@ -145,8 +149,8 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 							</Avatar>
 							{/*# TODO: enable profile pages when ready*/}
 							<Link
-								href={"/account"}
-								// href={"/" + user?.nickname || ""}
+								// href={"/account"}
+								href={"/" + data?.data?.profileName!}
 							>
 								<span className="flex flex-col text-white gap-y-1">
 									<span>{userName}</span>
@@ -364,6 +368,27 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 						</Button>
 					</Link>
 				)}
+				<div className="flex items-center justify-between text-white text-center">
+					<div></div>
+					<Link
+						href={"/faqs"}
+						className="mt-2 text-white text-sm font-normal hover:text-accent-300 underline-offset-4 underline"
+					>
+						FAQs
+					</Link>
+					<div></div>
+					<Button
+						variant="link"
+						onClick={() => {
+							// @ts-ignore - Intercom is vanilla JS
+							Intercom("show");
+						}}
+						className="mt-2 text-white text-sm font-normal hover:text-accent-300 underline"
+					>
+						Contact Us
+					</Button>
+					<div></div>
+				</div>
 			</div>
 		</div>
 	);

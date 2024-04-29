@@ -44,7 +44,7 @@ export default function LibraryIcon() {
 								cy="17"
 								r="13.8"
 								stroke="url(#paint2_linear_1887_8473)"
-								stroke-width="0.4"
+								strokeWidth="0.4"
 							/>
 						</g>
 						<path
@@ -214,8 +214,8 @@ export default function LibraryIcon() {
 						y2="33"
 						gradientUnits="userSpaceOnUse"
 					>
-						<stop stopColor="white" stop-opacity="0.12" />
-						<stop offset="1" stopColor="white" stop-opacity="0" />
+						<stop stopColor="white" stopOpacity="0.12" />
+						<stop offset="1" stopColor="white" stopOpacity="0" />
 					</linearGradient>
 					<linearGradient
 						id="paint1_linear_1887_8473"
