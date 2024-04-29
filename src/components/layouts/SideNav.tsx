@@ -342,7 +342,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 					</Button>
 				</UpgradeSubscriptionDialog>
 				{data?.data ? (
-					<Link href={"/auth/logout"}>
+					<Link href={"/api/auth/logout"}>
 						<Button
 							variant="outline"
 							className="min-w-full mt-2 rounded-lg py-1.5 text-white font-normal hover:text-pink-700"
