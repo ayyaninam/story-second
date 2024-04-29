@@ -8,6 +8,8 @@ export default function LogoutPage() {
 
 	useEffect(() => {
 		queryClient.clear();
+		queryClient.removeQueries();
+		router.reload();
 		router.push(`/api/auth/logout`);
 	}, [queryClient, router]);
 	return <div>Logging you out...</div>;

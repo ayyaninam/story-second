@@ -106,10 +106,23 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	const { user, isLoading } = useUser();
 
 	const { data, isPending } = useQuery({
-		queryKey: [QueryKeys.USER],
+		queryKey: [QueryKeys.USER_SIDE_NAV],
 		queryFn: () => api.user.get(),
-		enabled: user && !isLoading,
+		enabled: !!user && !isLoading,
+		staleTime: 0,
 	});
+
+	console.log(
+		user,
+		!isLoading,
+		data,
+		isPending,
+		"user",
+		"isLoading",
+		"data",
+		"isPending",
+		"SideNav.tsx"
+	);
 
 	const [userName, setUserName] = useState("Story.com");
 	const [subscriptionDetails, setSubscriptionDetails] = useState<
