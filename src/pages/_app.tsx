@@ -238,6 +238,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 }
 
 // Disable console logs in production
-// if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === "production") {
-// 	console.log = function () {};
-// }
+if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === "production") {
+	console.log = function () {};
+}
