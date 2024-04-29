@@ -108,7 +108,8 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	const { data, isPending } = useQuery({
 		queryKey: [QueryKeys.USER_SIDE_NAV],
 		queryFn: () => api.user.get(),
-		enabled: user && !isLoading,
+		enabled: !!user && !isLoading,
+		staleTime: 0,
 	});
 
 	console.log(
