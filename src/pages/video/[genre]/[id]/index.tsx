@@ -17,6 +17,7 @@ import Format from "@/utils/format";
 import PageLayout from "@/components/layouts/PageLayout";
 import LibraryAccentStyle from "@/features/library/library-accent-style";
 import FeedAccentStyle from "@/features/feed/feed-accent-style";
+import { Book, VideoObject, WithContext } from "schema-dts";
 
 export default function PublishPage({
 	storyData,
@@ -24,6 +25,24 @@ export default function PublishPage({
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	useSaveSessionToken(session.accessToken);
+
+	const jsonLd: WithContext<VideoObject> = {
+		"@context": "https://schema.org",
+		"@type": "VideoObject",
+		name: storyData.storyTitle!,
+		description: storyData.summary!,
+		thumbnailUrl: Format.GetImageUrl(storyData.coverImage!),
+		uploadDate: storyData.created,
+		contentUrl: storyData.renderedVideoKey
+			? storyData.renderedVideoKey
+			: `https://story.com/video/${storyData.topLevelCategory}/${storyData.id}`,
+		transcript: storyData.scenes
+			?.map((scene) =>
+				scene.videoSegments?.map((segment) => segment.textContent).join(" ")
+			)
+			.join("\n"),
+		director: "https://story.com/" + storyData.user!.profileName,
+	};
 	return (
 		<PageLayout pageIndex={storyData.canEdit ? 2 : 0}>
 			<HydrationBoundary state={dehydratedState}>
@@ -45,6 +64,10 @@ export default function PublishPage({
 							},
 						],
 					}}
+				/>
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 				/>
 				{storyData.canEdit ? <LibraryAccentStyle /> : <FeedAccentStyle />}
 				<WebStoryProvider initialValue={storyData}>

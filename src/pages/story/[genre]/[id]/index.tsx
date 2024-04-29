@@ -16,6 +16,7 @@ import StoryBookPage from "@/features/story/story-page";
 import { StoryOutputTypes } from "@/utils/enums";
 import LibraryAccentStyle from "@/features/library/library-accent-style";
 import FeedAccentStyle from "@/features/feed/feed-accent-style";
+import { Book, WithContext } from "schema-dts";
 
 export default function PublishPage({
 	storyData,
@@ -23,6 +24,19 @@ export default function PublishPage({
 	dehydratedState,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	useSaveSessionToken(session.accessToken);
+	const jsonLd: WithContext<Book> = {
+		"@context": "https://schema.org",
+		"@type": "Book",
+		name: storyData.storyTitle!,
+		description: storyData.summary!,
+		thumbnailUrl: Format.GetImageUrl(storyData.coverImage!),
+		numberOfPages: storyData.scenes?.reduce(
+			(total, scene) => total + (scene.storySegments?.length || 0),
+			0
+		),
+		bookFormat: "https://schema.org/EBook",
+		illustrator: "https://story.com/" + storyData.user!.profileName,
+	};
 	return (
 		<PageLayout pageIndex={storyData.canEdit ? 2 : 0}>
 			<HydrationBoundary state={dehydratedState}>
@@ -44,6 +58,10 @@ export default function PublishPage({
 							},
 						],
 					}}
+				/>
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 				/>
 				{storyData.canEdit ? <LibraryAccentStyle /> : <FeedAccentStyle />}
 				<StoryBookPage storyData={storyData} session={session} />
