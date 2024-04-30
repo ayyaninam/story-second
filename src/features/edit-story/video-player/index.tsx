@@ -15,7 +15,6 @@ import {
 	RenderPlayPauseButton,
 	RenderFullscreenButton,
 	CallbackListener,
-	RenderPoster,
 } from "@remotion/player";
 
 import {
@@ -41,12 +40,21 @@ export type RemotionPlayerHandle = {
 	seekTo: PlayerRef["seekTo"];
 };
 
+export type OnTimeUpdate = ({
+	frame,
+	durationInFrames,
+}: {
+	frame: number;
+	durationInFrames: number;
+}) => void;
+
 type RemotionPlayerProps = {
 	inputProps: RemotionPlayerInputProps;
 	onPlay?: CallbackListener<"play">;
 	onEnded?: CallbackListener<"ended">;
 	onPause?: CallbackListener<"pause">;
 	onSeeked?: CallbackListener<"seeked">;
+	onTimeUpdate?: OnTimeUpdate;
 	seekedFrame?: number;
 	isPlaying?: boolean;
 	isMuted?: boolean;
@@ -65,6 +73,7 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 			onEnded,
 			onPause,
 			onSeeked,
+			onTimeUpdate,
 			seekedFrame,
 			playerClassName,
 			isPlaying,
@@ -105,12 +114,23 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 			}
 		}, [inputProps.showLoadingVideo]);
 
+		const handleTimeUpdate = (e: { detail: { frame: number } }) => {
+			if (onTimeUpdate) {
+				onTimeUpdate({
+					frame: e.detail.frame,
+					durationInFrames: inputProps.durationInFrames,
+				});
+			}
+		};
+
 		// convert listeners to callback props
 		useEffect(() => {
 			const player = playerRef.current;
 			if (!player) {
 				return;
 			}
+
+			player.addEventListener("timeupdate", handleTimeUpdate);
 
 			if (onPlay) {
 				player.addEventListener("play", onPlay);
@@ -126,6 +146,8 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 			}
 
 			return () => {
+				player.removeEventListener("timeupdate", handleTimeUpdate);
+
 				if (onPlay) {
 					player.removeEventListener("play", onPlay);
 				}

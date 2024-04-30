@@ -6,6 +6,7 @@ import {
 	SceneModifications,
 } from "./utils/enums";
 import { CallbackListener } from "@remotion/player";
+import { OnTimeUpdate } from "@/features/edit-story/video-player";
 import { VIDEO_ORIENTATIONS } from "./constants/feed-constants";
 
 export type CreateInitialStoryQueryParams = mlSchema["CreateStoryRequest"];
@@ -23,6 +24,7 @@ export type VideoPlayerProps = {
 	onEnded?: CallbackListener<"ended">;
 	onPause?: CallbackListener<"pause">;
 	onSeeked?: CallbackListener<"seeked">;
+	onTimeUpdate?: OnTimeUpdate;
 	isPlaying?: boolean;
 	seekedFrame?: number;
 	isMuted?: boolean;

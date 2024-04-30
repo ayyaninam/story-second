@@ -43,7 +43,12 @@ export type AnalyticsEvent =
 	| "create_subscription_successful"
 	| "upgrade_subscription_successful"
 	| "create_subscription_failed"
-	| "upgrade_subscription_failed";
+	| "upgrade_subscription_failed"
+	| "video_watched_25"
+	| "video_watched_50"
+	| "video_watched_75"
+	| "video_watched_100";
+
 const useEventLogger = () => {
 	const { user } = useUser();
 

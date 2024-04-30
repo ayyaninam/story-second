@@ -42,12 +42,11 @@ import StoryLogo from "../../../public/auth-prompt/story-logo";
 import Link from "next/link";
 import GenericModal from "@/components/ui/generic-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
-import { DisplayAspectRatios } from "@/utils/enums";
-import useEventLogger from "@/utils/analytics";
+import { DisplayAspectRatios, AllowanceType } from "@/utils/enums";
+import useEventLogger, { AnalyticsEvent } from "@/utils/analytics";
 import { HTTPError } from "ky";
 import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
-import { AllowanceType } from "@/utils/enums";
 import DeleteVideoButton from "@/features/publish-story/delete-video-button";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import isBrowser from "@/utils/isBrowser";
@@ -283,6 +282,31 @@ export default function PublishedStory({
 		}
 	};
 
+	const [loggedEvents, setLoggedEvents] = useState<number[]>([]);
+
+	const onTimeUpdate = ({
+		frame,
+		durationInFrames,
+	}: {
+		frame: number;
+		durationInFrames: number;
+	}) => {
+		const progress = (frame / durationInFrames) * 100;
+
+		const logEvent = (eventName: AnalyticsEvent, milestone: number) => {
+			if (!loggedEvents.includes(milestone)) {
+				eventLogger(eventName);
+
+				setLoggedEvents((prevLoggedEvents) => [...prevLoggedEvents, milestone]);
+			}
+		};
+
+		if (progress >= 25 && progress < 50) logEvent("video_watched_25", 25);
+		if (progress >= 50 && progress < 75) logEvent("video_watched_50", 50);
+		if (progress >= 75 && progress < 99) logEvent("video_watched_75", 75);
+		if (progress >= 99) logEvent("video_watched_100", 100); // it's 99 instead of 100 because "progress" might reach until 99.90 but not exactly 100.0
+	};
+
 	const numVideoSegmentsReady = Webstory.data?.scenes
 		?.flatMap((el) => el.videoSegments)
 		.filter((el) => (el?.videoKey?.length ?? 0) > 0).length;
@@ -431,6 +455,7 @@ export default function PublishedStory({
 											setIsPlaying(false);
 											setSeekedFrame(0);
 										}}
+										onTimeUpdate={onTimeUpdate}
 									/>
 								</div>
 							</div>
