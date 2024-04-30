@@ -24,6 +24,7 @@ const VideoPlayer: FC<
 			onPlay,
 			onPause,
 			onSeeked,
+			onTimeUpdate,
 			seekedFrame,
 			isPlaying,
 			isMuted,
@@ -82,6 +83,7 @@ const VideoPlayer: FC<
 				onPlay={onPlay}
 				onPause={onPause}
 				onSeeked={onSeeked}
+				onTimeUpdate={onTimeUpdate}
 				isPlaying={isPlaying}
 				seekedFrame={seekedFrame}
 				isMuted={isMuted}

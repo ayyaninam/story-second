@@ -43,7 +43,12 @@ export type AnalyticsEvent =
 	| "create_subscription_successful"
 	| "upgrade_subscription_successful"
 	| "create_subscription_failed"
-	| "upgrade_subscription_failed";
+	| "upgrade_subscription_failed"
+	| "video_watched_25"
+	| "video_watched_50"
+	| "video_watched_75"
+	| "video_watched_100";
+
 const useEventLogger = () => {
 	const { user } = useUser();
 
@@ -60,14 +65,14 @@ const useEventLogger = () => {
 	return (action: AnalyticsEvent, variables?: { [key: string]: any }) => {
 		if (action.length >= 40)
 			console.error("Analytics event name too long: ", action);
-		// if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT !== "production")
-		// console.log({
-		// 	action,
-		// 	registrationStatus,
-		// 	subscriptionPlan: userSubscription,
-		// 	videoCreated,
-		// 	...variables,
-		// });
+		if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT !== "production")
+			console.log("GA:", {
+				action,
+				registrationStatus,
+				subscriptionPlan: userSubscription,
+				videoCreated,
+				...variables,
+			});
 		if (typeof window === "undefined") return;
 		return event(action, {
 			registrationStatus: registrationStatus,
