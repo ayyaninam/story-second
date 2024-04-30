@@ -39,6 +39,7 @@ import useUpdateUser from "@/hooks/useUpdateUser";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import { AllowanceType } from "@/utils/enums";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
+import { AmazonPublishLifecycle } from "@/constants/amazon-constants";
 
 const StoryPageButtons = ({
 	WebstoryData,
@@ -361,7 +362,16 @@ const StoryPageButtons = ({
 								className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 								variant="outline"
 								onClick={() => {
-									router.push(`/account?step=amazon-status`);
+									if (
+										WebstoryData.amazonBook?.amazonPublishLifecycle ===
+										AmazonPublishLifecycle.SelfPublished
+									) {
+										router.push(
+											`/story/${WebstoryData.topLevelCategory}/${WebstoryData.slug}/publish-book/download`
+										);
+									} else {
+										router.push(`/account?step=amazon-status`);
+									}
 								}}
 							>
 								<BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5" />

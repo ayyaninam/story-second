@@ -201,7 +201,7 @@ const CreditsCheckoutDialog = ({
 			}
 		} catch (e: any) {
 			console.error("Error Paying Credits: ", e.message);
-			toast.error("Error Paying Credits");
+			toast.error("Error Paying Credits: ", e.message);
 		} finally {
 			setSubmitting(false);
 		}

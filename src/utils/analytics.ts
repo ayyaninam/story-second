@@ -44,6 +44,7 @@ export type AnalyticsEvent =
 	| "upgrade_subscription_successful"
 	| "create_subscription_failed"
 	| "upgrade_subscription_failed"
+	| "video_watched_0"
 	| "video_watched_25"
 	| "video_watched_50"
 	| "video_watched_75"

@@ -301,6 +301,7 @@ export default function PublishedStory({
 			}
 		};
 
+		if (progress > 0 && progress < 25) logEvent("video_watched_0", 0);
 		if (progress >= 25 && progress < 50) logEvent("video_watched_25", 25);
 		if (progress >= 50 && progress < 75) logEvent("video_watched_50", 50);
 		if (progress >= 75 && progress < 99) logEvent("video_watched_75", 75);
@@ -315,7 +316,7 @@ export default function PublishedStory({
 	).length;
 
 	return (
-		<div className={`h-full bg-reverse items-center`}>
+		<div className={`h-full bg-reverse items-center overflow-auto`}>
 			{/* Navbar */}
 			<div className="flex justify-between p-4">
 				<div
