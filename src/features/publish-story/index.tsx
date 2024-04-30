@@ -316,7 +316,7 @@ export default function PublishedStory({
 	).length;
 
 	return (
-		<div className={`h-full bg-reverse items-center`}>
+		<div className={`h-full bg-reverse items-center overflow-auto`}>
 			{/* Navbar */}
 			<div className="flex justify-between p-4">
 				<div
