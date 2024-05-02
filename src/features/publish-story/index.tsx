@@ -618,6 +618,8 @@ export default function PublishedStory({
 														toast.error(
 															"You need to upgrade to a paid plan to download the video."
 														);
+														setOpenSubscriptionDialog(true);
+
 														return;
 													}
 
