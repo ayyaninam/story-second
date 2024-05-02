@@ -1,6 +1,7 @@
 import React from "react";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const AmazonInstructions = () => {
 	return (
@@ -86,8 +87,18 @@ export const AmazonInstructions = () => {
 						a publication link directly.
 					</p>
 					<p>
-						If you have any questions, please contact us using the chat in the
-						bottom right.
+						If you have any questions, please{" "}
+						<Button
+							variant="link"
+							onClick={() => {
+								// @ts-ignore - Intercom is vanilla JS
+								Intercom("show");
+							}}
+							className="mt-2 text-sm font-normal hover:text-accent-600 underline"
+						>
+							Contact Us
+						</Button>{" "}
+						using the chat in the bottom right.
 					</p>
 				</section>
 			</main>
