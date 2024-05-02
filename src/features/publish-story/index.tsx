@@ -42,7 +42,11 @@ import StoryLogo from "../../../public/auth-prompt/story-logo";
 import Link from "next/link";
 import GenericModal from "@/components/ui/generic-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
-import { DisplayAspectRatios, AllowanceType } from "@/utils/enums";
+import {
+	DisplayAspectRatios,
+	AllowanceType,
+	SubscriptionPlan,
+} from "@/utils/enums";
 import useEventLogger, { AnalyticsEvent } from "@/utils/analytics";
 import { HTTPError } from "ky";
 import { useUserCanUseCredits } from "@/utils/payment";
@@ -603,6 +607,20 @@ export default function PublishedStory({
 											<Button
 												onClick={async (e) => {
 													eventLogger("download_video_clicked");
+
+													const userHasPaidSubscription =
+														User?.data?.data?.subscription?.subscriptionPlan !==
+															SubscriptionPlan.Free &&
+														User?.data?.data?.subscription?.subscriptionPlan !==
+															undefined;
+
+													if (!userHasPaidSubscription) {
+														toast.error(
+															"You need to upgrade to a paid plan to download the video."
+														);
+														return;
+													}
+
 													setIsVideoDownloading(true);
 
 													let videoUrl;
