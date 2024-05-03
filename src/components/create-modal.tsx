@@ -40,6 +40,9 @@ import useEventLogger from "@/utils/analytics";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import StoryLogo from "../../public/auth-prompt/story-logo";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
+import api from "@/api";
 
 /**
  * Story generation form.
@@ -54,6 +57,11 @@ const GenerateModalContent: React.FC<{
 	tiktok?: boolean;
 }> = ({ className = "", fromLanding = false, tiktok = false }) => {
 	const eventLogger = useEventLogger();
+
+	const { data } = useQuery({
+		queryKey: [QueryKeys.USER],
+		queryFn: () => api.user.get(),
+	});
 
 	const [value, setValue] = useState<TabType>(
 		tiktok ? TabType.Trends : TabType.Video
@@ -94,6 +102,12 @@ const GenerateModalContent: React.FC<{
 			}
 			return;
 		}
+
+		if (window.location.pathname === "/prompt" && !data?.data?.emailVerified) {
+			window.parent.location.href = "/generate";
+			return;
+		}
+
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
 			?.enumValue as StoryOutputTypes;
 		const isStoryBook = outputType === StoryOutputTypes.Story;
