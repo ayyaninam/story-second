@@ -46,6 +46,11 @@ const user = {
 			})
 			.json<mainSchema["StringApiResponse"]>();
 	},
+	deleteAccount: async (): Promise<mainSchema["StringApiResponse"]> => {
+		return await publicProxyApiFetcher
+			.delete("proxyApi/User/DeleteAccount")
+			.json<mainSchema["StringApiResponse"]>();
+	},
 	updateKYC: async (data: FormData): Promise<mainSchema["UserInfoDTO"]> => {
 		console.log(data);
 		console.log(toFormData(data));

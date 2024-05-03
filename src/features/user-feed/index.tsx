@@ -7,6 +7,7 @@ import { FeedPageVideoQueryOptions, VideoOrientation } from "@/types";
 import { useRouter } from "next/router";
 import { useDebounce } from "usehooks-ts";
 import { mainSchema } from "@/api/schema";
+import DeleteAccountDialog from "@/features/account/components/delete-user-account";
 
 function UserProfilePage({
 	userData,

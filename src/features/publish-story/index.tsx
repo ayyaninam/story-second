@@ -46,7 +46,7 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import DeleteVideoButton from "@/features/publish-story/delete-video-button";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import isBrowser from "@/utils/isBrowser";
-import ShareStoryDialog from "../../components/share-video-dialog/share-story-dialog";
+import ShareStoryDialog from "@/components/share-story-dialog/share-story-dialog";
 
 const MAX_SUMMARY_LENGTH = 250;
 
