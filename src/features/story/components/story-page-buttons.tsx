@@ -40,7 +40,7 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import { AllowanceType } from "@/utils/enums";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import { AmazonPublishLifecycle } from "@/constants/amazon-constants";
-import ShareStoryDialog from "@/components/share-video-dialog/share-story-dialog";
+import ShareStoryDialog from "@/components/share-story-dialog/share-story-dialog";
 
 const StoryPageButtons = ({
 	WebstoryData,

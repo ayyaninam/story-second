@@ -10,11 +10,12 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { QueryObserverResult, useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { startCase } from "lodash";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import toast from "react-hot-toast";
 import Router from "next/router";
 import Routes from "@/routes";
+import DeleteAccountDialog from "@/features/account/components/delete-user-account";
 
 export const AccountForm = <T extends FieldValues>({
 	form,
@@ -53,6 +54,7 @@ export const AccountForm = <T extends FieldValues>({
 	const onSave = useCallback(async () => {
 		await mutateAsync(form.getValues());
 	}, [form, mutateAsync]);
+	const [dialogOpen, setDialogOpen] = useState(false);
 
 	return (
 		<FormProvider {...form}>
@@ -155,6 +157,10 @@ export const AccountForm = <T extends FieldValues>({
 					>
 						Logout
 					</Button>
+					<DeleteAccountDialog
+						dialogOpen={dialogOpen}
+						setDialogOpen={setDialogOpen}
+					/>
 				</div>
 			</form>
 		</FormProvider>
