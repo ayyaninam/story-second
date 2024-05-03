@@ -150,7 +150,7 @@ const CoverAmazonPDF = ({ storyData }: CoverAmazonPDFProps) => {
 					<div style={styles.storyTitleAndAuthorContainer}>
 						<Text style={styles.storyTitle}>{storyData?.storyTitle}</Text>
 						<Text style={styles.authorText}>
-							A story by {storyData?.user.name}
+							A story by {storyData?.user.name} + + {storyData?.user.lastName}
 						</Text>
 					</div>
 				</div>
