@@ -213,12 +213,16 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 			<>
 				<div className="self-end font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px] mt-1">
 					if you want more than professional,{" "}
-					<Link
-						href="/contact-us"
-						className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+					<Button
+						variant="link"
+						onClick={() => {
+							// @ts-ignore - Intercom is vanilla JS
+							Intercom("show");
+						}}
+						className="mt-2 text-sm font-normal hover:text-accent-600 underline"
 					>
-						contact us
-					</Link>
+						Contact Us
+					</Button>
 				</div>
 				<div className="absolute -top-10 z-10 -right-20">
 					<Subtrack size={200} />
@@ -469,7 +473,17 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 									</>
 								))}
 								<div className="self-end font-normal text-slate-500 text-[14px] tracking-[0] leading-[24px] mt-1">
-									if you want more than professional, please contact us
+									if you want more than professional, please{" "}
+									<Button
+										variant="link"
+										onClick={() => {
+											// @ts-ignore - Intercom is vanilla JS
+											Intercom("show");
+										}}
+										className="mt-2 text-sm font-normal hover:text-accent-600 underline"
+									>
+										Contact Us
+									</Button>
 									{/*# TODO: open intercom chat modal*/}
 									{/*<Link*/}
 									{/*	href="#"*/}

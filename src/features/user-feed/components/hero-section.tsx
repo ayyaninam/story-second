@@ -1,9 +1,9 @@
 import React, { CSSProperties } from "react";
-import Image from "next/image";
 import { mainSchema } from "@/api/schema";
 import Format from "@/utils/format";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
+import DeleteAccountDialog from "@/features/account/components/delete-user-account";
 
 const heroSectionContainer: CSSProperties = {
 	borderRadius: "var(--radius-3xl, 24px)",
@@ -17,6 +17,7 @@ function UserPageHeroSection({
 }: {
 	userData: mainSchema["OtherUserInfoDTO"];
 }) {
+	const [dialogOpen, setDialogOpen] = React.useState(false);
 	return (
 		<div className="w-full flex items-center justify-center gap-2 pb-6">
 			<div
@@ -48,7 +49,13 @@ function UserPageHeroSection({
 							<strong>{userData.videoCount}</strong> Videos,{" "}
 							<strong>{userData.storyCount}</strong> Stories
 						</p>
+						{/*TODO: add some flag for canEdit and enable deletion*/}
+						{/*<DeleteAccountDialog*/}
+						{/*	dialogOpen={dialogOpen}*/}
+						{/*	setDialogOpen={setDialogOpen}*/}
+						{/*/>*/}
 					</div>
+
 					<div className="flex-1">
 						<h2 className="text-xl font-semibold">
 							{userData.name}&apos;s Story:
