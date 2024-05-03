@@ -20,19 +20,21 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
-interface ShareVideoDialogProps {
+interface ShareStoryDialogProps {
 	open: boolean;
 	setOpen: (open: boolean) => void;
 	storyTitle: string;
 	summary: string;
+	storyTypeString: string;
 }
 
-const ShareVideoDialog = ({
+const ShareStoryDialog = ({
 	open,
 	setOpen,
 	storyTitle,
 	summary,
-}: ShareVideoDialogProps) => {
+	storyTypeString,
+}: ShareStoryDialogProps) => {
 	const router = useRouter();
 
 	const [storyUrl, setStoryUrl] = useState("");
@@ -46,7 +48,9 @@ const ShareVideoDialog = ({
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle className="text-md">Share this video</DialogTitle>
+					<DialogTitle className="text-md">
+						Share this {storyTypeString}
+					</DialogTitle>
 					<DialogDescription>
 						Anyone with the link can view this document.
 					</DialogDescription>
@@ -108,4 +112,4 @@ const ShareVideoDialog = ({
 	);
 };
 
-export default ShareVideoDialog;
+export default ShareStoryDialog;

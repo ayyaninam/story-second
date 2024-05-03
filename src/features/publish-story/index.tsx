@@ -46,7 +46,7 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import DeleteVideoButton from "@/features/publish-story/delete-video-button";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import isBrowser from "@/utils/isBrowser";
-import ShareVideoDialog from "../../components/share-video-dialog/share-video-dialog";
+import ShareStoryDialog from "../../components/share-video-dialog/share-story-dialog";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -541,18 +541,13 @@ export default function PublishedStory({
 										>
 											<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Share
 										</Button>
-										<ShareVideoDialog
-											open={openShareVideoDialog}
-											setOpen={setOpenShareVideoModal}
-											storyTitle={story?.storyTitle ?? ""}
-											summary={story?.summary ?? ""}
-										/>
+
 										{(numVideoSegmentsReady ?? 0) <
 											(numTotalVideoSegments ?? 0) ||
 										!Webstory.data?.storyDone ? null : Webstory.data
 												?.renderedVideoKey ? (
 											<Button
-												onClick={async (e) => {
+												onClick={async () => {
 													eventLogger("download_video_clicked");
 
 													const userHasPaidSubscription =
@@ -732,6 +727,14 @@ export default function PublishedStory({
 					)}
 				</div>
 			</div>
+
+			<ShareStoryDialog
+				open={openShareVideoDialog}
+				setOpen={setOpenShareVideoModal}
+				storyTitle={story?.storyTitle ?? ""}
+				summary={story?.summary ?? ""}
+				storyTypeString="video"
+			/>
 
 			<CheckoutDialog
 				variant="credits"
