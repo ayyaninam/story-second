@@ -17,11 +17,13 @@ import {
 	VIDEO_ORIENTATIONS,
 } from "@/constants/feed-constants";
 import { MobileSelector } from "@/components/ui/mobile-selector";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import Routes from "@/routes";
 import { useMediaQuery } from "usehooks-ts";
 import FeedIcon from "@/components/icons/side-nav/FeedIcon";
 import useEventLogger from "@/utils/analytics";
+import { Input } from "@/components/ui/input";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -61,6 +63,16 @@ export const FeedHeader = ({
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const pathname = usePathname();
+
+	const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name: key, value } = e.target;
+		const params = new URLSearchParams(searchParams ?? {});
+		params.set(key, value);
+		router.push(`${pathname}?${params.toString()}`);
+	};
+
 	const eventLogger = useEventLogger();
 
 	const sortOptions = Object.values(SORTING_OPTIONS);
@@ -239,20 +251,40 @@ export const FeedHeader = ({
 					{/*/>*/}
 				</div>
 				{isMobile ? (
-					<div className="flex flex-row w-full gap-4">
-						<MobileSelector
-							selectedTab={selectedGenre}
-							setSelectedTab={setSelectedGenre}
-							tabs={genreOptions}
-						/>
-						<MobileSelector
-							selectedTab={selectedSort}
-							setSelectedTab={setSelectedSort}
-							tabs={sortOptions}
-						/>
+					<div className="w-full pb-2">
+						<div className=" flex items-center left-10 w-full">
+							<Search size={20} className="text-muted-foreground" />
+							<Input
+								placeholder="Search your library..."
+								className="text-muted-foreground border-0  focus-visible:ring-0 focus-visible:ring-offset-0 "
+								name="searchTerm"
+								onChange={handleFilter}
+							/>
+						</div>
+						<div className="flex flex-row w-full gap-4">
+							<MobileSelector
+								selectedTab={selectedGenre}
+								setSelectedTab={setSelectedGenre}
+								tabs={genreOptions}
+							/>
+							<MobileSelector
+								selectedTab={selectedSort}
+								setSelectedTab={setSelectedSort}
+								tabs={sortOptions}
+							/>
+						</div>
 					</div>
 				) : (
 					<>
+						<div className="absolute flex items-center left-10">
+							<Search size={20} className="text-muted-foreground" />
+							<Input
+								placeholder="Search your library..."
+								className="text-muted-foreground border-0  focus-visible:ring-0 focus-visible:ring-offset-0 "
+								name="searchTerm"
+								onChange={handleFilter}
+							/>
+						</div>
 						<GenreTabSwitcher
 							selectedGenre={selectedGenre}
 							setSelectedGenre={setSelectedGenre}
