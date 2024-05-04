@@ -65,6 +65,7 @@ export const FeedHeader = ({
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const pathname = usePathname();
+	const searchTerm = searchParams?.get("searchTerm") ?? "";
 
 	const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name: key, value } = e.target;
@@ -258,6 +259,7 @@ export const FeedHeader = ({
 								placeholder="Search your library..."
 								className="text-muted-foreground border-0  focus-visible:ring-0 focus-visible:ring-offset-0 "
 								name="searchTerm"
+								defaultValue={searchTerm}
 								onChange={handleFilter}
 							/>
 						</div>
@@ -282,6 +284,7 @@ export const FeedHeader = ({
 								placeholder="Search your library..."
 								className="text-muted-foreground border-0  focus-visible:ring-0 focus-visible:ring-offset-0 "
 								name="searchTerm"
+								defaultValue={searchTerm}
 								onChange={handleFilter}
 							/>
 						</div>
