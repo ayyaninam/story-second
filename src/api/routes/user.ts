@@ -217,6 +217,12 @@ const user = {
 			.post(`proxyApi/Payment/WithdrawAmazonBalance`)
 			.json<mainSchema["StringApiResponse"]>();
 	},
+	requestVerification: async () => {
+		const response: mainSchema["StringApiResponse"] = await publicFetcher
+			.post(`proxyApi/User/RequestVerification`)
+			.json();
+		return response?.data;
+	},
 };
 
 export default user;
