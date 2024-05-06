@@ -3,81 +3,61 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Routes from "@/routes";
 import api from "@/api";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
 
 export const Verify = () => {
 	const router = useRouter();
 
-	const [isEmailVerified, setIsEmailVerified] = useState(false);
+	const { data, isLoading } = useQuery({
+		queryKey: [QueryKeys.USER],
+		queryFn: () => api.user.get(),
+		retry: false,
+	});
+
+	const userIsLoggedId = Boolean(data);
+
 	const [error, setError] = useState(false);
-	const [referrerURL, setReferrerURL] = useState("");
-	const [cameFromAuth0, setCameFromAuth0] = useState(true);
+	const [emailIsVerified, setEmailIsVerified] = useState(false);
+	const emailWasAlreadyVerified = data?.data?.emailVerified;
+
+	const redirectToFeed = () => {
+		setTimeout(() => {
+			router.replace(Routes.Feed()).then();
+		}, 5000);
+	};
 
 	useEffect(() => {
-		const referrer = document.referrer;
-		const auth0Host = "www.auth0-todo-change-with-real-one.com"; // todo: update this value with the "referrerURL" value that it gets when using auth0
-
-		if (!referrer) {
-			setCameFromAuth0(false);
-			return;
-		}
-
-		try {
-			const referrerURL = new URL(referrer);
-			setReferrerURL(referrerURL.host);
-
-			if (referrerURL.host === auth0Host) {
-				api.user.requestVerification().then();
-
-				setIsEmailVerified(true);
-			} else {
-				setCameFromAuth0(false);
+		if (emailWasAlreadyVerified) {
+			redirectToFeed();
+		} else {
+			if (userIsLoggedId) {
+				try {
+					api.user.requestVerification().then();
+					setEmailIsVerified(true);
+					redirectToFeed();
+				} catch (e) {
+					setError(true);
+				}
 			}
-		} catch (err) {
-			console.error(err);
-			setError(true);
 		}
-	}, []);
+	}, [router, emailWasAlreadyVerified]);
 
-	useEffect(() => {
-		if (isEmailVerified) {
-			setTimeout(() => {
-				router.replace(Routes.Feed()).then();
-			}, 5000);
-		}
-	}, [router, isEmailVerified]);
-
+	let text = "Verifying email...";
 	if (error) {
-		return (
-			<div className="flex flex-row justify-center items-center mt-8">
-				There was an error verifying your email. | referrerURL: &quot;
-				{referrerURL}&quot;
-			</div>
-		);
-	}
-
-	if (!cameFromAuth0) {
-		return (
-			<div className="flex flex-row justify-center items-center mt-8">
-				The user didnt came from Auth0, it should redirect to /feed but for now
-				this logic is disabled | referrerURL: &quot;{referrerURL}&quot;
-			</div>
-		);
-	}
-
-	if (isEmailVerified) {
-		return (
-			<div className="flex flex-row justify-center items-center mt-8">
-				Email verified! redirecting in 5 seconds to feed... | referrerURL:
-				&quot;
-				{referrerURL}&quot;
-			</div>
-		);
+		text = "There was an error verifying your email.";
+	} else if (isLoading) {
+		text = "Loading...";
+	} else if (!userIsLoggedId) {
+		text = "You need to be logged in to verify your email.";
+	} else if (emailIsVerified) {
+		text = "Email verified! Redirecting in 5 seconds to feed...";
+	} else if (emailWasAlreadyVerified) {
+		text = "Email was already verified. Redirecting in 5 seconds to feed...";
 	}
 
 	return (
-		<div className="flex flex-row justify-center items-center mt-8">
-			Verifying email... | referrerURL: &quot;{referrerURL}&quot;
-		</div>
+		<div className="flex flex-row justify-center items-center mt-8">{text}</div>
 	);
 };
 

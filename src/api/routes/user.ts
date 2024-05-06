@@ -218,9 +218,10 @@ const user = {
 			.json<mainSchema["StringApiResponse"]>();
 	},
 	requestVerification: async () => {
-		const response: mainSchema["StringApiResponse"] = await publicFetcher
-			.post(`proxyApi/User/RequestVerification`)
-			.json();
+		const response: mainSchema["StringApiResponse"] =
+			await publicProxyApiFetcher
+				.post(`proxyApi/User/RequestVerification`)
+				.json();
 		return response?.data;
 	},
 };
