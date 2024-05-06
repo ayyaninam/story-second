@@ -1,6 +1,6 @@
 import { publicProxyApiFetcher } from "@/lib/fetcher";
 import { mainSchema } from "../schema";
-import { LibraryPageVideoQueryOptions } from "@/types";
+import { LibraryPageVideoQueryOptions, PaginationParams } from "@/types";
 import { StoryOutputTypes } from "@/utils/enums";
 
 const library = {
@@ -68,6 +68,30 @@ const library = {
 		}
 
 		return data.data;
+	},
+	getSuggestedStories: async ({
+		id,
+		searchParams,
+	}: {
+		id: string;
+		searchParams: PaginationParams;
+	}): Promise<mainSchema["ReturnVideoStoryDTOListApiResponse"]> => {
+		const data: mainSchema["ReturnVideoStoryDTOListApiResponse"] =
+			await publicProxyApiFetcher
+				.get(`proxyApi/Library/${id}/Suggested`, {
+					searchParams,
+				})
+				.json();
+		console.log(data);
+
+		if (!data.succeeded) {
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data;
 	},
 };
 
