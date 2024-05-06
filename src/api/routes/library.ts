@@ -82,7 +82,6 @@ const library = {
 					searchParams,
 				})
 				.json();
-		console.log(data);
 
 		if (!data.succeeded) {
 		}
