@@ -84,7 +84,10 @@ const GenerateModalContent: React.FC<{
 	const [videoFileId, setVideoFileId] = useState<string | null>(null);
 
 	const [isLoading, setIsLoading] = useState(false);
-	const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
+	const isSubmitDisabled =
+		isLoading ||
+		(!input.trim() && !videoFileId) ||
+		(!fromLanding && data && !data?.data?.emailVerified);
 
 	const { invalidateUser } = useUpdateUser();
 
