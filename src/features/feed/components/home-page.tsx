@@ -42,6 +42,7 @@ function FeedHomePage({
 						isDescending: filterOptions.isDescending,
 						storyType: storyType,
 						resolution: resolution,
+						searchTerm: filterOptions.searchTerm,
 					},
 				}),
 			staleTime: 3000,
