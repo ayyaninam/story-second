@@ -50,6 +50,9 @@ const user = {
 	resendEmailVerification: async () => {
 		return await publicProxyApiFetcher
 			.post("proxyApi/User/ResendEmailVerification")
+	deleteAccount: async (): Promise<mainSchema["StringApiResponse"]> => {
+		return await publicProxyApiFetcher
+			.delete("proxyApi/User/DeleteAccount")
 			.json<mainSchema["StringApiResponse"]>();
 	},
 	updateKYC: async (data: FormData): Promise<mainSchema["UserInfoDTO"]> => {

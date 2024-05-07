@@ -2,12 +2,6 @@ import { useMediaQuery } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
 	ChevronRight,
 	DownloadCloudIcon,
 	DownloadIcon,
@@ -17,8 +11,6 @@ import {
 	Share2,
 	Video,
 	Heart,
-	Clipboard,
-	Twitter,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { ModeToggle } from "../edit-story/components/mode-toggle";
@@ -54,8 +46,7 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import DeleteVideoButton from "@/features/publish-story/delete-video-button";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import isBrowser from "@/utils/isBrowser";
-import Whatsapp from "@/components/icons/whatsapp";
-import { TwitterShareButton, WhatsappShareButton } from "react-share";
+import ShareStoryDialog from "@/components/share-story-dialog/share-story-dialog";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -70,7 +61,7 @@ export default function PublishedStory({
 	const eventLogger = useEventLogger();
 	const isMobile = useMediaQuery("(max-width: 1024px)");
 	const [showFullDescription, setShowFullDescription] = useState(false);
-	const [enableQuery, setEnableQuery] = useState(true);
+	const [openShareVideoDialog, setOpenShareVideoModal] = useState(false);
 	const [story, setStory] = useWebstoryContext();
 
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
@@ -137,12 +128,6 @@ export default function PublishedStory({
 			router.replace(path, undefined, { shallow: true });
 		}
 	}, [router.query]);
-
-	const [shareUrl, setShareUrl] = useState("");
-	useEffect(() => {
-		const url = window.location.href;
-		setShareUrl(url);
-	}, [router.asPath]);
 
 	const [storyLikesUpdate, setStoryLikesUpdate] = useState(0);
 	const storyLikes = (storyData.storyLikes ?? 0) + storyLikesUpdate;
@@ -549,63 +534,19 @@ export default function PublishedStory({
 											{storyLikes}
 										</Button>
 
-										<DropdownMenu>
-											<DropdownMenuTrigger asChild>
-												<Button
-													className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-													variant="outline"
-												>
-													<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" />{" "}
-													Share
-												</Button>
-											</DropdownMenuTrigger>
-											<DropdownMenuContent>
-												{/*<FacebookShareButton url={shareUrl} className="w-full">*/}
-												{/*	<DropdownMenuItem className="cursor-pointer">*/}
-												{/*		<Facebook className="h-5 w-5 mr-1.5" />*/}
-												{/*		<span>Facebook</span>*/}
-												{/*	</DropdownMenuItem>*/}
-												{/*</FacebookShareButton>*/}
-												<DropdownMenuItem
-													className="cursor-pointer"
-													onClick={() => {
-														navigator.clipboard.writeText(window.location.href);
-														toast.success("Link copied to clipboard");
-													}}
-												>
-													<Clipboard className="h-5 w-5 mr-1.5" /> Copy Link
-												</DropdownMenuItem>
-												<TwitterShareButton
-													title={`${story.storyTitle}\n\n`}
-													url={shareUrl}
-													className="flex items-center w-full"
-												>
-													<DropdownMenuItem className="cursor-pointer w-full">
-														<Twitter className="h-5 w-5 mr-1.5" />
-														<span>Twitter</span>
-													</DropdownMenuItem>
-												</TwitterShareButton>
-												<WhatsappShareButton
-													aria-label="Share on Whatsapp"
-													url={shareUrl}
-													title={`Just stumbled upon "${story.storyTitle}" on Story.com and couldn't resist sharing! 🌟 \n\n${story.summary}\n\n`}
-													className="flex items-center w-full"
-												>
-													<DropdownMenuItem className="cursor-pointer w-full">
-														<span className="mr-1.5">
-															<Whatsapp size={20} />
-														</span>
-														<span>Whatsapp</span>
-													</DropdownMenuItem>
-												</WhatsappShareButton>
-											</DropdownMenuContent>
-										</DropdownMenu>
+										<Button
+											onClick={() => setOpenShareVideoModal(true)}
+											className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+											variant="outline"
+										>
+											<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Share
+										</Button>
+
 										{(numVideoSegmentsReady ?? 0) <
 											(numTotalVideoSegments ?? 0) ||
-										!Webstory.data?.storyDone ? null : Webstory.data
-												?.renderedVideoKey ? (
+										!Webstory.data?.storyDone ? null : (Webstory.data?.renderedVideoKey && !Webstory.data?.invalidateRender) ? (
 											<Button
-												onClick={async (e) => {
+												onClick={async () => {
 													eventLogger("download_video_clicked");
 
 													const userHasPaidSubscription =
@@ -785,6 +726,14 @@ export default function PublishedStory({
 					)}
 				</div>
 			</div>
+
+			<ShareStoryDialog
+				open={openShareVideoDialog}
+				setOpen={setOpenShareVideoModal}
+				storyTitle={story?.storyTitle ?? ""}
+				summary={story?.summary ?? ""}
+				storyTypeString="video"
+			/>
 
 			<CheckoutDialog
 				variant="credits"
