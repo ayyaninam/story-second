@@ -180,7 +180,9 @@ export default function PublishedStory({
 					"Video is being rendered. Please check again in 2 minutes"
 				);
 			} catch (error: any) {
-				toast.error("Failed to render video: ", error.message);
+				toast.error(
+					"Failed to render video: Please generate audio for all the segments in Edit Video"
+				);
 			}
 
 			// here is code to refetch the webstory data to get the new isRendering value(true) without reloading page
