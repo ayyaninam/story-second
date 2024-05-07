@@ -43,6 +43,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import api from "@/api";
+import VerifyDialog from "@/features/generate/components/VerifyDialog";
 
 /**
  * Story generation form.
@@ -71,6 +72,7 @@ const GenerateModalContent: React.FC<{
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
 	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+	const [openVerificationDialog, setOpenVerificationDialog] = useState(false);
 
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
 		videoRatios[0]?.value.toString() || ""
@@ -84,10 +86,8 @@ const GenerateModalContent: React.FC<{
 	const [videoFileId, setVideoFileId] = useState<string | null>(null);
 
 	const [isLoading, setIsLoading] = useState(false);
-	const isSubmitDisabled =
-		isLoading ||
-		(!input.trim() && !videoFileId) ||
-		(!fromLanding && data && !data?.data?.emailVerified);
+	const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
+	console.log(isSubmitDisabled, isLoading, input, videoFileId, fromLanding);
 
 	const { invalidateUser } = useUpdateUser();
 
@@ -106,9 +106,14 @@ const GenerateModalContent: React.FC<{
 			return;
 		}
 
-		if (window.location.pathname === "/prompt" && !data?.data?.emailVerified) {
-			window.parent.location.href = "/generate";
-			return;
+		if (!data?.data?.emailVerified) {
+			if (window.location.pathname === "/prompt") {
+				window.parent.location.href = "/generate";
+				return;
+			} else {
+				setOpenVerificationDialog(true);
+				return;
+			}
 		}
 
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
@@ -336,6 +341,11 @@ const GenerateModalContent: React.FC<{
 					</div>
 				</div>
 			</div>
+
+			<VerifyDialog
+				open={openVerificationDialog}
+				setOpen={setOpenVerificationDialog}
+			/>
 
 			<CheckoutDialog
 				variant="credits"

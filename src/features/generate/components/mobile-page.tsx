@@ -8,7 +8,7 @@ import {
 import { cn } from "@/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { CreateInitialStoryQueryParams } from "@/types";
 import {
@@ -33,6 +33,10 @@ import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "@/lib/queryKeys";
+import api from "@/api";
+import VerifyDialog from "@/features/generate/components/VerifyDialog";
 
 export default function MobileGeneratePage({
 	fromLanding = false,
@@ -42,6 +46,11 @@ export default function MobileGeneratePage({
 	const [value, setValue] = useState<TabType>(TabType.Video);
 	const [input, setInput] = useState("");
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
+
+	const { data } = useQuery({
+		queryKey: [QueryKeys.USER],
+		queryFn: () => api.user.get(),
+	});
 
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
 		videoRatios[1]?.value.toString() || ""
@@ -57,16 +66,7 @@ export default function MobileGeneratePage({
 	const [isLoading, setIsLoading] = useState(false);
 	const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
 	const { invalidateUser } = useUpdateUser();
-
-	const router = useRouter();
-	const { message } = router.query ?? {};
-
-	useEffect(() => {
-		if (message) {
-			toast.dismiss();
-			toast.error(message as string);
-		}
-	}, []);
+	const [openVerificationDialog, setOpenVerificationDialog] = useState(false);
 
 	const { userCanUseCredits } = useUserCanUseCredits();
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
@@ -83,6 +83,15 @@ export default function MobileGeneratePage({
 				window.location.href = "/auth/login?returnTo=/generate";
 			}
 			return;
+		}
+		if (!data?.data?.emailVerified) {
+			if (window.location.pathname === "/prompt") {
+				window.parent.location.href = "/generate";
+				return;
+			} else {
+				setOpenVerificationDialog(true);
+				return;
+			}
 		}
 		setIsLoading(true);
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
@@ -354,6 +363,11 @@ export default function MobileGeneratePage({
 						: "Generate Script From Prompt"}
 				</Button>
 			</div>
+
+			<VerifyDialog
+				open={openVerificationDialog}
+				setOpen={setOpenVerificationDialog}
+			/>
 
 			<CheckoutDialog
 				variant="credits"

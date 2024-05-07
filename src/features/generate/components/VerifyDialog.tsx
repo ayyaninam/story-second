@@ -5,75 +5,45 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
+import React, { useState, SetStateAction, Dispatch } from "react";
 import api from "@/api";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import toast from "react-hot-toast";
 
-const VerifyDialog = () => {
-	const { user } = useUser();
-	console.log(user?.sid);
+interface VerifyDialogProps {
+	open: boolean;
+	setOpen: Dispatch<SetStateAction<boolean>>;
+}
 
-	const [open, setOpen] = useState(false);
-	const [error, setError] = useState("");
+const VerifyDialog = ({ open, setOpen }: VerifyDialogProps) => {
 	const [loading, setLoading] = useState(false);
-
-	const { data } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
 
 	const resendVerificationEmail = async () => {
 		setLoading(true);
-		setError("");
 		try {
-			const response = await fetch("/api/send-verification-email", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ user_id: user?.sid }), // maybe its "user?.sid" or other value
-			});
-			const data = await response.json();
-			console.log(data);
-			if (!response.ok)
-				throw new Error(data.message || "Failed to send verification email");
-			alert("Verification email sent!");
-		} catch (err) {
-			// @ts-ignore
-			setError(err.message);
+			const response = await api.user.resendEmailVerification();
+			console.log(response);
+			toast.success("Verification email sent!");
+		} catch (error: any) {
+			toast.error(error.message);
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	useEffect(() => {
-		if (data && !data?.data?.emailVerified) {
-			setTimeout(() => {
-				setOpen(true);
-			}, 1000);
-		}
-	}, [data]);
-
-	useEffect(() => {
-		if (error) {
-			toast.error(error);
-		}
-	}, [error]);
-
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Verify Your Email</DialogTitle>
+					<DialogTitle>Verify Your Email To Continue</DialogTitle>
 					<DialogDescription>
-						Please verify your email. This verification is necessary in order to
-						generate a story. Check your inbox for a verification link.
+						Please verify your email to generate a story.
+						<p className="my-2">
+							Didn&apos;t receive an email? Click the button below to resend the
+							verification email.
+						</p>
 					</DialogDescription>
-					<div>
+					<div className="flex justify-center gap-2 mt-8 w-full">
 						<Button
 							className="px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit"
 							variant="default"
