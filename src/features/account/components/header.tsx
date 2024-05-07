@@ -63,13 +63,13 @@ export function AccountsHeader({ user }: { user: any }) {
 							}
 						/>
 						<AvatarFallback>
-							{Format.AvatarName(user?.name || "S", user?.lastName)}
+							{Format.AvatarName(user?.name || "S", user?.lastName || "")}
 						</AvatarFallback>
 					</Avatar>
 					<div className="items-center">
 						<div className="flex items-center gap-x-2">
 							<p className="text-lg rounded-sm font-bold text-muted-foreground text-slate-800">
-								{user?.name + " " + user?.lastName}
+								{user?.name + " " + user?.lastName || ""}
 							</p>
 						</div>
 						<div className="flex items-center gap-x-2 text-slate-500 text-sm">

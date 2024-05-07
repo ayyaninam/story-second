@@ -53,6 +53,14 @@ export interface paths {
     /** Regenerate Audio */
     post: operations["regenerate_audio_regenerate_audio_post"];
   };
+  "/internal/regenerate-video": {
+    /** Internal Regenerate Video */
+    post: operations["internal_regenerate_video_internal_regenerate_video_post"];
+  };
+  "/internal/regenerate-image": {
+    /** Regenerate Image */
+    post: operations["regenerate_image_internal_regenerate_image_post"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -223,7 +231,7 @@ export interface components {
       cover_image?: boolean;
       /**
        * Seed
-       * @default 21234573
+       * @default 35838384
        */
       seed?: number;
       /**
@@ -274,7 +282,7 @@ export interface components {
       image_sampling_steps?: number;
       /**
        * Image Seed
-       * @default 58194323
+       * @default 15294552
        */
       image_seed?: number;
       /**
@@ -604,6 +612,60 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["RegenerateAudioRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Internal Regenerate Video */
+  internal_regenerate_video_internal_regenerate_video_post: {
+    parameters: {
+      header: {
+        "X-Secret-Key": string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegenerateVideoRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Regenerate Image */
+  regenerate_image_internal_regenerate_image_post: {
+    parameters: {
+      header: {
+        "X-Secret-Key": string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RegenerateImageRequest"];
       };
     };
     responses: {

@@ -1762,8 +1762,8 @@ export interface paths {
       };
     };
   };
-  "/api/User/EmailNotificationPreferences": {
-    /** Update user's email notification preferences. */
+  "/api/User/Preferences": {
+    /** Update user's preferences. */
     put: {
       requestBody?: {
         content: {
@@ -1816,14 +1816,6 @@ export interface paths {
   "/api/User/VerifyEmail": {
     /** Verify a user's email address. */
     post: {
-      requestBody?: {
-        content: {
-          "application/json-patch+json": components["schemas"]["VerifyEmailDTO"];
-          "application/json": components["schemas"]["VerifyEmailDTO"];
-          "text/json": components["schemas"]["VerifyEmailDTO"];
-          "application/*+json": components["schemas"]["VerifyEmailDTO"];
-        };
-      };
       responses: {
         /** @description Success */
         200: {
@@ -2270,6 +2262,13 @@ export interface paths {
      * @description Get a list of suggested stories based on the provided story id
      */
     get: operations["GetSuggestedStories"];
+  };
+  "/api/Video/{id}/RenderVideoMLServer": {
+    /**
+     * Render a video
+     * @description Render a video based on the provided story id
+     */
+    put: operations["RenderVideo"];
   };
   "/api/Video/{id}/RenderVideo": {
     /**
@@ -4149,6 +4148,11 @@ export interface components {
        * @description Preference for New Comment On Story Email notifications.
        */
       newCommentOnStoryEmail: boolean;
+      /**
+       * DefaultPublic
+       * @description Default privacy setting of new stories.
+       */
+      defaultPublic?: boolean;
     };
     /** @description DTO used to enroll WebStory into an active contest */
     EnrollStoryInContestDTO: {
@@ -4388,6 +4392,11 @@ export interface components {
        * @description The user's profile picture from Social Sign-On.
        */
       profilePicture?: string | null;
+      /**
+       * EmailVerified
+       * @description Email verification status.
+       */
+      emailVerified?: boolean;
     };
     /** @description DTO used to report a Comment on a WebStory. */
     ReportCommentDTO: {
@@ -7270,6 +7279,11 @@ export interface components {
       photoIDType?: string | null;
       photoIDNumber?: string | null;
       /**
+       * IsSuperUser
+       * @description Whether the user is a super user.
+       */
+      isSuperUser?: boolean;
+      /**
        * Created
        * Format: date-time
        * @description The date and time the user was created.
@@ -7338,14 +7352,6 @@ export interface components {
        * @description The date and time the user's subscription will refresh.
        */
       nextRefreshDate?: string | null;
-    };
-    /** @description DTO used to verify a user's email address. */
-    VerifyEmailDTO: {
-      /**
-       * VerificationId
-       * @description The verification id sent to the user's email address.
-       */
-      verificationId: string;
     };
     VideoSegment: {
       /** Format: uuid */

@@ -672,7 +672,7 @@ export default function PublishedStory({
 												<>
 													<span>
 														{Webstory.data.user.name}{" "}
-														{Webstory.data.user?.lastName}
+														{Webstory.data.user?.lastName || ""}
 													</span>
 													<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
 														<>

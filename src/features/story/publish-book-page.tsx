@@ -185,7 +185,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 												<p className="text-sm ml-1.5">
 													{story.user && (
 														<span>
-															by {story.user.name} {story.user?.lastName}
+															by {story.user.name} {story.user?.lastName || ""}
 														</span>
 													)}
 												</p>
@@ -247,12 +247,14 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 																of your book manuscript and cover page.
 															</li>
 															<li>
-															Receive detailed <strong>steps for publishing your book</strong> on Amazon.
+																Receive detailed{" "}
+																<strong>steps for publishing your book</strong>{" "}
+																on Amazon.
 															</li>
 															<li className="tracking-wide leading-loose">
 																<strong>Ownership & Royalties:</strong> You will
-																own the copyrights to your story and receive 100% of the
-																royalties from all sales.
+																own the copyrights to your story and receive
+																100% of the royalties from all sales.
 															</li>
 														</ul>
 													</div>
@@ -285,12 +287,15 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 														<ul className="list-disc pl-5">
 															<li className="tracking-wide leading-loose">
 																Includes everything from the{" "}
-																<strong>Standard Edition: Self-Publish Kit.</strong>
+																<strong>
+																	Standard Edition: Self-Publish Kit.
+																</strong>
 															</li>
 															<li className="tracking-wide leading-loose">
 																<strong>Hassle-Free Experience:</strong> We
 																manage the entire publication and sales process
-																for you, so you can get the royalties straight to your account.
+																for you, so you can get the royalties straight
+																to your account.
 															</li>
 															<li className="tracking-wide leading-loose">
 																<strong>Peace of Mind:</strong> Your story is in
