@@ -2,8 +2,6 @@ import React from "react";
 import { PageSize } from "@react-pdf/types";
 import { Document, StyleSheet, Font } from "@react-pdf/renderer";
 
-import QRPagePDF from "./pages/qr-page";
-import LogoPagePDF from "./pages/logo-page";
 import EmptyPagePDF from "./pages/empty-page";
 import FinalPagePDF from "./pages/final-page";
 import TitlePagePDF from "./pages/title-page";
@@ -46,7 +44,8 @@ const StorybookAmazonPDF = ({ storyData }: StorybookAmazonPDFProps) => (
 	<Document style={globalStyles.root}>
 		{/*<LogoPagePDF />*/}
 		{/* todo: implement the QRPage */}
-		{/*<EmptyPagePDF />*/}
+		<EmptyPagePDF />
+		<EmptyPagePDF />
 		{/*<QRPagePDF />*/}
 		{/*<EmptyPagePDF />*/}
 		<TitlePagePDF storyData={storyData} />

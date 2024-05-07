@@ -93,7 +93,7 @@ export const styles = StyleSheet.create({
 });
 
 // with dpi = 72 the conversion is 1mm = 2.83px
-const mmToPx = (mm: number): number => mm * 2.83;
+const mmToPx = (mm: number): number => Math.round(mm * 2.83);
 
 const calculateDynamicStyle = (pagesNumber: number): [number, number] => {
 	const fluffPages = 6; // pages that does not contain story content like blank pages, title page, etc.
