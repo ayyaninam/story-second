@@ -563,7 +563,10 @@ export default function PublishedStory({
 														User?.data?.data?.subscription?.subscriptionPlan !==
 															undefined;
 
-													if (!userHasPaidSubscription) {
+													if (
+														!userHasPaidSubscription &&
+														!User?.data?.data?.isSuperUser
+													) {
 														toast.error(
 															"You need to upgrade to a paid plan to download the video."
 														);
