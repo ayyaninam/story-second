@@ -47,7 +47,9 @@ const user = {
 			.json<mainSchema["StringApiResponse"]>();
 	},
 	// TODO: add type for data when backend is ready
-	resendEmailVerification: async () => {
+	resendEmailVerification: async (): Promise<
+		mainSchema["StringApiResponse"]
+	> => {
 		return await publicProxyApiFetcher
 			.post("proxyApi/User/ResendEmailVerification")
 			.json<mainSchema["StringApiResponse"]>();
