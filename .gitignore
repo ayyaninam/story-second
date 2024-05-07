@@ -22,7 +22,6 @@
 .yarn/install-state.gz
 
 # lock files
-pnpm-lock.yaml
 
 # testing
 /coverage

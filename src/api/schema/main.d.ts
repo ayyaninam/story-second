@@ -1789,14 +1789,9 @@ export interface paths {
       };
     };
   };
-  "/api/User/RequestVerification": {
+  "/api/User/ResendEmailVerification": {
     /** Request a new verification email. */
     post: {
-      parameters: {
-        query?: {
-          redirectUrl?: string;
-        };
-      };
       responses: {
         /** @description Success */
         200: {
