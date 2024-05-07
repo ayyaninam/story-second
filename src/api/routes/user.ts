@@ -46,6 +46,12 @@ const user = {
 			})
 			.json<mainSchema["StringApiResponse"]>();
 	},
+	// TODO: add type for data when backend is ready
+	resendEmailVerification: async () => {
+		return await publicProxyApiFetcher
+			.post("proxyApi/User/ResendEmailVerification")
+			.json<mainSchema["StringApiResponse"]>();
+	},
 	deleteAccount: async (): Promise<mainSchema["StringApiResponse"]> => {
 		return await publicProxyApiFetcher
 			.delete("proxyApi/User/DeleteAccount")

@@ -8,7 +8,6 @@ function GeneratePage() {
 		<>
 			<DesktopGeneratePage />
 			<MobileGeneratePage />
-			<VerifyDialog />
 		</>
 	);
 }
