@@ -544,8 +544,7 @@ export default function PublishedStory({
 
 										{(numVideoSegmentsReady ?? 0) <
 											(numTotalVideoSegments ?? 0) ||
-										!Webstory.data?.storyDone ? null : Webstory.data
-												?.renderedVideoKey ? (
+										!Webstory.data?.storyDone ? null : (Webstory.data?.renderedVideoKey && !Webstory.data?.invalidateRender) ? (
 											<Button
 												onClick={async () => {
 													eventLogger("download_video_clicked");
