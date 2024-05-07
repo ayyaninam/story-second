@@ -24,6 +24,7 @@ import FeedIcon from "@/components/icons/side-nav/FeedIcon";
 import useEventLogger from "@/utils/analytics";
 import { Input } from "@/components/ui/input";
 import { usePathname, useSearchParams } from "next/navigation";
+import debounce from "@/utils/debounce";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -67,12 +68,12 @@ export const FeedHeader = ({
 	const pathname = usePathname();
 	const searchTerm = searchParams?.get("searchTerm") ?? "";
 
-	const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name: key, value } = e.target;
+	const handleFilter = (value: string) => {
 		const params = new URLSearchParams(searchParams ?? {});
-		params.set(key, value);
+		params.set("searchTerm", value);
 		router.push(`${pathname}?${params.toString()}`);
 	};
+	const handleFilterDebounce = debounce(handleFilter, 2000);
 
 	const eventLogger = useEventLogger();
 
@@ -260,7 +261,14 @@ export const FeedHeader = ({
 								className="text-muted-foreground border-0  focus-visible:ring-0 focus-visible:ring-offset-0 "
 								name="searchTerm"
 								defaultValue={searchTerm}
-								onChange={handleFilter}
+								onChange={(e) => {
+									handleFilterDebounce(e.target.value);
+								}}
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										handleFilter(e.currentTarget.value);
+									}
+								}}
 							/>
 						</div>
 						<div className="flex flex-row w-full gap-4">
@@ -285,7 +293,14 @@ export const FeedHeader = ({
 								className="text-muted-foreground border-0  focus-visible:ring-0 focus-visible:ring-offset-0 "
 								name="searchTerm"
 								defaultValue={searchTerm}
-								onChange={handleFilter}
+								onChange={(e) => {
+									handleFilterDebounce(e.target.value);
+								}}
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										handleFilter(e.currentTarget.value);
+									}
+								}}
 							/>
 						</div>
 						<GenreTabSwitcher
