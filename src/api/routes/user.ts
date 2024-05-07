@@ -50,6 +50,8 @@ const user = {
 	resendEmailVerification: async () => {
 		return await publicProxyApiFetcher
 			.post("proxyApi/User/ResendEmailVerification")
+			.json<mainSchema["StringApiResponse"]>();
+	},
 	deleteAccount: async (): Promise<mainSchema["StringApiResponse"]> => {
 		return await publicProxyApiFetcher
 			.delete("proxyApi/User/DeleteAccount")
