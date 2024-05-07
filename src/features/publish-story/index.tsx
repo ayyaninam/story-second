@@ -172,10 +172,16 @@ export default function PublishedStory({
 				return;
 			}
 
-			await RenderVideo.mutateAsync({
-				id: storyData.id!,
-			});
-			toast.success("Video is being rendered. Please check again in 2 minutes");
+			try {
+				await RenderVideo.mutateAsync({
+					id: storyData.id!,
+				});
+				toast.success(
+					"Video is being rendered. Please check again in 2 minutes"
+				);
+			} catch (error: any) {
+				toast.error("Failed to render video: ", error.message);
+			}
 
 			// here is code to refetch the webstory data to get the new isRendering value(true) without reloading page
 			// i tried to use it but it makes flicker the player when using it...
@@ -544,7 +550,9 @@ export default function PublishedStory({
 
 										{(numVideoSegmentsReady ?? 0) <
 											(numTotalVideoSegments ?? 0) ||
-										!Webstory.data?.storyDone ? null : (Webstory.data?.renderedVideoKey && !Webstory.data?.invalidateRender) ? (
+										!Webstory.data?.storyDone ? null : Webstory.data
+												?.renderedVideoKey &&
+										  !Webstory.data?.invalidateRender ? (
 											<Button
 												onClick={async () => {
 													eventLogger("download_video_clicked");
