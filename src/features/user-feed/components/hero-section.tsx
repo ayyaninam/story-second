@@ -61,12 +61,12 @@ function UserPageHeroSection({
 							<strong>{userData.videoCount}</strong> Videos,{" "}
 							<strong>{userData.storyCount}</strong> Stories
 						</p>
-						{data?.data?.isSuperUser && (
-							<DeleteAccountDialog
-								dialogOpen={dialogOpen}
-								setDialogOpen={setDialogOpen}
-							/>
-						)}
+						{/*{data?.data?.isSuperUser && (*/}
+						{/*	<DeleteAccountDialog*/}
+						{/*		dialogOpen={dialogOpen}*/}
+						{/*		setDialogOpen={setDialogOpen}*/}
+						{/*	/>*/}
+						{/*)}*/}
 					</div>
 
 					<div className="flex-1">
