@@ -189,7 +189,7 @@ const StoryBookDownloadPdfPage = ({
 												<p className="text-sm ml-1.5">
 													{story.user && (
 														<span>
-															by {story.user.name} {story.user?.lastName}
+															by {story.user.name} {story.user?.lastName || ""}
 														</span>
 													)}
 												</p>

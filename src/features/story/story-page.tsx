@@ -133,7 +133,7 @@ const StoryBookPage = ({
 												{story.user && (
 													<>
 														<span>
-															{story.user.name} {story.user?.lastName}
+															{story.user.name} {story.user?.lastName || ""}
 														</span>
 														<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
 															<>

@@ -18,13 +18,16 @@ import {
 	VIDEO_ORIENTATIONS,
 } from "@/constants/feed-constants";
 import { MobileSelector } from "@/components/ui/mobile-selector";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import Routes from "@/routes";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import api from "@/api";
 import { useMediaQuery } from "usehooks-ts";
 import useEventLogger from "@/utils/analytics";
+import { Input } from "@/components/ui/input";
+import { usePathname, useSearchParams } from "next/navigation";
+import debounce from "@/utils/debounce";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -75,6 +78,17 @@ export const LibraryHeader = ({
 }) => {
 	const { theme } = useTheme();
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const pathname = usePathname();
+	const searchTerm = searchParams?.get("searchTerm") ?? "";
+
+	const handleFilter = (value: string) => {
+		const params = new URLSearchParams(searchParams ?? {});
+		params.set("searchTerm", value);
+		router.push(`${pathname}?${params.toString()}`);
+	};
+	const handleFilterDebounce = debounce(handleFilter, 2000);
+
 	const eventLogger = useEventLogger();
 
 	const sort = (router.query.sort as string) || "desc";
@@ -231,20 +245,56 @@ export const LibraryHeader = ({
 					{/*/>*/}
 				</div>
 				{isMobile ? (
-					<div className="flex flex-row w-full gap-4">
-						<MobileSelector
-							selectedTab={selectedGenre}
-							setSelectedTab={setSelectedGenre}
-							tabs={genreOptions}
-						/>
-						<MobileSelector
-							selectedTab={sort}
-							setSelectedTab={setSort}
-							tabs={sortOptions}
-						/>
+					<div className="w-full pb-2">
+						<div className=" flex items-center left-10 w-full">
+							<Search size={20} className="text-muted-foreground" />
+							<Input
+								placeholder="Search your library..."
+								className="text-muted-foreground border-0  focus-visible:ring-0 focus-visible:ring-offset-0 "
+								name="searchTerm"
+								defaultValue={searchTerm}
+								onChange={(e) => {
+									handleFilterDebounce(e.target.value);
+								}}
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										handleFilter(e.currentTarget.value);
+									}
+								}}
+							/>
+						</div>
+						<div className="flex flex-row w-full gap-4">
+							<MobileSelector
+								selectedTab={selectedGenre}
+								setSelectedTab={setSelectedGenre}
+								tabs={genreOptions}
+							/>
+							<MobileSelector
+								selectedTab={selectedSort}
+								setSelectedTab={setSelectedSort}
+								tabs={sortOptions}
+							/>
+						</div>
 					</div>
 				) : (
 					<>
+						<div className="absolute flex items-center left-10">
+							<Search size={20} className="text-muted-foreground" />
+							<Input
+								placeholder="Search your library..."
+								className="text-muted-foreground border-0  focus-visible:ring-0 focus-visible:ring-offset-0 "
+								name="searchTerm"
+								defaultValue={searchTerm}
+								onChange={(e) => {
+									handleFilterDebounce(e.target.value);
+								}}
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										handleFilter(e.currentTarget.value);
+									}
+								}}
+							/>
+						</div>
 						<GenreTabSwitcher
 							selectedGenre={selectedGenre}
 							setSelectedGenre={setSelectedGenre}
