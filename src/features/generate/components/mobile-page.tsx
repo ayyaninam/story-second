@@ -47,11 +47,6 @@ export default function MobileGeneratePage({
 	const [input, setInput] = useState("");
 	const tabIndex = tabs.findIndex((tab) => tab.text.toLowerCase() === value);
 
-	const { data } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
-
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
 		videoRatios[1]?.value.toString() || ""
 	);
@@ -72,7 +67,14 @@ export default function MobileGeneratePage({
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
 	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
-	const { user } = useUser();
+	const { user, isLoading: isUserLoading } = useUser();
+
+	const { data, refetch: refetchUserData } = useQuery({
+		queryKey: [QueryKeys.USER_SIDE_NAV],
+		queryFn: () => api.user.get(),
+		enabled: !!user && !isUserLoading,
+		staleTime: 0,
+	});
 
 	const onSubmit = async () => {
 		localStorage.setItem("prompt", input);
@@ -84,6 +86,8 @@ export default function MobileGeneratePage({
 			}
 			return;
 		}
+		await refetchUserData();
+
 		if (!data?.data?.emailVerified) {
 			if (window.location.pathname === "/prompt") {
 				window.parent.location.href = "/generate";
