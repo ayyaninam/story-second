@@ -8,10 +8,9 @@ import {
 	Dialog,
 } from "@/components/ui/dialog"; // Adjust import paths as necessary
 import { Button } from "@/components/ui/button"; // Adjust import paths as necessary
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
+import { useMutation } from "@tanstack/react-query";
 import api from "@/api";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -184,12 +183,16 @@ const payoutAccountSchema = z
 		}
 	);
 
+type FormInputs = {
+	accountType: string;
+	firstName: string;
+	lastName: string;
+	companyName: string;
+	country: string;
+};
+
 const CreatePayoutsAccountModal = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
-	const [selectedOption, setSelectedOption] = useState("Individual");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [companyName, setCompanyName] = useState("");
 
 	const form = useForm({
 		resolver: zodResolver(payoutAccountSchema),
@@ -201,26 +204,20 @@ const CreatePayoutsAccountModal = () => {
 			country: "US",
 		},
 	});
+
 	const setupPayoutAccount = useMutation({
 		mutationFn: api.user.setupPaymentAccount,
 	});
-	const [selectedCountry, setSelectedCountry] = useState("US");
 
-	const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setSelectedOption(e.target.value);
-	};
-
-	const handleSubmit = async () => {
+	const handleSubmit: SubmitHandler<FormInputs> = async (formInputs) => {
 		try {
 			const payoutAccountResponse = await setupPayoutAccount.mutateAsync({
-				individualBusinessType: selectedOption === "Individual",
-				firstName,
-				lastName,
-				companyName,
-				country: selectedCountry,
+				individualBusinessType: formInputs.accountType === "Individual",
+				firstName: formInputs.firstName,
+				lastName: formInputs.lastName,
+				companyName: formInputs.companyName,
+				country: formInputs.country,
 			});
-
-			console.log(payoutAccountResponse);
 
 			if (payoutAccountResponse.url) {
 				window.location.href = payoutAccountResponse.url;
@@ -262,15 +259,16 @@ const CreatePayoutsAccountModal = () => {
 										type="radio"
 										value="Individual"
 									/>
-									Individual
+									<span className="ml-1">Individual</span>
 								</label>
 								<label>
 									<input
 										{...form.register("accountType")}
 										type="radio"
 										value="Business"
+										className="ml-2"
 									/>
-									Business
+									<span className="ml-1">Business</span>
 								</label>
 							</div>
 
