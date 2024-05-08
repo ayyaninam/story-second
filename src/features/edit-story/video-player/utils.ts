@@ -109,6 +109,8 @@ export const webStoryToRemotionInputProps = async (
 		renderedVideoExists = false;
 	}
 
+	const isIosDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) ;
+
 	return toRemotionInputProps({
 		variant,
 		segments,
@@ -120,6 +122,6 @@ export const webStoryToRemotionInputProps = async (
 			? Format.GetPublicBucketObjectUrl(audioURL)
 			: undefined,
 		// temporal disable again due to multiple issues
-		renderedVideoURL: renderedVideoExists ? renderedVideoURL : undefined,
+		renderedVideoURL: renderedVideoExists && isIosDevice ? renderedVideoURL : undefined,
 	});
 };
