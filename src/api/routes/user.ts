@@ -232,6 +232,13 @@ const user = {
 				.json<mainSchema["StringApiResponse"]>();
 		return response?.data;
 	},
+	updatePreferences: async (
+		data: mainSchema["EmailNotificationPreferencesDTO"]
+	) => {
+		return await publicProxyApiFetcher
+			.put("proxyApi/User/Preferences", { json: data })
+			.json<mainSchema["StringApiResponse"]>();
+	},
 };
 
 export default user;
