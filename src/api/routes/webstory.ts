@@ -46,6 +46,25 @@ const webstory = {
 		id: string;
 	}): Promise<mainSchema["StringApiResponse"]> =>
 		await publicProxyApiFetcher.delete(`proxyApi/Webstory/${id}/Delete`).json(),
+	updateStoryPrivacy: async ({
+		id,
+		isPublic,
+	}: {
+		id: string;
+		isPublic: boolean;
+	}): Promise<mainSchema["BooleanApiResponse"]> =>
+		await publicProxyApiFetcher
+			.post(`proxyApi/Webstory/UpdateStoryPrivacy`, {
+				json: {
+					storiesToUpdate: [
+						{
+							storyId: id,
+							isPublic,
+						},
+					],
+				},
+			})
+			.json(),
 };
 
 export default webstory;
