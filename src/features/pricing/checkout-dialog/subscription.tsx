@@ -10,6 +10,7 @@ import { useStripeSetup, useUser } from "../hooks";
 import CheckoutDialogContent from "./content";
 import { pricingValues } from "@/features/pricing/constants";
 import useEventLogger from "@/utils/analytics";
+import { HTTPError } from "ky";
 
 type Item = {
 	description: string;
@@ -250,8 +251,11 @@ const SubscriptionCheckoutDialog = ({
 				}
 			}
 		} catch (e: any) {
-			console.error("Error Paying Subscription: ", e.message);
-			toast.error("Error Paying Subscription: ", e.message);
+			if (e instanceof HTTPError) {
+				const backendError = (await e.response.json())?.message;
+				console.error("Error Paying Subscription: ", e.message);
+				toast.error(`Error Paying Subscription: ${backendError}`);
+			}
 		} finally {
 			setSubmitting(false);
 		}

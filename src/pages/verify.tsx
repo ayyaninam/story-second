@@ -19,7 +19,7 @@ export const Verify = () => {
 
 	const [error, setError] = useState(false);
 	const [emailIsVerified, setEmailIsVerified] = useState(false);
-	const emailWasAlreadyVerified = data?.data?.emailVerified;
+	const emailWasAlreadyVerified = !!data?.data?.emailVerified;
 
 	const redirectToFeed = () => {
 		setTimeout(() => {
@@ -33,9 +33,15 @@ export const Verify = () => {
 		} else {
 			if (userIsLoggedId) {
 				try {
-					api.user.requestVerification().then();
-					setEmailIsVerified(true);
-					redirectToFeed();
+					api.user.requestVerification().then(
+						() => {
+							setEmailIsVerified(true);
+							redirectToFeed();
+						},
+						() => {
+							setError(true);
+						}
+					);
 				} catch (e) {
 					setError(true);
 				}

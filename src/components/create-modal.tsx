@@ -59,11 +59,6 @@ const GenerateModalContent: React.FC<{
 }> = ({ className = "", fromLanding = false, tiktok = false }) => {
 	const eventLogger = useEventLogger();
 
-	const { data } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
-
 	const [value, setValue] = useState<TabType>(
 		tiktok ? TabType.Trends : TabType.Video
 	);
@@ -93,7 +88,14 @@ const GenerateModalContent: React.FC<{
 
 	const { userCanUseCredits } = useUserCanUseCredits();
 
-	const { user } = useUser();
+	const { user, isLoading: isUserLoading } = useUser();
+
+	const { data, refetch: refetchUserData } = useQuery({
+		queryKey: [QueryKeys.USER_SIDE_NAV],
+		queryFn: () => api.user.get(),
+		enabled: !!user && !isUserLoading,
+		staleTime: 0,
+	});
 
 	const onSubmit = async () => {
 		localStorage.setItem("prompt", input);
@@ -105,6 +107,7 @@ const GenerateModalContent: React.FC<{
 			}
 			return;
 		}
+		await refetchUserData();
 
 		if (!data?.data?.emailVerified) {
 			if (window.location.pathname === "/prompt") {
@@ -413,10 +416,12 @@ export const submitToBackend = async (
 					break;
 				}
 				default: {
-					console.log(error.response.statusText);
-					toast.error(
-						"Unable to generate your story: " + error.response.statusText
-					);
+					error.response.json().then(data => {
+						const backendErrorMessage = data.error || 'Unknown error occurred';
+						toast.error(`Unable to generate your story: ${backendErrorMessage}`);
+					}).catch(e => {
+						toast.error("An unexpected error occurred while processing your request.");
+					});
 					break;
 				}
 			}
