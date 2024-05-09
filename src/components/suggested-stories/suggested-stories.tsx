@@ -8,11 +8,18 @@ import React from "react";
 import { Img } from "remotion";
 import { Skeleton } from "../ui/skeleton";
 
-export default function SuggestedStories({ id }: { id: string }) {
+type SuggestedStoriesProps = {
+	id: string;
+	story?: boolean;
+};
+
+export default function SuggestedStories({ id, story }: SuggestedStoriesProps) {
 	const suggestedStories = useQuery({
-		queryKey: [id],
+		queryKey: [id, story],
 		queryFn: () =>
-			api.library.getSuggestedStories({
+			(story
+				? api.storybook.getSuggestedStories
+				: api.video.getSuggestedVideos)({
 				id,
 				searchParams: { PageSize: 10, CurrentPage: 1 },
 			}),

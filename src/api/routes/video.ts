@@ -7,7 +7,7 @@ import {
 import { mainSchema, mlSchema } from "../schema";
 import { getJwt } from "@/utils/jwt";
 import { StoryOutputTypes } from "@/utils/enums";
-import { FeedPageVideoQueryOptions, RegenerateVideoSegments } from "@/types";
+import { PaginationParams, RegenerateVideoSegments } from "@/types";
 
 const video = {
 	getUploadUrl: async (params: {
@@ -238,6 +238,29 @@ const video = {
 				.json();
 		if (!data.data) return null;
 		return data?.data;
+	},
+	getSuggestedVideos: async ({
+		id,
+		searchParams,
+	}: {
+		id: string;
+		searchParams: PaginationParams;
+	}): Promise<mainSchema["ReturnVideoStoryDTOListApiResponse"]> => {
+		const data: mainSchema["ReturnVideoStoryDTOListApiResponse"] =
+			await publicFetcher
+				.get(`api/Video/${id}/Suggested`, {
+					searchParams,
+				})
+				.json();
+
+		if (!data.succeeded) {
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data;
 	},
 };
 

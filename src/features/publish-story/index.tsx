@@ -47,6 +47,7 @@ import DeleteVideoButton from "@/features/publish-story/delete-video-button";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import isBrowser from "@/utils/isBrowser";
 import ShareStoryDialog from "@/components/share-story-dialog/share-story-dialog";
+import SuggestedStories from "@/components/suggested-stories/suggested-stories";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -305,111 +306,114 @@ export default function PublishedStory({
 	).length;
 
 	return (
-		<div className={`h-full bg-reverse items-center overflow-auto`}>
-			{/* Navbar */}
-			<div className="flex justify-between p-4">
-				<div
-					className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm lg:rounded-br-sm lg:rounded-tr-sm lg:rounded-tl-sm lg:rounded-bl-sm`}
-				>
-					<div className="flex items-center gap-x-2 py-3">
-						<Link href={Routes.Feed()}>
-							<StoryLogo size={20} fill="#657D8B" />
-						</Link>
+		<div className="flex bg-reverse">
+			<div className="w-full k xl:h-[calc(100vh-20px)] lg:w-[calc(100%-306px)]">
+				{/* Navbar */}
+				<div className="flex justify-between p-4">
+					<div
+						className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm lg:rounded-br-sm lg:rounded-tr-sm lg:rounded-tl-sm lg:rounded-bl-sm`}
+					>
+						<div className="flex items-center gap-x-2 py-3">
+							<Link href={Routes.Feed()}>
+								<StoryLogo size={20} fill="#657D8B" />
+							</Link>
 
-						{/*<svg*/}
-						{/*	width="16"*/}
-						{/*	height="16"*/}
-						{/*	viewBox="0 0 16 16"*/}
-						{/*	fill="none"*/}
-						{/*	xmlns="http://www.w3.org/2000/svg"*/}
-						{/*>*/}
-						{/*	<path*/}
-						{/*		d="M0 8.30408C0.102418 12.5006 3.47197 15.8762 7.66086 15.9891C7.65062 11.7618 4.21961 8.3246 0 8.30408Z"*/}
-						{/*		fill="#657D8B"*/}
-						{/*	/>*/}
-						{/*	<path*/}
-						{/*		d="M15.9714 7.6756C15.869 3.47912 12.4994 0.103458 8.31055 0.000854492C8.32079 4.22811 11.7518 7.66533 15.9714 7.6756Z"*/}
-						{/*		fill="#657D8B"*/}
-						{/*	/>*/}
-						{/*	<path*/}
-						{/*		d="M7.66965 -0.00952148C3.48076 0.0930818 0.111207 3.46874 0.00878906 7.66522C4.2284 7.65496 7.65941 4.21774 7.66965 -0.00952148Z"*/}
-						{/*		fill="#657D8B"*/}
-						{/*	/>*/}
-						{/*	<path*/}
-						{/*		d="M8.30788 16.0096H8.11328H15.9995V8.30408C11.7594 8.30408 8.30788 11.7618 8.30788 16.0096Z"*/}
-						{/*		fill="#657D8B"*/}
-						{/*	/>*/}
-						{/*</svg>*/}
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							viewBox="0 0 16 16"
-							fill="none"
-						>
-							<g opacity="0.5">
-								<path
-									d="M8.00013 2.63336C8.01854 2.63336 8.03346 2.64829 8.03346 2.6667V13.3334C8.03346 13.3518 8.01851 13.3667 8.00013 13.3667C7.98175 13.3667 7.9668 13.3518 7.9668 13.3334V2.6667C7.9668 2.64829 7.98172 2.63336 8.00013 2.63336Z"
-									fill="#020817"
-									stroke="#64748B"
-								/>
-							</g>
-						</svg>
-					</div>
-					<p className="text-sm">{Format.Title(Webstory.data?.storyTitle)}</p>
-				</div>
-				<div className="hidden md:block space-x-2">
-					{/*<Button*/}
-					{/*	className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}*/}
-					{/*	onClick={(e) => {*/}
-					{/*		navigator.clipboard.writeText(window.location.href);*/}
-					{/*		toast.success("Link copied to clipboard");*/}
-					{/*	}}*/}
-					{/*	variant="outline"*/}
-					{/*>*/}
-					{/*	<Share2 className="mr-2 h-4 w-4" /> Share this video*/}
-					{/*</Button>*/}
-					{session?.accessToken && (
-						<Button
-							className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
-							variant="outline"
-							onClick={() => {
-								router.push(Routes.Logout("/feed/all"));
-							}}
-						>
-							<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
-						</Button>
-					)}
-				</div>
-			</div>
-
-			<div className={`flex bg-reverse min-h-[calc(100vh-66px)] p-2 gap-x-1.5`}>
-				<div className="relative w-full lg:px-20 pb-10 items-center">
-					<div className="flex flex-col md:flex-row items-center justify-center h-full">
-						<div
-							className={cn(
-								`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
-								// Based on aspect ratio we need to adjust the parent width
-								ImageRatio.width === 1 && "md:max-w-[1080px]",
-								ImageRatio.width === 3 && "md:max-w-[900px]",
-								ImageRatio.width === 4 && "md:max-w-[1280px]",
-								ImageRatio.width === 9 && "md:max-w-[780px]",
-								ImageRatio.width === 16 && "md:max-w-[1620px]",
-								ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
-									"lg:flex-col 2xl:flex-row"
-							)}
-						>
-							<div className="relative w-full rounded-tl-lg rounded-bl-lg">
-								{!isMobile && (
-									<StoryScreenBgBlur
-										blur="3xl"
-										Webstory={Webstory.data}
-										isError={Webstory.isError}
-										isPlaying={isPlaying}
-										seekedFrame={seekedFrame}
+							{/*<svg*/}
+							{/*	width="16"*/}
+							{/*	height="16"*/}
+							{/*	viewBox="0 0 16 16"*/}
+							{/*	fill="none"*/}
+							{/*	xmlns="http://www.w3.org/2000/svg"*/}
+							{/*>*/}
+							{/*	<path*/}
+							{/*		d="M0 8.30408C0.102418 12.5006 3.47197 15.8762 7.66086 15.9891C7.65062 11.7618 4.21961 8.3246 0 8.30408Z"*/}
+							{/*		fill="#657D8B"*/}
+							{/*	/>*/}
+							{/*	<path*/}
+							{/*		d="M15.9714 7.6756C15.869 3.47912 12.4994 0.103458 8.31055 0.000854492C8.32079 4.22811 11.7518 7.66533 15.9714 7.6756Z"*/}
+							{/*		fill="#657D8B"*/}
+							{/*	/>*/}
+							{/*	<path*/}
+							{/*		d="M7.66965 -0.00952148C3.48076 0.0930818 0.111207 3.46874 0.00878906 7.66522C4.2284 7.65496 7.65941 4.21774 7.66965 -0.00952148Z"*/}
+							{/*		fill="#657D8B"*/}
+							{/*	/>*/}
+							{/*	<path*/}
+							{/*		d="M8.30788 16.0096H8.11328H15.9995V8.30408C11.7594 8.30408 8.30788 11.7618 8.30788 16.0096Z"*/}
+							{/*		fill="#657D8B"*/}
+							{/*	/>*/}
+							{/*</svg>*/}
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 16 16"
+								fill="none"
+							>
+								<g opacity="0.5">
+									<path
+										d="M8.00013 2.63336C8.01854 2.63336 8.03346 2.64829 8.03346 2.6667V13.3334C8.03346 13.3518 8.01851 13.3667 8.00013 13.3667C7.98175 13.3667 7.9668 13.3518 7.9668 13.3334V2.6667C7.9668 2.64829 7.98172 2.63336 8.00013 2.63336Z"
+										fill="#020817"
+										stroke="#64748B"
 									/>
+								</g>
+							</svg>
+						</div>
+						<p className="text-sm">{Format.Title(Webstory.data?.storyTitle)}</p>
+					</div>
+					<div className="hidden md:block space-x-2">
+						{/*<Button*/}
+						{/*	className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}*/}
+						{/*	onClick={(e) => {*/}
+						{/*		navigator.clipboard.writeText(window.location.href);*/}
+						{/*		toast.success("Link copied to clipboard");*/}
+						{/*	}}*/}
+						{/*	variant="outline"*/}
+						{/*>*/}
+						{/*	<Share2 className="mr-2 h-4 w-4" /> Share this video*/}
+						{/*</Button>*/}
+						{session?.accessToken && (
+							<Button
+								className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}
+								variant="outline"
+								onClick={() => {
+									router.push(Routes.Logout("/feed/all"));
+								}}
+							>
+								<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
+							</Button>
+						)}
+					</div>
+				</div>
+
+				<div
+					className={`flex bg-reverse  p-2 gap-x-1.5`}
+				>
+					<div className="relative w-full lg:px-20 pb-10 items-center">
+						<div className="flex flex-col md:flex-row items-center justify-center h-full">
+							<div
+								className={cn(
+									`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
+									// Based on aspect ratio we need to adjust the parent width
+									ImageRatio.width === 1 && "md:max-w-[1080px]",
+									ImageRatio.width === 3 && "md:max-w-[900px]",
+									ImageRatio.width === 4 && "md:max-w-[1280px]",
+									ImageRatio.width === 9 && "md:max-w-[780px]",
+									ImageRatio.width === 16 && "md:max-w-[1620px]",
+									ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+										"lg:flex-col 2xl:flex-row"
 								)}
-								{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
+							>
+								<div className="relative w-full rounded-tl-lg rounded-bl-lg">
+									{!isMobile && (
+										<StoryScreenBgBlur
+											blur="3xl"
+											Webstory={Webstory.data}
+											isError={Webstory.isError}
+											isPlaying={isPlaying}
+											seekedFrame={seekedFrame}
+										/>
+									)}
+									{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
 								 <div
 									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
 								>
@@ -421,311 +425,318 @@ export default function PublishedStory({
 										isMuted={true}
 									/>
 								</div> */}
+									<div
+										className={cn(
+											isMobile
+												? "relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+												: "absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+										)}
+									>
+										<StoryScreen
+											playerClassName="rounded-tl-lg rounded-bl-lg"
+											Webstory={Webstory.data}
+											isError={Webstory.isError}
+											onPlay={() => {
+												setIsPlaying(true);
+											}}
+											onPause={() => {
+												setIsPlaying(false);
+											}}
+											onSeeked={(e) => {
+												setSeekedFrame(e.detail.frame);
+											}}
+											onEnded={() => {
+												setIsPlaying(false);
+												setSeekedFrame(0);
+											}}
+											onTimeUpdate={onTimeUpdate}
+										/>
+									</div>
+								</div>
+
+								{/* </Loading> */}
 								<div
 									className={cn(
-										isMobile
-											? "relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
-											: "absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+										`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`,
+										ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+											"lg:max-w-[100%] 2xl:max-w-sm"
 									)}
 								>
-									<StoryScreen
-										playerClassName="rounded-tl-lg rounded-bl-lg"
-										Webstory={Webstory.data}
-										isError={Webstory.isError}
-										onPlay={() => {
-											setIsPlaying(true);
-										}}
-										onPause={() => {
-											setIsPlaying(false);
-										}}
-										onSeeked={(e) => {
-											setSeekedFrame(e.detail.frame);
-										}}
-										onEnded={() => {
-											setIsPlaying(false);
-											setSeekedFrame(0);
-										}}
-										onTimeUpdate={onTimeUpdate}
-									/>
-								</div>
-							</div>
-
-							{/* </Loading> */}
-							<div
-								className={cn(
-									`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`,
-									ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
-										"lg:max-w-[100%] 2xl:max-w-sm"
-								)}
-							>
-								<div className="relative space-y-2">
-									<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
-										<p className="text-purple-500">Video</p>
-										<ChevronRight className="w-4 h-4" />
-										{isLoading ? (
-											<Skeleton className="w-[100px] h-[20px] rounded-full" />
-										) : (
-											<p>{Format.Title(Webstory.data.topLevelCategory)}</p>
-										)}
-									</div>
-									{isLoading ? (
-										<Skeleton className="min-w-72 h-[24px] rounded-md" />
-									) : (
-										<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
-											{Format.Title(Webstory.data.storyTitle)}
-										</p>
-									)}
-									<div className="flex flex-wrap gap-2">
-										{!Webstory.data?.canEdit &&
-											Webstory.data?.storyType === 1 &&
-											Webstory.data?.videosDone && (
-												<GenericModal
-													title="Duplicate Video"
-													description="We'll add a video to your library with the same plot that you can make your own and edit! This action will cost 1 video credit"
-													buttonText={
-														<span className="flex flex-row">
-															<Video className="mr-1 h-4 w-4 md:h-5 md:w-5" />
-															Make a video like this
-														</span>
-													}
-													confirmAction={handleCopyVideo}
-													dialogOpen={dialogOpen}
-													setDialogOpen={setDialogOpen}
-												/>
+									<div className="relative space-y-2">
+										<div className="flex gap-x-1 text-muted-foreground items-center text-sm">
+											<p className="text-purple-500">Video</p>
+											<ChevronRight className="w-4 h-4" />
+											{isLoading ? (
+												<Skeleton className="w-[100px] h-[20px] rounded-full" />
+											) : (
+												<p>{Format.Title(Webstory.data.topLevelCategory)}</p>
 											)}
-										{Webstory.data?.canEdit &&
-											Webstory.data?.storyType !== 2 && (
+										</div>
+										{isLoading ? (
+											<Skeleton className="min-w-72 h-[24px] rounded-md" />
+										) : (
+											<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
+												{Format.Title(Webstory.data.storyTitle)}
+											</p>
+										)}
+										<div className="flex flex-wrap gap-2">
+											{!Webstory.data?.canEdit &&
+												Webstory.data?.storyType === 1 &&
+												Webstory.data?.videosDone && (
+													<GenericModal
+														title="Duplicate Video"
+														description="We'll add a video to your library with the same plot that you can make your own and edit! This action will cost 1 video credit"
+														buttonText={
+															<span className="flex flex-row">
+																<Video className="mr-1 h-4 w-4 md:h-5 md:w-5" />
+																Make a video like this
+															</span>
+														}
+														confirmAction={handleCopyVideo}
+														dialogOpen={dialogOpen}
+														setDialogOpen={setDialogOpen}
+													/>
+												)}
+											{Webstory.data?.canEdit &&
+												Webstory.data?.storyType !== 2 && (
+													<Button
+														className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+														variant="outline"
+														onClick={() =>
+															router.push(
+																Routes.EditStoryboard(
+																	storyData.storyType,
+																	storyData.topLevelCategory!,
+																	storyData.slug!
+																)
+															)
+														}
+													>
+														<Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit
+														Video
+													</Button>
+												)}
+
+											<Button
+												className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+												variant="outline"
+												onClick={() =>
+													handleLikeVideo(!Interactions.data?.liked)
+												}
+											>
+												<Heart
+													className="mr-2 h-4 w-4 md:h-5 md:w-5"
+													style={{
+														fill:
+															isBrowser && Interactions.data?.liked
+																? "#EC4899"
+																: undefined,
+														color:
+															isBrowser && Interactions.data?.liked
+																? "#EC4899"
+																: undefined,
+													}}
+												/>
+												{storyLikes}
+											</Button>
+
+											<Button
+												onClick={() => setOpenShareVideoModal(true)}
+												className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+												variant="outline"
+											>
+												<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Share
+											</Button>
+
+											{(numVideoSegmentsReady ?? 0) <
+												(numTotalVideoSegments ?? 0) ||
+											!Webstory.data?.storyDone ? null : Webstory.data
+													?.renderedVideoKey ? (
+												<Button
+													onClick={async () => {
+														eventLogger("download_video_clicked");
+
+														const userHasPaidSubscription =
+															User?.data?.data?.subscription
+																?.subscriptionPlan !== SubscriptionPlan.Free &&
+															User?.data?.data?.subscription
+																?.subscriptionPlan !== undefined;
+
+														if (!userHasPaidSubscription) {
+															toast.error(
+																"You need to upgrade to a paid plan to download the video."
+															);
+															setOpenSubscriptionDialog(true);
+
+															return;
+														}
+
+														setIsVideoDownloading(true);
+
+														let videoUrl;
+														if (
+															storyData.renderedVideoKey &&
+															!storyData.invalidateRender
+														) {
+															videoUrl = Format.GetPublicBucketObjectUrl(
+																storyData.renderedVideoKey
+															);
+														} else {
+															videoUrl = await RenderVideo.mutateAsync({
+																id: storyData.id!,
+															});
+														}
+														if (videoUrl) {
+															window.location.href = videoUrl;
+														}
+														setIsVideoDownloading(false);
+													}}
+													className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+													variant="outline"
+													disabled={isVideoDownloading}
+												>
+													<DownloadIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+													{isVideoDownloading ? "Loading" : "Download"}
+												</Button>
+											) : (
 												<Button
 													className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
 													variant="outline"
-													onClick={() =>
-														router.push(
-															Routes.EditStoryboard(
-																storyData.storyType,
-																storyData.topLevelCategory!,
-																storyData.slug!
-															)
-														)
-													}
+													onClick={handleRenderVideo}
 												>
-													<Edit className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Edit
-													Video
+													<DownloadCloudIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+													{RenderVideo.isPending ? "Loading" : "Download"}
 												</Button>
 											)}
 
-										<Button
-											className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-											variant="outline"
-											onClick={() => handleLikeVideo(!Interactions.data?.liked)}
-										>
-											<Heart
-												className="mr-2 h-4 w-4 md:h-5 md:w-5"
-												style={{
-													fill:
-														isBrowser && Interactions.data?.liked
-															? "#EC4899"
-															: undefined,
-													color:
-														isBrowser && Interactions.data?.liked
-															? "#EC4899"
-															: undefined,
-												}}
-											/>
-											{storyLikes}
-										</Button>
-
-										<Button
-											onClick={() => setOpenShareVideoModal(true)}
-											className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-											variant="outline"
-										>
-											<Share2 className="mr-2 h-4 w-4 md:h-5 md:w-5" /> Share
-										</Button>
-
-										{(numVideoSegmentsReady ?? 0) <
-											(numTotalVideoSegments ?? 0) ||
-										!Webstory.data?.storyDone ? null : Webstory.data
-												?.renderedVideoKey ? (
-											<Button
-												onClick={async () => {
-													eventLogger("download_video_clicked");
-
-													const userHasPaidSubscription =
-														User?.data?.data?.subscription?.subscriptionPlan !==
-															SubscriptionPlan.Free &&
-														User?.data?.data?.subscription?.subscriptionPlan !==
-															undefined;
-
-													if (!userHasPaidSubscription) {
-														toast.error(
-															"You need to upgrade to a paid plan to download the video."
-														);
-														setOpenSubscriptionDialog(true);
-
-														return;
-													}
-
-													setIsVideoDownloading(true);
-
-													let videoUrl;
-													if (
-														storyData.renderedVideoKey &&
-														!storyData.invalidateRender
-													) {
-														videoUrl = Format.GetPublicBucketObjectUrl(
-															storyData.renderedVideoKey
-														);
-													} else {
-														videoUrl = await RenderVideo.mutateAsync({
-															id: storyData.id!,
-														});
-													}
-													if (videoUrl) {
-														window.location.href = videoUrl;
-													}
-													setIsVideoDownloading(false);
-												}}
-												className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-												variant="outline"
-												disabled={isVideoDownloading}
-											>
-												<DownloadIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-												{isVideoDownloading ? "Loading" : "Download"}
-											</Button>
-										) : (
-											<Button
-												className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
-												variant="outline"
-												onClick={handleRenderVideo}
-											>
-												<DownloadCloudIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-												{RenderVideo.isPending ? "Loading" : "Download"}
-											</Button>
-										)}
-
-										{Webstory.data?.canEdit && Webstory.data?.id && (
-											<DeleteVideoButton storyId={Webstory.data.id} />
-										)}
-									</div>
-
-									{isLoading ? (
-										<Skeleton className="min-w-72 h-[220px] rounded-lg" />
-									) : (
-										<p className="text-sm text-muted-foreground text-wrap text-ellipsis whitespace-nowrap overflow-hidden self-stretch">
-											{showFullDescription
-												? Webstory.data.summary
-												: Format.TruncateTextWithEllipses(
-														Webstory.data.summary,
-														MAX_SUMMARY_LENGTH
-													)}
-										</p>
-									)}
-									{(Webstory.data?.summary?.length ?? 0) > MAX_SUMMARY_LENGTH &&
-										!showFullDescription && (
-											<Button
-												variant="link"
-												className="text-indigo-500 text-sm font-normal m-0 p-0"
-												onClick={() => setShowFullDescription(true)}
-											>
-												See full description
-											</Button>
-										)}
-								</div>
-								<div
-									className={cn(
-										"lg:hidden my-2.5 bg-slate-200 self-stretch h-px",
-										ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
-											"lg:flex 2xl:hidden"
-									)}
-								/>
-								<Link
-									href={`/${Webstory.data?.user?.profileName}`}
-									className="flex gap-x-2.5"
-								>
-									{isLoading ? (
-										<Skeleton className="w-[44px] h-[44px] rounded-full" />
-									) : (
-										<Avatar className="h-11 w-11">
-											<AvatarImage
-												src={Webstory.data.user?.profilePicture ?? undefined}
-											/>
-											<AvatarFallback>
-												{Format.AvatarName(
-													Webstory.data.user?.name,
-													Webstory.data.user?.lastName
-												)}
-											</AvatarFallback>
-										</Avatar>
-									)}
-									{isLoading ? (
-										<Skeleton className="w-[168px] h-[44px] rounded-lg" />
-									) : (
-										<span className="flex flex-col">
-											{Webstory.data.user && (
-												<>
-													<span>
-														{Webstory.data.user.name}{" "}
-														{Webstory.data.user?.lastName}
-													</span>
-													<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
-														<>
-															{Webstory.data.user.videoCount! > 0 && (
-																<p>{Webstory.data.user?.videoCount} Videos</p>
-															)}
-															{Webstory.data.user.videoCount! > 0 &&
-																Webstory.data.user.storyCount! > 0 && (
-																	<p className="text-slate-300"> • </p>
-																)}
-															{Webstory.data.user.storyCount! > 0 && (
-																<p>{Webstory.data.user.storyCount} Stories</p>
-															)}
-														</>
-													</span>
-												</>
+											{Webstory.data?.canEdit && Webstory.data?.id && (
+												<DeleteVideoButton storyId={Webstory.data.id} />
 											)}
-										</span>
-									)}
-								</Link>
+										</div>
+
+										{isLoading ? (
+											<Skeleton className="min-w-72 h-[220px] rounded-lg" />
+										) : (
+											<p className="text-sm text-muted-foreground text-wrap text-ellipsis whitespace-nowrap overflow-hidden self-stretch">
+												{showFullDescription
+													? Webstory.data.summary
+													: Format.TruncateTextWithEllipses(
+															Webstory.data.summary,
+															MAX_SUMMARY_LENGTH
+														)}
+											</p>
+										)}
+										{(Webstory.data?.summary?.length ?? 0) >
+											MAX_SUMMARY_LENGTH &&
+											!showFullDescription && (
+												<Button
+													variant="link"
+													className="text-indigo-500 text-sm font-normal m-0 p-0"
+													onClick={() => setShowFullDescription(true)}
+												>
+													See full description
+												</Button>
+											)}
+									</div>
+									<div
+										className={cn(
+											"lg:hidden my-2.5 bg-slate-200 self-stretch h-px",
+											ImageRatio.enumValue ===
+												DisplayAspectRatios["1024x576"] && "lg:flex 2xl:hidden"
+										)}
+									/>
+									<Link
+										href={`/${Webstory.data?.user?.profileName}`}
+										className="flex gap-x-2.5"
+									>
+										{isLoading ? (
+											<Skeleton className="w-[44px] h-[44px] rounded-full" />
+										) : (
+											<Avatar className="h-11 w-11">
+												<AvatarImage
+													src={Webstory.data.user?.profilePicture ?? undefined}
+												/>
+												<AvatarFallback>
+													{Format.AvatarName(
+														Webstory.data.user?.name,
+														Webstory.data.user?.lastName
+													)}
+												</AvatarFallback>
+											</Avatar>
+										)}
+										{isLoading ? (
+											<Skeleton className="w-[168px] h-[44px] rounded-lg" />
+										) : (
+											<span className="flex flex-col">
+												{Webstory.data.user && (
+													<>
+														<span>
+															{Webstory.data.user.name}{" "}
+															{Webstory.data.user?.lastName}
+														</span>
+														<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
+															<>
+																{Webstory.data.user.videoCount! > 0 && (
+																	<p>{Webstory.data.user?.videoCount} Videos</p>
+																)}
+																{Webstory.data.user.videoCount! > 0 &&
+																	Webstory.data.user.storyCount! > 0 && (
+																		<p className="text-slate-300"> • </p>
+																	)}
+																{Webstory.data.user.storyCount! > 0 && (
+																	<p>{Webstory.data.user.storyCount} Stories</p>
+																)}
+															</>
+														</span>
+													</>
+												)}
+											</span>
+										)}
+									</Link>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div className="absolute bottom-10 left-4 items-center hidden md:flex flex-row gap-x-1">
-						<span
-							className="rounded-full text-xs text-accent-100 bg-accent-600 p-1.5 hover:cursor-pointer hover:bg-accent-400 transition-colors duration-200  ease-in-out"
-							style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-							onClick={() => router.push(Routes.Generate())}
-						>
-							<div
-								className={`flex text-sm gap-x-2.5 px-3 items-center hover:cursor-pointer hover:text-gray-600 transition-colors duration-200  ease-in-out`}
+						<div className="absolute bottom-10 left-4 items-center hidden md:flex flex-row gap-x-1">
+							<span
+								className="rounded-full text-xs text-accent-100 bg-accent-600 p-1.5 hover:cursor-pointer hover:bg-accent-400 transition-colors duration-200  ease-in-out"
+								style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
 								onClick={() => router.push(Routes.Generate())}
 							>
-								Try It Free
-							</div>
-						</span>
-					</div>
-					<Link
-						href="/feed/[genre]"
-						className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden md:flex flex-row gap-x-3 text-sm text-muted-foreground"
-					>
-						© 2024 Story.com - All rights reserved
-					</Link>
-					{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
-						<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
-							<span
-								className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
-								style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-							>
-								<ModeToggle />
-							</span>
-							<span
-								className="rounded-full w-8 h-8 bg-popover p-1.5"
-								style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
-							>
-								<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
+								<div
+									className={`flex text-sm gap-x-2.5 px-3 items-center hover:cursor-pointer hover:text-gray-600 transition-colors duration-200  ease-in-out`}
+									onClick={() => router.push(Routes.Generate())}
+								>
+									Try It Free
+								</div>
 							</span>
 						</div>
-					)}
+						<Link
+							href="/feed/[genre]"
+							className="absolute bottom-2 left-1/2 transform -translate-x-1/2 hidden md:flex flex-row gap-x-3 text-sm text-muted-foreground"
+						>
+							© 2024 Story.com - All rights reserved
+						</Link>
+						{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
+							<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
+								<span
+									className="rounded-full w-8 h-8 bg-popover p-1.5 flex items-center justify-center"
+									style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+								>
+									<ModeToggle />
+								</span>
+								<span
+									className="rounded-full w-8 h-8 bg-popover p-1.5"
+									style={{ boxShadow: "0px 3px 6px 0px rgba(0, 0, 0, 0.13)" }}
+								>
+									<HelpCircle className="h-[18.286px] w-[18.286px] flex-shrink-0 stroke-slate-400" />
+								</span>
+							</div>
+						)}
+					</div>
 				</div>
+			</div>
+			<div className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto">
+				<SuggestedStories id={story.id ?? ""} />
 			</div>
 
 			<ShareStoryDialog

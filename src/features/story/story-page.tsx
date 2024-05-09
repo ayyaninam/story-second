@@ -15,7 +15,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useMediaQuery } from "usehooks-ts";
 import StoryPageButtons from "@/features/story/components/story-page-buttons";
 import Link from "next/link";
-import SuggestedVideos from "@/components/suggested-stories/suggested-stories";
+import SuggestedStories from "@/components/suggested-stories/suggested-stories";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -164,7 +164,7 @@ const StoryBookPage = ({
 				</div>
 			</div>
 			<div className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto">
-				<SuggestedVideos id={story.id ?? ""} />
+				<SuggestedStories id={story.id ?? ""} story />
 			</div>
 		</div>
 	);
