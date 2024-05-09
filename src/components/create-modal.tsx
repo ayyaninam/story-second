@@ -417,9 +417,12 @@ export const submitToBackend = async (
 				}
 				default: {
 					console.log(error.response.statusText);
+					
+					const backendErrorMessage: string = (await error.response.json())
+						?.message;
+					
 					toast.error(
-						"Unable to generate your story: " + error.response.statusText
-					);
+						"Unable to generate your story: ${backendErrorMessage}");
 					break;
 				}
 			}
