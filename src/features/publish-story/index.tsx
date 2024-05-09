@@ -831,6 +831,7 @@ export default function PublishedStory({
 			>
 				<SuggestedStories
 					id={story.id ?? ""}
+					storyType={story.storyType}
 					visible={suggestedOpen}
 					setVisible={setSuggestedOpen}
 					hovering={isHovering}

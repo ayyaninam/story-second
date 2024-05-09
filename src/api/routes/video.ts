@@ -241,15 +241,17 @@ const video = {
 	},
 	getSuggestedVideos: async ({
 		id,
+		storyType,
 		searchParams,
 	}: {
 		id: string;
+		storyType: StoryOutputTypes;
 		searchParams: PaginationParams;
 	}): Promise<mainSchema["ReturnVideoStoryDTOListApiResponse"]> => {
 		const data: mainSchema["ReturnVideoStoryDTOListApiResponse"] =
 			await publicFetcher
 				.get(`api/Video/${id}/Suggested`, {
-					searchParams,
+					searchParams: { storyType: storyType, ...searchParams },
 				})
 				.json();
 

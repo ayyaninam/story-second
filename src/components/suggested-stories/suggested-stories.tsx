@@ -9,10 +9,11 @@ import { Img } from "remotion";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import { ChevronsRight } from "lucide-react";
+import { StoryOutputTypes } from "@/utils/enums";
 
 type SuggestedStoriesProps = {
 	id: string;
-	story?: boolean;
+	storyType: StoryOutputTypes;
 	visible: boolean;
 	setVisible: (visible: boolean) => void;
 	hovering?: boolean;
@@ -20,20 +21,23 @@ type SuggestedStoriesProps = {
 
 export default function SuggestedStories({
 	id,
-	story,
+	storyType,
 	visible,
 	hovering,
 	setVisible,
 }: SuggestedStoriesProps) {
+	console.log("SuggestedID:", id);
 	const suggestedStories = useQuery({
-		queryKey: [id, story],
+		queryKey: [id, storyType],
 		queryFn: () =>
-			(story
+			(storyType === StoryOutputTypes.Story
 				? api.storybook.getSuggestedStories
 				: api.video.getSuggestedVideos)({
 				id,
+				storyType,
 				searchParams: { PageSize: 10, CurrentPage: 1 },
 			}),
+		staleTime: 0,
 	});
 
 	return (
@@ -41,7 +45,7 @@ export default function SuggestedStories({
 			className={cn(
 				"w-[306px] right-2 top-2 translate-x-0  p-4 pt-6 bg-slate-200 overflow-auto h-full transition-all duration-300 ease-in-out max-w-[306px] opacity-100 suggested-videos",
 				!visible && "translate-x-[200%] opacity-0 fixed top-20",
-				hovering && "translate-x-0 opacity-100",
+				hovering && "translate-x-0 opacity-100"
 			)}
 		>
 			<div className="flex items-center gap-4">
@@ -55,7 +59,9 @@ export default function SuggestedStories({
 				<div className="flex gap-2 items-center">
 					{/* <div className="h-10 w-10 rounded-md shadow bg-white" /> */}
 					<div>
-						<h1 className="font-bold text-base text-slate-950">More Videos</h1>
+						<h1 className="font-bold text-base text-slate-950">
+							Suggested Stories
+						</h1>
 						<p className="text-sm text-muted-foreground">Made with Story.com</p>
 					</div>
 				</div>

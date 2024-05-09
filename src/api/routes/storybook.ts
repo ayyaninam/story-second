@@ -1,6 +1,7 @@
 import { publicFetcher } from "@/lib/fetcher";
 import { mainSchema } from "@/api/schema";
 import { PaginationParams } from "@/types";
+import { StoryOutputTypes } from "@/utils/enums";
 
 const storybook = {
 	getStory: async ({
@@ -18,15 +19,17 @@ const storybook = {
 	},
 	getSuggestedStories: async ({
 		id,
+		storyType,
 		searchParams,
 	}: {
 		id: string;
+		storyType: StoryOutputTypes;
 		searchParams: PaginationParams;
 	}): Promise<mainSchema["ReturnVideoStoryDTOListApiResponse"]> => {
 		const data: mainSchema["ReturnVideoStoryDTOListApiResponse"] =
 			await publicFetcher
 				.get(`api/StoryBook/${id}/Suggested`, {
-					searchParams,
+					searchParams: { storyType: storyType, ...searchParams },
 				})
 				.json();
 

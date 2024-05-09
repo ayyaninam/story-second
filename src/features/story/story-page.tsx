@@ -186,7 +186,7 @@ const StoryBookPage = ({
 			>
 				<SuggestedStories
 					id={story.id ?? ""}
-					story
+					storyType={story.storyType}
 					visible={suggestedOpen}
 					setVisible={setSuggestedOpen}
 					hovering={isHovering}
