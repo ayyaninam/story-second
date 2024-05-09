@@ -93,15 +93,17 @@ export const styles = StyleSheet.create({
 });
 
 // with dpi = 72 the conversion is 1mm = 2.83px
-const mmToPx = (mm: number): number => Math.round(mm * 2.83);
+const mmToPx = (mm: number): number => Math.ceil(mm * 2.83);
 
 const calculateDynamicStyle = (pagesNumber: number): [number, number] => {
-	const fluffPages = 6; // pages that does not contain story content like blank pages, title page, etc.
+	const fluffPages = 8; // pages that does not contain story content like blank pages, title page, etc.
 	const n = pagesNumber * 2 + fluffPages;
+	console.log("PAGES", pagesNumber, n);
 
 	const baseFullWidth = 311.15;
 	const baseSpineWidth = 0;
 	const adjustmentFactor = 1.43 / 24;
+	console.log("SIZE", n, adjustmentFactor, adjustmentFactor * n);
 
 	const fullWidth = baseFullWidth + adjustmentFactor * n;
 	const spineWidth = baseSpineWidth + adjustmentFactor * n;
@@ -119,9 +121,13 @@ const CoverAmazonPDF = ({ storyData }: CoverAmazonPDFProps) => {
 	}
 
 	const [fullWidthInMM] = calculateDynamicStyle(
-		storyData?.scenes?.[0]?.storySegments?.length || 0
+		storyData?.scenes?.reduce(
+			(acc, scene) => acc + (scene.storySegments?.length || 0),
+			0
+		) || 0
 	);
 	const fullWidth = mmToPx(fullWidthInMM);
+	console.log("CoverSIDE", fullWidthInMM, fullWidth);
 
 	const rectangleSize: PageSize = [fullWidth, 666];
 
