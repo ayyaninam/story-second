@@ -6374,6 +6374,11 @@ export interface components {
        */
       imagesDone?: boolean;
       /**
+       * IsPublic
+       * @description Whether the story is public or not.
+       */
+      isPublic?: boolean;
+      /**
        * IsRendering
        * @description Whether the story is rendering or not.
        */
@@ -6489,6 +6494,11 @@ export interface components {
        * @description The url slug of the story.
        */
       slug?: string | null;
+      /**
+       * IsPublic
+       * @description Whether the story is public or not.
+       */
+      isPublic?: boolean;
       /**
        * TopLevelCategory
        * @description The top level category of the story

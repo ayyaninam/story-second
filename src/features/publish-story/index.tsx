@@ -11,6 +11,8 @@ import {
 	Share2,
 	Video,
 	Heart,
+	Eye,
+	EyeOff,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { ModeToggle } from "../edit-story/components/mode-toggle";
@@ -307,6 +309,34 @@ export default function PublishedStory({
 		if (progress >= 99) logEvent("video_watched_100", 100); // it's 99 instead of 100 because "progress" might reach until 99.90 but not exactly 100.0
 	};
 
+	const visibility = Webstory.data?.isPublic ? "public" : "private";
+
+	const handleToggleVisibility = async () => {
+		if (!Webstory?.data?.id) {
+			return;
+		}
+
+		const newVisibility = visibility === "public" ? "private" : "public";
+
+		try {
+			await api.webstory.updateStoryPrivacy({
+				id: Webstory.data.id,
+				isPublic: newVisibility === "public",
+			});
+
+			if (newVisibility === "public") {
+				toast.success("Your video is now public");
+			} else {
+				toast.success("Your video is now private");
+			}
+
+			await Webstory.refetch();
+		} catch (error) {
+			console.log(error);
+			toast.error("Failed to update video privacy");
+		}
+	};
+
 	const numVideoSegmentsReady = Webstory.data?.scenes
 		?.flatMap((el) => el.videoSegments)
 		.filter((el) => (el?.videoKey?.length ?? 0) > 0).length;
@@ -543,6 +573,27 @@ export default function PublishedStory({
 											/>
 											{storyLikes}
 										</Button>
+
+										{Webstory.data?.canEdit &&
+											Webstory.data?.storyType !== 2 && (
+												<Button
+													className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+													variant="outline"
+													onClick={() => handleToggleVisibility()}
+												>
+													{visibility === "public" ? (
+														<>
+															<Eye className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+															Public
+														</>
+													) : (
+														<>
+															<EyeOff className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+															Private
+														</>
+													)}
+												</Button>
+											)}
 
 										<Button
 											onClick={() => setOpenShareVideoModal(true)}
