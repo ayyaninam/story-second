@@ -11,6 +11,8 @@ import {
 	Share2,
 	Video,
 	Heart,
+	Eye,
+	EyeOff,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { ModeToggle } from "../edit-story/components/mode-toggle";
@@ -173,10 +175,20 @@ export default function PublishedStory({
 				return;
 			}
 
-			await RenderVideo.mutateAsync({
-				id: storyData.id!,
-			});
-			toast.success("Video is being rendered. Please check again in 2 minutes");
+			try {
+				await RenderVideo.mutateAsync({
+					id: storyData.id!,
+				});
+				toast.success(
+					"Video is being rendered. Please check again in 2 minutes"
+				);
+			} catch (error: any) {
+				if (error instanceof HTTPError) {
+					const backendErrorMessage: string = (await error.response.json())
+						?.message;
+					toast.error(`Failed to render video: ${backendErrorMessage}`);
+				}
+			}
 
 			// here is code to refetch the webstory data to get the new isRendering value(true) without reloading page
 			// i tried to use it but it makes flicker the player when using it...
@@ -298,6 +310,34 @@ export default function PublishedStory({
 		if (progress >= 99) logEvent("video_watched_100", 100); // it's 99 instead of 100 because "progress" might reach until 99.90 but not exactly 100.0
 	};
 
+	const visibility = Webstory.data?.isPublic ? "public" : "private";
+
+	const handleToggleVisibility = async () => {
+		if (!Webstory?.data?.id) {
+			return;
+		}
+
+		const newVisibility = visibility === "public" ? "private" : "public";
+
+		try {
+			await api.webstory.updateStoryPrivacy({
+				id: Webstory.data.id,
+				isPublic: newVisibility === "public",
+			});
+
+			if (newVisibility === "public") {
+				toast.success("Your video is now public");
+			} else {
+				toast.success("Your video is now private");
+			}
+
+			await Webstory.refetch();
+		} catch (error) {
+			console.log(error);
+			toast.error("Failed to update video privacy");
+		}
+	};
+
 	const numVideoSegmentsReady = Webstory.data?.scenes
 		?.flatMap((el) => el.videoSegments)
 		.filter((el) => (el?.videoKey?.length ?? 0) > 0).length;
@@ -308,6 +348,7 @@ export default function PublishedStory({
 	return (
 		<div className="flex bg-reverse">
 			<div className="w-full k xl:h-[calc(100vh-20px)] lg:w-[calc(100%-306px)]">
+				{" "}
 				{/* Navbar */}
 				<div className="flex justify-between p-4">
 					<div
@@ -384,10 +425,7 @@ export default function PublishedStory({
 						)}
 					</div>
 				</div>
-
-				<div
-					className={`flex bg-reverse  p-2 gap-x-1.5`}
-				>
+				<div className={`flex bg-reverse p-2 gap-x-1.5`}>
 					<div className="relative w-full lg:px-20 pb-10 items-center">
 						<div className="flex flex-col md:flex-row items-center justify-center h-full">
 							<div
@@ -540,6 +578,27 @@ export default function PublishedStory({
 												{storyLikes}
 											</Button>
 
+											{Webstory.data?.canEdit &&
+												Webstory.data?.storyType !== 2 && (
+													<Button
+														className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
+														variant="outline"
+														onClick={() => handleToggleVisibility()}
+													>
+														{visibility === "public" ? (
+															<>
+																<Eye className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+																Public
+															</>
+														) : (
+															<>
+																<EyeOff className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+																Private
+															</>
+														)}
+													</Button>
+												)}
+
 											<Button
 												onClick={() => setOpenShareVideoModal(true)}
 												className="p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md md:p-3"
@@ -551,7 +610,8 @@ export default function PublishedStory({
 											{(numVideoSegmentsReady ?? 0) <
 												(numTotalVideoSegments ?? 0) ||
 											!Webstory.data?.storyDone ? null : Webstory.data
-													?.renderedVideoKey ? (
+													?.renderedVideoKey &&
+											  !Webstory.data?.invalidateRender ? (
 												<Button
 													onClick={async () => {
 														eventLogger("download_video_clicked");
@@ -562,7 +622,10 @@ export default function PublishedStory({
 															User?.data?.data?.subscription
 																?.subscriptionPlan !== undefined;
 
-														if (!userHasPaidSubscription) {
+														if (
+															!userHasPaidSubscription &&
+															!User?.data?.data?.isSuperUser
+														) {
 															toast.error(
 																"You need to upgrade to a paid plan to download the video."
 															);
@@ -672,7 +735,7 @@ export default function PublishedStory({
 													<>
 														<span>
 															{Webstory.data.user.name}{" "}
-															{Webstory.data.user?.lastName}
+															{Webstory.data.user?.lastName || ""}
 														</span>
 														<span className="flex text-muted-foreground gap-x-1 items-center text-sm">
 															<>
@@ -738,7 +801,6 @@ export default function PublishedStory({
 			<div className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto">
 				<SuggestedStories id={story.id ?? ""} />
 			</div>
-
 			<ShareStoryDialog
 				open={openShareVideoDialog}
 				setOpen={setOpenShareVideoModal}

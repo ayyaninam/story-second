@@ -50,17 +50,6 @@ const profileSchema = z.object({
 		.max(subDays(new Date(), 1), "Invalid DOB"),
 });
 
-const preferenceSchema = z.object({
-	storyVisibility: z.boolean(),
-	amazonStatus: z.boolean(),
-	tokenPurchase: z.boolean(),
-	tokenUsage: z.boolean(),
-	lowBalance: z.boolean(),
-	storyGenerated: z.boolean(),
-	reportUpdated: z.boolean(),
-	commentUsage: z.boolean(),
-});
-
 type Account = z.infer<typeof profileSchema>;
 
 const AccountsPage = () => {
@@ -112,19 +101,6 @@ const AccountsPage = () => {
 		form.reset(basicDetails);
 	}, [form, basicDetails]);
 
-	const preferenceForm = useForm({
-		resolver: zodResolver(preferenceSchema),
-		defaultValues: {
-			storyVisibility: true,
-			amazonStatus: true,
-			tokenPurchase: false,
-			tokenUsage: false,
-			lowBalance: false,
-			storyGenerated: false,
-			reportUpdated: false,
-			commentUsage: true,
-		},
-	});
 	useEffect(() => {
 		if (!router.isReady) {
 			return;
@@ -209,6 +185,12 @@ const AccountsPage = () => {
 								>
 									My Videos [storybird.ai]
 								</ToggleGroupItem>
+								<ToggleGroupItem
+									value={"preferences"}
+									className="justify-center sm:justify-start text-center sm:text-left w-full"
+								>
+									Preferences
+								</ToggleGroupItem>
 								{/*<ToggleGroupItem*/}
 								{/*	value="preferences"*/}
 								{/*	className="justify-center sm:justify-start text-center sm:text-left w-full"*/}
@@ -250,11 +232,7 @@ const AccountsPage = () => {
 
 									{step === "amazon-status" && <AmazonStatus />}
 
-									{/*{step === "preferences" && (*/}
-									{/*	<>*/}
-									{/*		<PreferencesForm form={preferenceForm} />*/}
-									{/*	</>*/}
-									{/*)}*/}
+									{step === "preferences" && <PreferencesForm />}
 								</div>
 							</div>
 						)}

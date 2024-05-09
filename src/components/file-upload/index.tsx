@@ -27,6 +27,9 @@ export default function Index({
 				await fetch(uploadData.data.preSignedUrl, {
 					method: "PUT",
 					body: file,
+					headers: {
+						"Content-Type": file.type,
+					},
 				});
 				setVideoFileId(uploadData.data.objectKey ?? "");
 			}

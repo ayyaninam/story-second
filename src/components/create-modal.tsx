@@ -43,6 +43,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import api from "@/api";
+import VerifyDialog from "@/features/generate/components/VerifyDialog";
 
 /**
  * Story generation form.
@@ -58,11 +59,6 @@ const GenerateModalContent: React.FC<{
 }> = ({ className = "", fromLanding = false, tiktok = false }) => {
 	const eventLogger = useEventLogger();
 
-	const { data } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
-
 	const [value, setValue] = useState<TabType>(
 		tiktok ? TabType.Trends : TabType.Video
 	);
@@ -71,6 +67,7 @@ const GenerateModalContent: React.FC<{
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
 	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
+	const [openVerificationDialog, setOpenVerificationDialog] = useState(false);
 
 	const [selectedVideoRatio, setSelectedVideoRatio] = useState(
 		videoRatios[0]?.value.toString() || ""
@@ -85,12 +82,20 @@ const GenerateModalContent: React.FC<{
 
 	const [isLoading, setIsLoading] = useState(false);
 	const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
+	console.log(isSubmitDisabled, isLoading, input, videoFileId, fromLanding);
 
 	const { invalidateUser } = useUpdateUser();
 
 	const { userCanUseCredits } = useUserCanUseCredits();
 
-	const { user } = useUser();
+	const { user, isLoading: isUserLoading } = useUser();
+
+	const { data, refetch: refetchUserData } = useQuery({
+		queryKey: [QueryKeys.USER_SIDE_NAV],
+		queryFn: () => api.user.get(),
+		enabled: !!user && !isUserLoading,
+		staleTime: 0,
+	});
 
 	const onSubmit = async () => {
 		localStorage.setItem("prompt", input);
@@ -102,10 +107,16 @@ const GenerateModalContent: React.FC<{
 			}
 			return;
 		}
+		await refetchUserData();
 
-		if (window.location.pathname === "/prompt" && !data?.data?.emailVerified) {
-			window.parent.location.href = "/generate";
-			return;
+		if (!data?.data?.emailVerified) {
+			if (window.location.pathname === "/prompt") {
+				window.parent.location.href = "/generate";
+				return;
+			} else {
+				setOpenVerificationDialog(true);
+				return;
+			}
 		}
 
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
@@ -334,6 +345,11 @@ const GenerateModalContent: React.FC<{
 				</div>
 			</div>
 
+			<VerifyDialog
+				open={openVerificationDialog}
+				setOpen={setOpenVerificationDialog}
+			/>
+
 			<CheckoutDialog
 				variant="credits"
 				allowanceType={AllowanceType.Videos}
@@ -400,10 +416,12 @@ export const submitToBackend = async (
 					break;
 				}
 				default: {
-					console.log(error.response.statusText);
-					toast.error(
-						"Unable to generate your story: " + error.response.statusText
-					);
+					error.response.json().then(data => {
+						const backendErrorMessage = data.error || 'Unknown error occurred';
+						toast.error(`Unable to generate your story: ${backendErrorMessage}`);
+					}).catch(e => {
+						toast.error("An unexpected error occurred while processing your request.");
+					});
 					break;
 				}
 			}

@@ -47,10 +47,12 @@ function FeedPage() {
 		useMemo<FeedPageVideoQueryOptions>(() => {
 			const page = (router.query.page as string) || "1";
 			const sort = (router.query.sort as string) || "desc";
+			const searchTerm = (router.query.searchTerm as string) || "";
 			return {
 				CurrentPage: parseInt(page, 10),
 				topLevelCategory: (router.query.genre as string) || "all",
 				isDescending: sort === "desc",
+				searchTerm,
 			};
 		}, [router.query]),
 		500

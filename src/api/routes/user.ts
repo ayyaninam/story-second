@@ -46,6 +46,14 @@ const user = {
 			})
 			.json<mainSchema["StringApiResponse"]>();
 	},
+	// TODO: add type for data when backend is ready
+	resendEmailVerification: async (): Promise<
+		mainSchema["StringApiResponse"]
+	> => {
+		return await publicProxyApiFetcher
+			.post("proxyApi/User/ResendEmailVerification")
+			.json<mainSchema["StringApiResponse"]>();
+	},
 	deleteAccount: async (): Promise<mainSchema["StringApiResponse"]> => {
 		return await publicProxyApiFetcher
 			.delete("proxyApi/User/DeleteAccount")
@@ -218,10 +226,18 @@ const user = {
 			.json<mainSchema["StringApiResponse"]>();
 	},
 	requestVerification: async () => {
-		const response: mainSchema["StringApiResponse"] = await publicFetcher
-			.post(`proxyApi/User/RequestVerification`)
-			.json();
+		const response: mainSchema["StringApiResponse"] =
+			await publicProxyApiFetcher
+				.post(`proxyApi/User/VerifyEmail`)
+				.json<mainSchema["StringApiResponse"]>();
 		return response?.data;
+	},
+	updatePreferences: async (
+		data: mainSchema["EmailNotificationPreferencesDTO"]
+	) => {
+		return await publicProxyApiFetcher
+			.put("proxyApi/User/Preferences", { json: data })
+			.json<mainSchema["StringApiResponse"]>();
 	},
 };
 

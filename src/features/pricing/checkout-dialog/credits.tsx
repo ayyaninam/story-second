@@ -17,6 +17,7 @@ import { SubscriptionPlan, AllowanceType } from "@/utils/enums";
 import { useStripeSetup, useUser } from "../hooks";
 import CheckoutDialogContent from "./content";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { HTTPError } from "ky";
 
 const getCost = {
 	[SubscriptionPlan.Free]: {
@@ -200,8 +201,12 @@ const CreditsCheckoutDialog = ({
 				}
 			}
 		} catch (e: any) {
-			console.error("Error Paying Credits: ", e.message);
-			toast.error("Error Paying Credits: ", e.message);
+			if (e instanceof HTTPError) {
+				const backendError = (await e.response.json())?.message;
+				console.error("Error Paying Credits: ", e.message);
+				toast.error(`Error Paying Credits: ${backendError}`);
+			}
+			
 		} finally {
 			setSubmitting(false);
 		}

@@ -202,7 +202,6 @@ const video = {
 		id,
 	}: {
 		id: string;
-		accessToken?: string;
 	}): Promise<string | undefined | null> => {
 		const data: mainSchema["StringApiResponse"] = await publicProxyApiFetcher
 			.put(`proxyApi/Video/${id}/RenderVideo`, {
@@ -211,8 +210,9 @@ const video = {
 			.json();
 		const status = data.status;
 		if (status === 204) return null;
-		// console.log(response.data);
-		if (!data.data) return null;
+		if (!data.data) {
+			throw new Error(data.message || "Internal Server Error");
+		}
 		return data?.data;
 	},
 	copyVideo: async ({
