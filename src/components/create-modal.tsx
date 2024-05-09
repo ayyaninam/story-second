@@ -422,7 +422,7 @@ export const submitToBackend = async (
 						?.message;
 					
 					toast.error(
-						"Unable to generate your story: ${backendErrorMessage}");
+						`Unable to generate your story: ${backendErrorMessage}`);
 					break;
 				}
 			}
