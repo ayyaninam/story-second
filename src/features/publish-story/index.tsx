@@ -13,6 +13,8 @@ import {
 	Heart,
 	Eye,
 	EyeOff,
+	Menu,
+	ChevronsLeft,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { ModeToggle } from "../edit-story/components/mode-toggle";
@@ -50,6 +52,7 @@ import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-d
 import isBrowser from "@/utils/isBrowser";
 import ShareStoryDialog from "@/components/share-story-dialog/share-story-dialog";
 import SuggestedStories from "@/components/suggested-stories/suggested-stories";
+import debounce from "@/utils/debounce";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -66,6 +69,8 @@ export default function PublishedStory({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [openShareVideoDialog, setOpenShareVideoModal] = useState(false);
 	const [story, setStory] = useWebstoryContext();
+	const [suggestedOpen, setSuggestedOpen] = useState(true);
+	const [isHovering, setIsHovering] = useState(false);
 
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
@@ -345,9 +350,18 @@ export default function PublishedStory({
 		(el) => el.videoSegments
 	).length;
 
+	const toggleHovering = debounce((value: boolean) => {
+		setIsHovering(value);
+	}, 100);
+
 	return (
-		<div className="flex bg-reverse">
-			<div className="w-full k xl:h-[calc(100vh-20px)] lg:w-[calc(100%-306px)]">
+		<div className="flex bg-reverse w-full">
+			<div
+				className={cn(
+					"w-full k xl:h-[calc(100vh-20px)] relative",
+					suggestedOpen ? "lg:w-[calc(100%-306px)]" : "lg:w-full"
+				)}
+			>
 				{" "}
 				{/* Navbar */}
 				<div className="flex justify-between p-4">
@@ -401,7 +415,7 @@ export default function PublishedStory({
 						</div>
 						<p className="text-sm">{Format.Title(Webstory.data?.storyTitle)}</p>
 					</div>
-					<div className="hidden md:block space-x-2">
+					<div className="hidden md:flex gap-2  space-x-2">
 						{/*<Button*/}
 						{/*	className={`p-2 shadow-sm bg-gradient-to-r from-button-start to-button-end hover:shadow-md`}*/}
 						{/*	onClick={(e) => {*/}
@@ -423,9 +437,21 @@ export default function PublishedStory({
 								<LogOutIcon className="mr-2 h-4 w-4" /> Log Out
 							</Button>
 						)}
+						{!suggestedOpen && (
+							<Button
+								className={`hidden lg:flex h-9 w-10 p-0 rounded-md shadow bg-white hover:shadow-lg fade-in-5 group `}
+								variant="outline"
+								onClick={() => setSuggestedOpen(!suggestedOpen)}
+								onMouseEnter={() => toggleHovering(true)}
+								onMouseLeave={() => toggleHovering(false)}
+							>
+								<ChevronsLeft size={20} className="hidden group-hover:block" />
+								<Menu size={20} className="block group-hover:hidden" />
+							</Button>
+						)}
 					</div>
 				</div>
-				<div className={`flex bg-reverse p-2 gap-x-1.5`}>
+				<div className={`flex h-[calc(100%-78.6px)] bg-reverse p-2 gap-x-1.5`}>
 					<div className="relative w-full lg:px-20 pb-10 items-center">
 						<div className="flex flex-col md:flex-row items-center justify-center h-full">
 							<div
@@ -798,8 +824,17 @@ export default function PublishedStory({
 					</div>
 				</div>
 			</div>
-			<div className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto">
-				<SuggestedStories id={story.id ?? ""} />
+			<div
+				className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto relative"
+				onMouseEnter={() => toggleHovering(true)}
+				onMouseLeave={() => toggleHovering(false)}
+			>
+				<SuggestedStories
+					id={story.id ?? ""}
+					visible={suggestedOpen}
+					setVisible={setSuggestedOpen}
+					hovering={isHovering}
+				/>
 			</div>
 			<ShareStoryDialog
 				open={openShareVideoDialog}

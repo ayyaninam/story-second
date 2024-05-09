@@ -16,6 +16,7 @@ import { useMediaQuery } from "usehooks-ts";
 import StoryPageButtons from "@/features/story/components/story-page-buttons";
 import Link from "next/link";
 import SuggestedStories from "@/components/suggested-stories/suggested-stories";
+import { debounce } from "lodash";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -30,6 +31,8 @@ const StoryBookPage = ({
 	const isMobile = useMediaQuery("(max-width: 768px)");
 	const { genre, id } = router.query;
 
+	const [suggestedOpen, setSuggestedOpen] = useState(true);
+	const [isHovering, setIsHovering] = useState(false);
 	const [showFullDescription, setShowFullDescription] = useState(false);
 
 	const Webstory = useQuery({
@@ -54,14 +57,27 @@ const StoryBookPage = ({
 	if (!story) {
 		return null;
 	}
-
+	const toggleHovering = debounce((value: boolean) => {
+		setIsHovering(value);
+	}, 100);
 	return (
-		<div className="flex bg-reverse">
-			<div className=" min-h-[calc(100vh-75px)] xl:h-[calc(100vh-20px)] w-full lg:w-[calc(100%-306px)]">
+		<div className="flex bg-reverse w-full">
+			<div
+				className={cn(
+					" min-h-[calc(100vh-75px)] xl:h-[calc(100vh-20px)] w-full",
+					suggestedOpen ? "lg:w-[calc(100%-306px)]" : "lg:w-full"
+				)}
+			>
 				{" "}
-				<Navbar WebstoryData={story} />
-				<div className="flex flex-col justify-start xl:justify-center items-center min-h-[calc(100vh-175px)] px-4 py-6 overflow-y-auto">
-					<div className="w-full max-w-[1600px] h-full min-h-[750px] flex flex-col justify-center">
+				<Navbar
+					WebstoryData={story}
+					suggestedOpen={suggestedOpen}
+					setSuggestedOpen={setSuggestedOpen}
+					toggleHovering={toggleHovering}
+					suggestedMenuButton
+				/>
+				<div className="flex bg-reverse flex-col justify-start xl:justify-center items-center h-[calc(100%-175px)] px-4 py-6 overflow-y-auto">
+					<div className="w-full max-w-[1600px] h-full  flex flex-col justify-center">
 						<div className="flex bg-reverse p-2 gap-x-1.5">
 							<div className="relative w-full h-full xl:px-20 pb-10 items-center min-w-fit">
 								<div className="flex flex-col md:flex-row items-center justify-center h-full">
@@ -163,8 +179,18 @@ const StoryBookPage = ({
 					</div>
 				</div>
 			</div>
-			<div className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto">
-				<SuggestedStories id={story.id ?? ""} story />
+			<div
+				className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto relative"
+				onMouseEnter={() => toggleHovering(true)}
+				onMouseLeave={() => toggleHovering(false)}
+			>
+				<SuggestedStories
+					id={story.id ?? ""}
+					story
+					visible={suggestedOpen}
+					setVisible={setSuggestedOpen}
+					hovering={isHovering}
+				/>
 			</div>
 		</div>
 	);
