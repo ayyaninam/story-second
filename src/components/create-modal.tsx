@@ -416,13 +416,12 @@ export const submitToBackend = async (
 					break;
 				}
 				default: {
-					console.log(error.response.statusText);
-					
-					const backendErrorMessage: string = (await error.response.json())
-						?.message;
-					
-					toast.error(
-						`Unable to generate your story: ${backendErrorMessage}`);
+					error.response.json().then(data => {
+						const backendErrorMessage = data.error || 'Unknown error occurred';
+						toast.error(`Unable to generate your story: ${backendErrorMessage}`);
+					}).catch(e => {
+						toast.error("An unexpected error occurred while processing your request.");
+					});
 					break;
 				}
 			}
