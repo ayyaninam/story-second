@@ -13,7 +13,6 @@ export const Verify = () => {
 		queryKey: [QueryKeys.USER],
 		queryFn: () => api.user.get(),
 		retry: false,
-		staleTime: 0,
 	});
 
 	const userIsLoggedId = Boolean(data);
@@ -29,26 +28,26 @@ export const Verify = () => {
 	};
 
 	useEffect(() => {
-		if (isLoading || !userIsLoggedId) return;
 		if (emailWasAlreadyVerified) {
 			redirectToFeed();
-			return;
-		}
-
-		try {
-			api.user.requestVerification().then(
-				() => {
-					setEmailIsVerified(true);
-					redirectToFeed();
-				},
-				() => {
+		} else {
+			if (userIsLoggedId) {
+				try {
+					api.user.requestVerification().then(
+						() => {
+							setEmailIsVerified(true);
+							redirectToFeed();
+						},
+						() => {
+							setError(true);
+						}
+					);
+				} catch (e) {
 					setError(true);
 				}
-			);
-		} catch (e) {
-			setError(true);
+			}
 		}
-	}, [router, emailWasAlreadyVerified, isLoading]);
+	}, [router, emailWasAlreadyVerified]);
 
 	let text = "Verifying email...";
 	if (error) {
@@ -67,3 +66,5 @@ export const Verify = () => {
 		<div className="flex flex-row justify-center items-center mt-8">{text}</div>
 	);
 };
+
+export default Verify;
