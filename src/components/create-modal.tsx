@@ -109,15 +109,15 @@ const GenerateModalContent: React.FC<{
 		}
 		await refetchUserData();
 
-		if (!data?.data?.emailVerified) {
-			if (window.location.pathname === "/prompt") {
-				window.parent.location.href = "/generate";
-				return;
-			} else {
-				setOpenVerificationDialog(true);
-				return;
-			}
-		}
+		// if (!data?.data?.emailVerified) {
+		// 	if (window.location.pathname === "/prompt") {
+		// 		window.parent.location.href = "/generate";
+		// 		return;
+		// 	} else {
+		// 		setOpenVerificationDialog(true);
+		// 		return;
+		// 	}
+		// }
 
 		const outputType = tabs.find((tab) => tab.text.toLowerCase() === value)
 			?.enumValue as StoryOutputTypes;
