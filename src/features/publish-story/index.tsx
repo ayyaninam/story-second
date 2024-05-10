@@ -835,6 +835,7 @@ export default function PublishedStory({
 					visible={suggestedOpen}
 					setVisible={setSuggestedOpen}
 					hovering={isHovering}
+					resolution={story.resolution}
 				/>
 			</div>
 			<ShareStoryDialog

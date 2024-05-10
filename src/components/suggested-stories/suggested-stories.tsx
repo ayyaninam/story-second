@@ -17,6 +17,7 @@ type SuggestedStoriesProps = {
 	visible: boolean;
 	setVisible: (visible: boolean) => void;
 	hovering?: boolean;
+	resolution: number;
 };
 
 export default function SuggestedStories({
@@ -25,17 +26,21 @@ export default function SuggestedStories({
 	visible,
 	hovering,
 	setVisible,
+	resolution: DisplayResolution,
 }: SuggestedStoriesProps) {
-	console.log("SuggestedID:", id);
 	const suggestedStories = useQuery({
-		queryKey: [id, storyType],
+		queryKey: [id, storyType, DisplayResolution],
 		queryFn: () =>
 			(storyType === StoryOutputTypes.Story
 				? api.storybook.getSuggestedStories
 				: api.video.getSuggestedVideos)({
 				id,
 				storyType,
-				searchParams: { PageSize: 10, CurrentPage: 1 },
+				DisplayResolution,
+				searchParams: {
+					PageSize: 10,
+					CurrentPage: 1,
+				},
 			}),
 		staleTime: 0,
 	});

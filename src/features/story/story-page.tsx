@@ -190,6 +190,7 @@ const StoryBookPage = ({
 					visible={suggestedOpen}
 					setVisible={setSuggestedOpen}
 					hovering={isHovering}
+					resolution={story.resolution}
 				/>
 			</div>
 		</div>
