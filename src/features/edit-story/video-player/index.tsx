@@ -31,7 +31,6 @@ import { useRouter } from "next/router";
 import useWebstoryContext from "../providers/WebstoryContext";
 import { cn } from "@/utils";
 import { useMediaQuery } from "usehooks-ts";
-import CustomVideoPlayer from "@/components/custom-video-player/custom-video-player";
 
 const DynamicMain = dynamic(() => import("./Main").then((mod) => mod.Main), {
 	ssr: false,
@@ -370,12 +369,15 @@ const RemotionPlayer = forwardRef<RemotionPlayerHandle, RemotionPlayerProps>(
 			<div ref={containerRef} className="w-full h-full">
 				{isPhone && inputProps.renderedVideoURL ? (
 					<>
-						<CustomVideoPlayer
-							coverImageURL={coverImageURL}
-							inputProps={inputProps}
-							renderPlayPauseButton={renderPlayPauseButton}
-							renderFullscreenButton={renderFullscreenButton}
-						/>
+						<video
+							controls
+							preload="metadata"
+							className="rounded-tl-lg rounded-tr-lg"
+							poster={coverImageURL}
+						>
+							<source src={inputProps.renderedVideoURL} type="video/mp4" />
+							Your browser does not support the video tag.
+						</video>
 					</>
 				) : (
 					<Player
