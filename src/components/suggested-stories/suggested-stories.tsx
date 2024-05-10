@@ -54,7 +54,13 @@ export default function SuggestedStories({
 					variant="outline"
 					onClick={() => setVisible(!visible)}
 				>
-					<ChevronsRight size={20} />
+					<ChevronsRight
+						size={20}
+						className={cn(
+							"transition-all duration-75 ",
+							!visible && "rotate-180"
+						)}
+					/>
 				</Button>
 				<div className="flex gap-2 items-center">
 					{/* <div className="h-10 w-10 rounded-md shadow bg-white" /> */}
@@ -71,29 +77,41 @@ export default function SuggestedStories({
 					/* Show skeleton loader if data is not loaded */
 					suggestedStories.isLoading
 						? Array.from({ length: 4 }).map((_, index) => (
-								<Skeleton key={index} className="rounded-lg w-full h-[150px]" />
+								<div key={index}>
+									<Skeleton className="rounded-lg w-full h-[150px]" />
+									<Skeleton className="rounded-lg w-full h-6 mt-1" />
+								</div>
 							))
 						: null
 				}
 				{suggestedStories?.data?.data?.map((story, index) => (
-					<Link
-						href={Routes.ViewStory(
-							story.storyType,
-							story.topLevelCategory?.replace(/ /g, "-").toLowerCase() || "all",
-							story.slug as string
-						)}
-						key={index}
-						className={cn(
-							"rounded-lg overflow-hidden",
-							story?.id === id &&
-								"outline-accent-600 border border-white outline outline-1"
-						)}
-					>
-						<Img
-							src={Format.GetImageUrl(story?.coverImage ?? "")}
-							alt={story?.storyTitle ?? "Story"}
-						/>
-					</Link>
+					<div key={index}>
+						<Link
+							href={Routes.ViewStory(
+								story.storyType,
+								story.topLevelCategory?.replace(/ /g, "-").toLowerCase() ||
+									"all",
+								story.slug as string
+							)}
+							className={cn(
+								"rounded-lg overflow-hidden",
+								story?.id === id &&
+									"outline-accent-600 border border-white outline outline-1"
+							)}
+						>
+							<Img
+								src={Format.GetImageUrl(story?.coverImage ?? "")}
+								alt={story?.storyTitle ?? "Story"}
+							/>
+						</Link>
+						<span
+							className={
+								"line-clamp-1 overflow-hidden text-ellipsis font-semibold my-1"
+							}
+						>
+							{story.storyTitle}
+						</span>
+					</div>
 				))}
 			</div>
 		</div>
