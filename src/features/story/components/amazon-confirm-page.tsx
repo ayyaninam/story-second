@@ -30,12 +30,7 @@ const AmazonConfirmPage = ({ storyData }: { storyData: WebStory }) => {
 		initialData: storyData,
 		enabled: !!genre && !!id,
 	});
-	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
-		queryFn: () => api.user.get(),
-		staleTime: 3000,
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER],
-	});
+	
 	const options = {
 		publish: CreditSpendType.AmazonPublishing,
 		publishPDF: CreditSpendType.AmazonPublishingPDFOnly,

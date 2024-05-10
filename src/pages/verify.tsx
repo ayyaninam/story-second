@@ -3,17 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Routes from "@/routes";
 import api from "@/api";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
 
 export const Verify = () => {
 	const router = useRouter();
 
-	const { data, isLoading } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-		retry: false,
-	});
+	const { data, isUserLoading: isLoading } = useAuth();
 
 	const userIsLoggedId = Boolean(data);
 

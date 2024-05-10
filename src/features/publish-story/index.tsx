@@ -49,6 +49,7 @@ import DeleteVideoButton from "@/features/publish-story/delete-video-button";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import isBrowser from "@/utils/isBrowser";
 import ShareStoryDialog from "@/components/share-story-dialog/share-story-dialog";
+import { useAuth } from "../auth-prompt/providers/AuthContext";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -102,12 +103,7 @@ export default function PublishedStory({
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.INTERACTIONS, router.asPath],
 	});
-	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
-		queryFn: () => api.user.get(),
-		staleTime: 3000,
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER],
-	});
+	const User = useAuth();
 
 	const LikeVideo = useMutation({ mutationFn: api.library.likeVideo });
 

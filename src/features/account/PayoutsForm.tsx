@@ -8,6 +8,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import api from "@/api";
 import CreatePayoutsAccountModal from "@/features/account/components/create-payouts-account-modal";
+import { useAuth } from "../auth-prompt/providers/AuthContext";
 
 export enum checkStripeAccountEnum {
 	DoesNotExist,
@@ -29,10 +30,7 @@ const Payouts = () => {
 	const router = useRouter();
 	const { success } = router.query;
 
-	const { data: user, isPending } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
+	const { data: user } = useAuth();
 	const { data: bookRevenues, isLoading } = useQuery({
 		queryKey: [QueryKeys.BOOK_REVENUE, qParams],
 		queryFn: () => {
