@@ -3,11 +3,7 @@ import { mainSchema } from "@/api/schema";
 import Format from "@/utils/format";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import DeleteAccountDialog from "@/features/account/components/delete-user-account";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
-import api from "@/api";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
 
 const heroSectionContainer: CSSProperties = {
 	borderRadius: "var(--radius-3xl, 24px)",
@@ -22,13 +18,7 @@ function UserPageHeroSection({
 	userData: mainSchema["OtherUserInfoDTO"];
 }) {
 	const [dialogOpen, setDialogOpen] = React.useState(false);
-	const { user, isLoading } = useUser();
-
-	const { data } = useQuery({
-		queryKey: [QueryKeys.USER_SIDE_NAV],
-		queryFn: () => api.user.get(),
-		enabled: !!user && !isLoading,
-	});
+	const { user, isUserLoading: isLoading } = useAuth();
 
 	return (
 		<div className="w-full flex items-center justify-center gap-2 pb-6">

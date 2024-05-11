@@ -1,17 +1,12 @@
 import toast from "react-hot-toast";
 // import useUpdateUser from "@/hooks/useUpdateUser";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
 
-import api from "@/api";
 import { SubscriptionPlan } from "@/utils/enums";
 import useUpdateUser from "@/hooks/useUpdateUser";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
 
 export const useUserCanUseCredits = () => {
-	const { data } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
+	const { data } = useAuth();
 
 	const subscription = data?.data?.subscription;
 	const { invalidateUser } = useUpdateUser();

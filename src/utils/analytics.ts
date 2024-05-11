@@ -1,10 +1,7 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { event } from "nextjs-google-analytics";
 import { env } from "@/env.mjs";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
-import api from "@/api";
 import { SubscriptionConstants } from "@/constants/subscription-constants";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
 
 export type AnalyticsEvent =
 	| "create_story"
@@ -51,12 +48,7 @@ export type AnalyticsEvent =
 	| "video_watched_100";
 
 const useEventLogger = () => {
-	const { user } = useUser();
-
-	const { data } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
+	const { user, data } = useAuth();
 
 	const registrationStatus = user ? "registered" : "unregistered";
 	const userSubscription =

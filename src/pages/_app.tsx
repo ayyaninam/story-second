@@ -5,8 +5,8 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from "@tanstack/react-query";
-import type { AppProps, NextWebVitalsMetric } from "next/app";
-import { UserProvider, useUser } from "@auth0/nextjs-auth0/client";
+import type { AppProps } from "next/app";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "react-hot-toast";
 import { ReactElement, ReactNode, useState } from "react";
@@ -16,7 +16,7 @@ import { DefaultSeo, DefaultSeoProps } from "next-seo";
 import { env } from "@/env.mjs";
 import Script from "next/script";
 import { GoogleAnalytics, event } from "nextjs-google-analytics";
-import useEventLogger from "@/utils/analytics";
+import { AuthProvider } from "@/features/auth-prompt/providers/AuthContext";
 
 const randFont = localFont({
 	variable: "--font-rand",
@@ -228,7 +228,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 						disableTransitionOnChange
 					>
 						<UserProvider>
-							{getLayout(<Component {...pageProps} />)}
+							<AuthProvider>
+								{getLayout(<Component {...pageProps} />)}
+							</AuthProvider>
 						</UserProvider>
 					</ThemeProvider>
 				</main>
