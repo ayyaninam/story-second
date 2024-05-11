@@ -935,13 +935,6 @@ export interface paths {
      */
     get: operations["GetOnePublicStoryByCategoryAndSlug"];
   };
-  "/api/Library/{id}/Suggested": {
-    /**
-     * Get suggested stories
-     * @description Get a list of suggested stories based on the provided story id
-     */
-    get: operations["GetSuggestedStories"];
-  };
   "/api/Library/ActiveContests": {
     /**
      * Get active contests
@@ -7645,36 +7638,6 @@ export interface operations {
     };
   };
   /**
-   * Get suggested stories
-   * @description Get a list of suggested stories based on the provided story id
-   */
-  GetSuggestedStories: {
-    parameters: {
-      query?: {
-        CurrentPage?: number;
-        PageSize?: number;
-        storyType?: components["schemas"]["StoryType"];
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Success */
-      200: {
-        content: {
-          "text/plain": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
-          "application/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
-          "text/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        content: never;
-      };
-    };
-  };
-  /**
    * Get active contests
    * @description Get a list of active contests
    */
@@ -7828,6 +7791,37 @@ export interface operations {
     responses: {
       /** @description Success */
       200: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Get suggested stories
+   * @description Get a list of suggested stories based on the provided story id
+   */
+  GetSuggestedStories: {
+    parameters: {
+      query?: {
+        CurrentPage?: number;
+        PageSize?: number;
+        storyType?: components["schemas"]["StoryType"];
+        displayResolution?: components["schemas"]["DisplayResolution"];
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "text/plain": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
+          "application/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
+          "text/json": components["schemas"]["ReturnVideoStoryDTOListApiResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
         content: never;
       };
     };

@@ -74,7 +74,7 @@ export default function SuggestedStories({
 			!suggestedStoryRef?.current?.isFetchingNextPage &&
 			suggestedStoryRef?.current?.hasNextPage
 		) {
-			suggestedStories.fetchNextPage();
+			suggestedStories.fetchNextPage().then();
 		}
 	};
 	useEffect(() => {
