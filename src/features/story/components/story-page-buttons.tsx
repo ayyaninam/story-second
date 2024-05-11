@@ -1,29 +1,7 @@
 import toast from "react-hot-toast";
 import React, { useState, useEffect } from "react";
-import {
-	Heart,
-	Share2,
-	Facebook,
-	Twitter,
-	Clipboard,
-	FileText,
-	Edit,
-	BookOpen,
-	Video,
-} from "lucide-react";
-import {
-	FacebookShareButton,
-	TwitterShareButton,
-	WhatsappShareButton,
-} from "react-share";
-import {
-	DropdownMenu,
-	DropdownMenuTrigger,
-	DropdownMenuContent,
-	DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+import { Heart, Share2, FileText, Edit, BookOpen, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Whatsapp from "@/components/icons/whatsapp";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { mainSchema } from "@/api/schema";
 import api from "@/api";
@@ -41,6 +19,7 @@ import { AllowanceType } from "@/utils/enums";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import { AmazonPublishLifecycle } from "@/constants/amazon-constants";
 import ShareStoryDialog from "@/components/share-story-dialog/share-story-dialog";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
 
 const StoryPageButtons = ({
 	WebstoryData,
@@ -56,13 +35,7 @@ const StoryPageButtons = ({
 
 	const [dialogOpen, setDialogOpen] = useState(false);
 
-	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
-		queryFn: () => api.user.get(),
-		staleTime: 3000,
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER],
-	});
-
+	const User = useAuth();
 	const Interactions = useQuery<mainSchema["ReturnStoryInteractionDTO"]>({
 		queryFn: () => api.webstory.interactions(WebstoryData?.id as string),
 		staleTime: 3000,

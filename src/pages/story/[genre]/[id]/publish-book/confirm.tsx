@@ -14,8 +14,6 @@ import { NextSeo } from "next-seo";
 import PageLayout from "@/components/layouts/PageLayout";
 import { StoryOutputTypes } from "@/utils/enums";
 import LibraryAccentStyle from "@/features/library/library-accent-style";
-import FeedAccentStyle from "@/features/feed/feed-accent-style";
-import AmazonPublishForm from "@/features/story/components/amazon-publish-form";
 import AmazonConfirmPage from "@/features/story/components/amazon-confirm-page";
 
 export default function PublishBook({
@@ -85,19 +83,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, ctx.resolvedUrl],
 	});
-	if (accessToken) {
-		await queryClient.prefetchQuery({
-			queryFn: async () =>
-				await api.webstory.interactions(storyData?.id as string, accessToken),
-			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-			queryKey: [QueryKeys.INTERACTIONS, ctx.resolvedUrl],
-		});
-		await queryClient.prefetchQuery({
-			queryFn: async () => await api.user.get(),
-			// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-			queryKey: [QueryKeys.USER],
-		});
-	} else {
+	if (!accessToken) {
 		return {
 			redirect: {
 				destination: `/auth/login?returnTo=/story/${genre}/${id}/publish-book`,

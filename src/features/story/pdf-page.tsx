@@ -18,6 +18,7 @@ import Routes from "@/routes";
 import DownloadPDFButton from "@/features/story/components/download-pdf-button";
 import { useUserCanUseCredits } from "@/utils/payment";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
+import { useAuth } from "../auth-prompt/providers/AuthContext";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -51,13 +52,7 @@ const StoryBookDownloadPdfPage = ({
 		enabled: !!genre && !!id,
 	});
 
-	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
-		queryFn: () => api.user.get(),
-		staleTime: 3000,
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER],
-	});
-
+	const User = useAuth();
 	const story = Webstory.data;
 	const ownStory = story?.user?.id === User?.data?.data?.id;
 
@@ -129,7 +124,7 @@ const StoryBookDownloadPdfPage = ({
 
 		toast.success("Your purchase was successful!");
 		await UserPurchase.refetch();
-		await User.refetch();
+		await User.refetchUserData();
 	};
 
 	console.log(UserPurchase.data?.data);

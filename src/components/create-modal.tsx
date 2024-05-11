@@ -39,11 +39,8 @@ import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import useEventLogger from "@/utils/analytics";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import StoryLogo from "../../public/auth-prompt/story-logo";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
-import api from "@/api";
 import VerifyDialog from "@/features/generate/components/VerifyDialog";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
 
 /**
  * Story generation form.
@@ -88,14 +85,7 @@ const GenerateModalContent: React.FC<{
 
 	const { userCanUseCredits } = useUserCanUseCredits();
 
-	const { user, isLoading: isUserLoading } = useUser();
-
-	const { data, refetch: refetchUserData } = useQuery({
-		queryKey: [QueryKeys.USER_SIDE_NAV],
-		queryFn: () => api.user.get(),
-		enabled: !!user && !isUserLoading,
-		staleTime: 0,
-	});
+	const { user, refetchUserData, data } = useAuth();
 
 	const onSubmit = async () => {
 		localStorage.setItem("prompt", input);
@@ -416,12 +406,20 @@ export const submitToBackend = async (
 					break;
 				}
 				default: {
-					error.response.json().then(data => {
-						const backendErrorMessage = data.error || 'Unknown error occurred';
-						toast.error(`Unable to generate your story: ${backendErrorMessage}`);
-					}).catch(e => {
-						toast.error("An unexpected error occurred while processing your request.");
-					});
+					error.response
+						.json()
+						.then((data) => {
+							const backendErrorMessage =
+								data.error || "Unknown error occurred";
+							toast.error(
+								`Unable to generate your story: ${backendErrorMessage}`
+							);
+						})
+						.catch((e) => {
+							toast.error(
+								"An unexpected error occurred while processing your request."
+							);
+						});
 					break;
 				}
 			}
