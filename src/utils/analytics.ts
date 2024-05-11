@@ -57,16 +57,17 @@ const useEventLogger = () => {
 
 	return (action: AnalyticsEvent, variables?: { [key: string]: any }) => {
 		if (action.length >= 40)
-			console.error("Analytics event name too long: ", action);
-		if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT !== "production")
-			console.log("GA:", {
-				action,
-				registrationStatus,
-				subscriptionPlan: userSubscription,
-				videoCreated,
-				...variables,
-			});
-		if (typeof window === "undefined") return;
+			if (typeof window === "undefined")
+				// Enable this for debugging
+				// if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT !== "production")
+				// 	console.log("GA:", {
+				// 		action,
+				// 		registrationStatus,
+				// 		subscriptionPlan: userSubscription,
+				// 		videoCreated,
+				// 		...variables,
+				// 	});
+				return;
 		return event(action, {
 			registrationStatus: registrationStatus,
 			subscriptionPlan: userSubscription,

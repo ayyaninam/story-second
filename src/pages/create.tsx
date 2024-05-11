@@ -121,7 +121,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 						Routes.Landing("Not enough balance to create story")
 					);
 				}
-				console.log("There was an error generating the story: ", e);
 				throw new AuthError(
 					Routes.defaultRedirect,
 					Routes.Landing("There was an error creating the story")
@@ -129,7 +128,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			});
 		if ("error" in story) {
 			toast.error(story?.error as string);
-			console.log("Error creating story: ", story?.error);
 			return {
 				redirect: {
 					destination: Routes.ToSubscriptionPage(story?.error as string),
@@ -137,7 +135,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				},
 			};
 		}
-		console.log("Story created: ", story);
 		const { url } = story;
 
 		const [genre, id] = url.split("/");
@@ -156,7 +153,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		// get storyType using output_type and StoryOutputTypes
 		const storyType = Number(output_type) as StoryOutputTypes;
 
-		console.log("Redirecting to", Routes.ViewStory(storyType, genre, id));
 		return {
 			redirect: {
 				destination: Routes.ViewStory(storyType, genre, id),

@@ -49,7 +49,6 @@ export default function StoryScenes({
 	});
 
 	useEffect(() => {
-		console.log("Webstory.data", Webstory.data);
 		if (Webstory.data) {
 			if (
 				Webstory.data?.scenes
@@ -57,7 +56,6 @@ export default function StoryScenes({
 					?.every((segment) => !!segment?.videoKey) &&
 				Webstory.data?.scenes?.flatMap((el) => el.videoSegments)?.length > 0
 			) {
-				console.log("All video segments are ready");
 				setEnableQuery(false);
 			}
 			setStory(Webstory.data);

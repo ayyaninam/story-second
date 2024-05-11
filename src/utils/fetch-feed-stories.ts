@@ -105,7 +105,5 @@ export async function fetchFeedStories(
 				})
 			)
 		);
-	} catch (error) {
-		console.error("Error fetching data", error);
-	}
+	} catch (error) {}
 }

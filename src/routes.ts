@@ -86,7 +86,6 @@ class Routes {
 			Object.entries(params).map(([key, value]) => [key, value.toString()])
 		);
 		const urlParams = new URLSearchParams(stringified);
-		console.log(urlParams.toString());
 		return urlParams;
 	}
 }

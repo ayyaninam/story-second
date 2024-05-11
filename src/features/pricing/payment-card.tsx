@@ -66,7 +66,6 @@ export default function PaymentCard({
 			setDialogOpen(false);
 			onRemove();
 		} catch (error) {
-			console.error("Failed to remove card:", error);
 			toast.error("Failed to remove card");
 		} finally {
 			setSubmitting(false);

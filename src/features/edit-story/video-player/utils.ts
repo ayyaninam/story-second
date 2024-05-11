@@ -105,7 +105,6 @@ export const webStoryToRemotionInputProps = async (
 			await getVideoMetadata(renderedVideoURL);
 		}
 	} catch (e) {
-		console.error(e);
 		renderedVideoExists = false;
 	}
 

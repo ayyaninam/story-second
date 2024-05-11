@@ -51,8 +51,7 @@ const GenericModal = ({
 											setDialogOpen(false);
 											setSubmitting(false);
 										})
-										.catch((error) => {
-											console.error("Failed to process", error);
+										.catch(() => {
 											toast.error("Failed to process your request");
 											setSubmitting(false);
 										});

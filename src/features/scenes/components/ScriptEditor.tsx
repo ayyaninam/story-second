@@ -145,7 +145,6 @@ export default function ScriptEditor({
 																				}
 
 																				if (e.key === "Enter") {
-																					console.log("Enter key pressed");
 																					e.preventDefault();
 																					handleEnter(
 																						scene,

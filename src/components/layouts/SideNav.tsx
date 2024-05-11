@@ -100,17 +100,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	const router = useRouter();
 	const eventLogger = useEventLogger();
 
-	const { user, data, isUserLoading } = useAuth();
-
-	console.log(
-		user,
-		data,
-		"user",
-		"isLoading",
-		"data",
-		"isPending",
-		"SideNav.tsx"
-	);
+	const { data, isUserLoading } = useAuth();
 
 	const [userName, setUserName] = useState("Story.com");
 	const [subscriptionDetails, setSubscriptionDetails] = useState<

@@ -24,7 +24,6 @@ const UnsubscribeButton = () => {
 			toast.success("Unsubscribed successfully");
 			updateUserDataAfter1Second();
 		} catch (error) {
-			console.error("Failed to unsubscribe:", error);
 			toast.error("Failed to unsubscribe");
 		} finally {
 			setDialogOpen(false);

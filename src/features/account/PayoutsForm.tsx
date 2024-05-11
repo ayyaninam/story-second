@@ -69,17 +69,6 @@ const Payouts = () => {
 			checkStripeAccountEnum.Onboarded &&
 		user?.data?.totalUnclaimedRoyalties! > 0;
 
-	console.log(
-		"stripeaccountstatus",
-		stripeAccountStatus,
-		stripeAccountStatus?.stripeConnectAccountStatus ===
-			checkStripeAccountEnum.DoesNotExist,
-		stripeAccountStatus?.stripeConnectAccountStatus ===
-			checkStripeAccountEnum.OnboardingIncomplete,
-		stripeAccountStatus?.stripeConnectAccountStatus ===
-			checkStripeAccountEnum.Onboarded
-	);
-
 	function renderActionButton() {
 		switch (stripeAccountStatus?.stripeConnectAccountStatus) {
 			case checkStripeAccountEnum.DoesNotExist:

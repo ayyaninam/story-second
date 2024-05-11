@@ -28,7 +28,6 @@ const DeleteAccountDialog = ({
 			await api.user.deleteAccount();
 			await Router.push(Routes.Logout());
 		} catch (error) {
-			console.error("Failed to process", error);
 			toast.error("Failed to process your request");
 		} finally {
 			setSubmitting(false);

@@ -33,7 +33,6 @@ const video = {
 			fetcher = publicProxyApiFetcher;
 			endpoint = endpoint.replace("api/", "proxyApi/");
 		}
-		console.log(endpoint);
 		const data:
 			| mainSchema["ReturnVideoStoryDTOApiResponse"]
 			| mainSchema["ReturnWebStoryDTOApiResponse"] = await fetcher
@@ -65,7 +64,6 @@ const video = {
 				? `api/StoryBook/${topLevelCategory}/${slug}`
 				: `api/Video/${topLevelCategory}/${slug}`;
 
-		console.log("endpoint", endpoint);
 		const data:
 			| mainSchema["ReturnWebStoryDTOApiResponse"]
 			| mainSchema["ReturnVideoStoryDTOApiResponse"] = await fetcher
@@ -73,10 +71,8 @@ const video = {
 				searchParams: { storyType },
 			})
 			.json();
-		console.log("Response from getStoryServer", data);
 
 		if (!data.succeeded) {
-			console.log(data);
 			throw new Error("Story not found");
 		}
 		if (!data.data) {

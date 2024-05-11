@@ -60,11 +60,6 @@ const user = {
 			.json<mainSchema["StringApiResponse"]>();
 	},
 	updateKYC: async (data: FormData): Promise<mainSchema["UserInfoDTO"]> => {
-		console.log(data);
-		console.log(toFormData(data));
-		for (let [key, value] of data.entries()) {
-			console.log(key, value);
-		}
 		const response = await publicProxyApiFetcher
 			.post("proxyApi/User/UpdateKYC", {
 				body: data,
@@ -150,7 +145,6 @@ const user = {
 					searchParams: params,
 				})
 				.json();
-		console.log("DATA:", data);
 		if (!data.data) {
 			throw new Error("Internal Server Error");
 		}
@@ -174,7 +168,6 @@ const user = {
 		const response = await publicProxyApiFetcher
 			.get(`proxyApi/Payment/CheckStripeConnectAccount`)
 			.json<mainSchema["StripeConnectAccountStatusDTOApiResponse"]>();
-		console.log("RESPONSE:", response);
 		if (!response.data) {
 			throw new Error("Internal Server Error");
 		}

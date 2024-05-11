@@ -74,7 +74,6 @@ export const useUserCanUseCredits = () => {
 						icon: "🔒",
 					}
 				);
-				console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 				return { error: "using custom plan", success: false };
 			}
 			if (variant === "video credits") {

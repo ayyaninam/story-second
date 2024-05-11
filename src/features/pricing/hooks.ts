@@ -47,14 +47,12 @@ export const useStripeSetup = () => {
 			const base_url = env.NEXT_PUBLIC_BASE_URL;
 			const { error } = (await confirmSetup(`${base_url}/pricing`)) || {};
 			if (error) {
-				console.error("Confirm Setup failed: ", error);
 				toast.error("Confirm Setup failed");
 				return false;
 			}
 			toast.success("Added card successfully");
 			return true;
 		} catch (e: any) {
-			console.error("Error Adding Card: ", e.message);
 			toast.error("Error Adding Card");
 			return false;
 		}

@@ -59,7 +59,7 @@ const StoryScreen: FC<
 						.then((res) => {
 							setFetchedVideos((prev) => [...prev, url]);
 						})
-						.catch((e) => console.error(e)); // I think the errors are about cors
+						.catch(); // I think the errors are about cors
 				}
 			}
 			for (const seg of Webstory?.scenes?.flatMap((el) => el.videoSegments) ??
@@ -77,7 +77,7 @@ const StoryScreen: FC<
 						.then((res) => {
 							setFetchedAudios((prev) => [...prev, url]);
 						})
-						.catch((e) => console.error(e)); // I think the errors are about cors
+						.catch(); // I think the errors are about cors
 				}
 			}
 

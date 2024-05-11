@@ -127,12 +127,6 @@ const StoryBookDownloadPdfPage = ({
 		await User.refetchUserData();
 	};
 
-	console.log(UserPurchase.data?.data);
-	console.log(
-		"Purchased?" + UserPurchase.data?.data?.[itemType] ||
-			UserPurchase.data?.data?.[legacyItemType]
-	);
-
 	if (!story) {
 		return null;
 	}

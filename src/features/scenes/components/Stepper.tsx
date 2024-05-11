@@ -79,7 +79,6 @@ export default function Stepper({
 					setCurrentHover(step);
 				}}
 				onClick={() => {
-					console.log("saveEdits");
 					saveEdits();
 					router.push(
 						Routes.EditScript(
@@ -107,7 +106,6 @@ export default function Stepper({
 					setCurrentHover(step);
 				}}
 				onClick={() => {
-					console.log("saveEdits");
 					saveEdits();
 					router.push(
 						Routes.EditStoryboard(

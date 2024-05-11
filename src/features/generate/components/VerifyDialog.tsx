@@ -21,8 +21,7 @@ const VerifyDialog = ({ open, setOpen }: VerifyDialogProps) => {
 	const resendVerificationEmail = async () => {
 		setLoading(true);
 		try {
-			const response = await api.user.resendEmailVerification();
-			console.log(response);
+			await api.user.resendEmailVerification();
 			toast.success("Verification email sent!");
 		} catch (error: any) {
 			toast.error(error.message);

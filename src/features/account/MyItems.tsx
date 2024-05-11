@@ -29,7 +29,6 @@ const MyItems = ({ legacy }: { legacy?: boolean }) => {
 		queryKey: [queryKey, currentPage, legacy],
 		initialData: queryClient.getQueryData([queryKey]),
 	});
-	console.log(userItemsList);
 
 	if (isLoading) return <div>Loading...</div>;
 	return (

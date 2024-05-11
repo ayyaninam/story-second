@@ -30,7 +30,6 @@ const DeleteStorybookButton = ({ storyId }: DeleteStorybookButtonProps) => {
 			toast.success("Storybook deleted successfully");
 			await router.replace(`${Routes.Library()}?deleteSucceeded=true`);
 		} catch (error) {
-			console.error("Failed to delete: ", error);
 			toast.error("Failed to delete");
 		} finally {
 			setDialogOpen(false);

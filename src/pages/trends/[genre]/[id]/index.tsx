@@ -71,7 +71,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 			notFound: true,
 		};
 	}
-	console.log("PARAMSSS", ctx.params);
 
 	const queryClient = new QueryClient();
 	try {

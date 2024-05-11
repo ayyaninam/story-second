@@ -238,8 +238,6 @@ function ImageRegenerationPopup({
 			variant: "credits",
 		});
 
-		console.log(error);
-
 		if (error) {
 			if (error === "using custom plan" || error === "not paid subscription") {
 				setOpenSubscriptionDialog(true);
@@ -279,7 +277,6 @@ function ImageRegenerationPopup({
 		setIsRegeneratingImages(true);
 
 		try {
-			console.log(segment.settings);
 			const regeneratedImages = await api.video.regenerateImage({
 				// @ts-ignore
 				image_style: segmentSettings?.style ?? StoryImageStyles.Realistic,

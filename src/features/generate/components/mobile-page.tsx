@@ -98,7 +98,6 @@ export default function MobileGeneratePage({
 			});
 
 			if (error) {
-				console.log(error);
 				if (error === "user not logged in") {
 					if (window.location.pathname === "/prompt") {
 						window.parent.location.href = "/auth/login?returnTo=/generate";
@@ -128,7 +127,6 @@ export default function MobileGeneratePage({
 			});
 
 			if (error) {
-				console.log(error);
 				if (error === "user not logged in") {
 					if (window.location.pathname === "/prompt") {
 						window.parent.location.href = "/auth/login?returnTo=/generate";

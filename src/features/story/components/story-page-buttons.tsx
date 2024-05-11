@@ -149,13 +149,11 @@ const StoryPageButtons = ({
 					}
 					default: {
 						toast.error("Unable to copy video. Please try again.");
-						console.error(error.message, error.response.status);
 					}
 				}
 			} else {
 				// Handle non-HTTPError errors
 				toast.error("An unexpected error occurred. Please try again.");
-				console.error(error);
 			}
 		}
 	};

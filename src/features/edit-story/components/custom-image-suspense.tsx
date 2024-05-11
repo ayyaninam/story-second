@@ -115,7 +115,6 @@ export default function CustomImageSuspense({
 
 			let curr: number = newQueue[Math.floor(Math.random() * newQueue.length)]!;
 			let { i, j } = ridx(curr);
-			// console.log(curr);
 			newQueue = newQueue.filter((x) => x !== curr);
 
 			if (i < 0 || i >= height || j < 0 || j >= width) {

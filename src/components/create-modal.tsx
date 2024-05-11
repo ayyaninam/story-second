@@ -79,7 +79,6 @@ const GenerateModalContent: React.FC<{
 
 	const [isLoading, setIsLoading] = useState(false);
 	const isSubmitDisabled = isLoading || (!input.trim() && !videoFileId);
-	console.log(isSubmitDisabled, isLoading, input, videoFileId, fromLanding);
 
 	const { invalidateUser } = useUpdateUser();
 
@@ -120,7 +119,6 @@ const GenerateModalContent: React.FC<{
 			});
 
 			if (error) {
-				console.log("error", error);
 				if (error === "user not logged in") {
 					if (window.location.pathname === "/prompt") {
 						window.parent.location.href = "/auth/login?returnTo=/generate";
@@ -150,7 +148,6 @@ const GenerateModalContent: React.FC<{
 			});
 
 			if (error) {
-				console.log("error", error);
 				if (error === "user not logged in") {
 					if (window.location.pathname === "/prompt") {
 						window.parent.location.href = "/auth/login?returnTo=/generate";
@@ -378,13 +375,11 @@ export const submitToBackend = async (
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
 	const data = JSON.stringify(params);
-	console.log(data);
 	try {
 		localStorage.setItem("prompt", params.prompt || "");
 		const json: { storyPath: string } = await publicProxyApiFetcher
 			.post("api/story/create", { body: data })
 			.json();
-		console.log(json);
 		invalidateUser();
 
 		if (json.storyPath == null) {

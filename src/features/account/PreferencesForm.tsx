@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
 import { useAuth } from "../auth-prompt/providers/AuthContext";
+import api from "@/api";
 
 const PreferenceInput = ({
 	name,
@@ -105,7 +106,6 @@ export const PreferencesForm = () => {
 			});
 			toast.success("Preferences updated successfully");
 		} catch (e) {
-			console.error(e);
 			toast.error("Failed to update preferences");
 		}
 	}, []);

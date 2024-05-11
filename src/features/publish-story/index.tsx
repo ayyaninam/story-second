@@ -274,13 +274,11 @@ export default function PublishedStory({
 					}
 					default: {
 						toast.error("Unable to copy video. Please try again.");
-						console.error(error.message, error.response.status);
 					}
 				}
 			} else {
 				// Handle non-HTTPError errors
 				toast.error("An unexpected error occurred. Please try again.");
-				console.error(error);
 			}
 		}
 	};
@@ -334,7 +332,6 @@ export default function PublishedStory({
 
 			await Webstory.refetch();
 		} catch (error) {
-			console.log(error);
 			toast.error("Failed to update video privacy");
 		}
 	};

@@ -15,7 +15,6 @@ export const getServerSideSessionWithRedirect = async (
 ) => {
 	try {
 		const session = await getSession(req, res);
-		// console.log(session);
 		if (!session?.accessToken)
 			throw new AuthError(
 				"No access token found",
