@@ -25,8 +25,8 @@ const storybook = {
 		id: string;
 		storyType: StoryOutputTypes;
 		searchParams: PaginationParams;
-	}): Promise<mainSchema["ReturnVideoStoryDTOListApiResponse"]> => {
-		const data: mainSchema["ReturnVideoStoryDTOListApiResponse"] =
+	}): Promise<mainSchema["ReturnVideoStoryDTOPagedListApiResponse"]> => {
+		const data: mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] =
 			await publicFetcher
 				.get(`api/StoryBook/${id}/Suggested`, {
 					searchParams: { storyType: storyType, ...searchParams },

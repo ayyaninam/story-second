@@ -249,8 +249,8 @@ const video = {
 		storyType: StoryOutputTypes;
 		searchParams: PaginationParams;
 		DisplayResolution: number;
-	}): Promise<mainSchema["ReturnVideoStoryDTOListApiResponse"]> => {
-		const data: mainSchema["ReturnVideoStoryDTOListApiResponse"] =
+	}): Promise<mainSchema["ReturnVideoStoryDTOPagedListApiResponse"]> => {
+		const data: mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] =
 			await publicFetcher
 				.get(`api/Video/${id}/Suggested`, {
 					searchParams: {
