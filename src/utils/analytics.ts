@@ -2,6 +2,7 @@ import { event } from "nextjs-google-analytics";
 import { env } from "@/env.mjs";
 import { SubscriptionConstants } from "@/constants/subscription-constants";
 import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
+import isBrowser from "./isBrowser";
 
 export type AnalyticsEvent =
 	| "create_story"
@@ -57,23 +58,15 @@ const useEventLogger = () => {
 
 	return (action: AnalyticsEvent, variables?: { [key: string]: any }) => {
 		if (action.length >= 40)
-			if (typeof window === "undefined")
-				// Enable this for debugging
-				// if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT !== "production")
-				// 	console.log("GA:", {
-				// 		action,
-				// 		registrationStatus,
-				// 		subscriptionPlan: userSubscription,
-				// 		videoCreated,
-				// 		...variables,
-				// 	});
-				return;
-		return event(action, {
-			registrationStatus: registrationStatus,
-			subscriptionPlan: userSubscription,
-			videoCreated: videoCreated,
-			...variables,
-		});
+			return (
+				isBrowser &&
+				event(action, {
+					registrationStatus: registrationStatus,
+					subscriptionPlan: userSubscription,
+					videoCreated: videoCreated,
+					...variables,
+				})
+			);
 	};
 };
 
