@@ -25,18 +25,13 @@ import {
 	VideoRatioSelect,
 } from "@/features/generate/components/selection-constants";
 import FileUpload from "@/components/file-upload";
-import Router, { useRouter } from "next/router";
-import toast from "react-hot-toast";
 import { submitToBackend } from "@/components/create-modal";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import { useUserCanUseCredits } from "@/utils/payment";
 import CheckoutDialog from "@/features/pricing/checkout-dialog";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
-import api from "@/api";
 import VerifyDialog from "@/features/generate/components/VerifyDialog";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
 
 export default function MobileGeneratePage({
 	fromLanding = false,
@@ -67,14 +62,8 @@ export default function MobileGeneratePage({
 	const [openCreditsDialog, setOpenCreditsDialog] = useState(false);
 	const [openStoryBooksDialog, setOpenStoryBooksDialog] = useState(false);
 	const [openSubscriptionDialog, setOpenSubscriptionDialog] = useState(false);
-	const { user, isLoading: isUserLoading } = useUser();
 
-	const { data, refetch: refetchUserData } = useQuery({
-		queryKey: [QueryKeys.USER_SIDE_NAV],
-		queryFn: () => api.user.get(),
-		enabled: !!user && !isUserLoading,
-		staleTime: 0,
-	});
+	const { user, refetchUserData, data } = useAuth();
 
 	const onSubmit = async () => {
 		localStorage.setItem("prompt", input);
@@ -109,7 +98,6 @@ export default function MobileGeneratePage({
 			});
 
 			if (error) {
-				console.log(error);
 				if (error === "user not logged in") {
 					if (window.location.pathname === "/prompt") {
 						window.parent.location.href = "/auth/login?returnTo=/generate";
@@ -139,7 +127,6 @@ export default function MobileGeneratePage({
 			});
 
 			if (error) {
-				console.log(error);
 				if (error === "user not logged in") {
 					if (window.location.pathname === "/prompt") {
 						window.parent.location.href = "/auth/login?returnTo=/generate";

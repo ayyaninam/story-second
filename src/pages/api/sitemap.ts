@@ -12,8 +12,6 @@ async function fetchFromApi(endpoint: string) {
 		// limit to 30k responses
 		return data.slice(0, 15000);
 	} catch (error) {
-		console.error(env.NEXT_PUBLIC_API_URL + endpoint);
-		console.error(`Error fetching data from API: ${error}`);
 		return [];
 	}
 }
@@ -72,7 +70,6 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse) {
 		res.write("</urlset>");
 		res.end();
 	} catch (error) {
-		console.error(`Error generating sitemap: ${error}`);
 		res.status(500).end();
 	}
 }

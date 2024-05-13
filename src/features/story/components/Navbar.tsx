@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import Format from "@/utils/format";
 import { mainSchema } from "@/api/schema";
-import { Plus } from "lucide-react";
+import { ChevronsLeft, Menu, Plus } from "lucide-react";
 
 import GenerateIcon from "@/components/icons/dashboard/generate-icon";
 import Router, { useRouter } from "next/router";
@@ -11,8 +11,16 @@ import useEventLogger from "@/utils/analytics";
 
 export default function Navbar({
 	WebstoryData,
+	suggestedOpen,
+	setSuggestedOpen,
+	toggleHovering,
+	suggestedMenuButton,
 }: {
 	WebstoryData?: mainSchema["ReturnWebStoryDTO"] | null;
+	suggestedOpen?: boolean;
+	setSuggestedOpen?: (value: boolean) => void;
+	toggleHovering?: (value: boolean) => void;
+	suggestedMenuButton?: boolean;
 }) {
 	const router = useRouter();
 	const eventLogger = useEventLogger();
@@ -68,6 +76,18 @@ export default function Navbar({
 				>
 					<Plus className="mr-2 h-4 w-4" /> Create New
 				</Button>
+				{!suggestedOpen && suggestedMenuButton && (
+					<Button
+						className={`hidden lg:flex h-9 w-10 p-0 rounded-md shadow bg-white hover:shadow-lg fade-in-5 group `}
+						variant="outline"
+						onClick={() => setSuggestedOpen?.(!suggestedOpen)}
+						onMouseEnter={() => toggleHovering?.(true)}
+						onMouseLeave={() => toggleHovering?.(false)}
+					>
+						<ChevronsLeft size={20} className="hidden group-hover:block" />
+						<Menu size={20} className="block group-hover:hidden" />
+					</Button>
+				)}
 			</div>
 		</div>
 	);

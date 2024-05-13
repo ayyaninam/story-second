@@ -76,11 +76,6 @@ const UpdateKYCForm = () => {
 			formData.append("country", data.country);
 			formData.append("photoId", image);
 
-			console.log("formData", formData);
-			for (let [key, value] of formData.entries()) {
-				console.log(key, value);
-			}
-
 			await updateKYC(formData);
 			toast.success("KYC details submitted successfully");
 			router.push("/account?step=payouts");

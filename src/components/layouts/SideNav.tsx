@@ -11,16 +11,14 @@ import Format from "@/utils/format";
 import StoryLogoFullWhite from "@/components/brand-logos/primary-white";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
-import api from "@/api";
 import { useEffect, useState } from "react";
 import { SubscriptionConstants } from "@/constants/subscription-constants";
 import { mainSchema } from "@/api/schema";
 import { calculateDaysBetweenDates } from "@/utils/daytime";
 import useEventLogger from "@/utils/analytics";
 import { useRouter } from "next/router";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
+import { useSearchParams } from "next/navigation";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
@@ -101,33 +99,19 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	};
 
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const eventLogger = useEventLogger();
-
-	const { user, isLoading } = useUser();
-
-	const { data, isPending } = useQuery({
-		queryKey: [QueryKeys.USER_SIDE_NAV],
-		queryFn: () => api.user.get(),
-		enabled: !!user && !isLoading,
-		staleTime: 0,
-	});
-
-	console.log(
-		user,
-		!isLoading,
-		data,
-		isPending,
-		"user",
-		"isLoading",
-		"data",
-		"isPending",
-		"SideNav.tsx"
+	const openUpgradeSubscriptionQueryParam = searchParams?.get(
+		"openUpgradeSubscription"
 	);
+
+	const { data, isUserLoading } = useAuth();
 
 	const [userName, setUserName] = useState("Story.com");
 	const [subscriptionDetails, setSubscriptionDetails] = useState<
 		mainSchema["UserSubscriptionDTO"] | null
 	>(null);
+
 	useEffect(() => {
 		setUserName(
 			data?.data?.name?.split(" ")[0] +
@@ -139,11 +123,21 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 		setSubscriptionDetails(data?.data?.subscription || null);
 	}, [data]);
 
+	const [openUpgradeSubscription, setOpenUpgradeSubscription] = useState(false);
+
+	useEffect(() => {
+		if (openUpgradeSubscriptionQueryParam) {
+			setTimeout(() => {
+				setOpenUpgradeSubscription(true);
+			}, 2000);
+		}
+	}, [openUpgradeSubscriptionQueryParam]);
+
 	return (
 		<div className="hidden w-[18rem] lg:flex lg:flex-col lg:justify-between">
 			<div>
 				<div className="ml-3.5 flex mt-5 mb-6 items-center flex-row gap-4 mr-4">
-					{!isPending && data?.data ? (
+					{!isUserLoading && data?.data ? (
 						<>
 							<Avatar className="h-8 w-8 border-[1px] border-gray-200">
 								<AvatarImage
@@ -344,7 +338,10 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 				{/*		/>*/}
 				{/*	</Link>*/}
 				{/*</div>*/}
-				<UpgradeSubscriptionDialog>
+				<UpgradeSubscriptionDialog
+					open={openUpgradeSubscription}
+					setOpen={(open) => setOpenUpgradeSubscription(open)}
+				>
 					<Button
 						variant="outline"
 						className="min-w-full rounded-lg py-1.5 text-white font-normal hover:text-accent-300"

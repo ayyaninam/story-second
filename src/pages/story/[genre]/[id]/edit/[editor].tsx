@@ -55,7 +55,6 @@ const EditorPage = ({
 	);
 
 	useEffect(() => {
-		console.log("updated");
 		dispatch({
 			type: "reset_text",
 			draft: WebstoryToStoryDraft(Webstory.data!),
@@ -63,10 +62,6 @@ const EditorPage = ({
 	}, [getAllTextsFromVideoStory(Webstory.data!)]);
 
 	useEffect(() => {
-		console.log(
-			"updated123",
-			getEverythingExceptTextFromVideoStory(Webstory.data!)
-		);
 		dispatch({
 			type: "reset_all_except_text",
 			draft: WebstoryToStoryDraft(Webstory.data!),

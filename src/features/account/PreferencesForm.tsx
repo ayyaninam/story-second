@@ -6,11 +6,9 @@ import { useCallback, useEffect } from "react";
 import { FormProvider, UseFormReturn, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useQuery } from "@tanstack/react-query";
-import { mainSchema } from "@/api/schema";
-import api from "@/api";
-import { QueryKeys } from "@/lib/queryKeys";
 import toast from "react-hot-toast";
+import { useAuth } from "../auth-prompt/providers/AuthContext";
+import api from "@/api";
 
 const PreferenceInput = ({
 	name,
@@ -76,12 +74,7 @@ const preferenceSchema = z.object({
 });
 
 export const PreferencesForm = () => {
-	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
-		queryFn: () => api.user.get(),
-		staleTime: 3000,
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER],
-	});
+	const User = useAuth();
 
 	const form = useForm<PreferenceFormData>({
 		resolver: zodResolver(preferenceSchema),
@@ -113,7 +106,6 @@ export const PreferencesForm = () => {
 			});
 			toast.success("Preferences updated successfully");
 		} catch (e) {
-			console.error(e);
 			toast.error("Failed to update preferences");
 		}
 	}, []);

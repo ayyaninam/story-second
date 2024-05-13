@@ -181,7 +181,6 @@ const SubscriptionCheckoutDialog = ({
 				const response = await onAddCard();
 				if (!response) {
 					eventLogger("add_card_failed");
-					console.error("Add Card failed");
 					toast.error("Add Card failed");
 					return;
 				}
@@ -194,9 +193,6 @@ const SubscriptionCheckoutDialog = ({
 			});
 			if (!succeeded) {
 				eventLogger(`${name}_subscription_failed`);
-				console.error(
-					`${capitalize(name)} Subscription backend failed, status = ${status}`
-				);
 				toast.error(`${capitalize(name)} Subscription backend failed`);
 				return;
 			}
@@ -222,7 +218,6 @@ const SubscriptionCheckoutDialog = ({
 				toast.dismiss();
 
 				if (error) {
-					console.error("Stripe Error: ", error);
 					toast.error(`Purchase failed: ${error.message}`);
 					return;
 				}
@@ -253,7 +248,6 @@ const SubscriptionCheckoutDialog = ({
 		} catch (e: any) {
 			if (e instanceof HTTPError) {
 				const backendError = (await e.response.json())?.message;
-				console.error("Error Paying Subscription: ", e.message);
 				toast.error(`Error Paying Subscription: ${backendError}`);
 			}
 		} finally {

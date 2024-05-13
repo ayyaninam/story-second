@@ -198,7 +198,6 @@ const Footer = ({
 					?.map((el, index) => ({ ...el, sceneId: scene.id }))
 					?.filter((segment) => !segment.imageKey)
 			);
-			console.log(ungeneratedImages, newStory);
 			if (ungeneratedImages && ungeneratedImages?.length > 0) {
 				const Promises = ungeneratedImages?.map(
 					async (el) =>
@@ -211,7 +210,7 @@ const Footer = ({
 							prompt: el?.textContent!,
 						})) ?? Promise.resolve()
 				);
-				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
+				Promise.all(Promises).then();
 				invalidateUser();
 			}
 			router.push(
@@ -308,7 +307,7 @@ const Footer = ({
 						story_type: story.type,
 					});
 				});
-				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
+				Promise.all(Promises).then();
 			}
 
 			router.push(
@@ -343,7 +342,7 @@ const Footer = ({
 						story_type: story.type,
 					});
 				});
-				Promise.all(Promises).then((val) => val.map((el) => console.log(el)));
+				Promise.all(Promises).then();
 			}
 		},
 	});

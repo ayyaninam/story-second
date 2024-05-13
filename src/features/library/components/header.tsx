@@ -20,14 +20,12 @@ import {
 import { MobileSelector } from "@/components/ui/mobile-selector";
 import { Plus, Search } from "lucide-react";
 import Routes from "@/routes";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
-import api from "@/api";
 import { useMediaQuery } from "usehooks-ts";
 import useEventLogger from "@/utils/analytics";
 import { Input } from "@/components/ui/input";
 import { usePathname, useSearchParams } from "next/navigation";
 import debounce from "@/utils/debounce";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -104,12 +102,7 @@ export const LibraryHeader = ({
 	const sortOptions = Object.values(SORTING_OPTIONS);
 	const isMobile = useMediaQuery("(max-width: 768px)");
 
-	const { data, isPending, refetch } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
-
-	console.log(data);
+	const { data } = useAuth();
 
 	const [userName, setUserName] = useState("Story.com");
 	useEffect(() => {

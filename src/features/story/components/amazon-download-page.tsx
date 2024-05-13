@@ -42,8 +42,6 @@ const AmazonDownloadPage = ({ storyData }: { storyData: WebStory }) => {
 		enabled: !!story?.id,
 	});
 
-	console.log(amazonData);
-
 	if (!story || isLoading || !amazonData) {
 		return null;
 	}

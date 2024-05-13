@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import Routes from "@/routes";
 import { useUserCanUseCredits } from "@/utils/payment";
 import UpgradeSubscriptionDialog from "@/features/pricing/upgrade-subscription-dialog";
+import { useAuth } from "../auth-prompt/providers/AuthContext";
 
 const MAX_SUMMARY_LENGTH = 250;
 
@@ -47,12 +48,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 		enabled: !!genre && !!id,
 	});
 
-	const User = useQuery<mainSchema["UserInfoDTOApiResponse"]>({
-		queryFn: () => api.user.get(),
-		staleTime: 3000,
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
-		queryKey: [QueryKeys.USER],
-	});
+	const User = useAuth()
 
 	const story = Webstory.data;
 
@@ -130,7 +126,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory | null }) => {
 			pathname: `/story/${genre}/${id}/publish-book/form`,
 		});
 		await UserPurchase.refetch();
-		await User.refetch();
+		await User.refetchUserData();
 		setSaving(false);
 	};
 

@@ -8,7 +8,6 @@ export const removeJwt = () => {
 };
 
 export const getJwt = () => {
-	console.log("isBrowser", isBrowser);
 	if (isBrowser) return window.localStorage.getItem("jwt") ?? "";
 	throw new Error("Error fetching jwt: fetched browser JWT in the server");
 };

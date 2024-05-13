@@ -150,7 +150,6 @@ const CreditsCheckoutDialog = ({
 				quantity: quantity,
 			});
 			if (!succeeded) {
-				console.error(`Create Credits backend failed, status = ${status}`);
 				toast.error("Create Credits backend failed");
 				return;
 			}
@@ -176,7 +175,6 @@ const CreditsCheckoutDialog = ({
 				toast.dismiss();
 
 				if (error) {
-					console.error("Stripe Error: ", error);
 					toast.error(`Purchase failed: ${error.message}`);
 					return;
 				}
@@ -203,10 +201,8 @@ const CreditsCheckoutDialog = ({
 		} catch (e: any) {
 			if (e instanceof HTTPError) {
 				const backendError = (await e.response.json())?.message;
-				console.error("Error Paying Credits: ", e.message);
 				toast.error(`Error Paying Credits: ${backendError}`);
 			}
-			
 		} finally {
 			setSubmitting(false);
 		}

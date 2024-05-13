@@ -1,10 +1,8 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { event } from "nextjs-google-analytics";
 import { env } from "@/env.mjs";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/queryKeys";
-import api from "@/api";
 import { SubscriptionConstants } from "@/constants/subscription-constants";
+import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
+import isBrowser from "./isBrowser";
 
 export type AnalyticsEvent =
 	| "create_story"
@@ -51,12 +49,7 @@ export type AnalyticsEvent =
 	| "video_watched_100";
 
 const useEventLogger = () => {
-	const { user } = useUser();
-
-	const { data } = useQuery({
-		queryKey: [QueryKeys.USER],
-		queryFn: () => api.user.get(),
-	});
+	const { user, data } = useAuth();
 
 	const registrationStatus = user ? "registered" : "unregistered";
 	const userSubscription =
@@ -65,22 +58,15 @@ const useEventLogger = () => {
 
 	return (action: AnalyticsEvent, variables?: { [key: string]: any }) => {
 		if (action.length >= 40)
-			console.error("Analytics event name too long: ", action);
-		if (env.NEXT_PUBLIC_VERCEL_ENVIRONMENT !== "production")
-			console.log("GA:", {
-				action,
-				registrationStatus,
-				subscriptionPlan: userSubscription,
-				videoCreated,
-				...variables,
-			});
-		if (typeof window === "undefined") return;
-		return event(action, {
-			registrationStatus: registrationStatus,
-			subscriptionPlan: userSubscription,
-			videoCreated: videoCreated,
-			...variables,
-		});
+			return (
+				isBrowser &&
+				event(action, {
+					registrationStatus: registrationStatus,
+					subscriptionPlan: userSubscription,
+					videoCreated: videoCreated,
+					...variables,
+				})
+			);
 	};
 };
 

@@ -157,7 +157,6 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 		if (categoryMetadata?.data) {
 			setValue("categories", categoryMetadata.data);
 		}
-		console.log(formMethods.getValues());
 	}, [categoryMetadata]);
 
 	useEffect(() => {
@@ -188,7 +187,6 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 			};
 			formMethods.reset(formValues);
 		}
-		console.log(formMethods.getValues());
 	}, [metadata]);
 
 	if (isLoading) {
@@ -202,7 +200,6 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 	}
 
 	const onSubmit = async (data: any) => {
-		console.log(data);
 		try {
 			const request = { ...data };
 			request.categories = formMethods.getValues().categories;
@@ -215,16 +212,10 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 			});
 			toast.success("Publishing in progress...");
 			localStorage.setItem(id, JSON.stringify(request));
-			console.log(request);
 			await router.push(`/story/${genre}/${id}/publish-book/confirm`);
 		} catch (error) {
-			console.error(error);
 			toast.error("Failed to publish book");
 		}
-	};
-
-	const onInvalid = (errors: any) => {
-		console.log(errors);
 	};
 
 	return (
@@ -293,7 +284,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 									<div className="relative w-full bg-white p-6 border-t-2 lg:border-t-0 lg:border-l-2">
 										<FormProvider {...formMethods}>
 											<form
-												onSubmit={handleSubmit(onSubmit, onInvalid)}
+												onSubmit={handleSubmit(onSubmit)}
 												className="space-y-4"
 											>
 												<div>

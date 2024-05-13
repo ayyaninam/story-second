@@ -195,7 +195,6 @@ export const GenerateStoryDiff = (
 	mapArray.forEach((el) => {
 		if (previousMap.has(el) && currentMap.has(el)) {
 			const initialSegments = previousMap.get(el)!;
-			console.log({ initialSegments }, currentMap.get(el));
 			const currentSegments = currentMap
 				.get(el)
 				?.filter((seg) => seg.textContent?.trim().length > 0)!;

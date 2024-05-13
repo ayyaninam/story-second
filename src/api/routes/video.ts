@@ -7,7 +7,7 @@ import {
 import { mainSchema, mlSchema } from "../schema";
 import { getJwt } from "@/utils/jwt";
 import { StoryOutputTypes } from "@/utils/enums";
-import { FeedPageVideoQueryOptions, RegenerateVideoSegments } from "@/types";
+import { PaginationParams, RegenerateVideoSegments } from "@/types";
 
 const video = {
 	getUploadUrl: async (params: {
@@ -33,7 +33,6 @@ const video = {
 			fetcher = publicProxyApiFetcher;
 			endpoint = endpoint.replace("api/", "proxyApi/");
 		}
-		console.log(endpoint);
 		const data:
 			| mainSchema["ReturnVideoStoryDTOApiResponse"]
 			| mainSchema["ReturnWebStoryDTOApiResponse"] = await fetcher
@@ -65,7 +64,6 @@ const video = {
 				? `api/StoryBook/${topLevelCategory}/${slug}`
 				: `api/Video/${topLevelCategory}/${slug}`;
 
-		console.log("endpoint", endpoint);
 		const data:
 			| mainSchema["ReturnWebStoryDTOApiResponse"]
 			| mainSchema["ReturnVideoStoryDTOApiResponse"] = await fetcher
@@ -73,10 +71,8 @@ const video = {
 				searchParams: { storyType },
 			})
 			.json();
-		console.log("Response from getStoryServer", data);
 
 		if (!data.succeeded) {
-			console.log(data);
 			throw new Error("Story not found");
 		}
 		if (!data.data) {
@@ -238,6 +234,37 @@ const video = {
 				.json();
 		if (!data.data) return null;
 		return data?.data;
+	},
+	getSuggestedVideos: async ({
+		id,
+		storyType,
+		DisplayResolution,
+		searchParams,
+	}: {
+		id: string;
+		storyType: StoryOutputTypes;
+		searchParams: PaginationParams;
+		DisplayResolution: number;
+	}): Promise<mainSchema["ReturnVideoStoryDTOPagedListApiResponse"]> => {
+		const data: mainSchema["ReturnVideoStoryDTOPagedListApiResponse"] =
+			await publicFetcher
+				.get(`api/Video/${id}/Suggested`, {
+					searchParams: {
+						...searchParams,
+						storyType: storyType,
+						DisplayResolution,
+					},
+				})
+				.json();
+
+		if (!data.succeeded) {
+		}
+
+		if (!data.data) {
+			throw new Error("No data returned");
+		}
+
+		return data;
 	},
 };
 

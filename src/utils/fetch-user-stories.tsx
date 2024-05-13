@@ -86,7 +86,6 @@ export async function fetchUserFeedStories(
 
 	let fetchQueryFn = api.feed.getUserStoriesServer;
 	if (profileName !== "") {
-		console.log("profileName", profileName);
 		fetchQueryFn = (params) =>
 			api.feed.getUserStoriesServer({
 				...params,
@@ -112,7 +111,5 @@ export async function fetchUserFeedStories(
 				})
 			)
 		);
-	} catch (error) {
-		console.error("Error fetching data", error);
-	}
+	} catch (error) {}
 }
