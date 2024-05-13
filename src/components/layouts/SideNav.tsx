@@ -18,6 +18,7 @@ import { calculateDaysBetweenDates } from "@/utils/daytime";
 import useEventLogger from "@/utils/analytics";
 import { useRouter } from "next/router";
 import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
+import { useSearchParams } from "next/navigation";
 
 // # TODO: dynamically use --color-accent-500 for hoverBackground
 export const menuItems = [
@@ -98,7 +99,11 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	};
 
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const eventLogger = useEventLogger();
+	const openUpgradeSubscriptionQueryParam = searchParams?.get(
+		"openUpgradeSubscription"
+	);
 
 	const { data, isUserLoading } = useAuth();
 
@@ -106,6 +111,7 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 	const [subscriptionDetails, setSubscriptionDetails] = useState<
 		mainSchema["UserSubscriptionDTO"] | null
 	>(null);
+
 	useEffect(() => {
 		setUserName(
 			data?.data?.name?.split(" ")[0] +
@@ -116,6 +122,16 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 		);
 		setSubscriptionDetails(data?.data?.subscription || null);
 	}, [data]);
+
+	const [openUpgradeSubscription, setOpenUpgradeSubscription] = useState(false);
+
+	useEffect(() => {
+		if (openUpgradeSubscriptionQueryParam) {
+			setTimeout(() => {
+				setOpenUpgradeSubscription(true);
+			}, 2000);
+		}
+	}, [openUpgradeSubscriptionQueryParam]);
 
 	return (
 		<div className="hidden w-[18rem] lg:flex lg:flex-col lg:justify-between">
@@ -322,7 +338,10 @@ export default function SideNav({ pageIndex }: { pageIndex: number }) {
 				{/*		/>*/}
 				{/*	</Link>*/}
 				{/*</div>*/}
-				<UpgradeSubscriptionDialog>
+				<UpgradeSubscriptionDialog
+					open={openUpgradeSubscription}
+					setOpen={(open) => setOpenUpgradeSubscription(open)}
+				>
 					<Button
 						variant="outline"
 						className="min-w-full rounded-lg py-1.5 text-white font-normal hover:text-accent-300"
