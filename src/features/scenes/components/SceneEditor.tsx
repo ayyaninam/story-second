@@ -22,6 +22,7 @@ import StoryScreen from "@/features/edit-story/story-screen";
 import { CallbackListener } from "@remotion/player";
 import { filterSelectedKeysFromObject } from "../utils/storydraft";
 import useEventLogger from "@/utils/analytics";
+import { useMediaQuery } from "usehooks-ts";
 
 type HoveredThumbs = {
 	thumbs: string[];
@@ -68,6 +69,7 @@ const SceneEditorView = ({
 }) => {
 	const videoPlayerRef = useRef<VideoPlayerHandler | null>(null);
 	const eventLogger = useEventLogger();
+	const isMobile = useMediaQuery("(max-width: 1024px)");
 	const [isPlaying, setIsPlaying] = useState<boolean | undefined>();
 	const [seekedFrame, setSeekedFrame] = useState<number | undefined>();
 
@@ -108,9 +110,10 @@ const SceneEditorView = ({
 		}),
 	]);
 
+	const isPortrait = ImageRatio.width < ImageRatio.height;
 	return (
 		<>
-			<div className="relative w-4/5 h-4/5 m-auto max-w-[1300px] overflow-hidden bg-background rounded-md shadow-lg">
+			<div className="relative w-full h-full lg:w-4/5 lg:h-4/5 m-auto max-w-[1300px] overflow-hidden bg-background rounded-md shadow-lg">
 				<div className="w-full flex items-center justify-between gap-1 p-1 rounded-tl-lg rounded-tr-lg font-normal text-xs border border-accent-500 bg-accent-100 text-accent-900">
 					<div className="flex items-center gap-1">
 						<LayoutList className="stroke-accent-600 mr-1 h-4 w-4" />
@@ -138,16 +141,16 @@ const SceneEditorView = ({
 						</div>
 						<Separator className="w-[35%]" />
 					</div>
-					<div className="absolute h-[85%] w-px bg-slate-200 mt-6 ml-5" />
+					<div className="absolute hidden lg:block h-[85%] w-px bg-slate-200 mt-6 ml-5" />
 
 					<div
-						className="h-screen flex justify-between overflow-y-hidden w-full"
+						className=" flex justify-center flex-col-reverse lg:flex-row lg:justify-between overflow-y-hidden"
 						style={{ background: "transparent" }}
 					>
-						<div className="h-full w-[50%] flex-grow ml-2  flex flex-col justify-between overflow-y-auto">
+						<div className="h-full w-full lg:w-[50%] flex-grow ml-0 lg:ml-2  flex flex-col justify-between overflow-y-auto">
 							<div className="flex flex-col my-3 md:flex-row items-center w-full">
-								<div className="w-full ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col lg:flex-row">
-									<div className="flex w-full h-full space-y-2 flex-col-reverse justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
+								<div className="w-full ml-0 lg:ml-7 h-full bg-background  rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-bl-lg flex flex-col items-center lg:items-start lg:flex-row">
+									<div className="flex pb-8 w-[calc(100%-100px)] lg:w-full justify-center  h-full space-y-2 flex-col-reverse lg:justify-between md:flex-col rounded-t-lg lg:rounded-bl-lg lg:rounded-tl-lg lg:rounded-tr-none lg:rounded-br-none">
 										<Editor
 											Webstory={WebstoryData!}
 											dispatch={dispatch}
@@ -232,10 +235,17 @@ const SceneEditorView = ({
 							</div>
 						</div>
 
-						<div className="relative h-full w-[50%] px-4 flex items-center justify-center ">
+						<div
+							className={cn(
+								"relative lg:h-full  lg:w-[50%] overflow-hidden m-auto px-4 flex items-center justify-center ",
+								isPortrait ? "h-[429px] w-[295px]" : "h-[205px] w-[395px]"
+							)}
+						>
 							<div
-								className="absolute max-w-[95%] h-[95%]"
-								style={{ aspectRatio: ImageRatio.ratio }}
+								className={`w-full lg:w-auto h-full lg:h-[95%] lg:absolute max-w-[95%] max-h-[95%]`}
+								style={{
+									aspectRatio: isMobile ? 1 : ImageRatio.ratio,
+								}}
 							>
 								<StoryScreen
 									playerClassName="lg:rounded-lg"
@@ -252,7 +262,7 @@ const SceneEditorView = ({
 						</div>
 					</div>
 
-					<div className="w-[35%] ml-9 mb-[3rem] mt-auto flex justify-end pt-2" />
+					<div className="hidden w-[35%] ml-9 mb-[3rem] mt-auto lg:flex justify-end pt-2" />
 				</div>
 			</div>
 

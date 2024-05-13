@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 
 const activeStyles =
 	"border border-accent-500 bg-accent-100 text-accent-900 stepper-box-shadow";
-const baseStyles = `bg-primary-foreground font-normal text-sm cursor-pointer transition-all ease-in-out duration-300`;
+const baseStyles = `bg-primary-foreground font-normal my-1 text-sm cursor-pointer transition-all ease-in-out duration-300`;
 
 export default function Stepper({
 	step,
@@ -70,7 +70,7 @@ export default function Stepper({
 	};
 
 	return (
-		<div className="w-full bg-background border-border border-[1px] py-2 min-h-8 flex items-center justify-center">
+		<div className="w-full flex-wrap bg-background border-border border-[1px] py-2 min-h-8 flex items-center justify-center">
 			<Badge
 				onMouseEnter={() => {
 					setCurrentHover(StepperStep.Script);
@@ -126,7 +126,7 @@ export default function Stepper({
 				Storyboard
 			</Badge>
 			<ChevronRight className="w-4 h-4 opacity-50" />
-			{!isMobile && WebstoryData.storyType !== StoryOutputTypes.Story && (
+			{ WebstoryData.storyType !== StoryOutputTypes.Story && (
 				<>
 					<Badge
 						variant="outline"
