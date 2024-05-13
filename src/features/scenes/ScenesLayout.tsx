@@ -65,7 +65,7 @@ export default function StoryScenes({
 	const ImageRatio = GetDisplayImageRatio(Webstory.data.resolution);
 
 	return (
-		<div className="relative w-full rounded-lg bg-secondary h-[calc(100vh-16px)] overflow-hidden">
+		<div className="relative w-full rounded-lg bg-secondary lg:h-[calc(100vh-16px)] overflow-hidden">
 			{/* Navbar */}
 			<Navbar ImageRatio={ImageRatio} WebstoryData={Webstory.data} />
 
@@ -78,7 +78,7 @@ export default function StoryScenes({
 			/>
 
 			{/* MainSection */}
-			<div className={`flex p-2 gap-x-1.5 h-screen overflow-y-auto pb-[246px]`}>
+			<div className={`flex p-2 gap-x-1.5 lg:h-screen overflow-y-auto lg:pb-[246px]`}>
 				<EditorContainer view="scene">
 					<SceneEditorView
 						WebstoryData={Webstory.data}

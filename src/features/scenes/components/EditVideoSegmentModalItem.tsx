@@ -27,9 +27,9 @@ function RegenerateSegmentBar({
 }) {
 	const eventLogger = useEventLogger();
 	return (
-		<div className="flex w-full items-center rounded-sm justify-between">
+		<div className="flex gap-2 md:gap-0 flex-col sm:flex-row w-full items-center rounded-sm justify-between">
 			<div
-				className="h-56"
+				className="h-40 lg:h-56"
 				style={{
 					aspectRatio: GetDisplayImageRatio(displayResolution).ratio,
 				}}
@@ -58,7 +58,9 @@ function RegenerateSegmentBar({
 				</div>
 			</div>
 
-			<p className="text-muted-foreground">{segment.textContent}</p>
+			<p className="text-muted-foreground hidden lg:block">
+				{segment.textContent}
+			</p>
 			<Button
 				className="flex flex-col p-6 min-w-[175px] text-background bg-accent-600"
 				disabled={segment.videoStatus === StoryStatus.PENDING}
