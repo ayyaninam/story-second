@@ -284,7 +284,7 @@ const PublishBookPage = ({ storyData }: { storyData: WebStory }) => {
 									<div className="relative w-full bg-white p-6 border-t-2 lg:border-t-0 lg:border-l-2">
 										<FormProvider {...formMethods}>
 											<form
-												onSubmit={handleSubmit(onSubmit, onInvalid)}
+												onSubmit={handleSubmit(onSubmit)}
 												className="space-y-4"
 											>
 												<div>
