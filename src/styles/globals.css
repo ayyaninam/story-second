@@ -174,7 +174,7 @@
 
 @media (max-width: 1280px) {
 	.intercom-lightweight-app-launcher {
-    display: none !important;
+		display: none !important;
 		/*bottom: 80px !important;*/
 	}
 
@@ -204,4 +204,3 @@
 	line-height: 24px;
 	color: white;
 }
-
