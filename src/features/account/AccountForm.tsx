@@ -59,7 +59,7 @@ export const AccountForm = <T extends FieldValues>({
 	return (
 		<FormProvider {...form}>
 			<form onSubmit={form.handleSubmit(onSave)} className="space-y-5">
-				<div className="sm:grid grid-cols-1 gap-1 sm:gap-x-20 sm:gap-y-4">
+				<div className="sm:grid grid-cols-2 gap-1 sm:gap-x-20 sm:gap-y-4">
 					{/* First Name & Last Name */}
 					<div>
 						<Label htmlFor="firstName">First name</Label>
