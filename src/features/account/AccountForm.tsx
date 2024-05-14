@@ -59,7 +59,7 @@ export const AccountForm = <T extends FieldValues>({
 	return (
 		<FormProvider {...form}>
 			<form onSubmit={form.handleSubmit(onSave)} className="space-y-5">
-				<div className="grid grid-cols-2 gap-1 sm:gap-x-20 sm:gap-y-4">
+				<div className="sm:grid grid-cols-2 gap-1 sm:gap-x-20 sm:gap-y-4">
 					{/* First Name & Last Name */}
 					<div>
 						<Label htmlFor="firstName">First name</Label>
@@ -140,7 +140,7 @@ export const AccountForm = <T extends FieldValues>({
 						<Error control={form.control} name="bio" />
 					</div>
 				</div>
-				<div className="flex justify-center gap-4">
+				<div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
 					<Button
 						isLoading={isUpdating}
 						type="submit"

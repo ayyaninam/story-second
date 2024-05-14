@@ -26,15 +26,15 @@ function LibraryHeroSection({
 				className="flex w-full max-w-[1440px] justify-center items-center overflow-hidden"
 				style={heroSectionContainer}
 			>
-				<div className="pt-8 pb-16 flex p-10 gap-8 flex-col items-start w-full">
+				<div className="pt-4 sm:pt-8 pb-8 sm:pb-16 flex p-5 sm:p-10 gap-3 sm:gap-8 flex-col items-start w-full">
 					<span className="flex py-1 px-2 bg-accent-50 rounded-[350px] text-accent-600 font-normal tracking-tighter text-sm">
 						Hi There
 					</span>
 					<div className="flex flex-col gap-4 items-start">
-						<h1 className="text-[#14151A] text-5xl font-normal tracking-[-1.44px]">
+						<h1 className="text-[#14151A] text-2xl sm:text-5xl font-normal tracking-[-1.44px]">
 							This is Where Your Videos Live
 						</h1>
-						<p className="text-base font-normal text-accent-700">
+						<p className="text-sm sm:text-base font-normal text-accent-700">
 							Within your personal Authorly library, you’ll find every one of
 							your videos, both finished and draft.{" "}
 							<span className="text-[#0F132499]">
