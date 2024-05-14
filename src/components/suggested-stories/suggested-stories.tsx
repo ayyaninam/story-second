@@ -119,7 +119,7 @@ export default function SuggestedStories({
 					</div>
 				</div>
 			</div>
-			<div className="mt-2 flex flex-col gap-2">
+			<div className="mt-2 flex flex-col gap-4">
 				{
 					/* Show skeleton loader if data is not loaded */
 					suggestedStories.isLoading
