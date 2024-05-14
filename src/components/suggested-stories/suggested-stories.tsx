@@ -13,6 +13,8 @@ import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import { ChevronsRight } from "lucide-react";
 import { StoryOutputTypes } from "@/utils/enums";
+import { getGenreNameFromSlug } from "@/utils/feed-utils";
+import SuggestedImage from "./suggested-image";
 
 type SuggestedStoriesProps = {
 	id: string;
@@ -33,7 +35,7 @@ export default function SuggestedStories({
 }: SuggestedStoriesProps) {
 	const suggestedStory = useRef<HTMLDivElement>(null);
 	const suggestedStoryRef = useRef<UseInfiniteQueryResult>();
-
+	console.log("DisplayResolution", DisplayResolution);
 	const suggestedStories = useInfiniteQuery({
 		queryKey: [id, storyType, DisplayResolution],
 		queryFn: ({ pageParam }) =>
@@ -132,31 +134,23 @@ export default function SuggestedStories({
 				{suggestedStories?.data?.pages?.map((page, index) => {
 					return page?.data?.items?.map((story, index) => (
 						<div key={index}>
-							<Link
-								href={Routes.ViewStory(
-									story.storyType,
-									story.topLevelCategory?.replace(/ /g, "-").toLowerCase() ||
-										"all",
-									story.slug as string
-								)}
-								className={cn(
-									"rounded-lg overflow-hidden",
-									story?.id === id &&
-										"outline-accent-600 border border-white outline outline-1"
-								)}
-							>
-								<Img
-									src={Format.GetImageUrl(story?.coverImage ?? "")}
-									alt={story?.storyTitle ?? "Story"}
-								/>
-							</Link>
-							<span
-								className={
-									"line-clamp-1 overflow-hidden text-ellipsis font-semibold my-1"
-								}
-							>
-								{story.storyTitle}
-							</span>
+							<SuggestedImage
+								story={{
+									id: story.id,
+									title: story.storyTitle,
+									thumbnail: story.coverImage
+										? Format.GetImageUrl(story.coverImage)
+										: null,
+									description: story.summary,
+									storyType: story.storyType,
+									topLevelCategory: getGenreNameFromSlug(
+										story.topLevelCategory
+									),
+									slug: story.slug,
+									storyLikes: story.storyLikes,
+								}}
+								resolution={DisplayResolution}
+							/>
 						</div>
 					));
 				})}
