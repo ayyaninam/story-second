@@ -120,7 +120,7 @@ const EditSegmentModal = ({
 					!open && onClose();
 				}}
 			>
-				<DialogContent className="max-w-[1100px] w-full lg:w-2/3 bg-background">
+				<DialogContent className="max-w-[1100px] max-h-[90vh] overflow-auto w-full lg:w-2/3 bg-background">
 					<DialogTitle className="m-0 font-semibold text-foreground px-3 text-md">
 						<div className="flex gap-2 items-center">
 							<Settings2 width={16} height={16} />
@@ -132,7 +132,7 @@ const EditSegmentModal = ({
 						control, used the advanced editing options. When you’re ready to see
 						it, click regenerate.
 					</DialogDescription>
-					<div className="overflow-auto max-h-[70vh] md:px-3">
+					<div className="overflow-auto lg:max-h-[70vh] md:px-3">
 						{story.scenes[sceneId]?.segments?.map((segment, index) => (
 							<EditSegmentModalItem
 								key={index}
@@ -159,9 +159,9 @@ const EditSegmentModal = ({
 							/>
 						))}
 					</div>
-					<div className="flex mt-2 gap-1 mx-4 justify-end text-sm">
+					<div className="flex flex-col sm:flex-row mt-2 gap-1 mx-4 justify-end text-sm">
 						<Button
-							className="w-[50%] p-2 flex gap-1 text-accent-600 items-center"
+							className="sm:w-[50%] p-2 flex gap-1 text-accent-600 items-center"
 							variant="outline"
 							disabled={RegenerateSceneImages.isPending}
 							onClick={() => {
@@ -192,7 +192,7 @@ const EditSegmentModal = ({
 						</Button>
 						<DialogClose asChild>
 							<Button
-								className="w-[50%] p-2 flex gap-1 items-center text-white bg-accent-600"
+								className="sm:w-[50%] p-2 flex gap-1 items-center text-white bg-accent-600"
 								variant="default"
 							>
 								<Check width={16} height={16} />

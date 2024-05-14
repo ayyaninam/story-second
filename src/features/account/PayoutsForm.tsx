@@ -107,9 +107,9 @@ const Payouts = () => {
 
 	return (
 		<>
-			<div className="container mx-auto">
-				<header className="flex flex-col lg:items-end lg:flex-row gap-4">
-					<h1 className="text-3xl font-aleo font-semibold self-center">
+			<div className="sm:container mx-auto">
+				<header className="flex flex-col lg:items-end lg:flex-row sm:gap-4">
+					<h1 className="text-xl sm:text-3xl font-aleo font-semibold self-center">
 						Payouts
 					</h1>
 					<div className="flex flex-col items-start lg:items-center gap-2 lg:gap-6 lg:flex-row lg:ml-auto border-gold border-5 py-4 px-16 rounded-lg">
@@ -117,7 +117,7 @@ const Payouts = () => {
 							<span className="block text-sm font-medium tracking-wide text-center">
 								Total Royalty Available
 							</span>
-							<span className="block text-5xl font-semibold">
+							<span className="block text-3xl sm:text-5xl font-semibold">
 								${user?.data?.totalUnclaimedRoyalties!.toFixed(2)}
 							</span>
 						</div>
@@ -133,13 +133,13 @@ const Payouts = () => {
 				</header>
 
 				<div
-					className="w-full h-1 bg-primary-500 my-4 rounded"
+					className="w-full h-1 bg-primary-500 sm:my-4 rounded"
 					role="separator"
 				/>
 
-				<div className="container mx-auto  border-5 border-gold rounded-2xl p-4">
+				<div className="sm:container mx-auto  border-5 border-gold rounded-2xl sm:p-4">
 					{user?.data?.totalProcessingRoyalties! > 0 && (
-						<div className="flex flex-col gap-4 p-4">
+						<div className="flex flex-col gap-4 sm:p-4">
 							<h1 className="text-xl font-semibold">Processing Royalties</h1>
 							<p className="text-md text-success-500">
 								Your royalties of ${user?.data?.totalProcessingRoyalties} are
@@ -155,7 +155,7 @@ const Payouts = () => {
 									checkStripeAccountEnum.DoesNotExist ||
 									stripeAccountStatus?.stripeConnectAccountStatus ===
 										checkStripeAccountEnum.OnboardingIncomplete) && (
-									<div className="flex flex-col gap-4 p-4">
+									<div className="flex flex-col gap-4 sm:p-4">
 										<h1 className="text-xl font-semibold">
 											StoryBird.ai Payout Account Onboarding
 										</h1>
@@ -207,7 +207,7 @@ const Payouts = () => {
 									checkStripeAccountEnum.Onboarded && (
 									<>
 										{user?.data?.kycVerified === null ? (
-											<div className="flex flex-col gap-4 p-4 text-warning-500">
+											<div className="flex flex-col gap-4 sm:p-4 text-warning-500">
 												<p className="text-md">
 													You have not completed the KYC verification process
 													yet. Please complete the{" "}
@@ -222,7 +222,7 @@ const Payouts = () => {
 											</div>
 										) : user?.data?.kycVerified ===
 										  kycStatus.PendingVerification ? (
-											<div className="flex flex-col gap-4 p-4 text-success-700">
+											<div className="flex flex-col gap-4 sm:p-4 text-success-700">
 												<p className="text-md">
 													Great job on completing the setup! Your details are
 													now being reviewed for verification. Once verified,
@@ -230,7 +230,7 @@ const Payouts = () => {
 												</p>
 											</div>
 										) : user?.data?.kycVerified === kycStatus.Rejected ? (
-											<div className="flex flex-col gap-4 p-4 text-error-400">
+											<div className="flex flex-col gap-4 sm:p-4 text-error-400">
 												<p className="text-md">
 													We were unable to verify your KYC. Please re-submit
 													your details for verification by submitting the form{" "}
@@ -244,7 +244,7 @@ const Payouts = () => {
 												</p>
 											</div>
 										) : null}
-										<div className="flex flex-col gap-4 p-4">
+										<div className="flex flex-col gap-4 sm:p-4">
 											<p className="text-md">
 												Need to update your payout account details? Visit your
 												Stripe Dashboard to make changes to your Stripe or bank
@@ -255,7 +255,7 @@ const Payouts = () => {
 								)}
 								{stripeAccountStatus?.stripeConnectAccountStatus ===
 									checkStripeAccountEnum.OnboardingIncomplete && (
-									<div className="flex flex-col gap-4 p-4">
+									<div className="flex flex-col gap-4 sm:p-4">
 										<p className="text-md font-semibold">
 											You&apos;re almost there! To complete your onboarding and
 											start receiving your payouts, just a few more steps are
@@ -275,7 +275,7 @@ const Payouts = () => {
 
 								<hr className="my-8 border-gray-300" />
 
-								<div className="flex justify-between items-center p-4 bg-gray-100 mt-4">
+								<div className="flex justify-between items-center sm:p-4 bg-gray-100 mt-4">
 									<h2 className="text-lg font-medium">
 										Total Royalties Earned Till Date
 									</h2>
@@ -288,7 +288,7 @@ const Payouts = () => {
 								</div>
 							</>
 						) : (
-							<div className="flex flex-col gap-4 p-4">
+							<div className="flex flex-col gap-4 sm:p-4">
 								<h1 className="text-xl font-semibold">Amazon Sales Revenue</h1>
 								<p className="text-md">
 									It looks like you don&apos;t have any recorded revenue from
