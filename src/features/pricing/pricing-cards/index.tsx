@@ -208,6 +208,7 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 			"Fast Generation Time",
 			"Dedicated support",
 			"10000 credits",
+			"Unlimited Downloads",
 		],
 		icon: (
 			<>
@@ -299,9 +300,10 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 							</Button>
 						}
 						items={[
-							"5 video generations",
-							"15 story generations",
+							"5 videos / month",
+							"15 stories / month",
 							"200 credits",
+							"No Video Downloads",
 						]}
 					/>
 					<PricingCard
@@ -355,6 +357,7 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 								$2 per additional story
 							</>,
 							"300 credits",
+							"Unlimited Video Downloads",
 						]}
 					/>
 					<PricingCard
@@ -399,6 +402,7 @@ const PricingCards = ({ onCloseDialog }: PricingCardsProps) => {
 								$1.5 per additional story
 							</>,
 							"900 credits",
+							"Unlimited Video Downloads",
 						]}
 					/>
 					<div className="block lg:hidden relative">
