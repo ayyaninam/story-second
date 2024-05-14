@@ -8,6 +8,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 const customLogout = async (req: NextApiRequest, res: NextApiResponse) => {
 	const queryClient = new QueryClient();
 	queryClient.clear(); // Clear React Query cache
+	queryClient.removeQueries(); // Remove all queries
 	handleLogout({
 		returnTo: `${Routes.defaultRedirect}`,
 	})(req, res);
