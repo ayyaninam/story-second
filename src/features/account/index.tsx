@@ -21,6 +21,14 @@ import MyItems from "@/features/account/MyItems";
 import AmazonStatus from "@/features/account/AmazonStatus";
 import Payouts from "@/features/account/PayoutsForm";
 import UpdateKYCForm from "@/features/account/UpdateKYC";
+import { toggleItems } from "@/constants/profile-constants";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 const profileSchema = z.object({
 	profileName: z
@@ -133,78 +141,49 @@ const AccountsPage = () => {
 						Manage your account settings and set e-mail preferences.
 					</p>
 					<hr className="mt-2 lg:mt-8" />
-					<div className="flex flex-col sm:flex-row">
+					<div className="flex flex-col lg:flex-row">
 						{/* Toggle Group: Adjust for mobile and larger screens */}
-						<div className="w-full sm:w-2/12">
+						<div className="w-full lg:w-2/12">
 							<ToggleGroup
 								value={step as string}
 								type="single"
-								className="flex flex-row sm:flex-col space-x-2 sm:space-x-0 space-y-0 sm:space-y-2 mt-5"
+								className="hidden sm:flex flex-row  lg:flex-col space-x-2 lg:space-x-0 space-y-0 lg:space-y-2 mt-5"
 								onValueChange={onClickNavMenu}
 							>
-								<ToggleGroupItem
-									value="profile"
-									className="justify-center sm:justify-start text-center sm:text-left w-full"
-								>
-									Profile
-								</ToggleGroupItem>
-
-								<ToggleGroupItem
-									value="payment"
-									className="justify-center sm:justify-start text-center sm:text-left w-full"
-								>
-									Billing
-								</ToggleGroupItem>
-								<ToggleGroupItem
-									value="payouts"
-									className="justify-center sm:justify-start text-center sm:text-left w-full"
-								>
-									Payouts
-								</ToggleGroupItem>
-								{/*<ToggleGroupItem*/}
-								{/*	value="updateKYC"*/}
-								{/*	className="justify-center sm:justify-start text-center sm:text-left w-full"*/}
-								{/*>*/}
-								{/*	Update KYC*/}
-								{/*</ToggleGroupItem>*/}
-								<ToggleGroupItem
-									value={"amazon-status"}
-									className="justify-center sm:justify-start text-center sm:text-left w-full"
-								>
-									Amazon Status
-								</ToggleGroupItem>
-								<ToggleGroupItem
-									value={"my-items"}
-									className="justify-center sm:justify-start text-center sm:text-left w-full"
-								>
-									My PDFs
-								</ToggleGroupItem>
-								<ToggleGroupItem
-									value={"my-videos"}
-									className="justify-center sm:justify-start text-center sm:text-left w-full"
-								>
-									My Videos [storybird.ai]
-								</ToggleGroupItem>
-								<ToggleGroupItem
-									value={"preferences"}
-									className="justify-center sm:justify-start text-center sm:text-left w-full"
-								>
-									Preferences
-								</ToggleGroupItem>
-								{/*<ToggleGroupItem*/}
-								{/*	value="preferences"*/}
-								{/*	className="justify-center sm:justify-start text-center sm:text-left w-full"*/}
-								{/*>*/}
-								{/*	Notification Preferences*/}
-								{/*</ToggleGroupItem>*/}
+								{toggleItems.map((item) => (
+									<ToggleGroupItem
+										key={item.value}
+										value={item.value}
+										className="justify-center lg:justify-start text-center lg:text-left w-full"
+									>
+										{item.label}
+									</ToggleGroupItem>
+								))}
 							</ToggleGroup>
+							<Select
+								onValueChange={onClickNavMenu}
+								value={(router.query.step as string) ?? "profile"}
+							>
+								<SelectTrigger className="flex sm:hidden border-0 focus:ring-0 focus:ring-offset-0 bg-white text-[#000000]">
+									<div className="text-accent-600">
+										<SelectValue placeholder="Sort by" />
+									</div>
+								</SelectTrigger>
+								<SelectContent className="bg-white text-[#000000] border-muted">
+									{toggleItems.map((option) => (
+										<SelectItem value={option.value} key={option.value}>
+											{option.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 						</div>
 						{isPending ? (
 							<p className="ml-28 mt-10">Loading...</p>
 						) : (
 							<div
 								id="tab-section"
-								className="mt-8 sm:mt-0 sm:ml-28 w-full sm:w-4/6"
+								className="mt-8 lg:mt-0 lg:ml-28 w-full lg:w-4/6"
 							>
 								<div className="lg:py-8">
 									{step === "profile" && (

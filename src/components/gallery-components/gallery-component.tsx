@@ -25,8 +25,8 @@ function GalleryComponent({
 }) {
 	return (
 		<>
-			<div className="flex justify-between self-stretch min-w-100 items-center">
-				<div className="flex gap-2 h-[44px] items-center">
+			<div className="flex flex-col sm:flex-row gap-2 sm:gap-0 justify-between self-stretch min-w-100 sm:items-center">
+				<div className="flex gap-2 sm:h-[44px] items-center">
 					<div
 						className="w-[40px] h-[40px] bg-white rounded-lg flex items-center justify-center text-accent-600"
 						style={{

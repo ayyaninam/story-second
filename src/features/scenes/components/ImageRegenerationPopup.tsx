@@ -529,7 +529,7 @@ function ImageRegenerationPopup({
 
 	return (
 		<PopoverContent
-			side="right"
+			side={isMobile ? "bottom" : "right"}
 			onInteractOutside={() => {
 				onClose();
 			}}
