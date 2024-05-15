@@ -457,10 +457,10 @@ export default function PublishedStory({
 									ImageRatio.width === 9 && "md:max-w-[780px]",
 									ImageRatio.width === 16 && "md:max-w-[1620px]",
 									ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
-										"lg:flex-col 2xl:flex-row"
+										"lg:flex-col 2xl:flex-wrap 2xl:flex-row"
 								)}
 							>
-								<div className="relative w-full rounded-tl-lg rounded-bl-lg">
+								<div className="relative 2xl:min-w-[550px] 2xl:flex-1 rounded-tl-lg rounded-bl-lg">
 									{!isMobile && (
 										<StoryScreenBgBlur
 											blur="3xl"
@@ -514,9 +514,9 @@ export default function PublishedStory({
 								{/* </Loading> */}
 								<div
 									className={cn(
-										`p-6 flex flex-col-reverse justify-between md:flex-col lg:max-w-sm bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg`,
+										`p-6 2xl:min-[310px] 2xl:min-w-[457px] flex flex-col-reverse justify-between md:flex-col  bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg 2xl:max-w-sm`,
 										ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
-											"lg:max-w-[100%] 2xl:max-w-sm"
+											"2xl:flex-1 "
 									)}
 								>
 									<div className="relative space-y-2">
