@@ -15,8 +15,9 @@ import { NextPage } from "next/types";
 import { DefaultSeo, DefaultSeoProps } from "next-seo";
 import { env } from "@/env.mjs";
 import Script from "next/script";
-import { GoogleAnalytics, event } from "nextjs-google-analytics";
+import { GoogleAnalytics } from "nextjs-google-analytics";
 import { AuthProvider } from "@/features/auth-prompt/providers/AuthContext";
+import Maintenance from "@/pages/maintenance";
 
 const randFont = localFont({
 	variable: "--font-rand",
@@ -183,6 +184,8 @@ const defaultSeoProps: DefaultSeoProps = {
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+	// Maintenance mode flag
+	const maintenance = env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
 	const [queryClient] = useState(
 		() =>
 			new QueryClient({
@@ -193,6 +196,12 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 				},
 			})
 	);
+
+	// Early return for maintenance mode
+	if (maintenance) {
+		return <Maintenance />;
+	}
+
 	// Use the layout defined at the page level, if available else use page directly
 	const getLayout = Component.getLayout ?? ((page) => page);
 	return (
