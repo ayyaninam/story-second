@@ -352,14 +352,14 @@ export default function PublishedStory({
 			<div
 				className={cn(
 					"w-full k xl:h-[calc(100vh-20px)] relative",
-					suggestedOpen ? "lg:w-[calc(100%-306px)]" : "lg:w-full"
+					suggestedOpen ? "xl:w-[calc(100%-306px)]" : "xl:w-full"
 				)}
 			>
 				{" "}
 				{/* Navbar */}
 				<div className="flex justify-between p-4">
 					<div
-						className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm lg:rounded-br-sm lg:rounded-tr-sm lg:rounded-tl-sm lg:rounded-bl-sm`}
+						className={`flex gap-x-2.5 px-3 items-center shadow-sm bg-gradient-to-r from-button-start to-button-end border-[1px] border-border rounded-bl-sm rounded-br-sm xl:rounded-br-sm xl:rounded-tr-sm xl:rounded-tl-sm xl:rounded-bl-sm`}
 					>
 						<div className="flex items-center gap-x-2 py-3">
 							<Link href={Routes.Feed()}>
@@ -432,7 +432,7 @@ export default function PublishedStory({
 						)}
 						{!suggestedOpen && (
 							<Button
-								className={`hidden lg:flex h-9 w-10 p-0 rounded-md shadow bg-white hover:shadow-lg fade-in-5 group `}
+								className={`hidden xl:flex h-9 w-10 p-0 rounded-md shadow bg-white hover:shadow-lg fade-in-5 group `}
 								variant="outline"
 								onClick={() => setSuggestedOpen(!suggestedOpen)}
 								onMouseEnter={() => toggleHovering(true)}
@@ -445,11 +445,11 @@ export default function PublishedStory({
 					</div>
 				</div>
 				<div className={`flex h-[calc(100%-78.6px)] bg-reverse p-2 gap-x-1.5`}>
-					<div className="relative w-full lg:px-20 pb-10 items-center">
+					<div className="relative w-full xl:px-20 pb-10 items-center">
 						<div className="flex flex-col md:flex-row items-center justify-center h-full">
 							<div
 								className={cn(
-									`w-full border-[1px] rounded-bl-lg rounded-br-lg lg:rounded-br-lg lg:rounded-tr-lg lg:rounded-tl-sm lg:rounded-bl-sm flex flex-col lg:flex-row justify-stretch`,
+									`w-full border-[1px] rounded-bl-lg rounded-br-lg xl:rounded-br-lg xl:rounded-tr-lg xl:rounded-tl-sm xl:rounded-bl-sm flex flex-col xl:flex-row justify-stretch bg-description`,
 									// Based on aspect ratio we need to adjust the parent width
 									ImageRatio.width === 1 && "md:max-w-[1080px]",
 									ImageRatio.width === 3 && "md:max-w-[900px]",
@@ -457,10 +457,22 @@ export default function PublishedStory({
 									ImageRatio.width === 9 && "md:max-w-[780px]",
 									ImageRatio.width === 16 && "md:max-w-[1620px]",
 									ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
-										"lg:flex-col 2xl:flex-wrap 2xl:flex-row"
+										"xl:flex-col 2xl:flex-wrap 2xl:flex-row"
 								)}
 							>
-								<div className="relative 2xl:min-w-[550px] 2xl:flex-1 rounded-tl-lg rounded-bl-lg">
+								<div
+									className={cn(
+										"relative xl:min-w-[260px] w-full rounded-tl-lg rounded-bl-lg",
+										// Based on aspect ratio we need to adjust the parent width
+										ImageRatio.width === 1 && "md:max-w-[1080px]",
+										ImageRatio.width === 3 && "md:max-w-[900px]",
+										ImageRatio.width === 4 && "md:max-w-[1280px]",
+										ImageRatio.width === 9 && "md:max-w-[780px]",
+										ImageRatio.width === 16 && "md:max-w-[1620px]",
+										ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
+											"2xl:min-w-[650px] 2xl:flex-1"
+									)}
+								>
 									{!isMobile && (
 										<StoryScreenBgBlur
 											blur="3xl"
@@ -472,7 +484,7 @@ export default function PublishedStory({
 									)}
 									{/* NOTE: Incase the above code doesn't work, try replacing it with the following:
 								 <div
-									className={`relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
+									className={`relative w-full xl:max-w-[100%] rounded-tl-lg rounded-bl-lg blur-3xl`}
 								>
 									<StoryScreen
 										Webstory={Webstory.data}
@@ -485,8 +497,8 @@ export default function PublishedStory({
 									<div
 										className={cn(
 											isMobile
-												? "relative w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
-												: "absolute top-0 left-0 w-full lg:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+												? "relative w-full xl:max-w-[100%] rounded-tl-lg rounded-bl-lg"
+												: "absolute top-0 left-0 w-full xl:max-w-[100%] rounded-tl-lg rounded-bl-lg"
 										)}
 									>
 										<StoryScreen
@@ -514,7 +526,7 @@ export default function PublishedStory({
 								{/* </Loading> */}
 								<div
 									className={cn(
-										`p-6 2xl:min-[310px] 2xl:min-w-[457px] flex flex-col-reverse justify-between md:flex-col  bg-description rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg rounded-br-lg 2xl:max-w-sm`,
+										`p-6 2xl:min-[310px] 2xl:min-w-[457px] flex flex-col-reverse justify-between md:flex-col  bg-description rounded-bl-lg xl:rounded-bl-none xl:rounded-tr-lg rounded-br-lg 2xl:max-w-sm`,
 										ImageRatio.enumValue === DisplayAspectRatios["1024x576"] &&
 											"2xl:flex-1 "
 									)}
@@ -722,9 +734,9 @@ export default function PublishedStory({
 									</div>
 									<div
 										className={cn(
-											"lg:hidden my-2.5 bg-slate-200 self-stretch h-px",
+											"xl:hidden my-2.5 bg-slate-200 self-stretch h-px",
 											ImageRatio.enumValue ===
-												DisplayAspectRatios["1024x576"] && "lg:flex 2xl:hidden"
+												DisplayAspectRatios["1024x576"] && "xl:flex 2xl:hidden"
 										)}
 									/>
 									<Link
@@ -818,7 +830,7 @@ export default function PublishedStory({
 				</div>
 			</div>
 			<div
-				className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto relative"
+				className="hidden xl:block xl:h-[calc(100vh-20px)] overflow-y-auto relative"
 				onMouseEnter={() => toggleHovering(true)}
 				onMouseLeave={() => toggleHovering(false)}
 			>
