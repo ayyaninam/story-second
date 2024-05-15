@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 
+const maintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
 import withPWAInit from "@ducanh2912/next-pwa";
 
 const withPWA = withPWAInit({
@@ -41,6 +42,16 @@ const nextConfig = {
 		];
 	},
 	async rewrites() {
+    if (maintenanceMode) {
+      return {
+        afterFiles: [
+          {
+            source: "/(.*)",
+            destination: "/feed/all",
+          },
+        ],
+      };
+    }
 		return {
 			afterFiles: [
 				{
