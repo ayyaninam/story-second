@@ -132,6 +132,7 @@ const Editor = ({
 			segment: Segment,
 			segmentIndex: number
 		) => void;
+		handleFocus: (sceneIndex: number, segmentIndex: number) => void;
 		handleInput: (
 			e: React.ChangeEvent<HTMLTextAreaElement>,
 			scene: Scene,
@@ -145,6 +146,8 @@ const Editor = ({
 		// Putting an absurdly high number of scenes to make things simpler
 		Array.from({ length: 100 }, () => [])
 	);
+	const currentSceneIndex = useRef<number>(0);
+	const currentSegmentIndex = useRef<number>(-1);
 
 	const diff = GenerateStoryDiff(WebstoryToStoryDraft(Webstory), story);
 
@@ -162,6 +165,36 @@ const Editor = ({
 
 	useEffect(() => {
 		const handleKeyDown = async (event: KeyboardEvent) => {
+			if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+				event.preventDefault();
+				if (event.key === "ArrowDown") {
+					if (
+						refs?.current?.[currentSceneIndex?.current]?.[
+							currentSegmentIndex.current + 1
+						]
+					) {
+						currentSegmentIndex.current++;
+					} else if (refs.current[currentSceneIndex.current + 1]?.length) {
+						currentSceneIndex.current++;
+						currentSegmentIndex.current = 0;
+					}
+				} else if (event.key === "ArrowUp") {
+					if (
+						refs?.current?.[currentSceneIndex?.current]?.[
+							currentSegmentIndex.current - 1
+						]
+					) {
+						currentSegmentIndex.current--;
+					} else if (refs.current[currentSceneIndex.current - 1]) {
+						currentSceneIndex.current--;
+						currentSegmentIndex.current =
+							(refs?.current?.[currentSceneIndex?.current]?.length ?? 0) - 1;
+					}
+				}
+				refs?.current?.[currentSceneIndex?.current]?.[
+					currentSegmentIndex?.current
+				]?.focus();
+			}
 			if ((event.ctrlKey || event.metaKey) && event.key === "s") {
 				// Prevent default browser behavior (saving the page)
 				event.preventDefault();
@@ -192,6 +225,11 @@ const Editor = ({
 			window.removeEventListener("keydown", handleKeyDown);
 		};
 	});
+
+	const handleFocus = (sceneIndex: number, segmentIndex: number) => {
+		currentSceneIndex.current = sceneIndex;
+		currentSegmentIndex.current = segmentIndex;
+	};
 
 	const handleInput = (
 		e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -273,16 +311,14 @@ const Editor = ({
 			onEditSegment?.(segment, segmentIndex, sceneIndex);
 		}
 	};
+	let timeout: any;
 	const handleEnter = (
 		scene: Scene,
 		sceneIndex: number,
 		segment: Segment,
 		segmentIndex: number
 	) => {
-		// If the segment is the last segment in the scene, create a new scene
-		if (segmentIndex === scene.segments.length - 1) {
-			// if (false) {
-			// TODO: uncomment this when scene editor support is added
+		if (timeout) {
 			dispatch({
 				type: "create_scene",
 				scene: {
@@ -310,28 +346,31 @@ const Editor = ({
 			setTimeout(() => {
 				refs.current[sceneIndex + 1]?.[0]?.focus();
 			}, 0);
-		}
-		// Else, create a new segment
-		else {
-			dispatch({
-				type: "create_segment",
-				sceneIndex: sceneIndex,
-				segment: {
-					audioKey: "",
-					textContent: " ",
-					audioStatus: StoryStatus.READY,
-					id: segment.id,
-					imageKey: "",
-					imageStatus: StoryStatus.READY,
-					videoKey: "",
-					videoStatus: StoryStatus.READY,
-					textStatus: TextStatus.ADDED,
-				},
-				segmentIndex: segmentIndex,
-			});
-			setTimeout(() => {
-				refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
-			}, 0);
+			clearTimeout(timeout);
+			// timeout = null;
+		} else {
+			timeout = setTimeout(() => {
+				dispatch({
+					type: "create_segment",
+					sceneIndex: sceneIndex,
+					segment: {
+						audioKey: "",
+						textContent: " ",
+						audioStatus: StoryStatus.READY,
+						id: segment.id,
+						imageKey: "",
+						imageStatus: StoryStatus.READY,
+						videoKey: "",
+						videoStatus: StoryStatus.READY,
+						textStatus: TextStatus.ADDED,
+					},
+					segmentIndex: segmentIndex,
+				});
+				timeout = null;
+				setTimeout(() => {
+					refs.current[sceneIndex]?.[segmentIndex + 1]?.focus();
+				}, 0);
+			}, 300);
 		}
 	};
 
@@ -463,6 +502,7 @@ const Editor = ({
 		handleInput,
 		handleNavigation,
 		handleDelete,
+		handleFocus,
 		refs: refs,
 	});
 };

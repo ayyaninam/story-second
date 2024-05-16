@@ -47,51 +47,6 @@ export default function ScriptEditor({
 
 	const UpdateCategory = useUpdateCategory();
 	const isMobile = useMediaQuery("(max-width: 640px)");
-
-	const inputRefs = useRef<HTMLTextAreaElement[][]>([]);
-	const currentSceneIndex = useRef<number>(0);
-	const currentSegmentIndex = useRef<number>(-1);
-
-	const handleKeyDown = (event: KeyboardEvent) => {
-		if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-			event.preventDefault();
-			if (event.key === "ArrowDown") {
-				if (
-					inputRefs?.current?.[currentSceneIndex?.current]?.[
-						currentSegmentIndex.current + 1
-					]
-				) {
-					currentSegmentIndex.current++;
-				} else if (inputRefs.current[currentSceneIndex.current + 1]?.length) {
-					currentSceneIndex.current++;
-					currentSegmentIndex.current = 0;
-				}
-			} else if (event.key === "ArrowUp") {
-				if (
-					inputRefs?.current?.[currentSceneIndex?.current]?.[
-						currentSegmentIndex.current - 1
-					]
-				) {
-					currentSegmentIndex.current--;
-				} else if (inputRefs.current[currentSceneIndex.current - 1]) {
-					currentSceneIndex.current--;
-					currentSegmentIndex.current =
-						(inputRefs?.current?.[currentSceneIndex?.current]?.length ?? 0) - 1;
-				}
-			}
-			inputRefs?.current?.[currentSceneIndex?.current]?.[
-				currentSegmentIndex?.current
-			]?.focus();
-		}
-	};
-
-	useEffect(() => {
-		document.addEventListener("keydown", handleKeyDown);
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown);
-		};
-	}, []);
-
 	return (
 		<>
 			<TooltipProvider>
@@ -114,10 +69,10 @@ export default function ScriptEditor({
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
 						<div className="w-full inline-flex text-slate-400 text-xs py-1">
-							<CategorySelect
+							{/* <CategorySelect
 								value={WebstoryData?.topLevelCategory!}
 								onChange={(category) => UpdateCategory.mutate({ category })}
-							/>
+							/> */}
 							<p className="ms-1">by {userName}</p>
 						</div>
 					</div>
@@ -141,15 +96,9 @@ export default function ScriptEditor({
 											handleInput,
 											handleNavigation,
 											handleDelete,
+											handleFocus,
 											refs,
 										}) => {
-											inputRefs.current = refs.current.map(
-												(row) =>
-													row.filter(
-														(ref) => ref !== null
-													) as HTMLTextAreaElement[]
-											);
-
 											return (
 												<div className={cn("w-full")}>
 													{story.scenes.map((scene, sceneIndex) => (
@@ -242,9 +191,7 @@ export default function ScriptEditor({
 																				)
 																			}
 																			onFocus={() => {
-																				currentSceneIndex.current = sceneIndex;
-																				currentSegmentIndex.current =
-																					segmentIndex;
+																				handleFocus(sceneIndex, segmentIndex);
 																			}}
 																		/>
 																	</span>

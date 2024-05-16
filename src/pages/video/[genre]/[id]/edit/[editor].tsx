@@ -45,7 +45,6 @@ const EditorPage = ({
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],
 		initialData: storyData,
-		refetchInterval: 3000,
 		// Disable once all the videoKeys are obtained
 	});
 
