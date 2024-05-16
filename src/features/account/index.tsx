@@ -117,8 +117,11 @@ const AccountsPage = () => {
 
 	const onClickNavMenu = useCallback(
 		(item: string) => {
-			router.query.step = item;
-			router.push(router);
+			router
+				.push({ pathname: router.pathname, query: { step: item } }, undefined, {
+					shallow: true,
+				})
+				.then();
 		},
 		[router]
 	);
@@ -178,43 +181,39 @@ const AccountsPage = () => {
 								</SelectContent>
 							</Select>
 						</div>
-						{isPending ? (
-							<p className="ml-28 mt-10">Loading...</p>
-						) : (
-							<div
-								id="tab-section"
-								className="mt-8 lg:mt-0 lg:ml-28 w-full lg:w-4/6"
-							>
-								<div className="lg:py-8">
-									{step === "profile" && (
-										<>
-											<div className="hidden lg:block">
-												<p className="text-2xl font-bold">Profile</p>
-												<p className="text-base font-extralight text-muted-foreground">
-													This is how others will see you on the site.
-												</p>
-												<Separator className="my-8" />
-											</div>
-											<AccountForm<Account> form={form} refetch={refetch} />
-										</>
-									)}
+						<div
+							id="tab-section"
+							className="mt-8 lg:mt-0 lg:ml-28 w-full lg:w-4/6"
+						>
+							<div className="lg:py-8">
+								{step === "profile" && (
+									<>
+										<div className="hidden lg:block">
+											<p className="text-2xl font-bold">Profile</p>
+											<p className="text-base font-extralight text-muted-foreground">
+												This is how others will see you on the site.
+											</p>
+											<Separator className="my-8" />
+										</div>
+										<AccountForm<Account> form={form} refetch={refetch} />
+									</>
+								)}
 
-									{step === "payment" && <Billing />}
+								{step === "payment" && <Billing />}
 
-									{step === "payouts" && <Payouts />}
+								{step === "payouts" && <Payouts />}
 
-									{step === "updateKYC" && <UpdateKYCForm />}
+								{step === "updateKYC" && <UpdateKYCForm />}
 
-									{step === "my-items" && <MyItems />}
+								{step === "my-items" && <MyItems />}
 
-									{step === "my-videos" && <MyItems legacy />}
+								{step === "my-videos" && <MyItems legacy />}
 
-									{step === "amazon-status" && <AmazonStatus />}
+								{step === "amazon-status" && <AmazonStatus />}
 
-									{step === "preferences" && <PreferencesForm />}
-								</div>
+								{step === "preferences" && <PreferencesForm />}
 							</div>
-						)}
+						</div>
 					</div>
 				</div>
 			</div>
