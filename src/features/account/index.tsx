@@ -117,6 +117,10 @@ const AccountsPage = () => {
 
 	const onClickNavMenu = useCallback(
 		(item: string) => {
+			if (!item) {
+				return;
+			}
+
 			router
 				.push({ pathname: router.pathname, query: { step: item } }, undefined, {
 					shallow: true,
