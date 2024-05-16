@@ -30,16 +30,21 @@ const MyItems = ({ legacy }: { legacy?: boolean }) => {
 		initialData: queryClient.getQueryData([queryKey]),
 	});
 
-	if (isLoading) return <div>Loading...</div>;
 	return (
 		<div className="w-full flex-1 flex flex-col p-4">
 			<h3 className="font-aleo text-3xl font-semibold mb-4">My Items</h3>
-			{userItemsList && userItemsList.items?.length > 0 ? (
+			{isLoading ? (
 				<div className="flex flex-col gap-5">
-					{userItemsList.items.map((item) => (
+					<UserItemCard variant="loading" />
+					<UserItemCard variant="loading" />
+					<UserItemCard variant="loading" />
+				</div>
+			) : userItemsList && userItemsList.items?.length > 0 ? (
+				<div className="flex flex-col gap-5">
+					{userItemsList?.items.map((item) => (
 						<UserItemCard
-							data={item}
 							key={`${item.webStoryId}-${item.creditSpendType}`}
+							data={item}
 						/>
 					))}
 					<GenericPagination
