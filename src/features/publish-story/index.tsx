@@ -368,7 +368,7 @@ export default function PublishedStory({
 	}, 100);
 
 	return (
-		<div className="flex bg-reverse w-full">
+		<div className="flex flex-col xl:flex-row bg-reverse w-full">
 			<div
 				className={cn(
 					"w-full k xl:h-[calc(100vh-20px)] relative",
@@ -826,9 +826,9 @@ export default function PublishedStory({
 						</div>
 						<Link
 							href="/feed/[genre]"
-							className="absolute bottom-2 left-1/2 transform -translate-x-1/2 hidden md:flex flex-row gap-x-3 text-sm text-muted-foreground"
+							className="absolute bottom-2 left-1/2 transform -translate-x-1/2 hidden xl:flex flex-row gap-x-3 text-sm text-muted-foreground"
 						>
-							© 2024 Story.com - All rights reserved
+							© {new Date().getFullYear()} Story.com - All rights reserved
 						</Link>
 						{!env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES && (
 							<div className="absolute bottom-4 right-4 flex flex-col gap-y-3">
@@ -850,7 +850,7 @@ export default function PublishedStory({
 				</div>
 			</div>
 			<div
-				className="hidden xl:block xl:h-[calc(100vh-20px)] overflow-y-auto relative"
+				className="xl:h-[calc(100vh-20px)] overflow-y-auto relative"
 				onMouseEnter={() => toggleHovering(true)}
 				onMouseLeave={() => toggleHovering(false)}
 			>
@@ -863,6 +863,12 @@ export default function PublishedStory({
 					resolution={story.resolution}
 				/>
 			</div>
+			<Link
+				href="/feed/[genre]"
+				className=" text-center my-2 text-sm text-muted-foreground xl:hidden"
+			>
+				© {new Date().getFullYear()} Story.com - All rights reserved
+			</Link>
 			<ShareStoryDialog
 				open={openShareVideoDialog}
 				setOpen={setOpenShareVideoModal}

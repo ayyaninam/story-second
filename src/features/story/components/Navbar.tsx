@@ -78,7 +78,7 @@ export default function Navbar({
 				</Button>
 				{!suggestedOpen && suggestedMenuButton && (
 					<Button
-						className={`hidden lg:flex h-9 w-10 p-0 rounded-md shadow bg-white hover:shadow-lg fade-in-5 group `}
+						className={`hidden xl:flex h-9 w-10 p-0 rounded-md shadow bg-white hover:shadow-lg fade-in-5 group `}
 						variant="outline"
 						onClick={() => setSuggestedOpen?.(!suggestedOpen)}
 						onMouseEnter={() => toggleHovering?.(true)}
