@@ -47,7 +47,6 @@ export default function ScriptEditor({
 
 	const UpdateCategory = useUpdateCategory();
 	const isMobile = useMediaQuery("(max-width: 640px)");
-
 	return (
 		<>
 			<TooltipProvider>
@@ -69,12 +68,11 @@ export default function ScriptEditor({
 						<p className="text-2xl font-bold max-w-sm -tracking-[-0.6px]">
 							{Format.Title(WebstoryData?.storyTitle)}
 						</p>
-
 						<div className="w-full inline-flex text-slate-400 text-xs py-1">
-							<CategorySelect
+							{/* <CategorySelect
 								value={WebstoryData?.topLevelCategory!}
 								onChange={(category) => UpdateCategory.mutate({ category })}
-							/>
+							/> */}
 							<p className="ms-1">by {userName}</p>
 						</div>
 					</div>
@@ -98,6 +96,7 @@ export default function ScriptEditor({
 											handleInput,
 											handleNavigation,
 											handleDelete,
+											handleFocus,
 											refs,
 										}) => {
 											return (
@@ -121,9 +120,7 @@ export default function ScriptEditor({
 																{scene.segments.map((segment, segmentIndex) => (
 																	<span
 																		key={segmentIndex}
-																		style={{
-																			backgroundColor: "transparent",
-																		}}
+																		style={{ backgroundColor: "transparent" }}
 																		className={cn(`flex flex-wrap w-full`)}
 																	>
 																		<TextareaAutosize
@@ -174,21 +171,27 @@ export default function ScriptEditor({
 																				backgroundColor: "inherit",
 																			}}
 																			// @ts-ignore
-																			ref={(el) =>
+																			ref={(el) => {
 																				// @ts-ignore
-																				(refs.current[sceneIndex][
-																					segmentIndex
-																				] = el)
-																			}
+																				if (!refs.current[sceneIndex]) {
+																					refs.current[sceneIndex] = [];
+																				}
+																				// @ts-ignore
+																				refs.current[sceneIndex][segmentIndex] =
+																					el;
+																			}}
 																			value={segment.textContent}
-																			onChange={(e) => {
+																			onChange={(e) =>
 																				handleInput(
 																					e,
 																					scene,
 																					sceneIndex,
 																					segment,
 																					segmentIndex
-																				);
+																				)
+																			}
+																			onFocus={() => {
+																				handleFocus(sceneIndex, segmentIndex);
 																			}}
 																		/>
 																	</span>
