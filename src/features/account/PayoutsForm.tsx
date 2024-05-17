@@ -105,6 +105,8 @@ const Payouts = () => {
 		}
 	}, [success, router]);
 
+	const totalRoyaltyAvailable = user?.data?.totalUnclaimedRoyalties!.toFixed(2);
+
 	return (
 		<>
 			<div className="sm:container mx-auto">
@@ -118,7 +120,7 @@ const Payouts = () => {
 								Total Royalty Available
 							</span>
 							<span className="block text-3xl sm:text-5xl font-semibold">
-								${user?.data?.totalUnclaimedRoyalties!.toFixed(2)}
+								{totalRoyaltyAvailable ? `$${totalRoyaltyAvailable}` : ""}
 							</span>
 						</div>
 						{canWithdraw ? (

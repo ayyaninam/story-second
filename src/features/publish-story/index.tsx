@@ -42,6 +42,7 @@ import {
 	DisplayAspectRatios,
 	AllowanceType,
 	SubscriptionPlan,
+	StoryOutputTypes,
 } from "@/utils/enums";
 import useEventLogger, { AnalyticsEvent } from "@/utils/analytics";
 import { HTTPError } from "ky";
@@ -132,6 +133,25 @@ export default function PublishedStory({
 			router.replace(path, undefined, { shallow: true });
 		}
 	}, [router.query]);
+
+	useEffect(() => {
+		if (Webstory.data?.storyType === StoryOutputTypes.Story) {
+			toast.error(
+				"Incorrect URL for this content type. Redirecting to the correct page in 5 seconds..." // if it shows twice the toast on development is because react strict mode
+			);
+			setTimeout(() => {
+				router
+					.replace(
+						Routes.ViewStory(
+							StoryOutputTypes.Story,
+							router.query.genre!.toString(),
+							router.query.id!.toString()
+						)
+					)
+					.then();
+			}, 5000);
+		}
+	}, [Webstory.data?.storyType]);
 
 	const [storyLikesUpdate, setStoryLikesUpdate] = useState(0);
 	const storyLikes = (storyData.storyLikes ?? 0) + storyLikesUpdate;

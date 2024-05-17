@@ -24,6 +24,9 @@ export const env = createEnv({
 			.string()
 			.transform((v) => v === "true")
 			.default(false),
+    NEXT_PUBLIC_MAINTENANCE_MODE: z
+      .string()
+      .default("false"),
 		NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z
 			.string()
 			.min(1)
@@ -47,6 +50,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_AUTH0_AUDIENCE: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
 		NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES:
 			process.env.NEXT_PUBLIC_DISABLE_UNIMPLEMENTED_FEATURES,
+    NEXT_PUBLIC_MAINTENANCE_MODE: process.env.NEXT_PUBLIC_MAINTENANCE_MODE,
 		NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
 			process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 		NEXT_PUBLIC_VERCEL_ENVIRONMENT: process.env.NEXT_PUBLIC_VERCEL_ENVIRONMENT,

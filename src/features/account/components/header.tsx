@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import React, { CSSProperties } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
@@ -10,7 +9,7 @@ import Format from "@/utils/format";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useMediaQuery } from "usehooks-ts";
 import useEventLogger from "@/utils/analytics";
-import toast from "react-hot-toast";
+import { mainSchema } from "@/api/schema";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -33,7 +32,11 @@ const subHeaderContainer: CSSProperties = {
 	background: "var(--base-white, #FFF)",
 };
 
-export function AccountsHeader({ user }: { user: any }) {
+export function AccountsHeader({
+	user,
+}: {
+	user: mainSchema["UserInfoDTOApiResponse"]["data"];
+}) {
 	const { theme } = useTheme();
 	const isMobile = useMediaQuery("(max-width: 768px)");
 	const router = useRouter();
@@ -57,9 +60,9 @@ export function AccountsHeader({ user }: { user: any }) {
 					<Avatar className="h-10 w-10 border-[1px] border-gray-200 text-accent-700">
 						<AvatarImage
 							src={
-								Format.GetImageUrl(user?.profilePicture) ||
-								authUser?.picture ||
-								""
+								(user?.profilePicture
+									? Format.GetImageUrl(user?.profilePicture)
+									: undefined) || ""
 							}
 						/>
 						<AvatarFallback>
@@ -69,11 +72,11 @@ export function AccountsHeader({ user }: { user: any }) {
 					<div className="items-center">
 						<div className="flex items-center gap-x-2">
 							<p className="text-lg rounded-sm font-bold text-muted-foreground text-slate-800">
-								{user?.name + " " + user?.lastName || ""}
+								{`${user?.name ?? ""} ${user?.lastName ?? ""}` || ""}
 							</p>
 						</div>
 						<div className="flex items-center gap-x-2 text-slate-500 text-sm">
-							@{user?.profileName}
+							{user?.profileName ? `@${user?.profileName}` : ""}
 						</div>
 					</div>
 				</div>
@@ -84,11 +87,10 @@ export function AccountsHeader({ user }: { user: any }) {
 							className={`px-4 py-1.5 bg-accent-600 hover:bg-accent-700 border border-accent-700 text-background text-white text-sm font-medium flex gap-2 items-center h-fit`}
 							variant="default"
 							onClick={() => {
-								toast.success("Test");
-								// eventLogger("create_new_clicked", {
-								// 	sourceUrl: router.asPath,
-								// });
-								// router.push(Routes.Generate());
+								eventLogger("create_new_clicked", {
+									sourceUrl: router.asPath,
+								});
+								router.push(Routes.Generate()).then();
 							}}
 						>
 							<Plus className="h-4 w-4" /> Create New
