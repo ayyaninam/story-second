@@ -105,7 +105,7 @@ export const useSubmitEditScenesAndSegments = (
 				true
 			);
 
-			dispatch({ type: "reset", draft: WebstoryToStoryDraft(response) });
+			// dispatch({ type: "reset", draft: WebstoryToStoryDraft(response) });
 			return response;
 		},
 	});

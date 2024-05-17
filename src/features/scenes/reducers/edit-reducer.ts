@@ -191,21 +191,21 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 		}
 		case "reset_text": {
 			draft.title = action.draft.title;
-			draft.scenes = action.draft.scenes.map((scene) => {
-				const draftScene = draft.scenes.find((el) => el.id === scene.id);
-				if (draftScene) {
+			draft.scenes = draft.scenes.map((scene, index) => {
+				const relatableScene = action.draft.scenes?.[index];
+				if (relatableScene) {
 					return {
-						...draftScene,
+						...scene,
 						description: scene.description,
-						segments: scene.segments.map((segment) => {
-							const draftSegment = draftScene.segments.find(
-								(el) => el.id === segment.id
-							);
-							if (draftSegment) {
+						segments: scene.segments.map((segment, index) => {
+							const relatableSegment = relatableScene.segments?.[index];
+							if (relatableSegment) {
 								return {
-									...draftSegment,
-									textContent: segment.textContent,
-									textStatus: segment.textStatus,
+									...segment,
+									textStatus:
+										relatableSegment?.textContent === segment?.textContent
+											? TextStatus.UNEDITED
+											: TextStatus.EDITED,
 								};
 							}
 							return segment;

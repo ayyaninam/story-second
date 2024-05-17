@@ -61,11 +61,11 @@ const StoryBookPage = ({
 		setIsHovering(value);
 	}, 100);
 	return (
-		<div className="flex bg-reverse w-full">
+		<div className="flex flex-col xl:flex-row bg-reverse w-full">
 			<div
 				className={cn(
 					" min-h-[calc(100vh-75px)] xl:h-[calc(100vh-20px)] w-full",
-					suggestedOpen ? "lg:w-[calc(100%-306px)]" : "lg:w-full"
+					suggestedOpen ? "xl:w-[calc(100%-306px)]" : "xl:w-full"
 				)}
 			>
 				{" "}
@@ -180,7 +180,7 @@ const StoryBookPage = ({
 				</div>
 			</div>
 			<div
-				className="hidden lg:block xl:h-[calc(100vh-20px)] overflow-y-auto relative"
+				className="xl:h-[calc(100vh-20px)] overflow-y-auto relative"
 				onMouseEnter={() => toggleHovering(true)}
 				onMouseLeave={() => toggleHovering(false)}
 			>

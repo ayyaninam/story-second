@@ -45,7 +45,6 @@ const EditorPage = ({
 		// eslint-disable-next-line @tanstack/query/exhaustive-deps -- pathname includes everything we need
 		queryKey: [QueryKeys.STORY, router.asPath],
 		initialData: storyData,
-		refetchInterval: 3000,
 		// Disable once all the videoKeys are obtained
 	});
 
@@ -55,18 +54,14 @@ const EditorPage = ({
 	);
 
 	useEffect(() => {
-		dispatch({
-			type: "reset_text",
-			draft: WebstoryToStoryDraft(Webstory.data!),
-		});
+		(async () => {
+			const data = await Webstory.refetch();
+			dispatch({
+				type: "reset_text",
+				draft: WebstoryToStoryDraft(data.data!),
+			});
+		})();
 	}, [getAllTextsFromVideoStory(Webstory.data!)]);
-
-	useEffect(() => {
-		dispatch({
-			type: "reset_all_except_text",
-			draft: WebstoryToStoryDraft(Webstory.data!),
-		});
-	}, [getEverythingExceptTextFromVideoStory(Webstory.data!)]);
 
 	if (router.query.editor === "script") {
 		return (
