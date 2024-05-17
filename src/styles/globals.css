@@ -204,3 +204,7 @@
 	line-height: 24px;
 	color: white;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}

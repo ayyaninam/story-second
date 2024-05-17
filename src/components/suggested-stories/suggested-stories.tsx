@@ -15,6 +15,7 @@ import { ChevronsRight } from "lucide-react";
 import { StoryOutputTypes } from "@/utils/enums";
 import { getGenreNameFromSlug } from "@/utils/feed-utils";
 import SuggestedImage from "./suggested-image";
+import { useMediaQuery } from "usehooks-ts";
 
 type SuggestedStoriesProps = {
 	id: string;
@@ -35,7 +36,7 @@ export default function SuggestedStories({
 }: SuggestedStoriesProps) {
 	const suggestedStory = useRef<HTMLDivElement>(null);
 	const suggestedStoryRef = useRef<UseInfiniteQueryResult>();
-	console.log("DisplayResolution", DisplayResolution);
+	const isMobile = useMediaQuery("(max-width: 1280px)");
 	const suggestedStories = useInfiniteQuery({
 		queryKey: [id, storyType, DisplayResolution],
 		queryFn: ({ pageParam }) =>
@@ -90,14 +91,15 @@ export default function SuggestedStories({
 		<div
 			ref={suggestedStory}
 			className={cn(
-				"w-[306px] right-2 top-2 translate-x-0  p-4 pt-6 bg-slate-200 overflow-auto h-full transition-all duration-300 ease-in-out max-w-[306px] opacity-100 suggested-videos",
+				" px-4 xl:w-[306px] right-2 top-2 translate-x-0  p-4 pt-6 bg-slate-200 overflow-auto h-screen xl:h-full transition-all duration-300 ease-in-out xl:max-w-[306px] opacity-100 suggested-videos",
 				!visible && "translate-x-[200%] opacity-0 fixed top-20",
-				hovering && "translate-x-0 opacity-100"
+				hovering && "translate-x-0 opacity-100",
+				isMobile && "no-scrollbar"
 			)}
 		>
 			<div className="flex items-center gap-4">
 				<Button
-					className={`h-10 w-10 p-0 rounded-md shadow bg-white hover:shadow-lg`}
+					className={`hidden xl:flex h-10 w-10 p-0 rounded-md shadow bg-white hover:shadow-lg`}
 					variant="outline"
 					onClick={() => setVisible(!visible)}
 				>
