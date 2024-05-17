@@ -10,6 +10,7 @@ import StripeForm from "@/features/pricing/stripe-form";
 import { useStripeSetup, useUser } from "@/features/pricing/hooks";
 import { pricingValues, PricingDetails } from "@/features/pricing/constants";
 import { SubscriptionPeriod } from "@/utils/enums";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BillingInfoProps {
 	userIsEditing: boolean;
@@ -86,6 +87,16 @@ const Billing = () => {
 		pricingValues?.[subscriptionPlan]?.[subscriptionPeriod];
 
 	const userHasCard = user ? getUserHasCard(user) : false;
+
+	if (!user) {
+		return (
+			<div className="flex flex-col gap-2 mt-4">
+				<Skeleton className="w-[150px] h-[24px] rounded-md" />
+				<Skeleton className="w-[100px] h-[24px] rounded-md" />
+				<Skeleton className="w-[125px] h-[24px] rounded-md" />
+			</div>
+		);
+	}
 
 	return (
 		<div>
