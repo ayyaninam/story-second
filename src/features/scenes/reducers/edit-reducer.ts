@@ -257,7 +257,6 @@ const editStoryReducer = (draft: EditStoryDraft, action: EditStoryAction) => {
 			 because not everything is present in the data from backend. Eg alternateImageKeys, alternateImagesStatus etc.
 			 and recursively because there are nested objects and array in that */
 			recursivelyUpdateOverlappingKeys(draft, action.draft);
-
 			return draft;
 		}
 		case "update_segment_statuses": {
