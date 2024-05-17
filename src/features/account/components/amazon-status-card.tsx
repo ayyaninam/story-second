@@ -6,6 +6,7 @@ import { AmazonPublishLifecycle } from "@/constants/amazon-constants";
 import { mainSchema } from "@/api/schema";
 import { CheckIcon } from "lucide-react";
 import { XIcon } from "react-share";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const displayStatus = (lifecycle: AmazonPublishLifecycle) => {
 	switch (lifecycle) {
@@ -24,57 +25,78 @@ export const displayStatus = (lifecycle: AmazonPublishLifecycle) => {
 	}
 };
 
-const AmazonStatusCard = ({
+type AmazonStatusCardProps =
+	| { variant?: "loading"; data?: never }
+	| { variant?: "default"; data: mainSchema["ReturnUserAmazonBookDTO"] };
+
+const AmazonStatusCard: React.FC<AmazonStatusCardProps> = ({
+	variant = "default",
 	data,
-}: {
-	data: mainSchema["ReturnUserAmazonBookDTO"];
 }) => {
+	const isLoading = variant === "loading";
+
 	return (
-		<div className="border-2 border-gray-300 rounded-lg p-4 shadow-md">
+		<div className="border-2 border-gray-300 rounded-lg p-4 shadow-md overflow-hidden">
 			<div className="flex flex-col md:flex-row gap-4 items-center">
 				{/* Image or cover of the item, with a fixed width but responsive height */}
 				<div
 					className="w-40 md:w-32 lg:w-36 xl:w-40 flex-shrink-0 relative"
 					style={{ height: "auto" }}
 				>
-					<Image
-						src={Format.GetImageUrl(data.coverImage!)}
-						alt="Story Cover"
-						width={160} // Set to the width of the container for large screens
-						height={160} // Adjust the height based on the desired aspect ratio, for example, 4:3
-						layout="responsive"
-						className="rounded-md"
-					/>
-				</div>
-				<div className="flex-grow text-sm w-full text-center">
-					<h4 className="text-lg font-semibold">{data.title}</h4>
-					<p>Status: {displayStatus(data.amazonPublishLifecycle)}</p>
-					<p>Submitted Date: {Format.DateDisplay(data.created!)}</p>
-					{data.amazonURL && (
-						<Link
-							href={data.amazonURL}
-							className="text-blue-600 hover:underline"
-						>
-							View on Amazon
-						</Link>
+					{isLoading ? (
+						<Skeleton className="aspect-square rounded-md" />
+					) : (
+						data && (
+							<Image
+								src={Format.GetImageUrl(data.coverImage!)}
+								alt="Story Cover"
+								width={160} // Set to the width of the container for large screens
+								height={160} // Adjust the height based on the desired aspect ratio, for example, 4:3
+								layout="responsive"
+								className="rounded-md"
+							/>
+						)
 					)}
-					<div
-						className={`${data.amazonPublishLifecycle === AmazonPublishLifecycle.SelfPublished ? "hidden" : ""}`}
-					>
-						<ProgressBar lifecycle={data.amazonPublishLifecycle} />
-					</div>
-					<div
-						className={`${data.amazonPublishLifecycle === AmazonPublishLifecycle.SelfPublished ? "" : "hidden"}`}
-					>
-						<Link
-							href={`/story/${data.topLevelCategory}/${data.slug}/publish-book/download`}
-							className="text-blue-600 hover:underline"
-							rel="noopener noreferrer"
-						>
-							Download Page
-						</Link>
-					</div>
 				</div>
+				{isLoading ? (
+					<div className="flex flex-col items-center gap-2 flex-grow">
+						<Skeleton className="h-6 w-44 mb-2" />
+						<Skeleton className="h-4 w-52 mb-2" />
+						<Skeleton className="h-4 w-52" />
+					</div>
+				) : (
+					data && (
+						<div className="flex-grow text-sm w-full text-center">
+							<h4 className="text-lg font-semibold">{data.title}</h4>
+							<p>Status: {displayStatus(data.amazonPublishLifecycle)}</p>
+							<p>Submitted Date: {Format.DateDisplay(data.created!)}</p>
+							{data.amazonURL && (
+								<Link
+									href={data.amazonURL}
+									className="text-blue-600 hover:underline"
+								>
+									View on Amazon
+								</Link>
+							)}
+							<div
+								className={`${data.amazonPublishLifecycle === AmazonPublishLifecycle.SelfPublished ? "hidden" : ""}`}
+							>
+								<ProgressBar lifecycle={data.amazonPublishLifecycle} />
+							</div>
+							<div
+								className={`${data.amazonPublishLifecycle === AmazonPublishLifecycle.SelfPublished ? "" : "hidden"}`}
+							>
+								<Link
+									href={`/story/${data.topLevelCategory}/${data.slug}/publish-book/download`}
+									className="text-blue-600 hover:underline"
+									rel="noopener noreferrer"
+								>
+									Download Page
+								</Link>
+							</div>
+						</div>
+					)
+				)}
 			</div>
 		</div>
 	);

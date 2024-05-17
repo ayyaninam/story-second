@@ -30,7 +30,11 @@ const AmazonStatus = () => {
 		<div className="w-full flex flex-col p-4">
 			<h3 className="text-3xl font-semibold mb-4">Amazon Publish Status</h3>
 			{isLoading ? (
-				<div>Loading...</div>
+				<div className="flex flex-col gap-5">
+					<AmazonStatusCard variant="loading" />
+					<AmazonStatusCard variant="loading" />
+					<AmazonStatusCard variant="loading" />
+				</div>
 			) : amazonItems && amazonItems.items.length > 0 ? (
 				<div className="space-y-5">
 					{amazonItems.items.map((item) => (

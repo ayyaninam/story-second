@@ -130,10 +130,6 @@ const AccountsPage = () => {
 		[router]
 	);
 
-	if (!data?.data) {
-		return null;
-	}
-
 	return (
 		<div className="h-full flex flex-col overflow-y-scroll">
 			<NextSeo
