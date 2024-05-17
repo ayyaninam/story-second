@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { usePathname, useSearchParams } from "next/navigation";
 import debounce from "@/utils/debounce";
 import { useAuth } from "@/features/auth-prompt/providers/AuthContext";
+import LibraryIcon from "@/components/icons/dashboard/library-icon";
 
 const mainHeaderContainer: {
 	[key: string]: CSSProperties;
@@ -125,12 +126,7 @@ export const LibraryHeader = ({
 				style={theme ? mainHeaderContainer[theme] : mainHeaderContainer.light}
 			>
 				<div className="flex items-start w-[250px]">
-					<Image
-						src="/images/nav-icons/library-icon.png"
-						alt="Library"
-						width={40}
-						height={40}
-					/>
+					<LibraryIcon size={40} />
 					<div className="pl-[12px] flex flex-col items-start">
 						<span className="text-slate-950 text-base font-bold">Library</span>
 						<span className="text-accent-700 text-sm font-normal flex lg:flex-row flex-col">
