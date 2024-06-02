@@ -83,7 +83,7 @@ const GenerateModalContent: React.FC<{
 	const { invalidateUser } = useUpdateUser();
 
 	const { userCanUseCredits } = useUserCanUseCredits();
-
+	
 	const { user, refetchUserData, data } = useAuth();
 
 	const onSubmit = async () => {

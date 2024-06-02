@@ -25,6 +25,7 @@ export default function LoginPage() {
 	};
 
 	eventLogger("login_page_viewed");
+	
 
 	return (
 		<>
