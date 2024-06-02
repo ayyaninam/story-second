@@ -33,6 +33,7 @@ import { TabType, tabs, videoRatios } from "@/features/generate/constants";
 // end 
 
 import { useRouter } from "next/navigation";
+import { submitToBackend } from "@/components/create-modal";
 
 const ProceedPage: React.FC = () => {
 
@@ -267,81 +268,3 @@ const ProceedPage: React.FC = () => {
 
 export default ProceedPage;
 
-
-
-/**
- * Submit form data to the backend
- * @param params form data
- * @param invalidateUser
- * @param fromLanding true if the user is coming from the landing page
- * @param setIsLoading form submitting state
- */
-export const submitToBackend = async (
-	params: CreateInitialStoryQueryParams,
-	invalidateUser: () => Promise<void>,
-	fromLanding: boolean,
-	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
-) => {
-	const data = JSON.stringify(params);
-	try {
-		localStorage.setItem("prompt", params.prompt || "");
-		const json: { storyPath: string } = await publicProxyApiFetcher
-			.post("api/story/create", { body: data })
-			.json();
-		invalidateUser();
-
-		if (json.storyPath == null) {
-			toast.error("An unexpected error has occurred. Please try again.");
-		} else {
-			// Ok! Send the user to the story page
-			localStorage.removeItem("prompt");
-			redirect(json.storyPath, fromLanding);
-		}
-	} catch (error) {
-		if (error instanceof HTTPError) {
-			switch (error.response.status) {
-				case 401: {
-					redirect("/auth/login?returnTo=/generate", fromLanding);
-					break;
-				}
-				case 402: {
-					toast.error("Not enough balance to create story.");
-					break;
-				}
-				default: {
-					error.response
-						.json()
-						.then((data) => {
-							const backendErrorMessage =
-								data.error || "Unknown error occurred";
-							toast.error(
-								`Unable to generate your story: ${backendErrorMessage}`
-							);
-						})
-						.catch((e) => {
-							toast.error(
-								"An unexpected error occurred while processing your request."
-							);
-						});
-					break;
-				}
-			}
-		}
-	} finally {
-		setIsLoading(false);
-	}
-};
-
-/**
- * Redirect user to `/generate` page.  Why not `useRouter.push()`?
- * This prompt component is used in both Next.js's legacy pages and the newer app dir in which
- * the router API has changed.  So we can't import both versions.
- *
- */
-const redirect = (dest: string, escapeIFrame: boolean) => {
-	if (escapeIFrame) {
-		window.parent.location.href = dest;
-	} else {
-		window.location.href = dest;
-	}
-};

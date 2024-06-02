@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const NPromptLayout = ({
 	children,
@@ -7,7 +7,9 @@ const NPromptLayout = ({
 }) => {
   return (
     <div className='max-w-screen-md h-64 mx-auto'>
+      <Suspense>
           {children}
+      </Suspense>
     </div>
   )
 }
